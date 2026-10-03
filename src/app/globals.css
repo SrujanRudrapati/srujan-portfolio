@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+/* Dark-first: deep blue-slate ground, one amber accent. */
+:root {
+  color-scheme: dark;
+  --bg: #0e1a2b;
+  --raised: #15253b;
+  --border: #2a3f5c;
+  --text: #e7edf5;
+  --muted: #9db0c8;
+  --accent: #f0b44c;
+  --accent-hover: #f5c773;
+  --on-accent: #0e1a2b;
+  --tag-bg: #1d3150;
+  --tag-fg: #c9d6e6;
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    color-scheme: light;
+    --bg: #f3f6fa;
+    --raised: #e6ecf4;
+    --border: #c3cedc;
+    --text: #0e1a2b;
+    --muted: #46566e;
+    --accent: #8a5600;
+    --accent-hover: #6e4400;
+    --on-accent: #f3f6fa;
+    --tag-bg: #dce4ee;
+    --tag-fg: #26364d;
+  }
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #f3f6fa;
+  --raised: #e6ecf4;
+  --border: #c3cedc;
+  --text: #0e1a2b;
+  --muted: #46566e;
+  --accent: #8a5600;
+  --accent-hover: #6e4400;
+  --on-accent: #f3f6fa;
+  --tag-bg: #dce4ee;
+  --tag-fg: #26364d;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-raised: var(--raised);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-on-accent: var(--on-accent);
+  --color-tag: var(--tag-bg);
+  --color-tag-ink: var(--tag-fg);
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
+[id] {
+  scroll-margin-top: 5rem;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+a, button {
+  touch-action: manipulation;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Diagram motion. Only defined when the user has not asked for reduced motion,
+   so the reduced-motion default is the finished, static diagram. */
+@media (prefers-reduced-motion: no-preference) {
+  .draw-line {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: draw-line 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: var(--d, 0ms);
+  }
+  .draw-appear {
+    opacity: 0;
+    animation: draw-appear 350ms ease-out forwards;
+    animation-delay: var(--d, 0ms);
+  }
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 25%;
+    }
+  }
+}
+
+@keyframes draw-line {
+  to { stroke-dashoffset: 0; }
+}
+@keyframes draw-appear {
+  to { opacity: 1; }
+}
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
