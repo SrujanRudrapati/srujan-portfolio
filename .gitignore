@@ -51,3 +51,4 @@ PORTFOLIO_BRIEF.md
 worker/node_modules/
 worker/dist/
 worker/.wrangler/
+docs/v3/refs/**/*.webm

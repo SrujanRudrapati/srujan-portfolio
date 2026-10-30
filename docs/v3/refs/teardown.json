@@ -1,0 +1,651 @@
+{
+  "eddy-naboulet": {
+    "desktop": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 2298,
+      "info": {
+        "title": "Eddy Naboulet — Senior front-end developer · React, TypeScript, WebGL",
+        "scrollHeight": 900,
+        "fonts": [
+          "\"Jacquard 12\"",
+          "DotGothic16",
+          "Arial"
+        ],
+        "colorCount": 22,
+        "colors": [
+          "bg:rgb(20, 16, 10)",
+          "rgb(255, 226, 176)",
+          "rgb(255, 160, 46)",
+          "bg:rgb(58, 42, 20)",
+          "bg:rgb(255, 160, 46)",
+          "bg:rgb(239, 239, 239)",
+          "rgb(224, 80, 30)",
+          "rgb(20, 16, 10)",
+          "bg:rgb(255, 226, 176)",
+          "bg:rgb(200, 200, 200)",
+          "bg:rgb(41, 41, 41)",
+          "bg:rgb(243, 238, 223)",
+          "rgb(41, 41, 41)",
+          "bg:rgb(244, 244, 244)",
+          "bg:rgb(250, 250, 248)",
+          "bg:rgb(235, 231, 218)",
+          "bg:rgb(244, 240, 230)",
+          "bg:rgb(255, 255, 255)",
+          "bg:color(srgb 0.493137 0.316863 0.102745)",
+          "bg:color(srgb 1 0.627451 0.180392 / 0.08)",
+          "bg:color(srgb 0.0784314 0.0627451 0.0392157 / 0.65)",
+          "rgb(0, 0, 238)"
+        ],
+        "maxFont": 190.08,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "",
+        "links": [
+          "/",
+          "/projets",
+          "/projets",
+          "/projet/printoclock",
+          "/projet/fabro",
+          "/projet/stenz",
+          "/projet/commit-lite",
+          "/projet/ribambelle",
+          "/projet/cgenetix",
+          "/contact",
+          "https://parallelstudio.tv/",
+          "/projet/prospection-terrain",
+          "/projets",
+          "/projet/lelaboblanc",
+          "https://ac-consultingfirm.com/",
+          "/projet/lelaboblanc",
+          "/projets",
+          "/projet/fungible-apparel",
+          "https://www.fungibleapparel.com/",
+          "/projet/ac-consulting",
+          "/projets",
+          "/projet/sidaction-cher-ami",
+          "https://cher-ami.tv/",
+          "https://cher-ami.tv/",
+          "https://cher-ami.eddy-naboulet.dev/",
+          "/projet/fungible-apparel",
+          "/projets",
+          "/projet/circle-dental",
+          "https://www.akaru.fr/",
+          "https://www.akaru.fr/",
+          "/projet/sidaction-cher-ami",
+          "/projets",
+          "/projet/snapshift",
+          "/projet/circle-dental",
+          "/projets",
+          "/projet/the-safe-box",
+          "https://turbodiesel.studio/",
+          "https://turbodiesel.studio/",
+          "/projet/snapshift",
+          "/projets"
+        ],
+        "nav": [
+          "EN",
+          "projets.vol",
+          "← Field prospecting",
+          "All projects ↗",
+          "← Le Labo Blanc",
+          "All projects ↗",
+          "← AC Consulting",
+          "All projects ↗",
+          "← Fungible Apparel",
+          "All projects ↗",
+          "← Sidaction × Cher Ami",
+          "All projects ↗",
+          "← Circle Dental",
+          "All projects ↗",
+          "← Snapshift",
+          "All projects ↗",
+          "← The Safe Box",
+          "All projects ↗",
+          "← Gemmyo",
+          "All projects ↗"
+        ],
+        "scripts": [
+          "https://eddy-naboulet.dev/_astro/themeBoot.Tct-Ry5K.js",
+          "https://eddy-naboulet.dev/_astro/ProjectDetail.astro_astro_type_script_index_0_lang.D-EuLwzN.js",
+          "https://eddy-naboulet.dev/_astro/Desktop.astro_astro_type_script_index_0_lang.CpCv9Pfz.js",
+          "https://eddy-naboulet.dev/_astro/Base.astro_astro_type_script_index_0_lang.DHX1HtlT.js",
+          "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+        ],
+        "text": "EDDY-OS\nVERSION 2.6 — BORDEAUX, FR\n[ OK ] design memory ..................... 15 years\n[ OK ] engineering memory ................ 10 years\n[ OK ] react.sys, typescript.sys .......... ready\n[ OK ] webgl.drv (three.js) ............... ready\n[ OK ] crt.drv .............. ready\n[ !! ] coffee.sys ......................... running low\n[ .. ] mounting volumes .................. 17 / 17\n▮ PRESS ANY KEY TO ENTER ▮\n[S] SOUND: ON"
+      },
+      "lastScrollY": 0
+    },
+    "mobile": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 1560,
+      "info": {
+        "title": "Eddy Naboulet — Senior front-end developer · React, TypeScript, WebGL",
+        "scrollHeight": 844,
+        "fonts": [
+          "\"Jacquard 12\"",
+          "DotGothic16",
+          "Arial"
+        ],
+        "colorCount": 22,
+        "colors": [
+          "bg:rgb(20, 16, 10)",
+          "rgb(255, 226, 176)",
+          "rgb(255, 160, 46)",
+          "bg:rgb(58, 42, 20)",
+          "bg:rgb(255, 160, 46)",
+          "bg:rgb(239, 239, 239)",
+          "rgb(224, 80, 30)",
+          "rgb(20, 16, 10)",
+          "bg:rgb(255, 226, 176)",
+          "bg:rgb(200, 200, 200)",
+          "bg:rgb(41, 41, 41)",
+          "bg:rgb(243, 238, 223)",
+          "rgb(41, 41, 41)",
+          "bg:rgb(244, 244, 244)",
+          "bg:rgb(250, 250, 248)",
+          "bg:rgb(235, 231, 218)",
+          "bg:rgb(244, 240, 230)",
+          "bg:rgb(255, 255, 255)",
+          "bg:color(srgb 0.493137 0.316863 0.102745)",
+          "bg:color(srgb 1 0.627451 0.180392 / 0.08)",
+          "bg:color(srgb 0.0784314 0.0627451 0.0392157 / 0.65)",
+          "rgb(0, 0, 238)"
+        ],
+        "maxFont": 56.16,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "",
+        "links": [
+          "/",
+          "/projets",
+          "/projets",
+          "/projet/printoclock",
+          "/projet/fabro",
+          "/projet/stenz",
+          "/projet/commit-lite",
+          "/projet/ribambelle",
+          "/projet/cgenetix",
+          "/contact",
+          "https://parallelstudio.tv/",
+          "/projet/prospection-terrain",
+          "/projets",
+          "/projet/lelaboblanc",
+          "https://ac-consultingfirm.com/",
+          "/projet/lelaboblanc",
+          "/projets",
+          "/projet/fungible-apparel",
+          "https://www.fungibleapparel.com/",
+          "/projet/ac-consulting",
+          "/projets",
+          "/projet/sidaction-cher-ami",
+          "https://cher-ami.tv/",
+          "https://cher-ami.tv/",
+          "https://cher-ami.eddy-naboulet.dev/",
+          "/projet/fungible-apparel",
+          "/projets",
+          "/projet/circle-dental",
+          "https://www.akaru.fr/",
+          "https://www.akaru.fr/",
+          "/projet/sidaction-cher-ami",
+          "/projets",
+          "/projet/snapshift",
+          "/projet/circle-dental",
+          "/projets",
+          "/projet/the-safe-box",
+          "https://turbodiesel.studio/",
+          "https://turbodiesel.studio/",
+          "/projet/snapshift",
+          "/projets"
+        ],
+        "nav": [
+          "EN",
+          "projets.vol",
+          "← Field prospecting",
+          "All projects ↗",
+          "← Le Labo Blanc",
+          "All projects ↗",
+          "← AC Consulting",
+          "All projects ↗",
+          "← Fungible Apparel",
+          "All projects ↗",
+          "← Sidaction × Cher Ami",
+          "All projects ↗",
+          "← Circle Dental",
+          "All projects ↗",
+          "← Snapshift",
+          "All projects ↗",
+          "← The Safe Box",
+          "All projects ↗",
+          "← Gemmyo",
+          "All projects ↗"
+        ],
+        "scripts": [
+          "https://eddy-naboulet.dev/_astro/themeBoot.Tct-Ry5K.js",
+          "https://eddy-naboulet.dev/_astro/ProjectDetail.astro_astro_type_script_index_0_lang.D-EuLwzN.js",
+          "https://eddy-naboulet.dev/_astro/Desktop.astro_astro_type_script_index_0_lang.CpCv9Pfz.js",
+          "https://eddy-naboulet.dev/_astro/Base.astro_astro_type_script_index_0_lang.DHX1HtlT.js",
+          "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092"
+        ],
+        "text": "EDDY-OS\nVERSION 2.6 — BORDEAUX, FR\n[ OK ] design memory ..................... 15 years\n[ OK ] engineering memory ................ 10 years\n[ OK ] react.sys, typescript.sys .......... ready\n[ OK ] webgl.drv (three.js) ............... ready\n[ OK ] crt.drv .............. ready\n[ !! ] coffee.sys ......................... running low\n[ .. ] mounting volumes .................. 17 / 17\n▮ PRESS ANY KEY TO ENTER ▮\n[S] SOUND: ON"
+      },
+      "lastScrollY": 0,
+      "fallbackScroll": true
+    }
+  },
+  "mijobello": {
+    "desktop": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 13957,
+      "info": {
+        "title": "bello.",
+        "scrollHeight": 6366,
+        "fonts": [
+          "\"Space Grotesk\""
+        ],
+        "colorCount": 5,
+        "colors": [
+          "bg:rgb(178, 199, 171)",
+          "bg:rgb(106, 12, 6)",
+          "rgb(178, 199, 171)",
+          "rgb(106, 12, 6)",
+          "bg:"
+        ],
+        "maxFont": 432,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "space_grotesk_e6988195-module__RNs2Mq__variable lenis",
+        "links": [
+          "/",
+          "/about",
+          "/works/mijobello-old",
+          "/works/mijobello-old",
+          "/works/making-memories-in-south-korea",
+          "/works/making-memories-in-south-korea",
+          "/works/in-seoul",
+          "/works/in-seoul",
+          "/works/self",
+          "/works/self",
+          "/works/maharanis-indian-restaurant",
+          "/works/maharanis-indian-restaurant",
+          "/works",
+          "/contact",
+          "/about",
+          "/works",
+          "/contact",
+          "https://www.instagram.com/mjbello1/",
+          "https://www.youtube.com/@mijobelloo",
+          "https://www.linkedin.com/in/miguel-bello-4aa7a8183/"
+        ],
+        "nav": [
+          "aboutabout",
+          "worksworks",
+          "contactcontact"
+        ],
+        "scripts": [
+          "https://mijobello.com/_next/static/chunks/0zvv_030n.apq.js",
+          "https://mijobello.com/_next/static/chunks/02~au-e2lti50.js",
+          "https://mijobello.com/_next/static/chunks/0.u22wc--5~wr.js",
+          "https://mijobello.com/_next/static/chunks/turbopack-11ovna3tjv17i.js",
+          "https://mijobello.com/_next/static/chunks/0evaigp7s23z3.js",
+          "https://mijobello.com/_next/static/chunks/0m6wrv1wjytmc.js",
+          "https://mijobello.com/_next/static/chunks/05h-wc0rbt1yu.js",
+          "https://mijobello.com/_next/static/chunks/0oqv9t9q_mu_z.js",
+          "https://mijobello.com/_next/static/chunks/0l85234rwspr_.js",
+          "https://mijobello.com/_next/static/chunks/0aojr4s6gva7d.js",
+          "https://mijobello.com/_next/static/chunks/0.4.oic0e92s4.js",
+          "https://mijobello.com/_next/static/chunks/03~yq9q893hmn.js",
+          "https://mijobello.com/_next/static/chunks/0l7h-5wf_s4.k.js"
+        ],
+        "text": "BRISBANE\n05:15:12\nAEST\n/\nSYDNEY\n06:15:12\nAEDT\n/\nTOKYO\n04:15:12\nJST\n/\nBERLIN\n20:15:12\nCET\n/\nLONDON\n19:15:12\nGMT\n/\nNEW YORK\n15:15:12\nEDT\n/\nLOS ANGELES\n12:15:12\nPDT\n/\nBRISBANE\n05:15:12\nAEST\n/\nSYDNEY\n06:15:12\nAEDT\n/\nTOKYO\n04:15:12\nJST\n/\nBERLIN\n20:15:12\nCET\n/\nLONDON\n19:15:12\nGMT\n/\nNEW YORK\n15:15:12\nEDT\n/\nLOS ANGELES\n12:15:12\nPDT\n/\nLIGHT\nLIGHT\nbello.\nWeb Developer\nUX Designer\nVideographer\n\nTHE\n\ndeveloper.\n\nI'm a 25-year-old web developer based in Brisbane, Australia. My path started in UX design, eventually graduating from QUT with a Bachelor of Design in Interaction Design but somewhere between wireframing a button and wondering how it actually worked, I fell down the development rabbit hole and never climbed back out.\n\nLEARN MORE\nLEARN MORE\n\nSELECTED\n\nworks.\nmijobello. (OLD)\nPORTFOLIO WEBSITE\nBRANDING\nUX DESIGN\nWEB DEVELOPMENT\nWORDPRESS\nLEARN MORE\nLEARN MORE\n>\nMaking Memories in South Korea\nYOUTUBE VIDEO\nVIDEOGRAPHY\nTRAVEL\nLEARN MORE\nLEARN MORE\n>\nIn Seoul\nYOUTUBE VIDEO\nVIDEOGRAPHY\nLEARN MORE\nLEARN MORE\n>\nSELF.\nQUT DESIGN FESTIVAL 2022 PROJECT\nANIMATION\nMUSIC\nUX DESIGN\nWEB DEVELOPMENT\nLEARN MORE\nLEARN MORE\n>\nMaharanis\nCOMPANY WEBSITE\nWEB DEVELOPMENT\nSHOPIFY\nE-COMMERCE\nLEARN MORE\nLEARN MORE\n>\n←\n→\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nV"
+      },
+      "lastScrollY": 5466
+    },
+    "mobile": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 13053,
+      "info": {
+        "title": "bello.",
+        "scrollHeight": 5697,
+        "fonts": [
+          "\"Space Grotesk\""
+        ],
+        "colorCount": 5,
+        "colors": [
+          "bg:rgb(178, 199, 171)",
+          "bg:rgb(106, 12, 6)",
+          "rgb(178, 199, 171)",
+          "rgb(106, 12, 6)",
+          "bg:"
+        ],
+        "maxFont": 117,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "space_grotesk_e6988195-module__RNs2Mq__variable lenis",
+        "links": [
+          "/",
+          "/about",
+          "/works/mijobello-old",
+          "/works/mijobello-old",
+          "/works/making-memories-in-south-korea",
+          "/works/making-memories-in-south-korea",
+          "/works/in-seoul",
+          "/works/in-seoul",
+          "/works/self",
+          "/works/self",
+          "/works/maharanis-indian-restaurant",
+          "/works/maharanis-indian-restaurant",
+          "/works",
+          "/contact",
+          "/about",
+          "/works",
+          "/contact",
+          "https://www.instagram.com/mjbello1/",
+          "https://www.youtube.com/@mijobelloo",
+          "https://www.linkedin.com/in/miguel-bello-4aa7a8183/"
+        ],
+        "nav": [
+          "aboutabout",
+          "worksworks",
+          "contactcontact"
+        ],
+        "scripts": [
+          "https://mijobello.com/_next/static/chunks/0zvv_030n.apq.js",
+          "https://mijobello.com/_next/static/chunks/02~au-e2lti50.js",
+          "https://mijobello.com/_next/static/chunks/0.u22wc--5~wr.js",
+          "https://mijobello.com/_next/static/chunks/turbopack-11ovna3tjv17i.js",
+          "https://mijobello.com/_next/static/chunks/0evaigp7s23z3.js",
+          "https://mijobello.com/_next/static/chunks/0m6wrv1wjytmc.js",
+          "https://mijobello.com/_next/static/chunks/05h-wc0rbt1yu.js",
+          "https://mijobello.com/_next/static/chunks/0oqv9t9q_mu_z.js",
+          "https://mijobello.com/_next/static/chunks/0l85234rwspr_.js",
+          "https://mijobello.com/_next/static/chunks/0aojr4s6gva7d.js",
+          "https://mijobello.com/_next/static/chunks/0.4.oic0e92s4.js",
+          "https://mijobello.com/_next/static/chunks/03~yq9q893hmn.js",
+          "https://mijobello.com/_next/static/chunks/0l7h-5wf_s4.k.js"
+        ],
+        "text": "LIGHT\nLIGHT\nbello.\nWeb Developer\nUX Designer\nVideographer\n\nTHE\n\ndeveloper.\n\nI'm a 25-year-old web developer based in Brisbane, Australia. My path started in UX design, eventually graduating from QUT with a Bachelor of Design in Interaction Design but somewhere between wireframing a button and wondering how it actually worked, I fell down the development rabbit hole and never climbed back out.\n\nLEARN MORE\nLEARN MORE\n\nSELECTED\n\nworks.\nmijobello. (OLD)\nPORTFOLIO WEBSITE\nBRANDING\nUX DESIGN\nWEB DEVELOPMENT\nWORDPRESS\nLEARN MORE\nLEARN MORE\n>\nMaking Memories in South Korea\nYOUTUBE VIDEO\nVIDEOGRAPHY\nTRAVEL\nLEARN MORE\nLEARN MORE\n>\nIn Seoul\nYOUTUBE VIDEO\nVIDEOGRAPHY\nLEARN MORE\nLEARN MORE\n>\nSELF.\nQUT DESIGN FESTIVAL 2022 PROJECT\nANIMATION\nMUSIC\nUX DESIGN\nWEB DEVELOPMENT\nLEARN MORE\nLEARN MORE\n>\nMaharanis\nCOMPANY WEBSITE\nWEB DEVELOPMENT\nSHOPIFY\nE-COMMERCE\nLEARN MORE\nLEARN MORE\n>\n←\n→\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW ALL WORKS\n/\nVIEW A"
+      },
+      "lastScrollY": 4853
+    }
+  },
+  "cartooneast": {
+    "desktop": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 16083,
+      "info": {
+        "title": "Anurag Bandyopadhyay | Cartooneast | Brand Designer Portfolio",
+        "scrollHeight": 4500,
+        "fonts": [
+          "__Quicksand_ebdfad"
+        ],
+        "colorCount": 8,
+        "colors": [
+          "bg:rgb(245, 245, 245)",
+          "bg:",
+          "rgb(28, 28, 28)",
+          "bg:rgb(255, 255, 255)",
+          "bg:rgba(0, 0, 0, 0.05)",
+          "bg:rgb(0, 0, 0)",
+          "bg:rgb(38, 38, 38)",
+          "rgb(0, 0, 0)"
+        ],
+        "maxFont": 80,
+        "libs": {
+          "gsap": false,
+          "lenis": false,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "scroll-smooth",
+        "links": [
+          "https://www.linkedin.com/in/anurag-bandyopadhyay-a4430713a/",
+          "mailto:anujoy006@gmail.com",
+          "https://www.linkedin.com/in/anurag-bandyopadhyay-a4430713a/",
+          "https://www.instagram.com/lucidgrapher/",
+          "https://www.behance.net/anurag19",
+          "https://wa.me/917890574459",
+          "https://www.awwwards.com/sites/cartooneast-portfolio"
+        ],
+        "nav": [],
+        "scripts": [
+          "https://cartooneast.in/_next/static/chunks/fd9d1056-d796dea454d0709d.js",
+          "https://cartooneast.in/_next/static/chunks/23-e3a0fd11d2430b77.js",
+          "https://cartooneast.in/_next/static/chunks/main-app-af589dec29700cf3.js",
+          "https://cartooneast.in/_next/static/chunks/921-fc6ace8bad09e792.js",
+          "https://cartooneast.in/_next/static/chunks/app/page-5ec50d8abe30bce2.js",
+          "https://cartooneast.in/_next/static/chunks/polyfills-78c92fac7aa8fdd8.js",
+          "https://cartooneast.in/_next/static/chunks/webpack-f71345b119c638ab.js",
+          "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+          "https://img1.wsimg.com/traffic-assets/js/tccl.min.js"
+        ],
+        "text": "Hi,\n\nI design.\nBrands grow.\n\nSimple.\nAnurag Bandyopadhyay\n\nSenior Visual Designer\n\n(6 years)\n\nWorks\nRedmi Note 12\nDriveX Diwali\nMarketplace Creatives\nBanner Refresh\nArtworks\nThe Design Journey\nSome Notable Colabs\nThis Is Where It Gets Personal.\nYou've Reached The End.\n\nOr The Beginning.\n\nMail me\n\nanujoy006@gmail.com\n\nMeet me in\n\nBangalore\n\nor stalk my profiles\n\nDownload Resume"
+      },
+      "lastScrollY": 0
+    },
+    "mobile": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 15985,
+      "info": {
+        "title": "Anurag Bandyopadhyay | Cartooneast | Brand Designer Portfolio",
+        "scrollHeight": 4220,
+        "fonts": [
+          "__Quicksand_ebdfad"
+        ],
+        "colorCount": 8,
+        "colors": [
+          "bg:rgb(245, 245, 245)",
+          "bg:",
+          "rgb(28, 28, 28)",
+          "bg:rgb(255, 255, 255)",
+          "bg:rgba(0, 0, 0, 0.05)",
+          "bg:rgb(0, 0, 0)",
+          "bg:rgb(38, 38, 38)",
+          "rgb(0, 0, 0)"
+        ],
+        "maxFont": 48,
+        "libs": {
+          "gsap": false,
+          "lenis": false,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "scroll-smooth",
+        "links": [
+          "https://www.linkedin.com/in/anurag-bandyopadhyay-a4430713a/",
+          "mailto:anujoy006@gmail.com",
+          "https://www.linkedin.com/in/anurag-bandyopadhyay-a4430713a/",
+          "https://www.instagram.com/lucidgrapher/",
+          "https://www.behance.net/anurag19",
+          "https://wa.me/917890574459",
+          "https://www.awwwards.com/sites/cartooneast-portfolio"
+        ],
+        "nav": [],
+        "scripts": [
+          "https://cartooneast.in/_next/static/chunks/fd9d1056-d796dea454d0709d.js",
+          "https://cartooneast.in/_next/static/chunks/23-e3a0fd11d2430b77.js",
+          "https://cartooneast.in/_next/static/chunks/main-app-af589dec29700cf3.js",
+          "https://cartooneast.in/_next/static/chunks/921-fc6ace8bad09e792.js",
+          "https://cartooneast.in/_next/static/chunks/app/page-5ec50d8abe30bce2.js",
+          "https://cartooneast.in/_next/static/chunks/polyfills-78c92fac7aa8fdd8.js",
+          "https://cartooneast.in/_next/static/chunks/webpack-f71345b119c638ab.js",
+          "https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092",
+          "https://img1.wsimg.com/traffic-assets/js/tccl.min.js"
+        ],
+        "text": "Hi,\n\nI design.\nBrands grow.\n\nSimple.\nWorks\nRedmi Note 12\nDriveX Diwali\nMarketplace Creatives\nBanner Refresh\nArtworks\nThe Design Journey\nSome Notable Colabs\nThis Is Where It Gets Personal.\nYou've Reached The End.\n\nOr The Beginning.\n\nMail me\n\nanujoy006@gmail.com\n\nMeet me in\n\nBangalore\n\nor stalk my profiles\n\nDownload Resume"
+      },
+      "lastScrollY": 3376,
+      "fallbackScroll": true
+    }
+  },
+  "russellnumo": {
+    "desktop": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 1382,
+      "info": {
+        "title": "Russell Numo | Creative Frontend Developer",
+        "scrollHeight": 7402,
+        "fonts": [
+          "__humane_c0fc2f",
+          "__neueMontreal_a91d71"
+        ],
+        "colorCount": 12,
+        "colors": [
+          "bg:rgb(255, 255, 255)",
+          "rgb(26, 32, 44)",
+          "bg:rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "bg:rgb(56, 161, 105)",
+          "rgba(0, 0, 0, 0.36)",
+          "rgba(0, 0, 0, 0.64)",
+          "rgba(0, 0, 0, 0.48)",
+          "rgba(255, 255, 255, 0.48)",
+          "bg:rgba(255, 255, 255, 0.16)",
+          "rgba(255, 255, 255, 0.36)",
+          "rgba(255, 255, 255, 0.64)"
+        ],
+        "maxFont": 259.2,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "__className_c0fc2f __className_a91d71 intro-loading lenis",
+        "links": [
+          "/",
+          "#about",
+          "#projects",
+          "#contact",
+          "/stadsarchief",
+          "/stadsarchief",
+          "/dept",
+          "/dept",
+          "mailto:hello@russellnumo.nl",
+          "tel:+31636096943",
+          "https://github.com/Zephelion",
+          "https://www.linkedin.com/in/russell-numo-a37810231/",
+          "https://www.instagram.com/_numoro/",
+          "https://www.awwwards.com/sites/russell-numo-portfolio"
+        ],
+        "nav": [
+          "RussellNumo",
+          "01About",
+          "02Projects",
+          "03Contact",
+          "GitHub",
+          "LinkedIn",
+          "Instagram"
+        ],
+        "scripts": [
+          "https://www.russellnumo.nl/_next/static/chunks/polyfills-78c92fac7aa8fdd8.js",
+          "https://www.russellnumo.nl/_next/static/chunks/webpack-7e0a04d6d1a844f2.js",
+          "https://www.russellnumo.nl/_next/static/chunks/framework-ecc4130bc7a58a64.js",
+          "https://www.russellnumo.nl/_next/static/chunks/main-2d94ec6e4d65c635.js",
+          "https://www.russellnumo.nl/_next/static/chunks/pages/_app-5daa2c6d3f81ec3e.js",
+          "https://www.russellnumo.nl/_next/static/chunks/pages/index-ee6ac4df4b8e52ff.js",
+          "https://www.russellnumo.nl/_next/static/W5Q78mmBXn2_b4I84udhm/_buildManifest.js",
+          "https://www.russellnumo.nl/_next/static/W5Q78mmBXn2_b4I84udhm/_ssgManifest.js",
+          "https://www.russellnumo.nl/_vercel/insights/script.js"
+        ],
+        "text": "RUSSELL\nNUMO\nAbout\nProjects\nContact\nFRONTEND DEVELOPER\nFRONTEND DEVELOPER\nFRONTEND DEVELOPER\nFRONTEND DEVELOPER\nUX/UI DESIGNER\nUX/UI DESIGNER\nUX/UI DESIGNER\nUX/UI DESIGNER\nCREATIVE\nCREATIVE\nCREATIVE\nCREATIVE\nCREATIVE\nCREATIVE\n\n BASED IN AMSTERDAM \n\n20:17:15\n\nOPEN TO WORK\n\n(01)\n\nABOUT\n\nI design and develop digital experiences with a focus on craft, motion, and\ninteraction — creating interfaces where every detail is intentional.\n\nBased in Amsterdam, I work at the intersection of creativity and technology. From\nconcept to code, I bring ideas to life with meticulous attention to detail.\n\nFEATURED WORK\n\n[SCROLL TO EXPLORE MORE]\n\n(01)\n\nRESEARCHER & DEVELOPMENT\n\n2026\n\nSTADSARCHIEF\nAMSTERDAM\n\nA look at how archival content can be experienced\nthrough interaction and storytelling, reimagining the\nStadsarchief Amsterdam as a living, engaging digital\nspace.\n\n(02)\n\nDESIGN & DEVELOPMENT\n\n2024\n\nDEPT®\n\nWorked on the Dept Campus website from concept to\nlaunch, building a streamlined and engaging experience\nthat helps young professionals discover and navigate\nopportunities.\n\n\"The web is loud, and most brands just blend into it. I work across design, development, and branding all at once, building digital experiences that feel as sharp as they look. Nothing gets handed off between teams or lost in translation, because I build every layer myself. That's how the identity we create together actually holds up once it's live. If your brand deserves to be seen, let's make sure people can't look away."
+      },
+      "lastScrollY": 6502
+    },
+    "mobile": {
+      "ok": true,
+      "shots": 8,
+      "loadMs": 1019,
+      "info": {
+        "title": "Russell Numo | Creative Frontend Developer",
+        "scrollHeight": 6171,
+        "fonts": [
+          "__humane_c0fc2f",
+          "__neueMontreal_a91d71"
+        ],
+        "colorCount": 11,
+        "colors": [
+          "rgb(26, 32, 44)",
+          "bg:rgb(0, 0, 0)",
+          "rgb(255, 255, 255)",
+          "bg:rgb(56, 161, 105)",
+          "rgba(0, 0, 0, 0.36)",
+          "rgba(0, 0, 0, 0.64)",
+          "rgba(0, 0, 0, 0.48)",
+          "rgba(255, 255, 255, 0.48)",
+          "bg:rgba(255, 255, 255, 0.16)",
+          "rgba(255, 255, 255, 0.36)",
+          "rgba(255, 255, 255, 0.64)"
+        ],
+        "maxFont": 217.6,
+        "libs": {
+          "gsap": false,
+          "lenis": true,
+          "three": false,
+          "scrollTrigger": false
+        },
+        "htmlClass": "__className_c0fc2f __className_a91d71 intro-loading lenis",
+        "links": [
+          "/",
+          "#about",
+          "#projects",
+          "#contact",
+          "/stadsarchief",
+          "/stadsarchief",
+          "/dept",
+          "/dept",
+          "mailto:hello@russellnumo.nl",
+          "tel:+31636096943",
+          "https://github.com/Zephelion",
+          "https://www.linkedin.com/in/russell-numo-a37810231/",
+          "https://www.instagram.com/_numoro/",
+          "https://www.awwwards.com/sites/russell-numo-portfolio"
+        ],
+        "nav": [
+          "RussellNumo",
+          "01About",
+          "02Projects",
+          "03Contact",
+          "GitHub",
+          "LinkedIn",
+          "Instagram"
+        ],
+        "scripts": [
+          "https://www.russellnumo.nl/_next/static/chunks/polyfills-78c92fac7aa8fdd8.js",
+          "https://www.russellnumo.nl/_next/static/chunks/webpack-7e0a04d6d1a844f2.js",
+          "https://www.russellnumo.nl/_next/static/chunks/framework-ecc4130bc7a58a64.js",
+          "https://www.russellnumo.nl/_next/static/chunks/main-2d94ec6e4d65c635.js",
+          "https://www.russellnumo.nl/_next/static/chunks/pages/_app-5daa2c6d3f81ec3e.js",
+          "https://www.russellnumo.nl/_next/static/chunks/pages/index-ee6ac4df4b8e52ff.js",
+          "https://www.russellnumo.nl/_next/static/W5Q78mmBXn2_b4I84udhm/_buildManifest.js",
+          "https://www.russellnumo.nl/_next/static/W5Q78mmBXn2_b4I84udhm/_ssgManifest.js",
+          "https://www.russellnumo.nl/_vercel/insights/script.js"
+        ],
+        "text": "RUSSELL\nNUMO\nMENU\nFRONTEND DEVELOPER\nFRONTEND DEVELOPER\nFRONTEND DEVELOPER\nUX/UI DESIGNER\nUX/UI DESIGNER\nUX/UI DESIGNER\nCREATIVE\nCREATIVE\nCREATIVE\nCREATIVE\n\n BASED IN AMSTERDAM \n\n20:17:34\n\nOPEN TO WORK\n\n(01)\n\nABOUT\n\nI design and develop digital\nexperiences with a focus on\ncraft, motion, and interaction —\ncreating interfaces where every\ndetail is intentional.\n\nBased in Amsterdam, I work at\nthe intersection of creativity and\ntechnology. From concept to\ncode, I bring ideas to life with\nmeticulous attention to detail.\n\nFEATURED WORK\n\n[SCROLL TO EXPLORE MORE]\n\n(01)\n\nRESEARCHER & DEVELOPMENT\n\n2026\n\nSTADSARCHIEF\nAMSTERDAM\n\nA look at how archival content can be experienced through interaction and storytelling, reimagining the Stadsarchief Amsterdam as a living, engaging digital space.\n\nVIEW PROJECT\n→\n\n(02)\n\nDESIGN & DEVELOPMENT\n\n2024\n\nDEPT®\n\nWorked on the Dept Campus website from concept to launch, building a streamlined and engaging experience that helps young professionals discover and navigate opportunities.\n\nVIEW PROJECT\n→\n\n\"The web is loud, and most brands just blend into it. I work across design, development, and branding all at once, building digital experiences that feel as sharp as they look. Nothing gets handed off between teams or lost in translation, because I build every layer myself. That's how the identity we create together actually holds up once it's live. If your brand deserves to be seen, let's make sure people can't look away.\"\n\n(SERVICES)\n\nART DIRECTION ()\n\nVISUA"
+      },
+      "lastScrollY": 5327
+    }
+  }
+}
