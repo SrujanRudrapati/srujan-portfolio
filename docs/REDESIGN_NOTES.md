@@ -422,3 +422,58 @@ Everything that carries text clears 4.5:1 in both themes, including red, which o
 - `DESIGN.md` still documents the v1 tokens (dark-first amber). A one-line note at its top now points here; rewriting it is a separate task.
 - Visual baselines need regenerating (see above).
 - The Lighthouse re-run belongs at the end of Phase 3, after sections are restructured.
+
+---
+
+# Phase 3: hero and navigation
+
+Built on the Phase 2 tokens and primitives. Content is unchanged except for one addition: three hero proof chips in `src/content/portfolio.ts` (`profile.proof`), each restating a fact already on the site.
+
+## Navigation (`src/components/SiteNav.tsx`, client)
+
+- Sticky bar. Transparent-bordered and 80% opaque at the top of the page; after 20px of scroll (or while the mobile menu is open) it gains the 2px ink rule and goes to 95% opaque. `useScrolled` in `src/hooks/use-scrolled.ts` reads `scrollY` through `useSyncExternalStore`, so there is no setState-in-effect and the server render is the unscrolled state.
+- Contents: name (links to `#top`), About, Work, Experience, Skills, Contact, theme toggle, and a secondary Resume button that opens `/resume.pdf` in a new tab (`target="_blank" rel="noopener noreferrer"`). The old nav had no About link; Credentials and Other projects still have no link, as before.
+- Active section. `useActiveSection` in `src/hooks/use-active-section.ts` observes the five sections with a band 30% to 40% down the viewport; the first section in document order that crosses the band is active, and at the very bottom of the page the last one is. The active link gets `aria-current="location"` and a cobalt underline. The same attribute is set on the mobile panel's links.
+- Mobile (under `md`). The bar shows name, theme toggle and a menu button (`aria-expanded`, `aria-controls="mobile-menu"`, label flips between "Open menu" and "Close menu"). The panel is full width, sits under the bar and fills the rest of the viewport. `useMobileMenu` in `src/hooks/use-mobile-menu.ts` locks `html { overflow: hidden }` while open, traps Tab and Shift+Tab inside the header's visible focusables, closes on Escape and returns focus to the button, closes on link click, and closes itself if the viewport grows past 768px.
+- The "Skip to content" link in `page.tsx` remains the first focusable element.
+
+## Hero (`src/components/Hero.tsx`)
+
+Headline (unchanged), the existing sub-line, two buttons ("See my work" to `#work`, "Get in touch" to `#contact`, both smooth-scroll through the global `scroll-behavior`), and three proof chips (`TagList` with the new `size="md"`):
+
+- Surplus AI, in active use at ASU Surplus (from the Surplus AI status and context lines)
+- Two years of data engineering at Celebal (from About)
+- Databricks Certified Data Engineer Professional (from Certifications)
+
+The DevHacks example in the brief is not on the site and was not used. The hero's previous "Download Resume" button and GitHub, LinkedIn and Email links are gone from the hero: Resume lives in the nav, LinkedIn and Email were already in Contact, and GitHub was added to Contact next to LinkedIn so no link left the site.
+
+**Entrance.** Five blocks (`h1`, sub-line, buttons, chips, diagram) carry an `.enter` class and a `--i` index; `globals.css` turns that into a 400ms fade-and-lift starting 70ms apart, so the last block finishes at 680ms. Not defined under `prefers-reduced-motion: reduce`.
+
+**Fit.** On a 390px phone the diagram drops below the text at a 300px max width. Measured on a 390 by 750 viewport: the chips end at 571px, so headline, sub-line, buttons and chips are all above the fold.
+
+## Medallion diagram (`src/components/MedallionDiagram.tsx`)
+
+Rebuilt as a server-rendered inline SVG (replaces `HeroDiagram.tsx`, which is removed; the six boxes and their labels are the same). Colours come from tokens: ink outlines, surface fills, cobalt connectors, cobalt outline on the LLM box.
+
+- **Dots.** Two `<circle>`s drawn before the boxes, so they pass beneath each one. Each follows a CSS `offset-path` through the box centres (`M220 402 H76 V296 H364 V190 H220 V72`, 906 units) on a 5s linear loop, the second delayed by 2.5s. The path overlaps every drawn connector.
+- **Stage lighting.** Each stage's `<rect>` has a 2.5s keyframe animation keyed to the measured arrival point of a dot (bronze at 49%, silver 74.6%, gold 6.4%, serving 37.4%, LLM 92%; source pulses at 0%). On arrival the fill snaps to a 16% cobalt tint of the surface, holds for 8% of the period, and fades back over 14%.
+- **Fallbacks.** The animation is wrapped in `@supports (offset-path: path(...))` and `prefers-reduced-motion: no-preference`. Outside either, the dots are `display: none` and every stage renders in the lit tint, still. Verified in headless Chrome with reduced motion forced.
+- No library; no JavaScript in the diagram.
+
+## Headline and sub-line: options
+
+The brief allowed a tighter headline. The current one is already short and specific, so it stays as the default. Two alternatives, in case you want to compare:
+
+| | Headline | Sub-line |
+|---|---|---|
+| Current (default) | I build the data layer, and the AI on top of it. | Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data. |
+| Option B | The data layer, and the AI on top of it. | Data engineer for teams on Databricks, Azure and AWS, building LLM systems that run on their real data. |
+| Option C | Data platforms first. AI that runs on them. | Data engineer for healthcare, energy, manufacturing and university teams, on Databricks, Azure and AWS. |
+
+Option C's "for whom" list comes from the About and Experience copy. Changing either string is a one-line edit in `src/content/portfolio.ts`.
+
+## Verification
+
+- `tsc`, `eslint` and `next build` clean. No console warnings; no horizontal overflow at 1440 or 390.
+- Playwright (functional and axe, visual baselines still skipped): new tests cover the nav links and new-tab Resume, `aria-current` after scrolling to Experience, the scrolled border, the mobile menu (open, focus trap over 12 Tabs, Escape with focus return, scroll unlock, close on link click), the hero contents and chips, and the phone-fold check.
+- Animation verified in headless Chrome: both dots run `medallion-travel` on the offset path and the gold stage runs `stage-gold`; with reduced motion the dots are hidden, the stages are lit, and the hero entrance animation is `none`.

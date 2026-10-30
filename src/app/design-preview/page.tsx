@@ -355,6 +355,7 @@ function GuidePanel({ theme }: { theme: "light" | "dark" }) {
             <TextLink href="#guide-heading">a text link</TextLink> inside a sentence.
           </p>
           <TagList items={sample.stack} label="Sample stack" />
+          <TagList items={profile.proof} label="Hero proof chips" size="md" />
         </div>
       </GuideBlock>
 

@@ -214,20 +214,32 @@
   }
 }
 
+/* Hero diagram: default (reduced motion, or no offset-path support) is fully
+   lit and still. Fonts are set here so the SVG follows the site family. */
+.medallion {
+  --stage-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+}
+.medallion-label {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-stretch: 112.5%;
+}
+.medallion-text {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+.medallion-stage rect {
+  fill: var(--stage-lit);
+}
+.medallion-dot {
+  display: none;
+}
+
 /* Motion. Only defined when the user has not asked for reduced motion, so the
    reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
-  /* Hero diagram draws once on load. */
-  .draw-line {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: draw-line 450ms var(--ease-out-quart) forwards;
-    animation-delay: var(--d, 0ms);
-  }
-  .draw-appear {
-    opacity: 0;
-    animation: draw-appear 350ms ease-out forwards;
-    animation-delay: var(--d, 0ms);
+  /* Hero entrance: five blocks, 70ms apart, 400ms each, done by 680ms. */
+  .enter {
+    animation: enter 400ms var(--ease-out-quart) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
   }
 
   /* Reveal primitive. The attribute is only ever set by JavaScript, so without
@@ -243,15 +255,95 @@
       opacity 600ms var(--ease-out-quart),
       transform 600ms var(--ease-out-quart);
   }
+
+  /* Medallion diagram. Two dots share one 5s loop, 2.5s apart, so every stage
+     sees an arrival every 2.5s; the stage keyframes run on that 2.5s period.
+     Arrival points were measured along the offset path (906 units long). */
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .medallion-dot {
+      display: block;
+      offset-path: path("M220 402 H76 V296 H364 V190 H220 V72");
+      offset-rotate: 0deg;
+      animation: medallion-travel 5s linear infinite;
+    }
+    .medallion-dot-2 {
+      animation-delay: -2.5s;
+    }
+    .medallion-stage rect {
+      fill: var(--surface);
+      animation-duration: 2.5s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    .medallion-stage[data-stage="source"] rect {
+      animation-name: stage-source;
+    }
+    .medallion-stage[data-stage="bronze"] rect {
+      animation-name: stage-bronze;
+    }
+    .medallion-stage[data-stage="silver"] rect {
+      animation-name: stage-silver;
+    }
+    .medallion-stage[data-stage="gold"] rect {
+      animation-name: stage-gold;
+    }
+    .medallion-stage[data-stage="serving"] rect {
+      animation-name: stage-serving;
+    }
+    .medallion-stage[data-stage="llm"] rect {
+      animation-name: stage-llm;
+    }
+  }
 }
 
-@keyframes draw-line {
-  to {
-    stroke-dashoffset: 0;
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
-}
-@keyframes draw-appear {
   to {
     opacity: 1;
+    transform: none;
   }
 }
+
+@keyframes medallion-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* Each stage: snap to lit when a dot arrives, hold 8%, fade back over 14%. */
+@keyframes stage-source {
+  0%, 6% { fill: var(--stage-lit); }
+  20%, 100% { fill: var(--surface); }
+}
+@keyframes stage-bronze {
+  0%, 48% { fill: var(--surface); }
+  49%, 57% { fill: var(--stage-lit); }
+  71%, 100% { fill: var(--surface); }
+}
+@keyframes stage-silver {
+  0%, 73.6% { fill: var(--surface); }
+  74.6%, 82.6% { fill: var(--stage-lit); }
+  96.6%, 100% { fill: var(--surface); }
+}
+@keyframes stage-gold {
+  0%, 5.4% { fill: var(--surface); }
+  6.4%, 14.4% { fill: var(--stage-lit); }
+  28.4%, 100% { fill: var(--surface); }
+}
+@keyframes stage-serving {
+  0%, 36.4% { fill: var(--surface); }
+  37.4%, 45.4% { fill: var(--stage-lit); }
+  59.4%, 100% { fill: var(--surface); }
+}
+@keyframes stage-llm {
+  0% { fill: var(--stage-lit); }
+  14%, 91% { fill: var(--surface); }
+  92%, 100% { fill: var(--stage-lit); }
+}
+

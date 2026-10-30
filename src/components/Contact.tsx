@@ -1,4 +1,4 @@
-import { ArrowUpRightIcon, EnvelopeSimpleIcon, LinkedinLogoIcon } from "@phosphor-icons/react/dist/ssr";
+import { ArrowUpRightIcon, EnvelopeSimpleIcon, GithubLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import { profile } from "@/content/portfolio";
 import { Container, TextLink } from "./ui";
 
@@ -19,13 +19,22 @@ export function Contact() {
           {profile.email}
         </a>
 
-        <p className="mt-6">
-          <TextLink href={profile.linkedin} external className="min-h-11">
-            <LinkedinLogoIcon aria-hidden="true" size={20} />
-            {profile.linkedinLabel}
-            <ArrowUpRightIcon aria-hidden="true" size={14} weight="bold" />
-          </TextLink>
-        </p>
+        <ul className="mt-6 flex flex-wrap gap-x-8 gap-y-2">
+          <li>
+            <TextLink href={profile.linkedin} external className="min-h-11">
+              <LinkedinLogoIcon aria-hidden="true" size={20} />
+              {profile.linkedinLabel}
+              <ArrowUpRightIcon aria-hidden="true" size={14} weight="bold" />
+            </TextLink>
+          </li>
+          <li>
+            <TextLink href={profile.github} external className="min-h-11">
+              <GithubLogoIcon aria-hidden="true" size={20} />
+              {profile.githubLabel}
+              <ArrowUpRightIcon aria-hidden="true" size={14} weight="bold" />
+            </TextLink>
+          </li>
+        </ul>
       </Container>
     </section>
   );

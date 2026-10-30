@@ -33,11 +33,12 @@ export function Section({
   );
 }
 
-export function TagList({ items, label }: { items: string[]; label: string }) {
+export function TagList({ items, label, size = "sm" }: { items: string[]; label: string; size?: "sm" | "md" }) {
+  const chip = size === "md" ? "px-3 py-2 text-sm leading-none" : "px-2 py-1 text-xs leading-none";
   return (
-    <ul aria-label={label} className="flex flex-wrap gap-1.5">
+    <ul aria-label={label} className={`flex flex-wrap ${size === "md" ? "gap-2" : "gap-1.5"}`}>
       {items.map((item) => (
-        <li key={item} translate="no" className="border border-ink px-2 py-1 text-xs leading-none font-medium text-ink">
+        <li key={item} translate="no" className={`border border-ink font-medium text-ink ${chip}`}>
           {item}
         </li>
       ))}

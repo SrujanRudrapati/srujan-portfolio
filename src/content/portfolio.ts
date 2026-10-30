@@ -14,6 +14,13 @@ export const profile = {
   github: "https://github.com/SrujanRudrapati",
   githubLabel: "github.com/SrujanRudrapati",
   resume: "/resume.pdf",
+  // Hero proof chips. Each one restates a fact that already appears on the
+  // site: the Surplus AI status line, the About paragraph, and Certifications.
+  proof: [
+    "Surplus AI, in active use at ASU Surplus",
+    "Two years of data engineering at Celebal",
+    "Databricks Certified Data Engineer Professional",
+  ],
 };
 
 // Written for the site from facts in the brief (the brief asks for 3-4 sentences but gives no draft).

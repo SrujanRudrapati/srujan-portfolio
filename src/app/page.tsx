@@ -3,7 +3,8 @@ import { Contact, SiteFooter } from "@/components/Contact";
 import { Credentials } from "@/components/Credentials";
 import { Experience } from "@/components/Experience";
 import { FeaturedWork } from "@/components/FeaturedWork";
-import { Hero, SiteHeader } from "@/components/Hero";
+import { Hero } from "@/components/Hero";
+import { SiteHeader } from "@/components/SiteNav";
 import { OtherProjects } from "@/components/OtherProjects";
 import { Skills } from "@/components/Skills";
 
