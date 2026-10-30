@@ -9,7 +9,7 @@ const TYPE_LABEL: Record<string, string> = {
   education: "Degree",
   certification: "Certification",
   skill: "Skill",
-  metric: "Result",
+  metric: "Figure",
   industry: "Industry",
   problem: "Problem solved",
   artifact: "Link",
@@ -24,10 +24,25 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
   const figures = hit.metrics ? hit.metrics.split("; ") : [];
   const links = externalEvidence(hit);
   return (
-    <li id={`evidence-${hit.id}`} className="scroll-mt-4 border-t-[3px] border-ink bg-surface p-4">
+    <li id={`evidence-${hit.id}`} tabIndex={-1} className="scroll-mt-4 border-t-[3px] border-ink bg-surface p-4">
       <p className="text-xs font-medium text-muted">{TYPE_LABEL[hit.type] ?? hit.type}</p>
       <h3 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
-        <a href={anchorFor(hit)} onClick={onNavigate} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+        <a
+          href={anchorFor(hit)}
+          onClick={() => {
+            onNavigate();
+            const target = anchorFor(hit);
+            // Project cards: land focus on the card once the hash handler has scrolled to it. Lens links focus their own heading.
+            if (target.startsWith("#project-"))
+              window.setTimeout(() => {
+                const card = document.getElementById(target.slice(1));
+                if (!card) return;
+                card.tabIndex = -1;
+                card.focus({ preventScroll: true });
+              }, 50);
+          }}
+          className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2"
+        >
           {hit.label}
         </a>
       </h3>

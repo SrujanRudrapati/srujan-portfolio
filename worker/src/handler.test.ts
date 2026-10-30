@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from "vitest";
-import { createHandler, RATE_LIMIT, type CallModel } from "./handler";
+import { createHandler, ModelError, RATE_LIMIT, type CallModel } from "./handler";
 import { NOT_IN_PORTFOLIO, SYSTEM_PROMPT } from "./prompt";
 
 const ORIGIN = "https://srujanrudrapati.github.io";
@@ -73,6 +73,22 @@ describe("ask handler", () => {
     expect((await handle(post({ question: "What reads labels?", nodes }, ORIGIN, "5.6.7.8"))).status).toBe(200);
     t += RATE_LIMIT.windowMs;
     expect((await handle(post({ question: "What reads labels?", nodes }))).status).toBe(200);
+  });
+
+  test("short questions like SQL? reach the model; oversized bodies are rejected before parsing", async () => {
+    const call = model("I used SQL at Celebal [project-surplus-ai].");
+    const handle = createHandler({ callModel: call, allowedOrigin: ORIGIN });
+    expect((await handle(post({ question: "SQL?", nodes }))).status).toBe(200);
+    expect(call).toHaveBeenCalledTimes(1);
+    const big = new Request("https://ask.example/ask", { method: "POST", headers: { origin: ORIGIN, "content-type": "application/json", "content-length": String(64 * 1024) }, body: "{}" });
+    expect((await handle(big)).status).toBe(413);
+  });
+
+  test("upstream failures map to distinct statuses", async () => {
+    const limited = createHandler({ callModel: vi.fn(async () => Promise.reject(new ModelError("upstream rate limit", 429))), allowedOrigin: ORIGIN });
+    expect((await limited(post({ question: "What reads labels?", nodes }))).status).toBe(429);
+    const broken = createHandler({ callModel: vi.fn(async () => Promise.reject(new Error("boom"))), allowedOrigin: ORIGIN });
+    expect((await broken(post({ question: "What reads labels?", nodes }))).status).toBe(502);
   });
 
   test("health and preflight", async () => {

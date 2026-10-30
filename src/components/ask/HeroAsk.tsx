@@ -26,7 +26,7 @@ export function HeroAsk() {
         maxLength={MAX_QUESTION}
         autoComplete="off"
         placeholder="Ask about my work…"
-        className="min-h-11 min-w-0 flex-1 border border-line bg-raised px-3 text-base text-ink placeholder:text-muted focus:border-ink"
+        className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-raised px-3 text-base text-ink placeholder:text-muted"
       />
       <button type="submit" className="inline-flex min-h-11 shrink-0 items-center border-2 border-ink px-4 text-sm font-medium text-ink transition-colors duration-150 hover:bg-ink hover:text-bg">
         Ask

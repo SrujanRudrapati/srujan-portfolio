@@ -2563,7 +2563,7 @@
     {
       "id": "metric-label-lens-tests",
       "type": "metric",
-      "label": "56 + 6 unit and end-to-end tests",
+      "label": "56 + 6 tests: 56 unit, 6 end-to-end",
       "summary": "Label Lens has 56 unit tests and 6 end-to-end tests.",
       "evidence": [
         {
@@ -2577,7 +2577,7 @@
         "testing"
       ],
       "value": "56 + 6",
-      "valueLabel": "unit and end-to-end tests"
+      "valueLabel": "tests: 56 unit, 6 end-to-end"
     },
     {
       "id": "metric-watchtower-agents",

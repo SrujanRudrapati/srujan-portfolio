@@ -34,6 +34,13 @@ describe("parseCitedAnswer", () => {
     expect(parseCitedAnswer("Both ground their output [project-surplus-ai][project-label-lens][project-surplus-ai].", allowed)[0].citations).toEqual(["project-surplus-ai", "project-label-lens"]);
   });
 
+  test("decimals and abbreviations do not split a sentence", () => {
+    expect(parseCitedAnswer("My capstone reached 27.7% WAPE vs. a 38.5% naive baseline [project-surplus-ai]. My GPA is 3.96 [project-label-lens].", allowed)).toEqual([
+      { text: "My capstone reached 27.7% WAPE vs. a 38.5% naive baseline.", citations: ["project-surplus-ai"] },
+      { text: "My GPA is 3.96.", citations: ["project-label-lens"] },
+    ]);
+  });
+
   test("returns nothing for an empty or uncited answer", () => {
     expect(parseCitedAnswer("", allowed)).toEqual([]);
     expect(parseCitedAnswer("Not in my portfolio.", allowed)).toEqual([]);

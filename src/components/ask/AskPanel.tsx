@@ -2,7 +2,7 @@
 
 import { XIcon } from "@phosphor-icons/react";
 import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
-import { ask, loadIndex, type AskResult } from "@/lib/ask/engine";
+import { ASK_ENDPOINT, generateFor, loadIndex, retrieveAnswer, type AskResult } from "@/lib/ask/engine";
 import { ASK_OPEN, ASK_PRELOAD, type AskOpenDetail } from "@/lib/ask/events";
 import { MAX_QUESTION } from "@/lib/ask/limits";
 import { SUGGESTIONS } from "@/lib/ask/suggestions";
@@ -14,14 +14,14 @@ import { EvidenceCard } from "./EvidenceCard";
 // configured, a generated paragraph in which every sentence cites a card.
 // The question is plain text throughout; nothing it contains is executed.
 
-type Status = { state: "idle" } | { state: "busy" } | { state: "done"; result: AskResult } | { state: "error"; message: string };
+type Status = { state: "idle" } | { state: "busy" } | { state: "done"; result: AskResult } | { state: "error" };
 
 function Suggestions({ onPick, label }: { onPick: (q: string) => void; label: string }) {
   return (
     <ul aria-label={label} className="flex flex-wrap gap-2">
       {SUGGESTIONS.map((s) => (
         <li key={s}>
-          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center border border-line px-3 text-left text-sm text-ink transition-colors duration-150 hover:border-ink md:min-h-9">
+          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center border border-line px-3 text-left text-sm text-ink transition-colors duration-150 hover:border-ink">
             {s}
           </button>
         </li>
@@ -39,9 +39,18 @@ function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evi
           <span key={i}>
             {s.text}{" "}
             {s.citations.map((id) => (
-              <a key={id} href={`#evidence-${id}`} className="mr-1 text-xs font-medium text-accent-2 underline decoration-1 underline-offset-2">
+              <button
+                key={id}
+                type="button"
+                onClick={() => {
+                  const card = document.getElementById(`evidence-${id}`);
+                  card?.scrollIntoView({ block: "nearest" });
+                  card?.focus();
+                }}
+                className="mr-1 text-xs font-medium text-accent-2 underline decoration-1 underline-offset-2"
+              >
                 {labels.get(id) ?? id}
-              </a>
+              </button>
             ))}{" "}
           </span>
         ))}
@@ -56,22 +65,36 @@ export function AskPanel() {
   const [question, setQuestion] = useState("");
   const [status, setStatus] = useState<Status>({ state: "idle" });
 
+  const latest = useRef(0);
+  const opener = useRef<HTMLElement | null>(null);
+  const pressedOnBackdrop = useRef(false);
+
   const submit = useCallback(async (q: string) => {
     const text = q.trim().slice(0, MAX_QUESTION);
     if (!text) return;
+    const id = ++latest.current;
     setQuestion(text);
     setStatus({ state: "busy" });
     try {
-      setStatus({ state: "done", result: await ask(text) });
-    } catch (error: unknown) {
-      setStatus({ state: "error", message: error instanceof Error ? error.message : "Unknown error" });
+      const result = await retrieveAnswer(text);
+      if (id !== latest.current) return;
+      setStatus({ state: "done", result });
+      // The generated paragraph follows the cards; a slow or failing proxy never delays them.
+      if (result.kind !== "evidence" || !ASK_ENDPOINT) return;
+      const generated = await generateFor(text, result.hits);
+      if (id === latest.current && generated.length > 0) setStatus({ state: "done", result: { ...result, generated } });
+    } catch {
+      if (id === latest.current) setStatus({ state: "error" });
     }
   }, []);
 
   useEffect(() => {
     const onOpen = (event: Event) => {
       const { question: q } = (event as CustomEvent<AskOpenDetail>).detail ?? {};
-      if (!dialogRef.current?.open) dialogRef.current?.showModal();
+      if (!dialogRef.current?.open) {
+        opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        dialogRef.current?.showModal();
+      }
       inputRef.current?.focus();
       if (q) void submit(q);
     };
@@ -85,6 +108,11 @@ export function AskPanel() {
   }, [submit]);
 
   const close = () => dialogRef.current?.close();
+  // If the opener is gone (the phone menu closed behind the dialog), give focus to the menu button instead of <body>.
+  const onClose = () => {
+    const target = opener.current;
+    if (target && target.offsetParent === null) document.querySelector<HTMLElement>('[aria-controls="mobile-menu"]')?.focus();
+  };
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     void submit(question);
@@ -96,7 +124,13 @@ export function AskPanel() {
     <dialog
       ref={dialogRef}
       aria-labelledby="ask-title"
-      onClick={(e) => e.target === dialogRef.current && close()}
+      onClose={onClose}
+      onPointerDown={(e) => {
+        pressedOnBackdrop.current = e.target === dialogRef.current;
+      }}
+      onClick={(e) => {
+        if (e.target === dialogRef.current && pressedOnBackdrop.current) close();
+      }}
       className="m-0 h-dvh max-h-dvh w-full max-w-none bg-raised p-0 text-ink backdrop:bg-ink/50 md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:border-t-[3px] md:border-ink"
     >
       <div className="flex h-full max-h-[inherit] flex-col">
@@ -122,7 +156,7 @@ export function AskPanel() {
               onChange={(e) => setQuestion(e.target.value)}
               maxLength={MAX_QUESTION}
               autoComplete="off"
-              placeholder="What did he build with Spark?"
+              placeholder="What did you build with Spark?"
               className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-bg px-3 text-base text-ink placeholder:text-muted"
             />
             <button type="submit" className="inline-flex min-h-11 shrink-0 items-center bg-ink px-4 text-sm font-medium text-bg hover:bg-accent-2">
@@ -131,10 +165,21 @@ export function AskPanel() {
           </form>
           <p className="mt-2 text-xs text-muted">Answers come only from the projects, roles and results on this site, with links to each source.</p>
 
-          <div aria-live="polite" aria-busy={status.state === "busy"} className="mt-6 space-y-5">
+          <p className="sr-only" aria-live="polite">
+            {status.state === "busy"
+              ? "Searching"
+              : result?.kind === "evidence"
+                ? result.summary
+                : result?.kind === "none"
+                  ? "I don't have anything on that."
+                  : status.state === "error"
+                    ? "The search could not load."
+                    : ""}
+          </p>
+          <div aria-busy={status.state === "busy"} className="mt-6 space-y-5">
             {status.state === "idle" && <Suggestions onPick={(q) => void submit(q)} label="Suggested questions" />}
             {status.state === "busy" && <p className="text-muted">Searching…</p>}
-            {status.state === "error" && <p className="text-ink">The search could not load ({status.message}). Try again in a moment.</p>}
+            {status.state === "error" && <p className="text-ink">The search could not load. Check your connection and try again.</p>}
             {result?.kind === "none" && (
               <>
                 <p className="text-lg text-ink">I don&apos;t have anything on that. Try one of these:</p>

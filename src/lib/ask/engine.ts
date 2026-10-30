@@ -13,6 +13,8 @@ export type AskResult =
   | { kind: "evidence"; question: string; summary: string; hits: Hit[]; generated: CitedSentence[] }
   | { kind: "none"; question: string };
 
+export { ASK_ENDPOINT } from "./proxy";
+
 let indexPromise: Promise<{ index: AskIndex; retrieve: (typeof import("./retrieve"))["retrieve"] }> | null = null;
 
 export function loadIndex() {
@@ -28,11 +30,22 @@ export function loadIndex() {
   return indexPromise;
 }
 
-export async function ask(question: string): Promise<AskResult> {
+/** Retrieval only: instant, never waits on the network beyond the local index. */
+export async function retrieveAnswer(question: string): Promise<AskResult> {
   const { index, retrieve } = await loadIndex();
   const hits = retrieve(index, question);
   if (hits.length === 0) return { kind: "none", question };
+  return { kind: "evidence", question, summary: summaryLine(hits, question), hits, generated: [] };
+}
+
+/** The optional generated paragraph: only sentences citing the retrieved nodes; empty when the proxy is off or fails. */
+export async function generateFor(question: string, hits: Hit[]): Promise<CitedSentence[]> {
   const proxied = await askProxy(question, hits);
-  const generated = proxied ? parseCitedAnswer(proxied.answer, new Set(hits.map((h) => h.id))) : [];
-  return { kind: "evidence", question, summary: summaryLine(hits), hits, generated };
+  return proxied ? parseCitedAnswer(proxied.answer, new Set(hits.map((h) => h.id))) : [];
+}
+
+/** Both steps, for callers that want one promise (tests). */
+export async function ask(question: string): Promise<AskResult> {
+  const result = await retrieveAnswer(question);
+  return result.kind === "evidence" ? { ...result, generated: await generateFor(question, result.hits) } : result;
 }

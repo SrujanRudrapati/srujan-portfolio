@@ -57,7 +57,7 @@
       "#project-label-lens",
       "https://label-lens-iota.vercel.app"
     ],
-    "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 unit and end-to-end tests",
+    "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 tests: 56 unit, 6 end-to-end",
     "skills": "Next.js, TypeScript, Anthropic Claude API, zod, Vitest, Playwright",
     "text": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
   },
@@ -1822,7 +1822,7 @@
   {
     "id": "metric-label-lens-tests",
     "type": "metric",
-    "label": "56 + 6 unit and end-to-end tests",
+    "label": "56 + 6 tests: 56 unit, 6 end-to-end",
     "summary": "Label Lens has 56 unit tests and 6 end-to-end tests.",
     "tags": [
       "metric",

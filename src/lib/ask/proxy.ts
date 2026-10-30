@@ -6,7 +6,10 @@ import type { Hit } from "./types";
 export const ASK_ENDPOINT = (process.env.NEXT_PUBLIC_ASK_ENDPOINT ?? "").replace(/\/+$/, "");
 const TIMEOUT_MS = 15_000;
 
-export type ProxyNode = Pick<Hit, "id" | "type" | "label" | "summary" | "metrics">;
+export type ProxyNode = Pick<Hit, "id" | "type" | "label" | "summary" | "metrics" | "skills" | "text">;
+
+/** Per-node body text sent to the proxy; the Worker rejects longer fields. */
+const MAX_TEXT = 1_500;
 export type ProxyAnswer = { answer: string; citations: string[] };
 
 let health: Promise<boolean> | null = null;
@@ -27,7 +30,7 @@ function isProxyAnswer(v: unknown): v is ProxyAnswer {
 /** POST /ask with the question and the retrieved nodes only. Resolves null on any failure, so callers fall back to retrieval. */
 export async function askProxy(question: string, hits: Hit[]): Promise<ProxyAnswer | null> {
   if (!ASK_ENDPOINT || !(await proxyHealthy())) return null;
-  const nodes: ProxyNode[] = hits.map(({ id, type, label, summary, metrics }) => ({ id, type, label, summary, metrics }));
+  const nodes: ProxyNode[] = hits.map(({ id, type, label, summary, metrics, skills, text }) => ({ id, type, label, summary, metrics, skills, text: text.slice(0, MAX_TEXT) }));
   try {
     const res = await fetch(`${ASK_ENDPOINT}/ask`, {
       method: "POST",

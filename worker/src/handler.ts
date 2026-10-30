@@ -10,9 +10,20 @@ import { MAX_QUESTION } from "../../src/lib/ask/limits";
 import { leaksSystemPrompt, NOT_IN_PORTFOLIO, SYSTEM_PROMPT, userTurn, type GraphNodeInput } from "./prompt";
 
 export type CallModel = (system: string, user: string) => Promise<{ text: string; refused: boolean }>;
+
+/** Thrown by CallModel for an upstream failure; `status` is what the Worker returns (429 for upstream rate limits, 502 otherwise). */
+export class ModelError extends Error {
+  constructor(
+    message: string,
+    readonly status: 429 | 502,
+  ) {
+    super(message);
+  }
+}
 export type HandlerDeps = { callModel: CallModel; allowedOrigin: string; now?: () => number; log?: (message: string, data?: unknown) => void };
 
 const MAX_NODES = 6;
+const MAX_BODY_BYTES = 32 * 1024;
 const MAX_FIELD = 2_000;
 export const RATE_LIMIT = { requests: 20, windowMs: 60 * 60 * 1000 };
 
@@ -24,9 +35,10 @@ function parseBody(value: unknown): AskBody | string {
   const { question, nodes } = value as { question?: unknown; nodes?: unknown };
   if (!str(question, MAX_QUESTION) || question.trim() === "") return `question must be 1 to ${MAX_QUESTION} characters`;
   if (!Array.isArray(nodes) || nodes.length === 0 || nodes.length > MAX_NODES) return `nodes must be 1 to ${MAX_NODES} entries`;
-  const ok = nodes.every((n) => n && typeof n === "object" && str(n.id, 120) && /^[a-z0-9-]+$/.test(n.id) && str(n.type, 40) && str(n.label, 300) && str(n.summary) && str(n.metrics));
-  if (!ok) return "each node needs id, type, label, summary and metrics strings";
-  return { question, nodes: nodes.map(({ id, type, label, summary, metrics }: GraphNodeInput) => ({ id, type, label, summary, metrics })) };
+  const optional = (v: unknown) => v === undefined || str(v);
+  const ok = nodes.every((n) => n && typeof n === "object" && str(n.id, 120) && /^[a-z0-9-]+$/.test(n.id) && str(n.type, 40) && str(n.label, 300) && str(n.summary) && str(n.metrics) && optional(n.skills) && optional(n.text));
+  if (!ok) return "each node needs id, type, label, summary and metrics strings (skills and text optional)";
+  return { question, nodes: nodes.map(({ id, type, label, summary, metrics, skills, text }: GraphNodeInput) => ({ id, type, label, summary, metrics, skills, text })) };
 }
 
 /** In-memory sliding window per IP. Per isolate, so approximate; a KV namespace would make it global (see DECISIONS). */
@@ -34,6 +46,8 @@ export function createRateLimiter(now: () => number) {
   const hits = new Map<string, number[]>();
   return (ip: string): boolean => {
     const t = now();
+    // Sweep expired windows so the map does not grow with every IP ever seen.
+    for (const [key, times] of hits) if (times.every((x) => t - x >= RATE_LIMIT.windowMs)) hits.delete(key);
     const recent = (hits.get(ip) ?? []).filter((x) => t - x < RATE_LIMIT.windowMs);
     if (recent.length >= RATE_LIMIT.requests) {
       hits.set(ip, recent);
@@ -61,6 +75,7 @@ export function createHandler({ callModel, allowedOrigin, now = Date.now, log = 
     const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
     if (!allow(ip)) return json({ error: "rate limited, try again later" }, 429, origin);
 
+    if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return json({ error: "body too large" }, 413, origin);
     let raw: unknown;
     try {
       raw = await request.json();
@@ -73,15 +88,17 @@ export function createHandler({ callModel, allowedOrigin, now = Date.now, log = 
     const { clean, stripped } = stripInjection(body.question);
     if (stripped) log("stripped instruction-shaped text from a question", { ip, original: body.question.slice(0, MAX_QUESTION) });
     // Nothing real left to ask once the instructions are gone (fragments like "prompt"): refuse without calling the model.
-    const meaningful = clean.split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 3).length;
-    if (meaningful < (stripped ? 2 : 1)) return json({ answer: NOT_IN_PORTFOLIO, citations: [] }, 200, origin);
+    const words = clean.split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+    const enough = stripped ? words.filter((w) => w.length > 3).length >= 2 : words.length > 0;
+    if (!enough) return json({ answer: NOT_IN_PORTFOLIO, citations: [] }, 200, origin);
 
     let result: { text: string; refused: boolean };
     try {
       result = await callModel(SYSTEM_PROMPT, userTurn(clean, body.nodes));
     } catch (error: unknown) {
-      log("model call failed", { message: error instanceof Error ? error.message : String(error) });
-      return json({ error: "generation unavailable" }, 502, origin);
+      const status = error instanceof ModelError ? error.status : 502;
+      log("model call failed", { status, message: error instanceof Error ? error.message : String(error) });
+      return json({ error: status === 429 ? "busy, try again later" : "generation unavailable" }, status, origin);
     }
     if (result.refused) return json({ answer: NOT_IN_PORTFOLIO, citations: [] }, 200, origin);
     if (leaksSystemPrompt(result.text)) {

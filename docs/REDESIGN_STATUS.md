@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phase 7 done).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 and 8 done).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -13,10 +13,53 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 5 — Content updates | done | 7f78b08 | Facts Section 2 applied: Surplus AI metrics and production status, DevHacks × Cubbie and Label Lens featured, RC Car in the grid, featured order per facts, Celebal additions and intern stint, e-commerce, June 2026 start, new email everywhere, hero chip. `withBasePath` + CI env for the resume link, `.nojekyll`. Content dump for proofreading. Verify 4/4, e2e 62 pass, fact-checker run. Checklist below. |
 | 6 — Knowledge graph | done | 6b59b3d | `src/data/graph/` (157 nodes, 143 edges) is the source of truth; `projects.ts` and the experience, skills, certifications and education exports are `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild`; `docs/GRAPH.md`. Site pixel-identical to Phase 5 at 390/1280 light/dark. Client bundle no longer carries the graph. fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 7 — Lenses | done | ec2f00a | Work section with a six-lens switcher (Highlights static, Timeline, Skill map, By problem, By industry, Recruiter from graph.json, lazy code chunk); lens in `#lens=`; Recruiter prints to one page; Experience and Skills shortened to summaries with full text in closed disclosures; Contact and footer reshaped; hero link to the one-pager. Verify 36/36 (390/768/1280, light/dark, six lenses), e2e 99 pass. fe-reviewer, fact-checker and recruiter-eyes findings fixed or ruled. Checklist below. |
-| 8 — Ask Srujan | in progress | | Started 2026-10-30. Skills loaded: claude-api, webapp-testing, portfolio-facts, static-export-check, phase-verify. |
+| 8 — Ask Srujan | done | HASH_PENDING | Ask panel (native dialog) from the nav and a hero prompt box; MiniSearch retrieval in the browser over `search-index.json` (both lazy); template summary plus evidence cards; grounded refusal for misses and injection; optional proxy client behind `NEXT_PUBLIC_ASK_ENDPOINT` (unset: no network calls). Worker scaffold in `worker/` (claude-sonnet-5-5, server-side refusal fallback, CORS, rate limit, 300 chars, injection stripping, leak check), dry-run builds, not deployed (G3 in DECISIONS 6). Vitest 57, e2e 114, verify 6/6. Checklist below. |
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 8 checklist
+
+Closed out 2026-10-30. Skills loaded: claude-api, webapp-testing, portfolio-facts, static-export-check, phase-verify.
+
+- [x] lint 0/0, typecheck clean (site and `worker/`), build passes
+- [x] `npm run verify -- --phase 8 --tablet`: 6 of 6 pass (390/768/1280, light and dark). Evidence: `docs/screenshots/phase-8/verify.md`; Ask panel shots `docs/screenshots/phase-8/ask-{answer,refusal}-{mobile,desktop}-{light,dark}.png` (inspected: answer and refusal, both themes)
+- [x] axe: 0 violations on the page (verify) and inside the open dialog (e2e)
+- Runbook 8.1 retrieval:
+  - [x] `scripts/build-graph.mts` emits `public/search-index.json`: one document per node with id, type, label, summary, tags, evidence urls, linked metric text, plus linked skills and body text so a question about Spark finds the role that used it
+  - [x] MiniSearch over label (boost 3), summary, tags, skills, metrics, text; stop words; prefix and light fuzzy matching; score floor, a one-third coverage floor for 3+ term questions, and a relative floor (15% of the best hit); project and role nodes outrank the skill and metric nodes that point at them
+  - [x] Ask panel reachable from the nav (desktop bar, phone menu) and a hero prompt box ("Ask about my work…"); eight suggested chips, each asserted in Vitest to return evidence
+  - [x] submit returns top 6 nodes: a template summary ("N projects and M roles match; strongest evidence: X (figure)", figure shown only when it shares a word with the question) and evidence cards (type, label linked to the node's place on the page, summary, figures, external evidence)
+  - [x] no match: "I don't have anything on that. Try one of these:" plus the suggestions; no generated text in retrieval mode
+- Runbook 8.2 generation (optional proxy):
+  - [x] `worker/` scaffold: `wrangler.toml`, TypeScript, `POST /ask {question, nodes}` and `GET /health`; Anthropic Messages API through the official `@anthropic-ai/sdk` (claude-api skill), model `claude-sonnet-5-5`, effort low, `fallbacks: "default"` with beta `server-side-fallback-2026-07-01`, `stop_reason === "refusal"` checked first, typed errors most-specific-first, 12 s timeout and one retry
+  - [x] system prompt: answer only from the supplied nodes, cite every sentence `[node-id]`, "That's not in my portfolio." when unsupported, question treated as untrusted data, under 120 words, keep `~`/`about`, no dashes, no solo claims for team work, no titles not in an entry
+  - [x] guardrails: CORS to the site origin, 20 requests per IP per hour (in memory, swept), 300-character questions, 32 KB body cap, instruction-shaped text stripped and logged (shared `src/lib/ask/guard.ts`), replies reusing an eight-word run of the system prompt refused, only cited sentences returned
+  - [x] client: `NEXT_PUBLIC_ASK_ENDPOINT`; health checked once, on the first question (ruling below); evidence cards render at once and the generated paragraph is added above them when it arrives; citations outside the retrieved set dropped; uncited sentences refused; any failure falls back silently
+  - [x] Vitest: citation parser (decimals, abbreviations, out-of-set ids, uncited sentences, markup), guard (attacks flagged, ordinary questions incl. "act as tech lead", "Dan" left alone), retrieval (suggestions, real questions, nonsense, injection, figure relevance), engine in both modes (unset: only the local index is fetched; set: cited sentences only; failing: silent fallback; injection never reaches the proxy), Worker handler (citations, prompt as data, injection, leak, CORS, limits, rate limit, upstream errors). 57 tests
+  - [x] Playwright: retrieval-only with the endpoint unset and zero off-site requests; nav open, Enter submits, suggestions, Escape closes and returns focus; phone menu path returns focus to the menu button; off-topic and injection refusals; evidence link lands on the card; axe on the open dialog
+  - [x] Gate G3: not deployed. `docs/REDESIGN_DECISIONS.md` item 6 has the wrangler commands, the secret name `ANTHROPIC_API_KEY`, and the one-line `NEXT_PUBLIC_ASK_ENDPOINT` env for the Pages build
+- Runbook checklist:
+  - [x] Ask works offline / retrieval-only
+  - [x] no network calls when the endpoint is unset (Vitest and Playwright)
+  - [x] keyboard operable: Enter submits, Escape closes, focus returns (desktop and phone)
+  - [x] answers cite (template summary from graph nodes; generated sentences only with valid citations)
+  - [x] prompt-injection test returns a grounded refusal in both modes (retrieval: no hits, refusal shown; proxy: engine never calls it for an injection, and the Worker strips, refuses empty remainders, and drops uncited or leaking replies)
+  - [x] tests pass: Vitest 57, Playwright 114
+  - [x] Worker builds: `npm run worker:check` (typecheck plus `wrangler deploy --dry-run`, 168 KB gzip)
+- [x] Review agents:
+  - fe-reviewer (WARN, 1 High): decimal splitting in the citation parser fixed; guard false positives fixed; evidence no longer waits for the proxy; stale-answer guard; phone focus return; hero input border 3:1; live region now announces the summary only; Worker client timeout, retries and typed errors; limiter sweeps expired IPs; 32 KB body cap; "SQL?" reaches the model; card links focus the card; citation chips are buttons (no history entries); fixed error copy; backdrop close needs press and release on the backdrop; suggestion chips 44 px at every width. Deferred to Phase 9: the 36 px nav buttons from `md` up (Ask, Resume, theme share one height). Documented, not changed: the Origin check is not authentication (a scripted client can send the header); the per-isolate limiter is approximate (DECISIONS 6 offers KV).
+  - fact-checker (NEEDS FIXES, 4 unsupported, 0 contradicted): summary line no longer pairs a node with an unrelated figure; "Claude API" no longer counts the Flask service; Worker receives skills and body text and its prompt carries the rule-5 guards and a neutral example; placeholder now first person; metric cards say "Figure"; certifications rank below work; Label Lens test figure reads "tests: 56 unit, 6 end-to-end".
+- [x] STATUS row updated, commit `redesign: phase 8 — ask srujan`
+
+### Rulings made in Phase 8
+
+- Model `claude-sonnet-5-5`: the runbook names `claude-sonnet-4-6` "or whatever is current"; the claude-api skill resolves "current Sonnet" to `claude-sonnet-5-5`. Effort `low` for short grounded answers.
+- Dependencies: `minisearch` (site, about 7 KB gzip, lazy chunk) and `vitest` (dev) as CLAUDE.md allows. The Worker is its own package (`worker/package.json`: `@anthropic-ai/sdk`, `wrangler`, `@cloudflare/workers-types`, `typescript`), not a site dependency; its `node_modules`, `dist` and `.wrangler` are git-ignored.
+- `/health` is checked lazily on the first question rather than at page load, so the page makes no proxy request unless someone asks; the runbook says "at load".
+- Suggestion "Fastest result you've shipped?" (a runbook example) replaced by "What cut response time?", which retrieves the Label Lens latency result; the original matched only a stray "shipped".
+- The injection guard lives in `src/lib/ask/guard.ts` and is imported by both the browser and the Worker, so the two modes refuse the same text.
+- The search index gained `skills` and `text`; existing fields unchanged (fact-checker compared all 157 docs).
 
 ## Phase 7 checklist
 

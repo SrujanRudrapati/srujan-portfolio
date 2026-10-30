@@ -8,8 +8,14 @@ const CITATION = /\[([a-z0-9][a-z0-9-]*)\]/g;
 /** Sentence ends: . ! ? followed by optional citations, then whitespace or end. */
 const SENTENCE = /[^.!?]+(?:[.!?]+(?:\s*\[[a-z0-9-]+\])*|$)/g;
 
+// Dots that do not end a sentence (27.7%, 3.96, vs., e.g., i.e.) are shielded
+// with a one-dot leader while splitting, then restored.
+const SHIELD = "\u2024";
+const shield = (s: string) => s.replace(/(\d)\.(?=\d)/g, `$1${SHIELD}`).replace(/\b(vs|e\.g|i\.e|etc|approx|no)\./gi, (m) => m.replace(/\./g, SHIELD));
+const unshield = (s: string) => s.replaceAll(SHIELD, ".");
+
 export function parseCitedAnswer(answer: string, allowed: ReadonlySet<string>): CitedSentence[] {
-  const sentences = answer.replace(/\s+/g, " ").trim().match(SENTENCE) ?? [];
+  const sentences = (shield(answer.replace(/\s+/g, " ").trim()).match(SENTENCE) ?? []).map(unshield);
   return sentences
     .map((raw) => {
       const ids = [...raw.matchAll(CITATION)].map((m) => m[1]);
