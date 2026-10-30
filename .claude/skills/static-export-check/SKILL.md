@@ -33,7 +33,11 @@ npx serve out -l 4321 --no-clipboard         # serve like Pages (no prefix): htt
 NEXT_PUBLIC_BASE_PATH=/srujan-portfolio npm run build && npx serve out -l 4000 --no-clipboard
 #   then open http://localhost:4000/srujan-portfolio/
 npm run verify -- --phase N                  # screenshots, axe, console, overflow (phase-verify skill)
+npm run release:check                        # release gate: CI-parity build, then every required file and link in out/
+npm run release:check -- --no-build          # check the existing out/ only
 ```
+
+`release:check` defaults `NEXT_PUBLIC_BASE_PATH` to `/srujan-portfolio` and rebuilds first. Before that fix it read a stale `out/` and an unset env var, and it falsely reported `resume.pdf` and `favicon.ico` missing. With `--no-build` it refuses an `out/` built under a different prefix and says so. It does not report the files as missing. For an unprefixed check, run `NEXT_PUBLIC_BASE_PATH= npm run release:check`.
 
 ## Checklist before any commit that touches paths, config, or assets
 

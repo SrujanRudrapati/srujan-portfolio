@@ -21,7 +21,7 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 ## Phase 11 progress (stopped at gate G1)
 
 - [x] 1. lint and typecheck clean; production build with `NEXT_PUBLIC_BASE_PATH=/srujan-portfolio` (CI parity); `out/` has `.nojekyll`, `index.html`, `graph.json`, `search-index.json`, `og.png`; every root-relative reference in `index.html` carries the prefix (14 of 14); served at `http://localhost:4000/srujan-portfolio/` and smoke-tested (home 200, 11 `_next` assets 200, no responses at 400 or above, no console errors, Timeline lens loads `graph.json`, Ask loads `search-index.json` and answers "What runs in production?" with Surplus AI).
-- [ ] 1 (part). `resume.pdf` in `out/`: missing; `npm run release:check` fails on it. Waiting on Srujan (DECISIONS 4).
+- [x] 1 (part). `resume.pdf` in `out/`: DECISIONS 4 done. Srujan added `public/resume.pdf` (PDF 1.5, 133 KB), committed in da3bf69; after a CI-parity rebuild `npm run release:check` passes (9 required files, 3 root-relative links resolve).
 - [x] 2. `git tag v1-before-redesign main` (local; pushed with `main` in step 4).
 - [x] 3. STOP: DECISIONS 10 asks for `merge`, after `public/resume.pdf` is committed.
 - [ ] 4 to 6: merge, push, deploy through the existing workflow, live checks, Lighthouse on the live URL, final note. Not started (gate G1).
