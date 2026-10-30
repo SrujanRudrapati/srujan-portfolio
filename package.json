@@ -15,7 +15,9 @@
     "content:dump": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/content-dump.mts",
     "graph": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/build-graph.mts",
     "test:unit": "vitest run",
-    "worker:check": "npm --prefix worker run typecheck && npm --prefix worker run build"
+    "worker:check": "npm --prefix worker run typecheck && npm --prefix worker run build",
+    "lighthouse": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/lighthouse.mts",
+    "axe": "axe http://localhost:4321/ --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa --exit"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
@@ -25,6 +27,7 @@
     "react-dom": "19.2.8"
   },
   "devDependencies": {
+    "@axe-core/cli": "^4.14.0",
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@tailwindcss/postcss": "^4",
@@ -33,6 +36,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "lighthouse": "^12.8.2",
     "serve": "^14.2.6",
     "tailwindcss": "^4",
     "typescript": "^5",

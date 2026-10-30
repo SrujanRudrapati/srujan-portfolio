@@ -34,7 +34,7 @@ export function SiteHeader() {
       className="sticky top-0 z-40 border-b-2 border-transparent bg-bg/80 backdrop-blur-md transition-[background-color,border-color] duration-200 data-scrolled:border-ink data-scrolled:bg-bg/95"
     >
       <Container className="flex h-16 items-center justify-between gap-4">
-        <a href="#top" className="font-display text-base font-bold tracking-tight text-ink font-stretch-expanded">
+        <a href="#top" className="inline-flex min-h-11 items-center font-display text-base font-bold tracking-tight text-ink font-stretch-expanded">
           {profile.name}
         </a>
 
@@ -45,7 +45,7 @@ export function SiteHeader() {
                 <a
                   href={`#${link.id}`}
                   aria-current={active === link.id ? "location" : undefined}
-                  className="text-sm font-medium text-muted underline-offset-[10px] decoration-2 decoration-accent-2 transition-colors duration-150 hover:text-ink aria-[current=location]:text-ink aria-[current=location]:underline"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-muted underline-offset-[10px] decoration-2 decoration-accent-2 transition-colors duration-150 hover:text-ink aria-[current=location]:text-ink aria-[current=location]:underline"
                 >
                   {link.label}
                 </a>
@@ -68,7 +68,7 @@ export function SiteHeader() {
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen(!open)}
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center border-2 border-ink text-ink transition-colors duration-150 hover:bg-ink hover:text-bg md:hidden"
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center border-2 border-ink text-ink transition-colors duration-150 hover:bg-ink hover:text-bg md:hidden"
           >
             {open ? <XIcon aria-hidden="true" size={18} weight="bold" /> : <ListIcon aria-hidden="true" size={18} weight="bold" />}
           </button>

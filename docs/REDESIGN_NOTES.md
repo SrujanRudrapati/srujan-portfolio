@@ -523,3 +523,31 @@ Diagrams: Surplus pipeline (two spec sources into one inventory and an LLM), Sur
 - Recruiter mode: name, headline, subline, current role, status line, the three metrics tagged `headline` in red, featured projects as single lines, the eight most-used skills, contact. A "Print or save as PDF" button opens the print dialog; print CSS keyed on `html[data-lens="recruiter"]` hides everything else and forces light colours. One page on Letter and A4 (checked in e2e with `page.pdf`).
 - Motion: the incoming panel fades in over 200 ms under `prefers-reduced-motion: no-preference` only.
 - Experience and Skills sections shrink to summaries (every role on one line plus the Celebal summary; each skill group with its first six skills and a count of the rest), each with a link into its lens. Contact: status line, large mailto, three icon links (LinkedIn, GitHub, Resume) with visible labels and aria-labels; footer with name, build year, location, "Built with Next.js, deployed on GitHub Pages.", and Back to top.
+
+---
+
+# Phase 9: motion, accessibility, performance, mobile (2026-10-30)
+
+## Lighthouse (mobile preset, `npm run lighthouse`, three runs on `npx serve out`, median)
+
+| | Performance | Accessibility | Best Practices | SEO | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|
+| Phase 0 baseline (v1 site) | 97 | 100 | 100 | 100 | | | |
+| Phase 9 start (after Phase 8) | 96 | 100 | 100 | 100 | 2.71 s | 19 ms | 0 |
+| Phase 9 end | 96 | 100 | 100 | 100 | 2.6 to 2.7 s | 32 ms | 0 |
+
+Targets (Performance 90, Accessibility 90, Best Practices 95, SEO 95) met throughout. Remaining Lighthouse notes are environmental or structural: `uses-long-cache-ttl` (local `serve`; GitHub Pages sets its own headers), render-blocking CSS (one Next stylesheet), DOM size (the full Timeline, Skills and Experience text is server-rendered on purpose, Phase 7 ruling). LCP sits just above 2.5 s under Lighthouse's simulated slow 4G; the hero headline no longer fades in, so it paints with the first frame.
+
+Bundle: client JS 214 KB gzipped before and after (no new runtime code in Phase 9). Lazy chunks: lens views (about 10 KB gz) with `graph.json`, MiniSearch (about 7 KB gz) with `search-index.json`, both on first use; the search index is requested on first focus of the hero prompt box or on the first question. Fonts come from `next/font`, which preloads the Archivo files.
+
+## Accessibility
+
+- axe-core (WCAG 2.0/2.1/2.2 A and AA tags) through `@axe-core/playwright`: 0 violations on the page at 390/768/1280 in light and dark (verify) and per lens and inside the open Ask dialog (e2e). The `@axe-core/cli` dev dependency and `npm run axe` are installed as the runbook asks, but the CLI needs a ChromeDriver; downloading one with `browser-driver-manager` was not permitted in this session, so it was not run (see STATUS).
+- Targets: every control outside running text is at least 44 px tall at 360, 390, 414, 768 and 1024 (asserted in e2e). Header buttons, nav links, filter chips, disclosures, the contact email and card links were raised.
+- Metadata: `lang="en"`, title, description, canonical, Open Graph and Twitter large-image card with `public/og.png` (1200 by 630, rendered by `scripts/og-image.mts` from the site's own Archivo build), `robots.txt` and a one-URL `sitemap.xml`. On a GitHub Pages project site these are served under `/srujan-portfolio/`, where crawlers do not look for `robots.txt`, so the file is inert live (it helps local Lighthouse only); the real guard for `/design-preview` is its own `robots: noindex` meta until Phase 10 removes the route. The sitemap can be submitted in Search Console if wanted.
+
+## Motion
+
+- The hero medallion now animates opacity overlays (`.medallion-lit`) instead of `fill`, and only while on screen and the tab is visible (`AnimateInView`, the same `useInView` the project diagrams use). Reduced motion, no JavaScript, and offscreen all show every stage lit and still. Dots keep `offset-distance` (the documented exception since Phase 3).
+- Card hover shadow is a `before:` layer that fades its opacity; the card itself only translates.
+- One easing family: `--default-transition-timing-function` is the house `--ease-out-quart`, so transitions without their own `ease-` utility (including the card's shadow layer) share the curve.

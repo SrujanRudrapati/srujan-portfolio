@@ -15,10 +15,25 @@ const archivo = Archivo({
 // choice leaves the attribute off and the system preference decides.
 const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
 
+const SITE_URL = "https://srujanrudrapati.github.io/srujan-portfolio/";
+const TITLE = "Srujan Rudrapati | Data Engineer";
+const DESCRIPTION = "Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data.";
+
 export const metadata: Metadata = {
-  title: "Srujan Rudrapati | Data Engineer",
-  description:
-    "Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data.",
+  // Absolute base for social cards: relative image paths resolve under the Pages project URL.
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Srujan Rudrapati",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: "og.png", width: 1200, height: 630, alt: "Srujan Rudrapati: I build the data layer, and the AI on top of it." }],
+  },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: ["og.png"] },
 };
 
 export const viewport: Viewport = {

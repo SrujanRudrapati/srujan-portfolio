@@ -1,7 +1,7 @@
 // Hero visual. Source systems feed bronze, silver and gold layers; gold feeds a
 // serving layer; LLMs and agents sit on top. Two dots travel the connectors on
 // a loop and each stage lights briefly as a dot arrives. All motion is CSS
-// (offset-path on the dots, keyframed fill on the stages; see .medallion-* in
+// (offset-path on the dots, keyframed opacity on lit overlays over the stages; see .medallion-* in
 // globals.css). Under prefers-reduced-motion, or where offset-path is not
 // supported, the dots are hidden and every stage renders lit and still.
 
@@ -35,7 +35,7 @@ export function MedallionDiagram() {
       viewBox="0 0 440 440"
       role="img"
       aria-labelledby="hero-diagram-title hero-diagram-desc"
-      className="medallion h-auto w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[460px]"
+      className="medallion h-auto w-full"
     >
       <title id="hero-diagram-title">Data pipeline from source systems up to LLMs and agents</title>
       <desc id="hero-diagram-desc">
@@ -64,11 +64,15 @@ export function MedallionDiagram() {
 
       {stages.map((s) => (
         <g key={s.id} className="medallion-stage" data-stage={s.id}>
+          <rect className="medallion-base" x={s.x} y={s.y} width={s.w} height={s.h} />
+          {/* Lit overlay: opacity is the only animated property; fully on when nothing animates. */}
+          <rect className="medallion-lit" x={s.x} y={s.y} width={s.w} height={s.h} />
           <rect
             x={s.x}
             y={s.y}
             width={s.w}
             height={s.h}
+            fill="none"
             stroke={s.accent ? "var(--accent-2)" : "var(--text)"}
             strokeWidth={s.accent ? 2 : 1}
           />

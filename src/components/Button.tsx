@@ -21,7 +21,7 @@ const base =
 
 const sizes: Record<Size, string> = {
   md: "h-11 px-5 text-base",
-  sm: "h-9 px-3 text-sm",
+  sm: "h-11 px-3 text-sm",
 };
 
 const variants: Record<Variant, string> = {
@@ -41,7 +41,7 @@ export function Button({
   className = "",
   ...rest
 }: Props) {
-  const sizing = variant === "ghost" ? (size === "sm" ? "h-9 text-sm" : "h-11 text-base") : sizes[size];
+  const sizing = variant === "ghost" ? (size === "sm" ? "h-11 text-sm" : "h-11 text-base") : sizes[size];
   const classes = `${base} ${sizing} ${variants[variant]} ${className}`;
 
   if (href) {

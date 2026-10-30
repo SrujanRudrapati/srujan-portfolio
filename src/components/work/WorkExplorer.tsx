@@ -55,7 +55,7 @@ export function WorkExplorer({ projects }: { projects: Project[] }) {
                   type="button"
                   aria-pressed={pressed}
                   onClick={() => setFilter(f.id)}
-                  className={`inline-flex h-11 items-center border px-4 text-sm font-medium transition-colors duration-150 md:h-9 md:px-3 ${
+                  className={`inline-flex h-11 items-center border px-4 text-sm font-medium transition-colors duration-150 ${
                     pressed ? "border-ink bg-ink text-bg" : "border-line text-ink hover:border-ink"
                   }`}
                 >

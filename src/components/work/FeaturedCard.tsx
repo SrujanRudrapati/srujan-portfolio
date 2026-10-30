@@ -101,14 +101,14 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
                 <ul className="flex flex-wrap gap-x-6 gap-y-2">
                   {links.map((k) => (
                     <li key={k}>
-                      <TextLink href={p.links[k]!} external>
+                      <TextLink href={p.links[k]!} external className="min-h-11">
                         {k === "repo" && p.links.repoLabel ? p.links.repoLabel : linkLabels[k]}
                       </TextLink>
                     </li>
                   ))}
                   {p.links.more?.map((link) => (
                     <li key={link.url}>
-                      <TextLink href={link.url} external>
+                      <TextLink href={link.url} external className="min-h-11">
                         {link.label}
                       </TextLink>
                     </li>
@@ -132,7 +132,7 @@ function FeaturedDetails({ project: p }: { project: Project }) {
   if (!p.details) return null;
   return (
     <details className="group mt-8 border-t border-line pt-4">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-2 font-display text-lg font-bold text-ink font-stretch-semi-expanded [&::-webkit-details-marker]:hidden">
+      <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 py-2 font-display text-lg font-bold text-ink font-stretch-semi-expanded [&::-webkit-details-marker]:hidden">
         {p.details.heading}
         <CaretDownIcon aria-hidden="true" size={20} weight="bold" className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
       </summary>

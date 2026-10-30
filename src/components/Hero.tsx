@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { profile } from "@/content/portfolio";
 import { HeroAsk } from "./ask/HeroAsk";
 import { Button } from "./Button";
+import { AnimateInView } from "./AnimateInView";
 import { MedallionDiagram } from "./MedallionDiagram";
 import { Container, TagList } from "./ui";
 
@@ -15,7 +16,8 @@ export function Hero() {
     <section id="top" aria-labelledby="hero-heading">
       <Container className="grid grid-cols-1 gap-10 pt-10 pb-16 md:pt-20 md:pb-24 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="lg:col-span-7">
-          <h1 id="hero-heading" className="enter text-4xl text-ink" style={enter(0)}>
+          {/* No entrance fade on the headline: it is the largest paint, and fading it in delays LCP. */}
+          <h1 id="hero-heading" className="text-4xl text-ink">
             {profile.headline}
           </h1>
           <p className="enter mt-5 max-w-[40ch] text-xl text-ink" style={enter(1)}>
@@ -44,7 +46,9 @@ export function Hero() {
         </div>
 
         <div className="enter flex justify-center lg:col-span-5 lg:justify-end" style={enter(4)}>
-          <MedallionDiagram />
+          <AnimateInView className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[460px]">
+            <MedallionDiagram />
+          </AnimateInView>
         </div>
       </Container>
     </section>

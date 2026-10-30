@@ -115,6 +115,8 @@
   --shadow-lift: 0 10px 24px -14px rgb(0 0 0 / 0.35);
 
   --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  /* One easing family: every transition without its own ease- utility uses the house curve. */
+  --default-transition-timing-function: var(--ease-out-quart);
 }
 
 @layer base {
@@ -226,7 +228,10 @@
 .medallion-text {
   font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
-.medallion-stage rect {
+.medallion-base {
+  fill: var(--surface);
+}
+.medallion-lit {
   fill: var(--stage-lit);
 }
 .medallion-dot {
@@ -296,37 +301,37 @@
      sees an arrival every 2.5s; the stage keyframes run on that 2.5s period.
      Arrival points were measured along the offset path (906 units long). */
   @supports (offset-path: path("M0 0 L1 1")) {
-    .medallion-dot {
+    [data-animate="on"] > .medallion .medallion-dot {
       display: block;
       offset-path: path("M220 402 H76 V296 H364 V190 H220 V72");
       offset-rotate: 0deg;
       animation: medallion-travel 5s linear infinite;
     }
-    .medallion-dot-2 {
+    [data-animate="on"] > .medallion .medallion-dot-2 {
       animation-delay: -2.5s;
     }
-    .medallion-stage rect {
-      fill: var(--surface);
+    [data-animate="on"] > .medallion .medallion-lit {
+      opacity: 0;
       animation-duration: 2.5s;
       animation-timing-function: linear;
       animation-iteration-count: infinite;
     }
-    .medallion-stage[data-stage="source"] rect {
+    [data-animate="on"] > .medallion [data-stage="source"] .medallion-lit {
       animation-name: stage-source;
     }
-    .medallion-stage[data-stage="bronze"] rect {
+    [data-animate="on"] > .medallion [data-stage="bronze"] .medallion-lit {
       animation-name: stage-bronze;
     }
-    .medallion-stage[data-stage="silver"] rect {
+    [data-animate="on"] > .medallion [data-stage="silver"] .medallion-lit {
       animation-name: stage-silver;
     }
-    .medallion-stage[data-stage="gold"] rect {
+    [data-animate="on"] > .medallion [data-stage="gold"] .medallion-lit {
       animation-name: stage-gold;
     }
-    .medallion-stage[data-stage="serving"] rect {
+    [data-animate="on"] > .medallion [data-stage="serving"] .medallion-lit {
       animation-name: stage-serving;
     }
-    .medallion-stage[data-stage="llm"] rect {
+    [data-animate="on"] > .medallion [data-stage="llm"] .medallion-lit {
       animation-name: stage-llm;
     }
   }
@@ -379,33 +384,33 @@
 
 /* Each stage: snap to lit when a dot arrives, hold 8%, fade back over 14%. */
 @keyframes stage-source {
-  0%, 6% { fill: var(--stage-lit); }
-  20%, 100% { fill: var(--surface); }
+  0%, 6% { opacity: 1; }
+  20%, 100% { opacity: 0; }
 }
 @keyframes stage-bronze {
-  0%, 48% { fill: var(--surface); }
-  49%, 57% { fill: var(--stage-lit); }
-  71%, 100% { fill: var(--surface); }
+  0%, 48% { opacity: 0; }
+  49%, 57% { opacity: 1; }
+  71%, 100% { opacity: 0; }
 }
 @keyframes stage-silver {
-  0%, 73.6% { fill: var(--surface); }
-  74.6%, 82.6% { fill: var(--stage-lit); }
-  96.6%, 100% { fill: var(--surface); }
+  0%, 73.6% { opacity: 0; }
+  74.6%, 82.6% { opacity: 1; }
+  96.6%, 100% { opacity: 0; }
 }
 @keyframes stage-gold {
-  0%, 5.4% { fill: var(--surface); }
-  6.4%, 14.4% { fill: var(--stage-lit); }
-  28.4%, 100% { fill: var(--surface); }
+  0%, 5.4% { opacity: 0; }
+  6.4%, 14.4% { opacity: 1; }
+  28.4%, 100% { opacity: 0; }
 }
 @keyframes stage-serving {
-  0%, 36.4% { fill: var(--surface); }
-  37.4%, 45.4% { fill: var(--stage-lit); }
-  59.4%, 100% { fill: var(--surface); }
+  0%, 36.4% { opacity: 0; }
+  37.4%, 45.4% { opacity: 1; }
+  59.4%, 100% { opacity: 0; }
 }
 @keyframes stage-llm {
-  0% { fill: var(--stage-lit); }
-  14%, 91% { fill: var(--surface); }
-  92%, 100% { fill: var(--stage-lit); }
+  0% { opacity: 1; }
+  14%, 91% { opacity: 0; }
+  92%, 100% { opacity: 1; }
 }
 
 

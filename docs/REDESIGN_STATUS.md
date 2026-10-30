@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 and 8 done).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7, 8 and 9 done).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -14,9 +14,49 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 6 — Knowledge graph | done | 6b59b3d | `src/data/graph/` (157 nodes, 143 edges) is the source of truth; `projects.ts` and the experience, skills, certifications and education exports are `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild`; `docs/GRAPH.md`. Site pixel-identical to Phase 5 at 390/1280 light/dark. Client bundle no longer carries the graph. fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 7 — Lenses | done | ec2f00a | Work section with a six-lens switcher (Highlights static, Timeline, Skill map, By problem, By industry, Recruiter from graph.json, lazy code chunk); lens in `#lens=`; Recruiter prints to one page; Experience and Skills shortened to summaries with full text in closed disclosures; Contact and footer reshaped; hero link to the one-pager. Verify 36/36 (390/768/1280, light/dark, six lenses), e2e 99 pass. fe-reviewer, fact-checker and recruiter-eyes findings fixed or ruled. Checklist below. |
 | 8 — Ask Srujan | done | db06808 | Ask panel (native dialog) from the nav and a hero prompt box; MiniSearch retrieval in the browser over `search-index.json` (both lazy); template summary plus evidence cards; grounded refusal for misses and injection; optional proxy client behind `NEXT_PUBLIC_ASK_ENDPOINT` (unset: no network calls). Worker scaffold in `worker/` (claude-sonnet-5-5, server-side refusal fallback, CORS, rate limit, 300 chars, injection stripping, leak check), dry-run builds, not deployed (G3 in DECISIONS 6). Vitest 57, e2e 114, verify 6/6. Checklist below. |
-| 9 — Motion, a11y, perf, mobile | todo | | Next up. Load frontend-design, webapp-testing, static-export-check, phase-verify. Carried in: nav buttons 36 px from md (Ask, Resume, theme); long Surplus card on phones; medallion on the phone fold; hero medallion stage lighting could move to the opacity overlay the flow diagrams use; `@axe-core/cli` and `lighthouse` dev deps per the runbook. |
+| 9 — Motion, a11y, perf, mobile | done | HASH_PENDING | Lighthouse mobile median 96/100/100/100 (targets 90/90/95/95), CLS 0; axe 0 via @axe-core/playwright (CLI blocked, see checklist); 44 px targets and no overflow at 360/390/414/768/1024 (e2e); touch flows; medallion lighting on opacity overlays, paused offscreen and in hidden tabs; one easing family; OG image, Open Graph and Twitter cards, canonical. Verify 12/12, e2e 142, Vitest 57. Checklist below. |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 9 checklist
+
+Closed out 2026-10-30. Skills loaded: frontend-design, webapp-testing, static-export-check, phase-verify. Measurements and changes: `docs/REDESIGN_NOTES.md`, "Phase 9" section.
+
+- [x] lint 0/0, typecheck clean, build passes
+- [x] `npm run verify -- --phase 9 --tablet --path / --path "/#lens=recruiter"`: 12 of 12 pass. Evidence: `docs/screenshots/phase-9/verify.md`; first screens inspected at 390 dark and 1280 light
+- Motion:
+  - [x] only transform and opacity animate (plus colours on hover and the header's scroll colour, which design-direction allows; dots keep the documented `offset-distance` exception). The medallion's stage lighting moved from animated `fill` to opacity overlays; the card shadow is a `before:` layer that fades opacity
+  - [x] hover 150 to 200 ms; reveals 600 ms; hero entrance 400 ms; lens fade 200 ms
+  - [x] one easing family: `--default-transition-timing-function: var(--ease-out-quart)`
+  - [x] reveals fire once (Reveal disconnects its observer after the first intersection)
+  - [x] nothing moves under reduced motion (e2e: medallion lit and still; diagrams static; no lens fade)
+  - [x] diagram loops pause offscreen and on `visibilitychange` (medallion via `AnimateInView`, project diagrams via `useInView`; e2e for scroll-away and hidden tab)
+  - [x] no layout shift from Reveal (transform and opacity only; Lighthouse CLS 0)
+- Accessibility:
+  - [~] `npx @axe-core/cli` not run: it needs a ChromeDriver, and downloading one with `browser-driver-manager` was refused by the session's permission check (code from an external package). The dev dependency and `npm run axe` are in place; run `npx browser-driver-manager install chrome` once, then `npm run axe` against a served build. The same axe-core engine at WCAG 2.2 AA reports 0 violations through `@axe-core/playwright` in verify (every width and theme) and e2e (every lens, the Ask dialog)
+  - [x] keyboard operability with visible focus (focus ring on `:focus-visible`; card focus; dialog and menu focus tests)
+  - [x] title and desc on every SVG; decorative icons and dots `aria-hidden`
+  - [x] AA contrast both themes (no new colour pairs; hero input border raised to ink in Phase 8)
+  - [x] links distinguishable beyond colour (underlined)
+  - [x] `lang`, `<title>`, meta description, canonical, Open Graph and Twitter cards; `public/og.png` 1200 by 630 in the Spec sheet style (`scripts/og-image.mts`, figure read from the graph)
+- Performance (Lighthouse mobile, three runs, median; before and after in NOTES):
+  - [x] Performance 96 (target 90), Accessibility 100 (90), Best Practices 100 (95), SEO 100 (95)
+  - [x] below-fold diagrams: SVG is static server HTML; animation code runs only in view; lens views and MiniSearch are lazy chunks; the search index loads on first focus of the prompt box
+  - [x] fonts preloaded (`next/font`)
+  - [x] bundle sizes recorded: client JS 214 KB gz before and after
+- Mobile:
+  - [x] 360/390/414/768/1024: no horizontal scroll and every control outside running text at least 44 px tall (e2e at all five widths)
+  - [x] body text at least 16 px (About copy 20 px at 360)
+  - [x] theme toggle, menu, lens switcher and Ask work by tap (Pixel 7 touch project)
+- [x] fe-reviewer: APPROVE (no Critical or High). Fixed: one easing family; e2e covers all five widths and the hidden-tab pause; OG figure read from the graph, one red figure; ghost small buttons 44 px; stale comment; Phase 9 tests moved to `e2e/phase9.spec.ts`. Documented: `robots.txt` is inert on a Pages project site (noindex meta guards `/design-preview`). Accepted: on a slow phone the medallion dims once when animation starts after hydration.
+- [x] STATUS row updated, commit `redesign: phase 9 — motion, accessibility, performance, mobile`
+
+### Rulings made in Phase 9
+
+- The hero headline no longer uses the entrance fade (it is the largest paint; fading it delays LCP). The subhead, buttons, chips and diagram keep the staggered entrance.
+- Header controls (Resume, Ask, theme, menu), nav links, filter chips, disclosures and card links are 44 px tall at every width rather than only on touch devices, so tablets in desktop layout pass too.
+- LCP stays around 2.6 to 2.7 s under Lighthouse's simulated slow 4G; it is not a runbook target and Performance is 96.
+- `lighthouse` and `@axe-core/cli` added as dev dependencies (runbook rule 8); `npm run lighthouse` prints the three-run median.
 
 ## Phase 8 checklist
 
