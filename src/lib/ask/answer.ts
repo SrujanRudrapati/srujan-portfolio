@@ -10,7 +10,7 @@ const NOUN: Record<string, [string, string]> = {
   education: ["degree", "degrees"],
   certification: ["certification", "certifications"],
   skill: ["skill", "skills"],
-  metric: ["result", "results"],
+  metric: ["figure", "figures"],
   industry: ["industry", "industries"],
   problem: ["problem", "problems"],
   artifact: ["link", "links"],
