@@ -8,6 +8,9 @@ export const profile = {
     "Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data.",
   location: "Phoenix, Arizona",
   status: "Graduating December 2026, available early 2027",
+  // Hero status line. Same facts as the About paragraph and `status`, so a
+  // recruiter sees "where he is now and when he is free" on the first screen.
+  now: "M.S. student at Arizona State University. Graduating December 2026, available early 2027.",
   email: "srujanrudrapati07@gmail.com",
   linkedin: "https://www.linkedin.com/in/srujan-rudrapati",
   linkedinLabel: "linkedin.com/in/srujan-rudrapati",

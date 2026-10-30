@@ -13,7 +13,7 @@ export function Contact() {
 
         <a
           href={`mailto:${profile.email}`}
-          className="mt-10 inline-flex max-w-full items-center gap-3 font-display text-2xl font-bold tracking-tight break-all text-ink transition-colors duration-150 font-stretch-expanded hover:text-accent-2 sm:text-3xl"
+          className="mt-10 inline-flex max-w-full items-center gap-3 font-display text-xl font-bold tracking-tight break-all text-ink transition-colors duration-150 font-stretch-expanded hover:text-accent-2 sm:text-3xl"
         >
           <EnvelopeSimpleIcon aria-hidden="true" className="hidden shrink-0 text-accent-2 sm:block" size={32} />
           {profile.email}

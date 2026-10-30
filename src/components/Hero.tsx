@@ -20,6 +20,9 @@ export function Hero() {
           <p className="enter mt-5 max-w-[40ch] text-xl text-ink" style={enter(1)}>
             {profile.subline}
           </p>
+          <p className="enter mt-4 max-w-[48ch] text-base text-muted tabular-nums" style={enter(1)}>
+            {profile.now}
+          </p>
 
           <div className="enter mt-8 flex flex-wrap gap-3" style={enter(2)}>
             <Button href="#work">See my work</Button>
@@ -29,7 +32,7 @@ export function Hero() {
           </div>
 
           <div className="enter mt-8" style={enter(3)}>
-            <TagList items={profile.proof} label="Highlights" size="md" />
+            <TagList items={profile.proof} label="Highlights" size="md" tone="quiet" />
           </div>
         </div>
 

@@ -33,12 +33,24 @@ export function Section({
   );
 }
 
-export function TagList({ items, label, size = "sm" }: { items: string[]; label: string; size?: "sm" | "md" }) {
+export function TagList({
+  items,
+  label,
+  size = "sm",
+  tone = "ink",
+}: {
+  items: string[];
+  label: string;
+  size?: "sm" | "md";
+  /** "ink" is an outlined tag; "quiet" is a filled surface with a hairline, for rows that sit next to buttons. */
+  tone?: "ink" | "quiet";
+}) {
   const chip = size === "md" ? "px-3 py-2 text-sm leading-none" : "px-2 py-1 text-xs leading-none";
+  const look = tone === "quiet" ? "border border-line bg-surface" : "border border-ink";
   return (
     <ul aria-label={label} className={`flex flex-wrap ${size === "md" ? "gap-2" : "gap-1.5"}`}>
       {items.map((item) => (
-        <li key={item} translate="no" className={`border border-ink font-medium text-ink ${chip}`}>
+        <li key={item} translate="no" className={`${look} font-medium text-ink ${chip}`}>
           {item}
         </li>
       ))}

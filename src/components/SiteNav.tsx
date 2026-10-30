@@ -50,12 +50,12 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
+          <Button variant="secondary" size="sm" href={profile.resume} external>
+            Resume
+          </Button>
           <span className="hidden md:inline-flex">
-            <Button variant="secondary" size="sm" href={profile.resume} external>
-              Resume
-            </Button>
+            <ThemeToggle />
           </span>
-          <ThemeToggle />
           <button
             type="button"
             ref={buttonRef}
@@ -90,10 +90,9 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <div className="mt-8">
-            <Button variant="secondary" href={profile.resume} external>
-              Resume
-            </Button>
+          <div className="mt-8 flex items-center justify-between gap-4 border-t border-line pt-6">
+            <span className="text-sm font-medium text-ink">Color theme</span>
+            <ThemeToggle />
           </div>
         </Container>
       </div>
