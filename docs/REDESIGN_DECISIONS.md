@@ -4,6 +4,14 @@ The only place Claude Code asks Srujan anything (runbook rule 7). Each question 
 
 ## Open
 
+11. **Gate G4: pick a concept for v3** (v3 Phase V1, BLOCKS Phase V2 onward). Three scrolling prototypes are built with real facts: open `/lab/a`, `/lab/b` and `/lab/c` on the dev server (`npm run dev`, then http://localhost:3000/lab/a), or look at the screenshots and scroll videos in `docs/v3/concepts/`. Write-ups, palettes, fonts and risks are in `docs/v3/CONCEPTS.md`.
+
+    - **A. The Pipeline**: scrolling runs one record down a rail through ingest, transform, serve, query; the record changes from bronze to silver to gold to answer. Calm, engineered.
+    - **B. The Notebook**: cells execute as you reach them (`In [*]` then `In [n]`) and render their output. Playful, nerdy.
+    - **C. The Spec Sheet**: a datasheet for a person; huge condensed type, rules that draw, `fig. 01` figures. Most striking, closest to v2.
+
+    Pick a concept: A, B, C, or a mix (for example: A's structure with C's typography). **Recommended default: A's structure with C's typography**, because the Pipeline is the only concept that belongs to a data engineer and gives scrolling a meaning, and C's oversized condensed Archivo and black and white neutrals make it striking instead of merely clean. One accent (cobalt) for the data path and figures; C's red dropped. Reply with a letter or a mix, plus any tweaks. Nothing after Phase V1 starts until you answer.
+
 Nothing below blocks a phase; each has a default already applied. Answer whenever convenient.
 
 1. **Label Lens has no date in the facts** (Phase 5). Default applied: the card shows no date (empty beats invented). If you want one, reply with the month and year.

@@ -1,0 +1,442 @@
+/* Concept A, The Pipeline. Two neutrals and one accent; the medallion tints live only
+   inside the rail packet and the hero diagram, as in v2. */
+.root {
+  --bg: #f1f2ee;
+  --ink: #0f1318;
+  --accent: #1d4ed8;
+  --bronze: #9a5f35;
+  --silver: #7c838b;
+  --gold: #9c7a1c;
+  --muted: color-mix(in srgb, var(--ink) 66%, var(--bg));
+  --hair: color-mix(in srgb, var(--ink) 16%, var(--bg));
+  --rail-x: 20px;
+  --pad-l: 48px;
+  --pad-r: 20px;
+
+  position: relative;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--a-display), system-ui, sans-serif;
+  overflow-x: clip;
+}
+:global(html[data-theme="dark"]) .root {
+  --bg: #0d1014;
+  --ink: #e4e7e2;
+  --accent: #7c9bff;
+  --bronze: #d08b57;
+  --silver: #b5bcc3;
+  --gold: #e0b84a;
+}
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme="light"])) .root {
+    --bg: #0d1014;
+    --ink: #e4e7e2;
+    --accent: #7c9bff;
+    --bronze: #d08b57;
+    --silver: #b5bcc3;
+    --gold: #e0b84a;
+  }
+}
+@media (min-width: 768px) {
+  .packetLabel {
+    display: inline;
+  }
+  .root {
+    --rail-x: 56px;
+    --pad-l: 128px;
+    --pad-r: 56px;
+  }
+}
+
+/* The v2 base layer styles headings in expanded Archivo; prototypes use their own faces.
+   :where keeps this at class specificity so the heading classes below still win. */
+.root :where(h1, h2, h3) {
+  font-family: inherit;
+  font-stretch: normal;
+  font-weight: inherit;
+}
+
+.root a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.root a:hover {
+  color: var(--accent);
+}
+.root a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* The rail: one data path down the whole page. */
+.rail {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+.track,
+.fill {
+  position: absolute;
+  inset: 0;
+}
+.track {
+  background: var(--hair);
+}
+.fill {
+  background: var(--accent);
+  transform-origin: top;
+  transform: scaleY(1);
+  opacity: 0;
+}
+.root[data-motion="on"] .fill {
+  opacity: 1;
+}
+.packet {
+  position: absolute;
+  top: 0;
+  left: -6px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  will-change: transform;
+}
+.root[data-motion="on"] .packet {
+  display: flex;
+}
+.dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--bronze);
+  box-shadow: 0 0 0 4px var(--bg);
+  transition: background-color 250ms;
+}
+.packet[data-state="cleaned"] .dot {
+  background: var(--silver);
+}
+.packet[data-state="modeled"] .dot {
+  background: var(--gold);
+}
+.packet[data-state="answer"] .dot {
+  background: var(--accent);
+}
+.packetLabel {
+  display: none;
+  font-family: var(--a-mono), monospace;
+  font-size: 12px;
+  color: var(--muted);
+  background: var(--bg);
+  padding: 0 4px;
+}
+
+/* Sections sit to the right of the rail. */
+.section {
+  position: relative;
+  padding: 96px var(--pad-r) 96px var(--pad-l);
+  max-width: 1440px;
+}
+.stage {
+  position: relative;
+  margin: 0 0 24px;
+  font-family: var(--a-mono), monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+.node {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--rail-x) - var(--pad-l) - 4px);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--ink);
+  background: var(--bg);
+  transform: translateY(-50%);
+  transition: background-color 250ms, border-color 250ms;
+}
+.lit,
+.root:not([data-motion="on"]) .node {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Ingest: the hero. */
+.hero {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 48px;
+}
+.name {
+  margin: 0;
+  font-size: clamp(3.25rem, 11vw, 10rem);
+  font-weight: 600;
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+}
+.line {
+  display: block;
+}
+.headline {
+  margin: 28px 0 0;
+  max-width: 22ch;
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.now {
+  margin: 16px 0 0;
+  max-width: 52ch;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.medallion {
+  margin: 40px 0 0;
+  max-width: 760px;
+}
+.medallion svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.edge {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.tile {
+  fill: var(--bg);
+  stroke-width: 2;
+}
+.tier0 .tile {
+  stroke: var(--bronze);
+}
+.tier1 .tile {
+  stroke: var(--silver);
+}
+.tier2 .tile {
+  stroke: var(--gold);
+}
+.tier3 .tile {
+  stroke: var(--accent);
+  fill: var(--accent);
+}
+.tierText {
+  font-family: var(--a-display), sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  fill: var(--ink);
+}
+.tier3 .tierText {
+  fill: var(--bg);
+}
+.subText {
+  font-family: var(--a-mono), monospace;
+  font-size: 18px;
+  fill: var(--muted);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 36px 0 0;
+  font-size: 1rem;
+}
+.links a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.cue {
+  margin: 48px 0 0;
+  font-family: var(--a-mono), monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Transform: the reel. Static layout first (phones swipe, desktop grid);
+   with motion on, desktop turns it into a pinned sideways track. */
+.reel {
+  position: relative;
+  padding: 96px 0 96px var(--pad-l);
+  overflow: hidden;
+}
+.reelHead {
+  padding-right: var(--pad-r);
+}
+.h2 {
+  margin: 0 0 48px;
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.reelTrack {
+  list-style: none;
+  margin: 0;
+  padding: 0 var(--pad-r) 8px 0;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.panel {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+  border-top: 2px solid var(--ink);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+@media (min-width: 768px) {
+  .reelTrack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 64px 48px;
+    overflow: visible;
+  }
+  .root[data-motion="on"] .reel {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .root[data-motion="on"] .reelTrack {
+    display: flex;
+    gap: 6vw;
+    overflow: visible;
+    width: max-content;
+    will-change: transform;
+  }
+  .root[data-motion="on"] .panel {
+    flex: 0 0 min(42vw, 620px);
+  }
+}
+.job {
+  margin: 0;
+  font-family: var(--a-mono), monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+.panelTitle {
+  margin: 12px 0 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.panelFigure {
+  margin: 28px 0 0;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.panelFigureLabel {
+  margin: 12px 0 0;
+  max-width: 34ch;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.panelLine {
+  margin: 20px 0 0;
+  max-width: 44ch;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.open {
+  margin-top: 24px;
+  font-family: var(--a-mono), monospace;
+  font-size: 13px;
+}
+
+/* Serve: proof. */
+.proof {
+  margin: 0;
+  max-width: 1100px;
+}
+.proofRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 24px 0;
+  border-top: 1px solid var(--hair);
+}
+@media (min-width: 768px) {
+  .proofRow {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 48px;
+    align-items: baseline;
+  }
+}
+.proofValue {
+  font-size: clamp(2.75rem, 6vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.proofRow dd {
+  margin: 0;
+}
+.proofLabel {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+.proofSummary {
+  display: block;
+  margin-top: 6px;
+  max-width: 56ch;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Query: Ask and contact. */
+.ask {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 640px;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 1px solid var(--ink);
+  font-size: 1.125rem;
+}
+.prompt {
+  font-family: var(--a-mono), monospace;
+  color: var(--accent);
+}
+.askText {
+  flex: 1;
+  color: var(--muted);
+}
+.kbd {
+  font-family: var(--a-mono), monospace;
+  font-size: 12px;
+  border: 1px solid var(--hair);
+  padding: 2px 6px;
+}

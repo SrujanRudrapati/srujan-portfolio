@@ -58,7 +58,6 @@ for (const [name, url] of SITES) {
         await page.mouse.move(w / 2, h / 2);
         // wheel so smooth-scroll libraries respond
         for (let k = 0; k < 6; k++) { await page.mouse.wheel(0, h / 6); await page.waitForTimeout(80); }
-        if (mobile) await page.evaluate(hh => window.scrollBy(0, 0), h);
         await page.waitForTimeout(900);
         await page.screenshot({ path: `${dir}/${String(i + 1).padStart(2, '0')}-step${i}.png` });
         r.shots++;
