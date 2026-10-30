@@ -1,9 +1,36 @@
 ---
 name: design-direction
-description: The chosen visual direction for the portfolio redesign ("Spec sheet"): palette hex values for light and dark, Archivo type rules, spacing scale, radii, motion rules, status vocabulary, and the explicit avoid list. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or Tailwind class on the portfolio site, and whenever tokens in globals.css change (then update this file too).
+description: The chosen visual direction for the portfolio redesign. v3 ("Pipeline" structure, Spec-sheet typography, one blue accent, realistic 3D layer) supersedes v2 ("Spec sheet") from Phase V2 on. Covers palette hex values for light and dark, Archivo and Martian Mono type rules, 3D material language, spacing scale, radii, motion rules, status vocabulary, and the explicit avoid list. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or Tailwind class on the portfolio site, and whenever tokens in globals.css change (then update this file too).
 ---
 
-# Design direction: Spec sheet
+# v3 direction: the Pipeline, set in Spec-sheet type (G4, 2026-10-30)
+
+Srujan's pick (DECISIONS 11): "A's structure with C's typography, blue accent." One concept only; `/lab/b` and `/lab/c` are removed at the start of V2. Everything from V2 on follows this section; the v2 "Spec sheet" section below describes the live site until V4 to V6 replace it and stays as history.
+
+**Structure (from A).** The site is a data pipeline and scrolling runs one record through it. Home stages: `stage 01 / ingest` (who), `stage 02 / transform` (what he builds, pinned reel of featured projects), `stage 03 / serve` (proof, figures count up), `stage 04 / query` (Ask and contact). One thin rail runs down the page as the data path; the record rides it, scrubbed to scroll, changing state bronze `raw` → silver `cleaned` → gold `modeled` → accent `answer`. Case studies continue the rail: `input` (problem), `transform` (approach, diagram drawn by scroll), `output` (figures).
+
+**Palette (C's neutrals, one blue accent; C's red is dropped).**
+
+| Role | Light | Dark |
+|---|---|---|
+| Page | `#FFFFFF` | `#000000` |
+| Ink (all text, rules) | `#000000` | `#FFFFFF` |
+| Muted (meta, captions only) | `#5C5C5C` | `#A3A3A3` |
+| Hairline | `#D9D9D9` | `#2B2B2B` |
+| Accent (data path, record, figures, links, focus) | `#1D4ED8` | `#7C9BFF` |
+| Bronze / silver / gold (medallion states, 3D data stages only) | `#9A5F35` / `#7C838B` / `#9C7A1C` | `#D08B57` / `#B5BCC3` / `#E0B84A` |
+
+Two neutrals plus one accent. The medallion tints are data states, never decoration: they appear only on the record, the hero particle stream, the medallion and the mini-game. No second accent hue, no gradients in the DOM.
+
+**Type (from C).** Archivo on its width axis: display (name, impact figures) 800 at 62% width, letter-spacing -0.03em, the name up to full width; section titles 600 to 800 at 112%; body 400, labels 500. Martian Mono 400 only for stage labels (`stage 02 / transform`), figure numbers (`fig. 01`), the record's state and table keys. Sentence case; mono labels lowercase.
+
+**3D material language (V1.5).** Scenes are real objects under studio light, not glowing sci-fi: PBR wood, cardboard, brushed aluminium, glass, plastic and paper with CC0 textures; one CC0 studio HDRI for image-based light; AgX tone mapping; soft contact shadows on a neutral floor that matches the page colour (white or black); AO always, depth of field subtle, bloom only on the gold/LLM glow. The accent blue appears in 3D only as the data path (scan line, pulses, lanes). No brand logos, liveries or trademarks on any model. Posters (static renders) carry the same framing as the live scene so the swap is invisible.
+
+**Carried over from v2.** Square corners, rules instead of shadows, left-aligned asymmetric grid, focus ring in the accent, the avoid list below (minus "a monospace face for data labels": v3 allows Martian Mono for labels only).
+
+---
+
+# v2 design direction: Spec sheet (live until V4 to V6, then history)
 
 Chosen in Phase 1, built in Phase 2 (`docs/REDESIGN_NOTES.md`). Feel: a datasheet for a person. Bright, exact, strong type on a visible grid, no decoration. Colour appears only where it means something. The diagrams are the hero; everything else stays quiet so they read.
 

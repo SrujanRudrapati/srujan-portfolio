@@ -4,13 +4,11 @@ The only place Claude Code asks Srujan anything (runbook rule 7). Each question 
 
 ## Open
 
-11. **Gate G4: pick a concept for v3** (v3 Phase V1, BLOCKS Phase V2 onward). Three scrolling prototypes are built with real facts: open `/lab/a`, `/lab/b` and `/lab/c` on the dev server (`npm run dev`, then http://localhost:3000/lab/a), or look at the screenshots and scroll videos in `docs/v3/concepts/`. Write-ups, palettes, fonts and risks are in `docs/v3/CONCEPTS.md`.
-
-    - **A. The Pipeline**: scrolling runs one record down a rail through ingest, transform, serve, query; the record changes from bronze to silver to gold to answer. Calm, engineered.
-    - **B. The Notebook**: cells execute as you reach them (`In [*]` then `In [n]`) and render their output. Playful, nerdy.
-    - **C. The Spec Sheet**: a datasheet for a person; huge condensed type, rules that draw, `fig. 01` figures. Most striking, closest to v2.
-
-    Pick a concept: A, B, C, or a mix (for example: A's structure with C's typography). **Recommended default: A's structure with C's typography**, because the Pipeline is the only concept that belongs to a data engineer and gives scrolling a meaning, and C's oversized condensed Archivo and black and white neutrals make it striking instead of merely clean. One accent (cobalt) for the data path and figures; C's red dropped. Reply with a letter or a mix, plus any tweaks. Nothing after Phase V1 starts until you answer.
+12. **Photo slots** (v3 Phase V1.5, does not block). Three empty slots are reserved in `public/images/`; until a file exists, the page shows the 3D scene or its poster instead, so nothing breaks. Drop in your own photos (JPEG or PNG, at least 1600 px on the long side; the build makes the AVIF/WebP sizes):
+    - `public/images/portrait.jpg`: a portrait for About and the CV header.
+    - `public/images/hackathon.jpg`: DevHacks (team, stage or demo).
+    - `public/images/surplus-station.jpg`: the Surplus Station setup (the Mac mini cluster or the intake station).
+    Default applied: no photos; the scenes stand in. Reply with alt text for each photo you add (or accept the defaults written next to each slot in `public/images/README.md`).
 
 Nothing below blocks a phase; each has a default already applied. Answer whenever convenient.
 
@@ -58,3 +56,4 @@ Srujan's replies of 2026-10-30, applied in the Phase 11 session:
 - **8. Repeated availability sentence**: recommended change applied (counts as the G2 yes). About's last sentence, "I graduate in December 2026 and I'm available early 2027.", was removed; the hero status line and Contact still say it.
 - **9. Intern title**: default kept, "Intern, Data Engineering, Celebal Technologies, Jaipur, India, July to August 2022".
 - **10. Gate G1**: "merge". Phase 11 steps 4 to 6 run; results in STATUS and NOTES.
+- **11. Gate G4 (concept)**, Srujan, 2026-10-30: "A's structure with C's typography, blue accent. We build ONE concept only; remove /lab/b and /lab/c when V2 starts." Recorded in `design-direction`. Removing `/lab/b` and `/lab/c` at the start of V2 counts as the G2 yes. Same message: delete the duplicate root `REDESIGN_V3_RUNBOOK.md` (done; it was identical to `docs/REDESIGN_V3_RUNBOOK.md`), and add Phase V1.5 "Visual layer: realistic 3D and physics" before V2 (added to the runbook; later phases amended).
