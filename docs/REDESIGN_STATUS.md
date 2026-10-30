@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-29.
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-29 (second session, stopped at Srujan's request before Phase 3 verify).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -8,7 +8,7 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 0 — Inspect | done | 7cf6e8a | `docs/REDESIGN_NOTES.md` has framework, styling, deploy mechanism, section list, Lighthouse baseline (desktop 100/100/100/100, mobile 97/100/100/100). Build passes. |
 | 1 — Direction | done | c51492e | Three directions at `/design-preview`; pick recorded in NOTES ("Chosen direction: C, Spec sheet"). |
 | 2 — Design system | done | b89d2ac | Tokens on `:root` + `[data-theme="dark"]`, no-flash toggle in localStorage, Archivo via `next/font`, primitives Container/Section/Card/Tag/Button/Stat/Reveal, AA contrast table in NOTES. Verified by reading the code; the Phase S screenshots show it rendering. |
-| 3 — Hero + nav | in progress | 491260e (code) | Code matches the spec on inspection: sticky nav with `aria-current`, toggle, Resume, mobile menu with focus trap + Escape, skip link; hero with headline, subhead, two buttons, three proof chips, animated medallion SVG, `.enter` stagger < 700 ms; the Phase S 390 px fold screenshot shows chips above the fold. Still owed: `npm run verify -- --phase 3`, `recruiter-eyes`, checklist in this file, closing commit. |
+| 3 — Hero + nav | in progress | 491260e (code) | Code matches the spec on inspection: sticky nav with `aria-current`, toggle, Resume, mobile menu with focus trap + Escape, skip link; hero with headline, subhead, two buttons, three proof chips, animated medallion SVG, `.enter` stagger < 700 ms; the Phase S 390 px fold screenshot shows chips above the fold. Session 2026-10-29 (evening): Phase 3 skills loaded; lint 0/0, typecheck clean, `npm run build` passes (routes `/`, `/_not-found`, `/design-preview`). `npm run verify -- --phase 3` was started and interrupted by Srujan before it wrote `verify.md`; its two partial screenshots were deleted so the next run starts clean. Still owed, in order: (1) `npm run verify -- --phase 3`, read `verify.md`, inspect 390/1280 light/dark shots; (2) run `recruiter-eyes` on `docs/screenshots/phase-3/`; (3) decide on the stale `e2e/home.spec.ts` snapshots (see "Not done in Phase S"); (4) Phase 3 checklist in this file; (5) closing commit `redesign: phase 3 — hero and navigation`. |
 | 4 — Project system + diagrams | todo | | |
 | 5 — Content updates | todo | | |
 | 6 — Knowledge graph | todo | | |
