@@ -1,4 +1,5 @@
-import { statusLabel, type ProjectStatus } from "@/data/projects";
+import type { ProjectStatus } from "@/data/graph/types";
+import { statusLabel } from "@/data/project-helpers";
 
 // Status vocabulary from the design-direction skill: a dot plus a word in
 // cobalt. Filled dot = running somewhere real (production, live); word only for

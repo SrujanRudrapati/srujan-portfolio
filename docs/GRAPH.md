@@ -43,7 +43,9 @@ Edge types and the endpoints the validator allows:
 
 `npm run build` runs `prebuild`, which fails the build if: an edge endpoint does not exist; an edge joins node types the table above does not allow; a node id is duplicated; a node has no label, no summary, or a summary longer than two sentences; a metric's `value` is neither numeric nor quoted, or has no evidence link; a project has no evidence link; an evidence URL is not a fragment, a root path or http(s); a label or summary contains an em or en dash; or a project, metric, industry or problem node has no edges.
 
-The emitted files are committed: the GitHub Pages workflow runs `next build` directly, so it ships whatever the last local `npm run build` generated. Run `npm run graph` (or `npm run build`) after editing the graph and commit `public/graph.json` and `public/search-index.json` with it.
+The emitted files are committed: the GitHub Pages workflow runs `next build` directly, so it ships whatever the last local `npm run build` generated. Run `npm run graph` (or `npm run build`) after editing the graph and commit `public/graph.json` and `public/search-index.json` with it. `prebuild` needs Node 22.6 or newer (`engines` in package.json) for native type stripping; the Pages workflow pins Node 20, which is one reason it does not run the generator (see `docs/REDESIGN_DECISIONS.md`).
+
+Root paths in the JSON (`/resume.pdf` as an artifact url and evidence url) carry no GitHub Pages prefix. Anything that renders a url read from `graph.json` or `search-index.json` must pass `/`-prefixed values through `withBasePath` from `src/lib/paths.ts`; fragments and http(s) URLs are used as they are.
 
 ## How to add a project in three steps
 

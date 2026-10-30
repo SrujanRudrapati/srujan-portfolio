@@ -37,10 +37,16 @@ function validate(): string[] {
     if (n.type === "metric") {
       const quoted = /^".+"$/.test(n.value) || /^'.+'$/.test(n.value);
       if (!/\d/.test(n.value) && !quoted) errors.push(`metric "${n.id}" value "${n.value}" is neither numeric nor quoted`);
+      if (!n.valueLabel.trim()) errors.push(`metric "${n.id}" has an empty valueLabel`);
       if (n.evidence.length === 0) errors.push(`metric "${n.id}" has no evidence link`);
     }
+    for (const d of [n.dates?.start, n.dates?.end]) {
+      if (d !== undefined && !/^\d{4}(-\d{2})?$/.test(d)) errors.push(`node "${n.id}" date "${d}" is not YYYY or YYYY-MM`);
+    }
+    if (n.dates && !n.dates.start && !n.dates.end) errors.push(`node "${n.id}" has an empty dates object`);
     if (n.type === "project" && n.evidence.length === 0) errors.push(`project "${n.id}" has no evidence link`);
     for (const ev of n.evidence) {
+      if (!ev.label?.trim()) errors.push(`node "${n.id}" has an evidence entry with no label`);
       if (!ev.url || !(ev.url.startsWith("#") || ev.url.startsWith("/") || /^https?:\/\//.test(ev.url))) errors.push(`node "${n.id}" evidence url "${ev.url}" is not a fragment, root path or http(s) URL`);
     }
     if (/[–—]/.test(`${n.label} ${n.summary}`)) errors.push(`node "${n.id}" contains an em or en dash`);
@@ -53,6 +59,8 @@ function validate(): string[] {
     if (!from || !to) continue;
     const rule = ALLOWED[e.type];
     if (!rule.from.includes(from.type) || !rule.to.includes(to.type)) errors.push(`edge ${e.type} ${e.from} -> ${e.to}: ${from.type} -> ${to.type} is not allowed`);
+    if (e.chip !== undefined && e.type !== "uses") errors.push(`edge ${e.type} ${e.from} -> ${e.to}: "chip" only applies to uses edges`);
+    if (e.label !== undefined && e.type !== "uses") errors.push(`edge ${e.type} ${e.from} -> ${e.to}: "label" only applies to uses edges`);
   }
   // Projects, metrics, industries and problems only mean something through
   // their edges. Skills the section lists but no project uses, certifications,

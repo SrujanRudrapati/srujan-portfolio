@@ -1,4 +1,5 @@
 import type { CertificationNode, Edge, EducationNode, MetricNode, RoleNode } from "./types.ts";
+import { metric } from "./factories.ts";
 
 // Roles, education and certifications, with the figures the Celebal bullets
 // contain as metric nodes. Content strings are the Experience and Credentials
@@ -96,7 +97,7 @@ export const educationNodes: EducationNode[] = [
     type: "education",
     label: "M.S. in Data Science, Analytics, and Engineering, Arizona State University",
     summary: "Expected December 2026. GPA 3.96 / 4.0.",
-    dates: { start: "2025", end: "2026-12" },
+    dates: { end: "2026-12" },
     evidence: [{ label: "Education", url: CREDENTIALS }],
     tags: ["education", "asu"],
     content: { degree: "M.S. in Data Science, Analytics, and Engineering", school: "Arizona State University", dates: "Expected December 2026", gpa: "GPA 3.96 / 4.0" },
@@ -124,21 +125,11 @@ const cert = (id: string, label: string, summary: string, tags: string[]): Certi
 
 export const certificationNodes: CertificationNode[] = [
   cert("databricks-de-professional", "Databricks Certified Data Engineer Professional", "Databricks' professional-level data engineering certification.", ["databricks"]),
-  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS certification covering AI and machine learning services.", ["aws", "ai"]),
+  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS's AI Practitioner certification.", ["aws", "ai"]),
   cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft's associate-level Azure data engineering certification.", ["azure"]),
   cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft's associate-level Azure administration certification.", ["azure"]),
 ];
 
-const metric = (id: string, value: string, valueLabel: string, summary: string, evidence: MetricNode["evidence"], tags: string[] = []): MetricNode => ({
-  id: `metric-${id}`,
-  type: "metric",
-  label: `${value} ${valueLabel}`,
-  summary,
-  evidence,
-  tags: ["metric", ...tags],
-  value,
-  valueLabel,
-});
 
 export const roleMetricNodes: MetricNode[] = [
   metric("time-to-insight", "about 50%", "less time-to-insight", "For a telehealth client in New Zealand, on Microsoft Fabric. The dashboards ended up in their weekly operational meetings.", [{ label: "Experience", url: EXPERIENCE }], ["celebal"]),

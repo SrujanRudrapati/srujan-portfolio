@@ -1,4 +1,5 @@
 import type { ArtifactNode, Edge, MetricNode, ProjectNode } from "./types.ts";
+import { metric } from "./factories.ts";
 
 // Project nodes in render order (featured first, in the facts' featured order),
 // their metric and artifact nodes, and the edges that give each card its impact
@@ -13,7 +14,7 @@ export const projectNodes: ProjectNode[] = [
     id: "project-surplus-ai",
     type: "project",
     label: "Surplus AI",
-    summary: "Private, offline AI system for ASU Surplus, in production since June 2026. Processing per item dropped from about 15 min to about 3 min.",
+    summary: "Private, offline AI system for ASU Surplus, in production. Built on the job from June 2026; processing per item dropped from about 15 min to about 3 min.",
     dates: { start: "2026-06" },
     evidence: [site("surplus-ai", "Surplus AI")],
     tags: ["project", "featured", "production", "ai", "data", "llm", "offline"],
@@ -244,16 +245,6 @@ export const projectNodes: ProjectNode[] = [
   },
 ];
 
-const metric = (id: string, value: string, valueLabel: string, summary: string, evidence: MetricNode["evidence"], tags: string[] = []): MetricNode => ({
-  id: `metric-${id}`,
-  type: "metric",
-  label: `${value} ${valueLabel}`,
-  summary,
-  evidence,
-  tags: ["metric", ...tags],
-  value,
-  valueLabel,
-});
 
 const surplus = site("surplus-ai", "Surplus AI");
 const devhacks = site("devhacks-cubbie", "DevHacks × Cubbie");
@@ -294,7 +285,7 @@ export const artifactNodes: ArtifactNode[] = [
   artifact("surplus-privacy-diagram", "diagram", "Surplus AI privacy layers diagram", "surplus-privacy", "Four layers between the model and the internet.", anchor("surplus-ai")),
   artifact("cooked-repo", "repo", "Cooked repository", "https://github.com/SrujanRudrapati/cooked", "Source for Cooked, the DevHacks × Cubbie winner.", "https://github.com/SrujanRudrapati/cooked", "Cooked repository"),
   artifact("receipts-repo", "repo", "Receipts repository", "https://github.com/SrujanRudrapati/receipts", "Source for Receipts, the Discord bot with 493 automated tests.", "https://github.com/SrujanRudrapati/receipts", "Receipts repository"),
-  artifact("label-lens-live", "live", "Label Lens live app", "https://label-lens-iota.vercel.app", "Label Lens, deployed on Vercel.", "https://label-lens-iota.vercel.app"),
+  artifact("label-lens-live", "live", "Label Lens live app", "https://label-lens-iota.vercel.app", "Label Lens, live app.", "https://label-lens-iota.vercel.app"),
   artifact("watchtower-flow-diagram", "diagram", "Watchtower agent flow diagram", "watchtower-flow", "Three agents in sequence; only the Risk Analyst has a tool.", anchor("supply-chain-watchtower")),
   artifact("aws-cicd-repo", "repo", "CI/CD pipeline repository", "https://github.com/SrujanRudrapati/aws-cicd-pipeline", "Terraform, Docker and GitHub Actions for the multi-tier AWS environment.", "https://github.com/SrujanRudrapati/aws-cicd-pipeline"),
   artifact("resume", "resume", "Resume", "/resume.pdf", "Srujan's resume as a PDF.", "/resume.pdf"),
@@ -338,7 +329,6 @@ export const projectEdges: Edge[] = [
   ...uses("project-label-lens", "nextjs", "typescript", ["anthropic-claude-api", "Claude API"], "zod", "vitest", "playwright"),
   e("project-label-lens", "solved", "problem-ungrounded-ai-output"),
   e("project-label-lens", "in", "industry-consumer-health"),
-  e("project-label-lens", "during", "education-ms-asu"),
   e("project-label-lens", "produced", "artifact-label-lens-live"),
   // Watchtower
   e("project-supply-chain-watchtower", "achieved", "metric-watchtower-agents"),

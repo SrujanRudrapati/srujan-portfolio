@@ -296,6 +296,25 @@ test.describe("Experience", () => {
   });
 });
 
+test.describe("Skills", () => {
+  test("groups and chip order come from the graph unchanged", async ({ page }) => {
+    const skills = page.locator("#skills");
+    await expect(skills.getByRole("heading", { level: 3 })).toHaveText(["Data engineering", "Cloud", "AI and ML", "Governance", "Infrastructure", "BI"]);
+    await expect(skills.getByRole("list", { name: "Governance skills" }).getByRole("listitem")).toHaveText([
+      "Microsoft Purview",
+      "Apache Atlas",
+      "Unity Catalog",
+      "metadata management",
+      "data lineage",
+    ]);
+    await expect(skills.getByRole("list", { name: "Azure skills" }).getByRole("listitem").first()).toHaveText("Databricks");
+  });
+
+  test("visual", async ({ page }) => {
+    await expect(page.locator("#skills")).toHaveScreenshot("skills.png");
+  });
+});
+
 test.describe("Whole page", () => {
   test("has no accessibility violations", async ({ page }) => {
     await expectNoA11yViolations(page);

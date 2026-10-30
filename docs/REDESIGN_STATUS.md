@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (third session: Phases 3, 4, 5 done; Phase 6 built and verified, close-out pending; stopped at the usage limit).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (third session: Phases 3, 4, 5, 6 done).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -11,12 +11,49 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 3 — Hero + nav | done | 1d08a21 | Sticky nav with `aria-current`, toggle, Resume (now visible on phones too), mobile menu with focus trap + Escape, skip link; hero with headline, subhead, status line (M.S. at ASU, available early 2027), two buttons, three quiet proof chips, animated medallion SVG, `.enter` stagger < 700 ms, chips above the fold at 390. Verify 4/4 pass, axe 0, e2e 48 pass (snapshots re-baselined), code-review approve, recruiter-eyes findings fixed. Checklist below. |
 | 4 — Project system + diagrams | done | 71cca15 | `src/data/projects.ts` (8 projects migrated verbatim), Work section with filter chips, featured cards with large Stats, 3/2/1 grid, four inline SVG diagrams on one flow engine (dots, stages light on arrival, in-view only, static under reduced motion). Verify 4/4, axe 0, e2e 62 pass, fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 5 — Content updates | done | 7f78b08 | Facts Section 2 applied: Surplus AI metrics and production status, DevHacks × Cubbie and Label Lens featured, RC Car in the grid, featured order per facts, Celebal additions and intern stint, e-commerce, June 2026 start, new email everywhere, hero chip. `withBasePath` + CI env for the resume link, `.nojekyll`. Content dump for proofreading. Verify 4/4, e2e 62 pass, fact-checker run. Checklist below. |
-| 6 — Knowledge graph | in progress | WIP commit (this row) | Session 2026-10-30 stopped at the usage limit. DONE: `src/data/graph/{types,skills,projects,roles,context,index}.ts` + `src/data/graph.ts` (157 nodes, 144 edges); `projects.ts` and `portfolio.ts` experience/skills/certifications/education are now `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild` (`npm run graph`); `docs/GRAPH.md`; lint, typecheck, build pass; `npm run verify -- --phase 6` 4/4 pass; e2e 62 pass on the unchanged Phase 5 baselines; Phase 6 screenshots pixel-identical to Phase 5 (PIL compare, all four); `out/graph.json` and `out/search-index.json` present. Still owed, in order: (1) read the fe-reviewer and fact-checker reports that were launched on this working tree (re-run them if the session was lost), fix Critical/High; (2) Phase 6 checklist in this file (copy the pattern of Phase 5) with these rulings: role→skill/problem/industry edges allowed beyond the runbook list; `chip: false` keeps graph-only skill links off the cards; capstone gained a second metric node (about 28% holding cost) that the grid card does not render; generated JSON is committed because the Pages workflow runs `next build` directly (ask in DECISIONS whether to switch CI to `npm run build`); `.ts` import extensions so Node can load the graph; (3) closing commit `redesign: phase 6 — knowledge graph`. |
+| 6 — Knowledge graph | done | HASH_PENDING | `src/data/graph/` (157 nodes, 143 edges) is the source of truth; `projects.ts` and the experience, skills, certifications and education exports are `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild`; `docs/GRAPH.md`. Site pixel-identical to Phase 5 at 390/1280 light/dark. Client bundle no longer carries the graph. fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 7 — Lenses | todo | | |
 | 8 — Ask Srujan | todo | | |
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 6 checklist
+
+Closed out 2026-10-30. Skills loaded: portfolio-facts, static-export-check, phase-verify.
+
+- [x] lint 0/0, typecheck clean, build passes; `prebuild` runs the validator (`npm run graph`): 157 nodes (project 11, role 4, education 2, certification 4, skill 82, metric 18, industry 12, problem 12, artifact 9, event 3), 143 edges
+- [x] `npm run verify -- --phase 6` passed (path `/`; 390 and 1280, light and dark). Evidence: `docs/screenshots/phase-6/verify.md`
+- [x] screenshots inspected by pixel comparison of `docs/screenshots/phase-6` against `phase-5` (PIL `ImageChops.difference`): identical at all four viewport/theme pairs after the Governance order fix; the final re-run differed by 223 scattered pixels in the 390 light shot only (travelling diagram dots caught at another frame; the three other shots were identical in the same run)
+- [x] axe: 0 violations; console: 0 errors; requests: 0 failed; overflow: 0
+- Runbook Phase 6 items:
+  - [x] 1. `src/data/graph.ts` exports `nodes`, `edges`, `graph`; node types project, role, education, certification, skill, metric, industry, problem, artifact, event; every node has id, type, label, summary (≤ 2 sentences, enforced), optional dates, evidence[], tags; edge types uses, achieved, solved, in, at, produced, during (allowed endpoints in `docs/GRAPH.md`)
+  - [x] 2. projects, experience, skills, certifications, education migrated; `projects.ts` is `selectProjects(graph)`, `portfolio.ts` exports `selectExperience/SkillGroups/Certifications/Education(graph)`; Phase 4 and 5 components unchanged (`git diff a7d1652 -- src/components` touches only import paths and the Work server/client split)
+  - [x] 3. `scripts/build-graph.mts` in `prebuild`: edge endpoints exist, edge types match allowed endpoints, metric value numeric or quoted plus ≥ 1 evidence, no node without summary, plus duplicate ids, empty labels, date format, dash scan, orphan projects/metrics/industries/problems; exits 1 on errors (seen working: the first run failed on 28 findings); emits `public/graph.json` and `public/search-index.json` (one document per node with id, type, label, summary, tags, evidence urls, linked metric text)
+  - [x] 4. `docs/GRAPH.md`: file map, counts, type tables, validator rules, three-step "add a project"
+- Runbook checklist:
+  - [x] build passes with validation
+  - [x] `graph.json` served at `<basePath>/graph.json`: present in `out/` (local, no prefix); CI build puts it under `/srujan-portfolio/graph.json` by the same `public/` copy; consumers must use `withBasePath` (documented in `types.ts` and GRAPH.md)
+  - [x] site renders identically to end of Phase 5: pixel compare identical; `npm run -s content:dump` identical except the capstone's second metric (ruling below); skills, certifications, education arrays byte-identical (JSON compare against `a7d1652`)
+- [x] `npm run test:e2e`: 68 passed (new "Skills" block guards group order and chip order and adds a `#skills` snapshot, so a selector regression like the Governance one fails CI)
+- [x] fe-reviewer (WARN: 1 High, 4 Medium, 7 Low) and fact-checker (NEEDS FIXES: 2 contradicted, 8 unsupported, all in node summaries that the page does not render). Resolved:
+  - High, fixed before the report arrived: Governance chip order (Unity Catalog pinned to its slot with `position`; e2e guard added).
+  - Medium, fixed: the client bundle carried the whole graph. `Work` is now a server component that passes `Project[]` to the client `WorkExplorer`; `statusLabel`/`primaryLink` moved to `src/data/project-helpers.ts`; `profile`/`about` moved to `src/content/profile.ts` so the client nav stops importing the graph. Graph text no longer appears in any client chunk; the affected chunk went from 22.9 KB to 11.2 KB gzipped; total client JS 184 KB gzipped.
+  - Medium, documented and asked: committed JSON can drift because the Pages workflow runs `next build` on Node 20 (DECISIONS question 5, default keep; `engines: node >= 22.6` added; GRAPH.md says to regenerate and commit).
+  - Medium, documented: root paths in the JSON need `withBasePath` at render (`types.ts` and GRAPH.md).
+  - Medium, accepted: the capstone has a second metric node (about 28% lower simulated holding cost, the figure already in its highlight). The grid card renders `impact[0]` only, so the page is unchanged; the figure is available to the lenses and the Ask index.
+  - Low, fixed: node index built once per selector; `chip`/`label` validated as `uses`-only; shared `metric` factory in `factories.ts`; validator checks empty valueLabel, evidence labels, date format; `projectLinks` without mutation; `engines` field. Deferred: Vitest selector tests until Phase 8 installs Vitest.
+  - fact-checker, all ten fixed: "about" restored on the 10 million records a day figure (two summaries); Surplus summary and the June 2026 event no longer date the start of production (event re-labelled "Started at ASU Surplus"); M.S. node keeps only its end date (`Dates.start` is now optional); Label Lens `during` edge removed (no date on record); "deployed on Vercel" → "live app"; AWS cert summary restates the name only; editorial sentence removed from the ungrounded-output problem; "courses" → "course". Re-validated and re-compared after the fixes.
+- [x] STATUS row updated, commit `redesign: phase 6 — knowledge graph`
+
+### Rulings made in Phase 6
+
+- `uses`, `solved`, `in` and `produced` also accept a role as the source, and `at`/`during` accept education as the target, so the Celebal bullets and the degrees take part in the lenses; the runbook lists only the project cases.
+- A `uses` edge with `chip: false` keeps a skill link in the graph without adding a stack chip, so the cards keep their Phase 5 chips exactly while the Skill map counts, for example, forecasting for the capstone.
+- A skill in two Skills-section groups has two `groups` entries; `position` pins its slot where declaration order would move it.
+- `.ts` extensions on the graph's relative imports (and `../data/graph.ts` from `portfolio.ts`) so Node runs the generator and the content dump without a bundler; `allowImportingTsExtensions` was already on.
+- Generated JSON committed; see DECISIONS 5.
+- Events: a hackathon win, the ASU Surplus start, and the expected graduation. Industry and problem nodes are categorisations of facts already on the page, with summaries that restate those facts; the fact-checker accepted the labels.
 
 ## Phase 5 checklist
 

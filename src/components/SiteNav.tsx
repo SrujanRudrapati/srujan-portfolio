@@ -1,7 +1,7 @@
 "use client";
 
 import { ListIcon, XIcon } from "@phosphor-icons/react";
-import { profile } from "@/content/portfolio";
+import { profile } from "@/content/profile";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useMobileMenu } from "@/hooks/use-mobile-menu";
 import { useScrolled } from "@/hooks/use-scrolled";

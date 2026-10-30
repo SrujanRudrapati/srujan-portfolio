@@ -17,10 +17,13 @@ export type NodeType =
 
 export type EdgeType = "uses" | "achieved" | "solved" | "in" | "at" | "produced" | "during";
 
+/** `url` is a fragment ("#work"), an http(s) URL, or a root path ("/resume.pdf"). Root paths are
+ *  stored without the GitHub Pages prefix: anything that renders one from graph.json must pass it
+ *  through `withBasePath` (src/lib/paths.ts). Same for `ArtifactNode.url`. */
 export type Evidence = { label: string; url: string };
 
-/** ISO-like dates: "2026-06" or "2022". `end` omitted means ongoing. */
-export type Dates = { start: string; end?: string };
+/** ISO-like dates: "2026-06" or "2022". `end` omitted means ongoing; `start` omitted means only the end is on record (e.g. an expected graduation). */
+export type Dates = { start?: string; end?: string };
 
 type Base<T extends NodeType> = {
   id: string;

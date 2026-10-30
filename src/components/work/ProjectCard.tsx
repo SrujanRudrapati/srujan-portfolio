@@ -1,5 +1,6 @@
 import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
-import { primaryLink, type Project } from "@/data/projects";
+import type { Project } from "@/data/graph/types";
+import { primaryLink } from "@/data/project-helpers";
 import { Card } from "@/components/Card";
 import { Reveal } from "@/components/Reveal";
 import { Stat } from "@/components/Stat";

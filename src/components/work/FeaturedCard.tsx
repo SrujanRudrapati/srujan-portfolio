@@ -1,5 +1,5 @@
 import { CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
-import type { Project } from "@/data/projects";
+import type { Project } from "@/data/graph/types";
 import { ProjectDiagram } from "@/components/diagrams/projectDiagrams";
 import { Reveal } from "@/components/Reveal";
 import { Stat } from "@/components/Stat";

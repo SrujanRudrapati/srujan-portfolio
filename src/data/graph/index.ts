@@ -51,45 +51,43 @@ export const graph: Graph = assemble();
 export const nodes = graph.nodes;
 export { edges };
 
-const nodeMap = new Map(graph.nodes.map((n) => [n.id, n]));
+type NodeIndex = Map<string, GraphNode>;
+const index = (g: Graph): NodeIndex => new Map(g.nodes.map((n) => [n.id, n]));
 const out = (g: Graph, from: string, type: Edge["type"]) => g.edges.filter((e) => e.from === from && e.type === type);
-const node = <T extends GraphNode["type"]>(g: Graph, id: string, type: T): Extract<GraphNode, { type: T }> => {
-  const n = (g === graph ? nodeMap : new Map(g.nodes.map((x) => [x.id, x]))).get(id);
+const node = <T extends GraphNode["type"]>(byId: NodeIndex, id: string, type: T): Extract<GraphNode, { type: T }> => {
+  const n = byId.get(id);
   if (!n || n.type !== type) throw new Error(`graph: expected ${type} node "${id}"`);
   return n as Extract<GraphNode, { type: T }>;
 };
 
 const defaultLinkLabel = { repo: "Repository", live: "Live app", writeup: "Write-up" } as const;
 
-function projectLinks(g: Graph, projectId: string): ProjectLinks {
-  const links: ProjectLinks = {};
-  for (const edge of out(g, projectId, "produced")) {
-    const a = node(g, edge.to, "artifact");
-    if (a.kind === "diagram" || a.kind === "resume") continue;
-    if (a.kind === "repo" && links.repo) {
-      links.more = [...(links.more ?? []), { label: a.linkLabel ?? defaultLinkLabel.repo, url: a.url }];
-      continue;
-    }
-    links[a.kind] = a.url;
-    if (a.kind === "repo" && a.linkLabel) links.repoLabel = a.linkLabel;
-  }
-  return links;
+/** Card links from the project's artifacts, in edge order: the first repo is "Repository", further repos go under `more`. */
+function projectLinks(g: Graph, byId: NodeIndex, projectId: string): ProjectLinks {
+  const artifacts = out(g, projectId, "produced")
+    .map((e) => node(byId, e.to, "artifact"))
+    .filter((a) => a.kind !== "diagram" && a.kind !== "resume");
+  return artifacts.reduce<ProjectLinks>((links, a) => {
+    if (a.kind === "repo" && links.repo) return { ...links, more: [...(links.more ?? []), { label: a.linkLabel ?? defaultLinkLabel.repo, url: a.url }] };
+    return { ...links, [a.kind]: a.url, ...(a.kind === "repo" && a.linkLabel ? { repoLabel: a.linkLabel } : {}) };
+  }, {});
 }
 
 /** The Project[] the Work section renders, in graph order. */
 export function selectProjects(g: Graph): Project[] {
+  const byId = index(g);
   return g.nodes
     .filter((n): n is Extract<GraphNode, { type: "project" }> => n.type === "project")
     .map((p) => {
       const impact: Impact[] = out(g, p.id, "achieved").map((e) => {
-        const m = node(g, e.to, "metric");
+        const m = node(byId, e.to, "metric");
         return { value: m.value, label: m.valueLabel };
       });
       const stack = out(g, p.id, "uses")
         .filter((e) => e.chip !== false)
-        .map((e) => e.label ?? node(g, e.to, "skill").label);
+        .map((e) => e.label ?? node(byId, e.to, "skill").label);
       const diagrams = out(g, p.id, "produced")
-        .map((e) => node(g, e.to, "artifact"))
+        .map((e) => node(byId, e.to, "artifact"))
         .filter((a) => a.kind === "diagram")
         .map((a) => a.url);
       return {
@@ -97,7 +95,7 @@ export function selectProjects(g: Graph): Project[] {
         slug: p.id.replace(/^project-/, ""),
         impact,
         stack,
-        links: projectLinks(g, p.id),
+        links: projectLinks(g, byId, p.id),
         ...(diagrams[0] ? { diagram: diagrams[0] } : {}),
         ...(diagrams.length > 1 ? { secondaryDiagrams: diagrams.slice(1) } : {}),
       };

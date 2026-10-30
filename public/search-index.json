@@ -3,7 +3,7 @@
     "id": "project-surplus-ai",
     "type": "project",
     "label": "Surplus AI",
-    "summary": "Private, offline AI system for ASU Surplus, in production since June 2026. Processing per item dropped from about 15 min to about 3 min.",
+    "summary": "Private, offline AI system for ASU Surplus, in production. Built on the job from June 2026; processing per item dropped from about 15 min to about 3 min.",
     "tags": [
       "project",
       "featured",
@@ -294,7 +294,7 @@
     "id": "certification-aws-ai-practitioner",
     "type": "certification",
     "label": "AWS Certified AI Practitioner",
-    "summary": "AWS certification covering AI and machine learning services.",
+    "summary": "AWS's AI Practitioner certification.",
     "tags": [
       "certification",
       "aws",
@@ -1804,7 +1804,7 @@
     "id": "industry-manufacturing",
     "type": "industry",
     "label": "Manufacturing",
-    "summary": "A US materials engineering client with a 10 million records a day AWS pipeline.",
+    "summary": "A US materials engineering client with an AWS pipeline handling about 10 million records a day.",
     "tags": [
       "industry"
     ],
@@ -1856,7 +1856,7 @@
     "id": "industry-network-security",
     "type": "industry",
     "label": "Network security",
-    "summary": "WLAN traffic forensics and the network security courses it was built for.",
+    "summary": "WLAN traffic forensics and the network security course it was built for.",
     "tags": [
       "industry"
     ],
@@ -1908,7 +1908,7 @@
     "id": "problem-ungrounded-ai-output",
     "type": "problem",
     "label": "Ungrounded AI output",
-    "summary": "A model that invents specs or warnings is worse than none. Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
+    "summary": "Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
     "tags": [
       "problem"
     ],
@@ -1934,7 +1934,7 @@
     "id": "problem-pipeline-downtime",
     "type": "problem",
     "label": "Pipeline downtime",
-    "summary": "A 10 million records a day AWS pipeline kept failing in the same ways. Tracing recurring failures to root causes cut downtime about 30%.",
+    "summary": "An AWS pipeline handling about 10 million records a day kept failing in the same ways. Tracing recurring failures to root causes cut downtime about 30%.",
     "tags": [
       "problem"
     ],
@@ -2121,7 +2121,7 @@
     "id": "artifact-label-lens-live",
     "type": "artifact",
     "label": "Label Lens live app",
-    "summary": "Label Lens, deployed on Vercel.",
+    "summary": "Label Lens, live app.",
     "tags": [
       "artifact",
       "live"
@@ -2188,15 +2188,17 @@
     "metrics": ""
   },
   {
-    "id": "event-surplus-ai-production",
+    "id": "event-asu-surplus-start",
     "type": "event",
-    "label": "Surplus AI in production",
-    "summary": "Surplus AI went into production at ASU Surplus, where Srujan started as Tech Assistant in June 2026.",
+    "label": "Started at ASU Surplus",
+    "summary": "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.",
     "tags": [
       "event",
+      "role",
       "production"
     ],
     "evidence": [
+      "#experience",
       "#project-surplus-ai"
     ],
     "metrics": ""
