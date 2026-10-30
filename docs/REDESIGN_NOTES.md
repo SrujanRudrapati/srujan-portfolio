@@ -220,3 +220,100 @@ Raw reports are not committed. Re-run with:
 npm run build && npx serve out -l 4321 --no-clipboard &
 npx lighthouse@12 http://localhost:4321/ --preset=desktop --view
 ```
+
+---
+
+# Phase 1: design direction
+
+Three directions, built on the same content, the same sample project card (F1 Race Outcome Predictor, chosen because it has a headline figure) and the same medallion diagram, so only the design changes between them. They are rendered side by side, light and dark, at `/design-preview` (throwaway route, `robots: noindex`, not linked from the nav). Fonts for the preview are loaded by that route only; the live page is untouched.
+
+Shared rule for all three: the brief's bans stand (no purple or blue gradient heroes, no glass cards, no neon grids, no stock tech imagery). Bronze, silver and gold appear as literal metal tints only inside the medallion diagram, never elsewhere.
+
+## A. Lab notebook
+
+**Feel.** A careful engineer's ledger: warm paper, ink, and nothing that was not written down for a reason. In three seconds a recruiter senses "this person documents their work."
+
+**Palette.**
+
+| Role | Light | Dark | Used for |
+|------|-------|------|----------|
+| Background | `#F2EDE3` | `#1C1915` | Page |
+| Surface | `#E9E2D3` | `#262219` | Cards, diagram panels |
+| Text | `#1C1A16` | `#EEE7D9` | Headings and body |
+| Muted | `#5B5648` | `#A89F8E` | Captions, dates, secondary copy |
+| Accent (ink blue) | `#24419A` | `#9DB1F0` | Links, diagram flow lines and arrows, the LLM node |
+| Accent 2 (red pencil) | `#B2442A` | `#E58B6A` | Impact numbers, status marks, "in progress" rings |
+
+Contrast on background: text 14.9 / 14.2, muted 6.3 / 6.7, accent 7.8 / 8.3, accent 2 4.8 / 6.9 (light / dark). All AA; accent 2 is used at large sizes only in light mode.
+
+**Typography.** Newsreader (Google, variable with optical size) at weight 500 for display, italic for the one-line feel statements; IBM Plex Sans 400/500 for body and for numbers (tabular). Two families. Newsreader's optical-size axis means the same face reads crisp at 13px in a diagram and generous at 60px in the hero, so no third face is needed. Plex Sans is already loaded on the site.
+
+**Motion.** Almost none. Links and buttons change color; the hero diagram still draws once on load; nothing else moves.
+
+**Medallion diagram.** A row of ledger cells on faintly ruled paper. Each cell has a small square metal stamp (bronze, silver, gold) above its name, cells are joined by a thin ink rule ending in a dot, and the LLM cell closes with a double rule, the way a ledger marks a total.
+
+**Risk.** Warm paper plus a serif is the most familiar "editorial portfolio" look right now, and it can read as a writer's site rather than an engineer's. The ink and red-pencil pair, and the diagrams, have to carry the engineering signal.
+
+## B. Night shift
+
+**Feel.** A control room at 2 a.m.: dark petrol, one hot signal, and every stage reporting its state. A recruiter senses "this person runs systems in production."
+
+**Palette.**
+
+| Role | Light | Dark (default) | Used for |
+|------|-------|----------------|----------|
+| Background | `#F3F6F6` | `#0F1C21` | Page |
+| Surface | `#E6ECEC` | `#16272E` | Cards, nodes |
+| Text | `#101C20` | `#E6EEF0` | Headings and body |
+| Muted | `#4C5E64` | `#8FA6AE` | Captions, connectors, secondary copy |
+| Accent (hot orange) | `#B03A04` | `#FF8A3D` | Links, impact numbers, the active stage, the primary button |
+| Accent 2 (mint) | `#1D7A5C` | `#5FD3A6` | Healthy status dots only, never text or decoration |
+
+Contrast on background: text 16.0 / 14.8, muted 6.2 / 6.8, accent 5.6 / 7.4, accent 2 4.8 / 9.4. All AA.
+
+**Typography.** Martian Mono (Google, variable) 500/600 for display, labels and numbers; Hanken Grotesk 400/500 for body. Two families. Martian Mono is wide and heavy enough to work as a headline face, which is unusual for a monospace, and it makes the dates, IPs and stack tags read as instrumentation rather than decoration. Hanken Grotesk is neutral and tall-x-height so paragraphs stay readable next to the mono.
+
+**Motion.** Quiet and continuous: a single small pulse travels along each pipeline connector on a loop, status dots do not animate, and everything is static under reduced motion.
+
+**Medallion diagram.** A pipeline run view. Each stage is a node with a colored left bar (bronze, silver, gold, orange for the LLM), a lowercase mono name, a short sub-label, and a status line ("ok" with a mint dot; "running" with an orange dot on the LLM). Dotted connectors carry the traveling pulse.
+
+**Risk.** Dark plus monospace is the most common engineer-portfolio look, so the execution has to be sharp or it reads as a template. It is also the closest to the current site, which limits how much a redesign is felt.
+
+## C. Spec sheet
+
+**Feel.** A datasheet for a person: bright, exact, strong type on a visible grid, no decoration at all. A recruiter senses "precise, confident, easy to scan."
+
+**Palette.**
+
+| Role | Light (default) | Dark | Used for |
+|------|-----------------|------|----------|
+| Background | `#F6F6F3` | `#161616` | Page |
+| Surface | `#EBEBE6` | `#202020` | Cards |
+| Text | `#0A0A0A` | `#F2F2EE` | Headings and body (body is full-strength text, not muted) |
+| Muted | `#55554F` | `#A3A39B` | Dates, captions only |
+| Accent (red) | `#C42A14` | `#FF6A4E` | Impact numbers and the one primary button |
+| Accent 2 (cobalt) | `#1B4FD8` | `#7F9CFF` | Links, diagram flow, the LLM tile |
+
+Contrast on background: text 18.3 / 16.1, muted 6.9 / 7.1, accent 5.1 / 6.4, accent 2 6.1 / 7.0. All AA.
+
+**Typography.** Archivo only (Google, variable with a width axis). Headlines and figures at weight 700 and 125% width, body at 400/500 at normal width, numbers tabular. One family doing two jobs through width, which is what makes it feel designed rather than defaulted.
+
+**Motion.** Quick and snappy: 120ms color and underline changes on hover and focus, nothing on scroll, and only the hero diagram draws on load.
+
+**Medallion diagram.** A strip of flat tiles that touch, separated by 2px black rules inside a 2px black frame: an outlined Source tile, then bronze, silver and gold tiles with black text, then a cobalt LLM tile with white text. No arrows; the strip itself is the sequence.
+
+**Risk.** Bright Swiss layouts can feel cold or corporate, and the expanded display width is loud at hero size. It needs discipline in spacing and a hard cap on how often red appears, or the page tips from "precise" into "shouty."
+
+## Recommendation: C, Spec sheet
+
+The content on this site is specific and technical, and the diagrams are the best thing on it. Spec sheet is the direction that makes those the hero: light background, black type, color only where it means something (red for a number, cobalt for flow). It reads as an engineer's datasheet rather than a designer's portfolio, and it is the one of the three that does not look like the current crop of engineer sites, which are overwhelmingly dark with monospace labels. Light-by-default also holds up where recruiters actually look: a laptop tab next to a job description, a screenshot in a message.
+
+Two things to borrow from the others when building it: Night shift's status vocabulary (a dot plus a word, never a dot alone) for the Surplus AI "running / in progress" badges, and Lab notebook's restraint on motion.
+
+If you want the site to keep its current dark-first identity, Night shift is the safer evolution and keeps most of the existing tokens.
+
+## Preview
+
+- URL: `http://localhost:3000/design-preview`
+- Files: `src/app/design-preview/page.tsx`, `src/app/design-preview/preview.module.css`
+- Verified: typecheck and lint clean, no console errors, no horizontal overflow at 1440 or 390 wide, static export writes the route to `out/design-preview.html`.
