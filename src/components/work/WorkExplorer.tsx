@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { SHOW_ALL_PROJECTS } from "@/components/explore/Explore";
 import type { Project } from "@/data/graph/types";
 import { FeaturedCard } from "./FeaturedCard";
 import { ProjectCard } from "./ProjectCard";
@@ -38,6 +39,11 @@ function matches(p: Project, filter: FilterId): boolean {
 
 export function WorkExplorer({ projects }: { projects: Project[] }) {
   const [filter, setFilter] = useState<FilterId>("all");
+  useEffect(() => {
+    const showAll = () => setFilter("all");
+    window.addEventListener(SHOW_ALL_PROJECTS, showAll);
+    return () => window.removeEventListener(SHOW_ALL_PROJECTS, showAll);
+  }, []);
   const visible = projects.filter((p) => matches(p, filter));
   const featured = visible.filter((p) => p.featured);
   const others = visible.filter((p) => !p.featured);

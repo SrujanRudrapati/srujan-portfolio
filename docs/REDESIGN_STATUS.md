@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7, 8 and 9 done).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 to 10 done; Phase 11 waits on DECISIONS 4 and gate G1).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -15,8 +15,29 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 7 — Lenses | done | ec2f00a | Work section with a six-lens switcher (Highlights static, Timeline, Skill map, By problem, By industry, Recruiter from graph.json, lazy code chunk); lens in `#lens=`; Recruiter prints to one page; Experience and Skills shortened to summaries with full text in closed disclosures; Contact and footer reshaped; hero link to the one-pager. Verify 36/36 (390/768/1280, light/dark, six lenses), e2e 99 pass. fe-reviewer, fact-checker and recruiter-eyes findings fixed or ruled. Checklist below. |
 | 8 — Ask Srujan | done | db06808 | Ask panel (native dialog) from the nav and a hero prompt box; MiniSearch retrieval in the browser over `search-index.json` (both lazy); template summary plus evidence cards; grounded refusal for misses and injection; optional proxy client behind `NEXT_PUBLIC_ASK_ENDPOINT` (unset: no network calls). Worker scaffold in `worker/` (claude-sonnet-5-5, server-side refusal fallback, CORS, rate limit, 300 chars, injection stripping, leak check), dry-run builds, not deployed (G3 in DECISIONS 6). Vitest 57, e2e 114, verify 6/6. Checklist below. |
 | 9 — Motion, a11y, perf, mobile | done | 8f410bb | Lighthouse mobile median 96/100/100/100 (targets 90/90/95/95), CLS 0; axe 0 via @axe-core/playwright (CLI blocked, see checklist); 44 px targets and no overflow at 360/390/414/768/1024 (e2e); touch flows; medallion lighting on opacity overlays, paused offscreen and in hidden tabs; one easing family; OG image, Open Graph and Twitter cards, canonical. Verify 12/12, e2e 142, Vitest 57. Checklist below. |
-| 10 — Pre-release review | in progress | | Started 2026-10-30. All skills loaded this session. |
+| 10 — Pre-release review | done | HASH_PENDING | `docs/REVIEW.md`: fe-reviewer and recruiter-eyes top fives (recruiter 8/10, up from 6) plus a full fact check (0 contradicted). Fixed everything not needing content: phone featured-card collapse, legible phone diagram, lens retry, 44 px targets in Ask and Skill map, 16 px lens copy, filter reset for hidden cards, inert background, print, Next 16.4.3, dead code. `/design-preview` removed (pre-approved). Content items in DECISIONS 4 (resume.pdf blocks G1), 5, 7, 8, 9. Verify 18/18, e2e 156, Vitest 57. Checklist below. |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 10 checklist
+
+Closed out 2026-10-30. All skills loaded this session. Report: `docs/REVIEW.md`.
+
+- [x] lint 0/0, typecheck clean, build passes (routes `/`, `/_not-found` only)
+- [x] `npm run verify -- --phase 10 --tablet --path / --path "/#lens=timeline" --path "/#lens=recruiter"`: 18 of 18 pass; phone fold and phone Work section inspected
+- [x] two reviewers' reports in `docs/REVIEW.md`, top five each with file:line: (a) senior front-end engineer (fe-reviewer, verdict BLOCK on the missing resume only), (b) recruiter with 30 seconds (recruiter-eyes, 8/10); plus the fact-checker (310 claims, 0 contradicted)
+- [x] every issue not needing a content decision fixed (list in REVIEW.md); content decisions written to DECISIONS 4 (resume.pdf, blocks G1), 5 (CI validation, now recommended), 7 (Celebal figure in a hero chip), 8 (repeated availability sentence in About), 9 (intern title)
+- [x] `/design-preview` removed (pre-approved); its `robots.txt` line and skill references updated
+- [x] dead code removed (`featuredProjects`, `otherProjects`, `Section` `intro`, `Stat` `size`, `.theme-light`/`.theme-dark`, `start` script); no `console.log` in `src/`; no unused assets in `public/`
+- [x] `npm run release:check` added for Phase 11 step 1; today it fails only on `resume.pdf` (expected, DECISIONS 4)
+- [x] e2e 156 passed (split into `home`, `lenses`, `ask`, `phase9` specs plus `helpers.ts`); Vitest 57; Worker typecheck and dry-run build
+- [x] STATUS row updated, commit `redesign: phase 10 — pre-release review`
+
+### Rulings made in Phase 10
+
+- Featured cards collapse on phones (below 768 px) to status, title, one line and figures, with "Show details" for the rest. The collapse only applies when JavaScript runs (`html[data-js]`, set by the head script before first paint), so the static HTML and no-JS visitors keep every word; desktop and tablet are unchanged. Nothing is removed, so rule 4 holds.
+- On phones the hero diagram hides its small sub-labels ("raw", "cleaned", "modeled", "RAG, Claude API, MLX", "Medallion architecture"); the SVG title and desc keep the full text for assistive tech, and the labels stay legible.
+- Rows in Experience without a summary lead with their first outcome (existing text).
+- `next` 16.3.8 to 16.4.3 (patch within the major; clears the recorded advisory).
 
 ## Phase 9 checklist
 

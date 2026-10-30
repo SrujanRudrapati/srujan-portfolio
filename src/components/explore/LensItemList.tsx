@@ -12,7 +12,7 @@ export function LensItemList({ items, label }: { items: LensItem[]; label: strin
             </a>
             <span className="ml-2 text-xs text-muted">{item.kind === "role" ? "Role" : "Project"}</span>
           </p>
-          <p className="text-sm text-ink md:col-span-4">{item.line}</p>
+          <p className="text-ink md:col-span-4">{item.line}</p>
           {item.metric && <p className="text-sm font-semibold text-ink tabular-nums md:col-span-3">{item.metric}</p>}
         </li>
       ))}

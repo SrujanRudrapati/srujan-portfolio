@@ -8,13 +8,9 @@
    runtime. Everything that never changes with theme (type scale, spacing,
    radii, shadows, easing) is declared once inside @theme, so Tailwind utilities
    and hand-written CSS read the same values. There is one colour system: the
-   @theme inline block below maps each token to a Tailwind utility name.
+   @theme inline block below maps each token to a Tailwind utility name. */
 
-   .theme-light / .theme-dark exist so the style guide can pin a subtree to one
-   theme. They carry the same values as the :root sets. */
-
-:root,
-.theme-light {
+:root {
   color-scheme: light;
   --bg: #f6f6f3;
   --surface: #ebebe6;
@@ -29,8 +25,7 @@
   --on-accent: #ffffff;
 }
 
-:root[data-theme="dark"],
-.theme-dark {
+:root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #161616;
   --surface: #202020;
@@ -228,6 +223,21 @@
 .medallion-text {
   font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
+/* Phones: the diagram is scaled to about 0.8, so the small sub-labels would
+   render under 12px. Hide them (the SVG title and desc carry the full text)
+   and enlarge the stage labels. */
+@media (max-width: 39.99rem) {
+  .medallion-text {
+    display: none;
+  }
+  .medallion-label {
+    font-size: 18px;
+  }
+  /* With the sub-label hidden, centre the stage label in its box. */
+  .medallion-stage[data-sub] .medallion-label {
+    transform: translateY(8px);
+  }
+}
 .medallion-base {
   fill: var(--surface);
 }
@@ -414,9 +424,27 @@
 }
 
 
+/* Featured cards on phones: title, figures and one line first; the rest opens
+   with "Show details". Only when scripted (data-js), so no-JS shows all. */
+.featured-toggle {
+  display: none;
+}
+@media (max-width: 47.99rem) {
+  html[data-js] .featured-toggle {
+    display: inline-flex;
+  }
+  html[data-js] .featured-more:not([data-open]) {
+    display: none;
+  }
+}
+
 /* Print. Recruiter mode prints alone on one page, in light colours, whatever
    theme is on screen. Other lenses print the page as it is. */
 @media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
   :root,
   :root[data-theme="dark"],
   :root:not([data-theme="light"]) {

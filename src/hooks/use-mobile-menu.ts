@@ -20,6 +20,9 @@ export function useMobileMenu() {
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
+    // Everything behind the open menu is inert: no Tab stops, no screen-reader browsing.
+    const behind = [document.querySelector("main"), document.querySelector("body > footer")].filter((el): el is HTMLElement => !!el);
+    behind.forEach((el) => (el.inert = true));
 
     const visibleFocusables = () =>
       Array.from(header?.querySelectorAll<HTMLElement>(FOCUSABLE) ?? []).filter((el) => el.offsetParent !== null);
@@ -58,6 +61,7 @@ export function useMobileMenu() {
     desktop.addEventListener("change", onDesktop);
     return () => {
       root.style.overflow = previousOverflow;
+      behind.forEach((el) => (el.inert = false));
       document.removeEventListener("keydown", onKeyDown);
       desktop.removeEventListener("change", onDesktop);
     };

@@ -28,7 +28,7 @@ export const profile = {
   ],
 };
 
-// Written for the site from facts in the brief (the brief asks for 3-4 sentences but gives no draft).
+// Written for the site from the facts in .claude/skills/portfolio-facts.
 export const about = [
   "I'm a data engineer finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University.",
   "Before that I spent two years at Celebal Technologies building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing, and e-commerce.",

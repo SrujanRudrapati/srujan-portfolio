@@ -6,7 +6,6 @@
     "dev": "next dev",
     "prebuild": "npm run -s graph",
     "build": "next build",
-    "start": "next start",
     "lint": "eslint",
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
@@ -17,12 +16,13 @@
     "test:unit": "vitest run",
     "worker:check": "npm --prefix worker run typecheck && npm --prefix worker run build",
     "lighthouse": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/lighthouse.mts",
-    "axe": "axe http://localhost:4321/ --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa --exit"
+    "axe": "axe http://localhost:4321/ --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa --exit",
+    "release:check": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/release-check.mts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
     "minisearch": "^7.2.0",
-    "next": "16.3.8",
+    "next": "^16.4.3",
     "react": "19.2.8",
     "react-dom": "19.2.8"
   },
@@ -35,7 +35,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.3.8",
+    "eslint-config-next": "^16.4.3",
     "lighthouse": "^12.8.2",
     "serve": "^14.2.6",
     "tailwindcss": "^4",

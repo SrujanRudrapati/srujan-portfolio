@@ -46,7 +46,7 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
           {hit.label}
         </a>
       </h3>
-      <p className="mt-1.5 text-sm text-ink">{hit.summary}</p>
+      <p className="mt-1.5 text-ink">{hit.summary}</p>
       {figures.length > 0 && (
         <ul aria-label={`${hit.label} figures`} className="mt-2 space-y-0.5">
           {figures.map((f) => (
@@ -60,7 +60,7 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
         <ul aria-label={`${hit.label} links`} className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
           {links.map((u) => (
             <li key={u}>
-              <a href={external(u)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-8 items-center gap-1 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+              <a href={external(u)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
                 {hostLabel(u)}
                 <ArrowUpRightIcon aria-hidden="true" size={12} weight="bold" />
                 <span className="sr-only">(opens in a new tab)</span>

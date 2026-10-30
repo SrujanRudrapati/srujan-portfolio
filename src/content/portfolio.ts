@@ -1,5 +1,5 @@
-// All copy and metrics come from PORTFOLIO_BRIEF.md and, from Phase 4 on,
-// .claude/skills/portfolio-facts. Do not add numbers, titles, or client names
+// All copy and metrics come from .claude/skills/portfolio-facts and the text
+// already on the site. Do not add numbers, titles, or client names
 // that are not in those sources. Projects: src/data/projects.ts.
 
 export { about, profile } from "./profile.ts";

@@ -20,7 +20,8 @@ export function Experience() {
                 {role.org}
                 <span className="font-normal text-muted">, {role.place}</span>
               </p>
-              {role.summary && <p className="mt-2 max-w-measure text-ink">{role.summary}</p>}
+              {/* Roles without a summary lead with their first outcome (existing text), so no row is bare. */}
+              {(role.summary ?? role.outcomes[0]?.text) && <p className="mt-2 max-w-measure text-ink">{role.summary ?? role.outcomes[0]?.text}</p>}
               {(roleFigures.get(`${role.title}|${role.org}`) ?? []).length > 0 && (
                 <ul aria-label={`${role.title} figures`} className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm">
                   {roleFigures.get(`${role.title}|${role.org}`)!.map((f) => (
@@ -38,7 +39,7 @@ export function Experience() {
                   </summary>
                   <ul className="mt-2 max-w-measure space-y-3">
                     {role.outcomes.map((o) => (
-                      <li key={o.label ?? o.text} className="text-sm text-ink">
+                      <li key={o.label ?? o.text} className="text-ink">
                         {o.label && <span className="block font-semibold">{o.label}</span>}
                         {o.text}
                       </li>

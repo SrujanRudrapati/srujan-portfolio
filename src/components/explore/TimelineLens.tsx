@@ -35,14 +35,14 @@ function Outcomes({ outcomes }: { outcomes: TimelineEntry["outcomes"] }) {
       {outcomes.map((o) => (
         <div key={o.label ?? o.text}>
           <dt className="text-sm font-semibold text-ink">{o.label}</dt>
-          <dd className="mt-1 text-sm text-ink">{o.text}</dd>
+          <dd className="mt-1 text-ink">{o.text}</dd>
         </div>
       ))}
     </dl>
   ) : (
     <ul className="mt-3 max-w-measure space-y-2">
       {outcomes.map((o) => (
-        <li key={o.text} className="relative pl-4 text-sm text-ink">
+        <li key={o.text} className="relative pl-4 text-ink">
           <span aria-hidden="true" className="absolute top-[0.65em] left-0 h-0.5 w-2 bg-ink" />
           {o.text}
         </li>

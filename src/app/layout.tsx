@@ -10,10 +10,11 @@ const archivo = Archivo({
   display: "swap",
 });
 
-// Runs synchronously while the HTML parses, before first paint. A stored choice
+// Runs synchronously while the HTML parses, before first paint. It marks the
+// page as scripted (data-js: phone-only collapses key off it), then a stored choice
 // sets data-theme so the matching token set applies immediately; no stored
 // choice leaves the attribute off and the system preference decides.
-const themeScript = `(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
+const themeScript = `(function(){document.documentElement.setAttribute("data-js","");try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
 
 const SITE_URL = "https://srujanrudrapati.github.io/srujan-portfolio/";
 const TITLE = "Srujan Rudrapati | Data Engineer";

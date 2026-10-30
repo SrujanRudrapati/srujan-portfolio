@@ -30,6 +30,41 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
     });
   }
 
+  test("390px: hero diagram text renders at 12px or more", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    const smallest = await page.locator("#top .medallion").evaluate((svg) => {
+      const scale = svg.getBoundingClientRect().width / (svg as SVGSVGElement).viewBox.baseVal.width;
+      return Math.min(...Array.from(svg.querySelectorAll("text")).filter((t) => getComputedStyle(t).display !== "none").map((t) => parseFloat(getComputedStyle(t).fontSize) * scale));
+    });
+    expect(smallest).toBeGreaterThanOrEqual(12);
+  });
+
+  for (const where of ["ask", "skills"] as const) {
+    test(`controls in the ${where === "ask" ? "open Ask panel" : "Skill map"} are at least 44px tall`, async ({ page }) => {
+      if (where === "ask") {
+        await page.locator("#hero-ask").fill("What have you done with Spark?");
+        await page.keyboard.press("Enter");
+        await expect(page.getByRole("dialog").getByRole("list", { name: "Evidence" })).toBeVisible();
+      } else {
+        await page.goto("/#lens=skills");
+        await expect(page.getByRole("heading", { name: "All projects" })).toBeVisible();
+      }
+      const scope = where === "ask" ? "dialog[open]" : "#work";
+      const small = await page.evaluate((sel) => {
+        const out: string[] = [];
+        for (const el of document.querySelectorAll<HTMLElement>(`${sel} a[href], ${sel} button, ${sel} input`)) {
+          const s = getComputedStyle(el);
+          if (s.display === "none" || el.closest("[hidden], .sr-only")) continue;
+          const b = el.getBoundingClientRect();
+          const inline = el.tagName === "A" && s.display === "inline";
+          if (!inline && b.height > 0 && b.height < 44) out.push(`${(el.textContent ?? "").trim().slice(0, 30)} ${Math.round(b.height)}px`);
+        }
+        return out;
+      }, scope);
+      expect(small).toEqual([]);
+    });
+  }
+
   test("touch: theme toggle, menu, lens switcher and Ask work by tap", async ({ page, isMobile }) => {
     test.skip(!isMobile, "Touch device project");
     await page.getByRole("button", { name: "Open menu" }).tap();

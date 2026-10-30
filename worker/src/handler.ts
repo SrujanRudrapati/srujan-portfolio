@@ -41,6 +41,31 @@ function parseBody(value: unknown): AskBody | string {
   return { question, nodes: nodes.map(({ id, type, label, summary, metrics, skills, text }: GraphNodeInput) => ({ id, type, label, summary, metrics, skills, text })) };
 }
 
+/** Reads the body up to `max` bytes; null if it is longer (covers chunked bodies with no content-length). */
+async function readCapped(request: Request, max: number): Promise<string | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > max) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const all = new Uint8Array(size);
+  let offset = 0;
+  for (const c of chunks) {
+    all.set(c, offset);
+    offset += c.byteLength;
+  }
+  return new TextDecoder().decode(all);
+}
+
 /** In-memory sliding window per IP. Per isolate, so approximate; a KV namespace would make it global (see DECISIONS). */
 export function createRateLimiter(now: () => number) {
   const hits = new Map<string, number[]>();
@@ -76,9 +101,11 @@ export function createHandler({ callModel, allowedOrigin, now = Date.now, log = 
     if (!allow(ip)) return json({ error: "rate limited, try again later" }, 429, origin);
 
     if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) return json({ error: "body too large" }, 413, origin);
+    const text = await readCapped(request, MAX_BODY_BYTES);
+    if (text === null) return json({ error: "body too large" }, 413, origin);
     let raw: unknown;
     try {
-      raw = await request.json();
+      raw = JSON.parse(text);
     } catch {
       return json({ error: "body must be JSON" }, 400, origin);
     }

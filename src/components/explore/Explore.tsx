@@ -1,6 +1,7 @@
 "use client";
 
-import { lazy, Suspense, useCallback, useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import type { Graph } from "@/data/graph/types";
 import { useGraph } from "@/hooks/use-graph";
 import { LensErrorBoundary } from "./LensErrorBoundary";
 import { DEFAULT_LENS, LENSES, lensFromHash, type LensId } from "./lenses";
@@ -14,7 +15,8 @@ import { LensSwitcher } from "./LensSwitcher";
 // even when the hash is already that value, and a #project-<slug> hash switches
 // back to Highlights so card links always land.
 
-const GraphLens = lazy(() => import("./GraphLens"));
+/** Event the Highlights filter listens for, so a link to a card it currently hides can show it. */
+export const SHOW_ALL_PROJECTS = "work:show-all";
 
 const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "start" });
 
@@ -24,6 +26,26 @@ export function Explore({ children }: { children: ReactNode }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusAfterSwitch = useRef(false);
   const { state: graphState, retry } = useGraph(lens !== DEFAULT_LENS);
+  // The lens code loads with graph.json, on first use. A failed import (a stale chunk after a redeploy,
+  // a dropped request) is retried by "try again", which bumps `attempt` and re-runs the import.
+  const [attempt, setAttempt] = useState(0);
+  const [LensView, setLensView] = useState<ComponentType<{ lens: Exclude<LensId, "highlights">; graph: Graph }> | null>(null);
+  const [chunkFailed, setChunkFailed] = useState(false);
+  useEffect(() => {
+    if (lens === DEFAULT_LENS || LensView || chunkFailed) return;
+    let cancelled = false;
+    import("./GraphLens")
+      .then((mod) => !cancelled && setLensView(() => mod.default))
+      .catch(() => !cancelled && setChunkFailed(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [lens, LensView, chunkFailed, attempt]);
+  const tryAgain = useCallback(() => {
+    setChunkFailed(false);
+    setAttempt((n) => n + 1);
+    retry();
+  }, [retry]);
   const label = LENSES.find((l) => l.id === lens)?.label ?? "";
 
   const choose = useCallback((next: LensId) => {
@@ -55,7 +77,10 @@ export function Explore({ children }: { children: ReactNode }) {
       }
       if (hash.startsWith("#project-")) {
         setLens(DEFAULT_LENS);
-        requestAnimationFrame(() => scrollToSection(hash.slice(1)));
+        // If a Highlights filter hides the card, show every project first.
+        const card = document.getElementById(hash.slice(1));
+        if (!card || card.offsetParent === null) window.dispatchEvent(new Event(SHOW_ALL_PROJECTS));
+        requestAnimationFrame(() => requestAnimationFrame(() => scrollToSection(hash.slice(1))));
         return;
       }
       if (!initial && hash === "") setLens(DEFAULT_LENS);
@@ -98,11 +123,11 @@ export function Explore({ children }: { children: ReactNode }) {
     target.focus({ preventScroll: true });
   }, [lens, graphState.status]);
 
-  const errorMessage = (message: string) => (
+  const errorMessage = () => (
     <p className="max-w-measure text-lg text-ink">
-      This view could not load ({message}).{" "}
-      <button type="button" onClick={retry} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
-        Try again
+      This view could not load. Check your connection, then{" "}
+      <button type="button" onClick={tryAgain} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
+        try again
       </button>{" "}
       or{" "}
       <button type="button" onClick={() => choose(DEFAULT_LENS)} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
@@ -132,14 +157,12 @@ export function Explore({ children }: { children: ReactNode }) {
           <h3 ref={headingRef} tabIndex={-1} className="sr-only">
             {label}
           </h3>
-          {graphState.status === "ready" ? (
-            <LensErrorBoundary fallback={errorMessage}>
-              <Suspense fallback={loading}>
-                <GraphLens lens={lens} graph={graphState.graph} />
-              </Suspense>
+          {graphState.status === "error" || chunkFailed ? (
+            errorMessage()
+          ) : graphState.status === "ready" && LensView ? (
+            <LensErrorBoundary key={attempt} fallback={errorMessage}>
+              <LensView lens={lens} graph={graphState.graph} />
             </LensErrorBoundary>
-          ) : graphState.status === "error" ? (
-            errorMessage(graphState.message)
           ) : (
             loading
           )}

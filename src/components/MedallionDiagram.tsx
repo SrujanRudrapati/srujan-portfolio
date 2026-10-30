@@ -63,7 +63,7 @@ export function MedallionDiagram() {
       </g>
 
       {stages.map((s) => (
-        <g key={s.id} className="medallion-stage" data-stage={s.id}>
+        <g key={s.id} className="medallion-stage" data-stage={s.id} data-sub={s.sub ? "" : undefined}>
           <rect className="medallion-base" x={s.x} y={s.y} width={s.w} height={s.h} />
           {/* Lit overlay: opacity is the only animated property; fully on when nothing animates. */}
           <rect className="medallion-lit" x={s.x} y={s.y} width={s.w} height={s.h} />

@@ -32,7 +32,7 @@ export function Hero() {
             <Button variant="secondary" href="#contact">
               Get in touch
             </Button>
-            <Button variant="ghost" href="#lens=recruiter">
+            <Button variant="secondary" href="#lens=recruiter">
               One-page summary
             </Button>
           </div>
@@ -46,7 +46,7 @@ export function Hero() {
         </div>
 
         <div className="enter flex justify-center lg:col-span-5 lg:justify-end" style={enter(4)}>
-          <AnimateInView className="w-full max-w-[300px] sm:max-w-[360px] lg:max-w-[460px]">
+          <AnimateInView className="w-full sm:max-w-[360px] lg:max-w-[460px]">
             <MedallionDiagram />
           </AnimateInView>
         </div>

@@ -9,8 +9,6 @@ import { Section, TagList } from "./ui";
 const PREVIEW = 6;
 const SUB_PREVIEW = 3;
 
-const count = (g: SkillGroup) => (g.items?.length ?? 0) + (g.subgroups ?? []).reduce((n, s) => n + s.items.length, 0);
-
 function More({ rest }: { rest: number }) {
   return rest > 0 ? <p className="mt-1.5 text-sm text-muted tabular-nums">and {rest} more</p> : null;
 }
@@ -60,7 +58,8 @@ function FullList() {
 }
 
 export function Skills() {
-  const total = skills.reduce((n, g) => n + count(g), 0);
+  // Distinct skills: Databricks and Unity Catalog each sit in two groups.
+  const total = new Set(skills.flatMap((g) => [...(g.items ?? []), ...(g.subgroups ?? []).flatMap((s) => s.items)])).size;
   return (
     <Section id="skills" title="Skills">
       <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">

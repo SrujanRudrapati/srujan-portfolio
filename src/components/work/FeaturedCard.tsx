@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import { Stat } from "@/components/Stat";
 import { StatusBadge, StatusNoteChip } from "@/components/StatusBadge";
 import { TagList, TextLink } from "@/components/ui";
+import { MoreToggle } from "./MoreToggle";
 
 // A featured project. Order of weight: the impact figures (red, large) land
 // first, then the diagram, then the prose. Everything from the old case study
@@ -52,74 +53,78 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
           </ul>
         )}
 
-        {p.diagram && (
-          <div className="mt-8">
-            <ProjectDiagram name={p.diagram} />
-          </div>
-        )}
+        <MoreToggle targetId={`${p.slug}-more`} title={p.title} />
 
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
-          <div className="space-y-6 lg:col-span-7">
-            {p.problem && <Prose label="Problem">{p.problem}</Prose>}
-            {p.built && <Prose label="What I built">{p.built}</Prose>}
-            {p.highlights.length > 0 && (
-              <div>
-                <h4 className="text-ink">Highlights</h4>
-                <ul className="mt-2 max-w-measure space-y-2 text-ink">
-                  {p.highlights.map((h) => (
-                    <li key={h} className="border-l-2 border-line pl-3">
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-          <div className="space-y-6 lg:col-span-5">
-            {p.statusNotes && (
-              <div>
-                <h4 className="text-ink">Status</h4>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.statusNotes.map((n) => (
-                    <StatusNoteChip key={n.text} state={n.state}>
-                      {n.text}
-                    </StatusNoteChip>
-                  ))}
+        <div id={`${p.slug}-more`} className="featured-more">
+          {p.diagram && (
+            <div className="mt-8">
+              <ProjectDiagram name={p.diagram} />
+            </div>
+          )}
+
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12">
+            <div className="space-y-6 lg:col-span-7">
+              {p.problem && <Prose label="Problem">{p.problem}</Prose>}
+              {p.built && <Prose label="What I built">{p.built}</Prose>}
+              {p.highlights.length > 0 && (
+                <div>
+                  <h4 className="text-ink">Highlights</h4>
+                  <ul className="mt-2 max-w-measure space-y-2 text-ink">
+                    {p.highlights.map((h) => (
+                      <li key={h} className="border-l-2 border-line pl-3">
+                        {h}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                {p.statusDetail && <p className="mt-3 max-w-measure text-sm text-muted">{p.statusDetail}</p>}
-              </div>
-            )}
-            {p.stack.length > 0 && (
-              <div>
-                <h4 className="mb-3 text-ink">Stack</h4>
-                <TagList items={p.stack} label={`${p.title} stack`} />
-              </div>
-            )}
-            {(links.length > 0 || p.links.more) && (
-              <div>
-                <h4 className="mb-3 text-ink">Links</h4>
-                <ul className="flex flex-wrap gap-x-6 gap-y-2">
-                  {links.map((k) => (
-                    <li key={k}>
-                      <TextLink href={p.links[k]!} external className="min-h-11">
-                        {k === "repo" && p.links.repoLabel ? p.links.repoLabel : linkLabels[k]}
-                      </TextLink>
-                    </li>
-                  ))}
-                  {p.links.more?.map((link) => (
-                    <li key={link.url}>
-                      <TextLink href={link.url} external className="min-h-11">
-                        {link.label}
-                      </TextLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+              )}
+            </div>
+            <div className="space-y-6 lg:col-span-5">
+              {p.statusNotes && (
+                <div>
+                  <h4 className="text-ink">Status</h4>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {p.statusNotes.map((n) => (
+                      <StatusNoteChip key={n.text} state={n.state}>
+                        {n.text}
+                      </StatusNoteChip>
+                    ))}
+                  </div>
+                  {p.statusDetail && <p className="mt-3 max-w-measure text-sm text-muted">{p.statusDetail}</p>}
+                </div>
+              )}
+              {p.stack.length > 0 && (
+                <div>
+                  <h4 className="mb-3 text-ink">Stack</h4>
+                  <TagList items={p.stack} label={`${p.title} stack`} />
+                </div>
+              )}
+              {(links.length > 0 || p.links.more) && (
+                <div>
+                  <h4 className="mb-3 text-ink">Links</h4>
+                  <ul className="flex flex-wrap gap-x-6 gap-y-2">
+                    {links.map((k) => (
+                      <li key={k}>
+                        <TextLink href={p.links[k]!} external className="min-h-11">
+                          {k === "repo" && p.links.repoLabel ? p.links.repoLabel : linkLabels[k]}
+                        </TextLink>
+                      </li>
+                    ))}
+                    {p.links.more?.map((link) => (
+                      <li key={link.url}>
+                        <TextLink href={link.url} external className="min-h-11">
+                          {link.label}
+                        </TextLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {p.details && <FeaturedDetails project={p} />}
+          {p.details && <FeaturedDetails project={p} />}
+        </div>
       </article>
     </Reveal>
   );
