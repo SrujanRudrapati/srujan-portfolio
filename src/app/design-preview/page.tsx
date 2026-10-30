@@ -7,7 +7,8 @@ import { Reveal } from "@/components/Reveal";
 import { Stat } from "@/components/Stat";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { TagList, TextLink } from "@/components/ui";
-import { otherProjects, profile } from "@/content/portfolio";
+import { profile } from "@/content/portfolio";
+import { otherProjects } from "@/data/projects";
 import s from "./preview.module.css";
 
 // Not linked from the nav, not indexed. Two parts:
@@ -46,7 +47,13 @@ type Direction = {
   Diagram: () => ReactNode;
 };
 
-const sampleProject = otherProjects.find((p) => p.title.startsWith("F1")) ?? otherProjects[0];
+// The preview predates src/data/projects.ts; adapt the new shape to the fields it renders.
+const sampleSource = otherProjects.find((p) => p.title.startsWith("F1")) ?? otherProjects[0];
+const sampleProject = {
+  ...sampleSource,
+  figure: sampleSource.impact[0],
+  outcome: [sampleSource.oneLiner, ...sampleSource.highlights].join(" "),
+};
 
 const directions: Direction[] = [
   {

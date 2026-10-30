@@ -477,3 +477,28 @@ Option C's "for whom" list comes from the About and Experience copy. Changing ei
 - `tsc`, `eslint` and `next build` clean. No console warnings; no horizontal overflow at 1440 or 390.
 - Playwright (functional and axe, visual baselines still skipped): new tests cover the nav links and new-tab Resume, `aria-current` after scrolling to Experience, the scrolled border, the mobile menu (open, focus trap over 12 Tabs, Escape with focus return, scroll unlock, close on link click), the hero contents and chips, and the phone-fold check.
 - Animation verified in headless Chrome: both dots run `medallion-travel` on the offset path and the gold stage runs `stage-gold`; with reduced motion the dots are hidden, the stages are lit, and the hero entrance animation is `none`.
+
+---
+
+# Phase 4: project system and diagrams (2026-10-30)
+
+## Data (`src/data/projects.ts`)
+
+One typed list, `projects`, with the runbook schema (`slug, title, oneLiner, status, impact[], highlights[], stack[], links, featured, diagram?`) plus optional fields so nothing from the old `portfolio.ts` is lost: `date`, `context`, `credit`, `tags`, `problem`, `built`, `details` (the six "How it works" parts), `secondaryDiagrams`, `statusNotes`, `statusDetail`. `featuredProjects` and `otherProjects` are derived; `primaryLink` picks live, then repo, then write-up. Old vs new text: `docs/screenshots/phase-4/content-diff.md`. The `tags` facet is a judgment call recorded in STATUS: `ai` where an LLM or ML model does the work, `data` where a pipeline or dataset is the job.
+
+## Design plan
+
+- Hierarchy on a featured card, in order of weight: the impact figures (red, `text-4xl`, the only red on the card), the diagram, the title, the prose. Status is a word in cobalt with a dot only when something is running for real. Meta (date, context) sits as separate muted spans, never joined with middle dots.
+- Grid cards are the same card primitive, three up on desktop, with one figure, one line, one or two muted sentences, stack chips, and a cobalt arrow that only appears when there is somewhere to go. The title is the single anchor; its `::after` covers the card so the whole surface clicks with one tab stop.
+- Filters are buttons styled like the secondary button; pressed = ink fill. A live count ("3 of 8 projects") announces changes. No URL state.
+- Hover and keyboard focus are the same state: 2px lift (only under `motion-safe`), top rule to cobalt, one shadow, arrow slides 2px.
+
+## Diagram engine (`src/components/diagrams/FlowDiagram.tsx`)
+
+A diagram is `nodes` (boxes with label, kicker, sub lines, variant), `edges` (orthogonal connectors with arrowheads, computed from box geometry), and `tracks` (ordered box ids a dot travels through). The engine computes each track's path through the box anchors, its length, and the fraction of the loop at which the dot reaches each box; each box gets a lit overlay rect whose opacity animation is phased to that arrival (`--arrive`, `--period`), so stages light in order and the data drives the timing. Elbow corners are chosen to sit inside one of the two boxes, so a dot rides along the switch bar rather than cutting across space.
+
+Each diagram has a wide and a narrow layout; both SVGs are in the DOM and CSS shows one per breakpoint (the hidden one is `display: none`, so it costs nothing and is skipped by screen readers). Every SVG has `<title>` and `<desc>`, every figure a visible caption.
+
+Motion gates, in order: `prefers-reduced-motion: no-preference`, `@supports (offset-path)`, and `data-animate="on"` set by `useInView` (IntersectionObserver plus `visibilitychange`). The default with none of those is every box lit and still. Dots use `offset-distance` like the hero medallion (the documented exception to transform/opacity); the lighting overlays animate opacity only, which is the fix the Phase 3 code review suggested for the hero.
+
+Diagrams: Surplus pipeline (two spec sources into one inventory and an LLM), Surplus cluster network (switch, five nodes with their IPs, dots from the head node), Surplus privacy layers (nested rings; the dot leaves the app and never reaches the Internet box), Watchtower agent flow (three agents in sequence, the dot detours through the RAG tool).

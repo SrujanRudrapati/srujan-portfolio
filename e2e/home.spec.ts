@@ -133,24 +133,94 @@ test.describe("Hero", () => {
   });
 });
 
-test.describe("Featured work", () => {
-  test("renders both case studies with honest status", async ({ page }) => {
+test.describe("Work", () => {
+  test("renders both featured projects with honest status and every diagram", async ({ page }) => {
     const work = page.locator("#work");
-    await expect(work.getByRole("heading", { level: 2, name: "Featured work" })).toBeVisible();
+    await expect(work.getByRole("heading", { level: 2, name: "Work" })).toBeVisible();
 
     const surplus = work.getByRole("article", { name: "Surplus AI" });
     await expect(surplus).toBeVisible();
-    await expect(surplus.getByRole("list", { name: "Surplus AI pipeline" })).toBeVisible();
-    await expect(surplus.getByRole("group", { name: "Cluster network" })).toBeVisible();
-    await expect(surplus.getByRole("group", { name: /Privacy layers/ })).toBeVisible();
+    await expect(surplus.getByText("Production", { exact: true })).toBeVisible();
+    await expect(surplus.getByRole("img", { name: /Surplus AI pipeline/ })).toBeVisible();
     await expect(surplus.getByText("14B cluster engine in progress")).toBeVisible();
-    await expect(surplus.getByRole("listitem").filter({ hasText: /^Node \d/ })).toHaveCount(5);
+
+    // The long "How it works" block and the two secondary diagrams sit behind a disclosure.
+    const details = surplus.locator("details");
+    await expect(details).not.toHaveAttribute("open", "");
+    await details.locator("summary").click();
+    await expect(surplus.getByRole("img", { name: /Cluster network/ })).toBeVisible();
+    await expect(surplus.getByRole("img", { name: /Privacy layers/ })).toBeVisible();
+    await expect(surplus.getByRole("term")).toHaveCount(6);
 
     const watchtower = work.getByRole("article", { name: "Autonomous Supply Chain Watchtower" });
-    await expect(watchtower.getByRole("list", { name: "Watchtower agent flow" })).toBeVisible();
-    await expect(watchtower.getByText("Personal prototype")).toBeVisible();
+    await expect(watchtower.getByRole("img", { name: /Watchtower agent flow/ })).toBeVisible();
+    await expect(watchtower.getByText("Personal", { exact: true })).toBeVisible();
     // Brief rule: Watchtower is never described as shipped, deployed, in production, or having users.
     await expect(watchtower).not.toContainText(/shipped|deployed|production|users/i);
+  });
+
+  test("keeps every project: two featured and six in the grid, impact figures loudest", async ({ page }) => {
+    const work = page.locator("#work");
+    await expect(work.getByRole("article")).toHaveCount(8);
+    await expect(work.locator("#projects").getByRole("article")).toHaveCount(6);
+    // The Stat figure is the largest text on a featured card.
+    const stat = work.getByRole("article", { name: "Surplus AI" }).getByRole("list", { name: "Surplus AI results" }).locator("span").first();
+    const title = work.getByRole("heading", { level: 3, name: "Surplus AI" });
+    const [statSize, titleSize] = await Promise.all([
+      stat.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+      title.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
+    ]);
+    expect(statSize).toBeGreaterThan(titleSize);
+  });
+
+  test("filter chips are real buttons with aria-pressed and never change the URL", async ({ page }) => {
+    const work = page.locator("#work");
+    const url = page.url();
+    const all = work.getByRole("button", { name: "All" });
+    const production = work.getByRole("button", { name: "Production" });
+    await expect(all).toHaveAttribute("aria-pressed", "true");
+    await expect(production).toHaveAttribute("aria-pressed", "false");
+
+    await production.click();
+    await expect(production).toHaveAttribute("aria-pressed", "true");
+    await expect(all).toHaveAttribute("aria-pressed", "false");
+    await expect(work.getByRole("article")).toHaveCount(1);
+    await expect(work.getByText("1 of 8 projects")).toBeVisible();
+    expect(page.url()).toBe(url);
+
+    await work.getByRole("button", { name: "Hackathon" }).click();
+    await expect(work.getByText("Nothing matches this filter yet.")).toBeVisible();
+    await work.getByRole("button", { name: "Show all projects" }).click();
+    await expect(work.getByRole("article")).toHaveCount(8);
+  });
+
+  test("a linked grid card is one tab stop whose anchor is the title", async ({ page, isMobile }) => {
+    test.skip(isMobile, "Keyboard-only check");
+    const card = page.locator("#project-aws-cicd-pipeline");
+    const link = card.getByRole("link", { name: /End-to-End CI\/CD Deployment Pipeline/ });
+    await expect(link).toHaveAttribute("href", "https://github.com/SrujanRudrapati/aws-cicd-pipeline");
+    await expect(card.getByRole("link")).toHaveCount(1);
+    await link.focus();
+    await expect(link).toBeFocused();
+    // Cards with nowhere to go have no tab stop at all.
+    await expect(page.locator("#project-java-group-chat").getByRole("link")).toHaveCount(0);
+  });
+
+  test("diagrams are static and fully lit under reduced motion", async ({ page }) => {
+    // The suite runs with reducedMotion: "reduce", so dots must be hidden and overlays opaque.
+    const figure = page.locator(".flow").first();
+    await figure.scrollIntoViewIfNeeded();
+    // useInView flips data-animate on the next IntersectionObserver tick.
+    await expect(figure).toHaveAttribute("data-animate", "on");
+    const state = await figure.evaluate((el) => {
+      const svg = Array.from(el.querySelectorAll("svg")).find((s) => getComputedStyle(s).display !== "none")!;
+      const dot = svg.querySelector(".flow-dot")!;
+      const lit = svg.querySelector(".flow-lit")!;
+      return { dot: getComputedStyle(dot).display, lit: getComputedStyle(lit).opacity, animate: el.getAttribute("data-animate") };
+    });
+    expect(state.dot).toBe("none");
+    expect(state.lit).toBe("1");
+    expect(state.animate).toBe("on");
   });
 
   test("has no accessibility violations", async ({ page }) => {
@@ -158,7 +228,7 @@ test.describe("Featured work", () => {
   });
 
   test("visual", async ({ page }) => {
-    await expect(page.locator("#work")).toHaveScreenshot("featured-work.png");
+    await expect(page.locator("#work")).toHaveScreenshot("work.png");
   });
 });
 

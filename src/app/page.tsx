@@ -2,10 +2,9 @@ import { About } from "@/components/About";
 import { Contact, SiteFooter } from "@/components/Contact";
 import { Credentials } from "@/components/Credentials";
 import { Experience } from "@/components/Experience";
-import { FeaturedWork } from "@/components/FeaturedWork";
 import { Hero } from "@/components/Hero";
 import { SiteHeader } from "@/components/SiteNav";
-import { OtherProjects } from "@/components/OtherProjects";
+import { Work } from "@/components/work/Work";
 import { Skills } from "@/components/Skills";
 
 export default function Home() {
@@ -21,8 +20,7 @@ export default function Home() {
       <main id="main">
         <Hero />
         <About />
-        <FeaturedWork />
-        <OtherProjects />
+        <Work />
         <Experience />
         <Skills />
         <Credentials />

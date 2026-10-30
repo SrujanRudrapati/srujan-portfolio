@@ -10,7 +10,8 @@
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
     "typecheck": "tsc --noEmit",
-    "verify": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/verify-phase.mts"
+    "verify": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/verify-phase.mts",
+    "content:dump": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/content-dump.mts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

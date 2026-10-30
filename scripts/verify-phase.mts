@@ -104,14 +104,20 @@ function startServer(port: number): ChildProcess {
 
 async function scrollThrough(page: Page): Promise<void> {
   await page.evaluate(async () => {
+    // The site scrolls smoothly; stepping with smooth scrolling never settles
+    // on each position, so IntersectionObserver callbacks never see the blocks.
+    const root = document.documentElement;
+    const previous = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
     const step = Math.max(200, Math.floor(window.innerHeight * 0.6));
-    for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
+    for (let y = 0; y < root.scrollHeight; y += step) {
       window.scrollTo(0, y);
       await new Promise((resolve) => setTimeout(resolve, 60));
     }
-    window.scrollTo(0, document.documentElement.scrollHeight);
+    window.scrollTo(0, root.scrollHeight);
     await new Promise((resolve) => setTimeout(resolve, 120));
     window.scrollTo(0, 0);
+    root.style.scrollBehavior = previous;
   });
   await page.waitForTimeout(REVEAL_SETTLE_MS);
 }

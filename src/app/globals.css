@@ -233,6 +233,21 @@
   display: none;
 }
 
+/* Project diagrams: default (no JavaScript, offscreen, reduced motion, or no
+   offset-path support) is every box lit and still. */
+.flow {
+  --flow-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+}
+.flow-text {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+.flow-label {
+  font-stretch: 112.5%;
+}
+.flow-dot {
+  display: none;
+}
+
 /* Motion. Only defined when the user has not asked for reduced motion, so the
    reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
@@ -254,6 +269,23 @@
     transition:
       opacity 600ms var(--ease-out-quart),
       transform 600ms var(--ease-out-quart);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  /* Project diagrams (FlowDiagram). Dots ride each track; a box's lit overlay
+     fades in the moment a dot reaches it. Runs only while the figure is on
+     screen (data-animate set by useInView). Overlays animate opacity only. */
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .flow[data-animate="on"] .flow-dot {
+      display: block;
+      offset-rotate: 0deg;
+      animation: flow-travel var(--loop) linear infinite;
+    }
+    .flow[data-animate="on"] .flow-lit {
+      opacity: 0;
+      animation: flow-flash var(--period) linear infinite;
+      animation-delay: calc((var(--arrive) - 1) * var(--period));
+    }
   }
 
   /* Medallion diagram. Two dots share one 5s loop, 2.5s apart, so every stage
@@ -305,6 +337,21 @@
     opacity: 1;
     transform: none;
   }
+}
+
+@keyframes flow-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* A box lights when a dot arrives (0%), holds, then fades over 14% of its period. */
+@keyframes flow-flash {
+  0%, 8% { opacity: 1; }
+  22%, 100% { opacity: 0; }
 }
 
 @keyframes medallion-travel {

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 
 // Fades and lifts children in when they scroll into view. The data-reveal
 // attribute is only ever set from this effect, so without JavaScript, under
 // prefers-reduced-motion, or when the block is already on screen at load,
 // children render visible and nothing moves. Styles live in globals.css.
-export function Reveal({ children, className }: { children: ReactNode; className?: string }) {
+export function Reveal({ children, className, delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ export function Reveal({ children, className }: { children: ReactNode; className
   }, []);
 
   return (
-    <div ref={ref} className={className}>
+    <div ref={ref} className={className} style={delay ? ({ "--reveal-delay": `${delay}ms` } as CSSProperties) : undefined}>
       {children}
     </div>
   );
