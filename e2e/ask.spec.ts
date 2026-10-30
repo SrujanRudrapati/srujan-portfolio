@@ -21,10 +21,15 @@ test.describe("Ask", () => {
     expect(offsite).toEqual([]);
   });
 
-  test("opens from the nav, Enter submits, a suggestion answers, Escape closes and returns focus", async ({ page, isMobile }) => {
-    test.skip(isMobile, "Desktop nav button");
-    const open = page.getByRole("navigation", { name: "Primary" }).getByRole("button", { name: "Ask" });
-    await open.click();
+  test("opens from the command palette, Enter submits, a suggestion answers, Escape closes and returns focus", async ({ page, isMobile }) => {
+    // V3: Ask lives in the palette. Type a question there and choose "Ask about my work".
+    const opener = page.getByRole("banner").getByRole("button", { name: isMobile ? /Menu/ : /Search/ });
+    await opener.click();
+    const palette = page.getByRole("dialog", { name: "Command palette" });
+    await expect(palette.getByRole("combobox")).toBeFocused();
+    await page.keyboard.press("End");
+    await expect(palette.getByRole("option", { selected: true })).toHaveText("Ask about my work");
+    await page.keyboard.press("Enter");
     await expect(dialog(page)).toBeVisible();
     await expect(dialog(page).locator("#ask-input")).toBeFocused();
     await expect(dialog(page).getByRole("list", { name: "Suggested questions" }).getByRole("button")).toHaveCount(8);
@@ -35,18 +40,29 @@ test.describe("Ask", () => {
     await expect(dialog(page).getByRole("list", { name: "Evidence" }).getByRole("heading", { level: 3 }).first()).toHaveText("DevHacks × Cubbie hackathon");
     await page.keyboard.press("Escape");
     await expect(dialog(page)).toBeHidden();
-    await expect(open).toBeFocused();
+    await expect(opener).toBeFocused();
   });
 
-  test("phone: menu, Ask, Escape returns focus to the menu button", async ({ page, isMobile }) => {
-    test.skip(!isMobile, "Phone menu path");
-    await page.getByRole("button", { name: "Open menu" }).click();
-    await page.locator("#mobile-menu").getByRole("button", { name: "Ask" }).click();
-    await expect(dialog(page)).toBeVisible();
-    await expect(page.locator("#mobile-menu")).toBeHidden();
-    await page.keyboard.press("Escape");
+  test("an evidence link opens its page and lens", async ({ page }) => {
+    await page.goto("/about");
+    await page.keyboard.press("ControlOrMeta+k");
+    await page.getByRole("dialog", { name: "Command palette" }).getByRole("combobox").fill("What did you do at Celebal?");
+    await page.keyboard.press("End");
+    await page.keyboard.press("Enter");
+    const evidence = dialog(page).getByRole("list", { name: "Evidence" });
+    await evidence.getByRole("link", { name: /Celebal/ }).first().click();
     await expect(dialog(page)).toBeHidden();
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
+    await expect(page).toHaveURL(/\/explore#lens=timeline$/);
+    await expect(page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  test("a question typed into the palette is asked as is", async ({ page }) => {
+    await page.keyboard.press("ControlOrMeta+k");
+    const palette = page.getByRole("dialog", { name: "Command palette" });
+    await palette.getByRole("combobox").fill("what runs in production");
+    await expect(palette.getByRole("option").last()).toHaveText("Ask about my work: “what runs in production”");
+    await palette.getByRole("option").last().click();
+    await expect(dialog(page).getByRole("list", { name: "Evidence" }).getByRole("heading", { level: 3 }).first()).toHaveText("Surplus AI");
   });
 
   test("off-topic and prompt-injection questions get the grounded refusal", async ({ page }) => {

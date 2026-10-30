@@ -1,4 +1,5 @@
 import type { LensItem } from "@/data/graph/lenses";
+import { withBasePath } from "@/lib/paths";
 
 // Projects and roles as single lines: title (the link), kind, one line, lead figure.
 export function LensItemList({ items, label }: { items: LensItem[]; label: string }) {
@@ -7,7 +8,7 @@ export function LensItemList({ items, label }: { items: LensItem[]; label: strin
       {items.map((item) => (
         <li key={item.id} className="grid grid-cols-1 gap-x-6 gap-y-1 py-3 md:grid-cols-12">
           <p className="md:col-span-5">
-            <a href={item.href} className="font-medium text-ink underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+            <a href={withBasePath(item.href)} className="font-medium text-ink underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
               {item.title}
             </a>
             <span className="ml-2 text-xs text-muted">{item.kind === "role" ? "Role" : "Project"}</span>

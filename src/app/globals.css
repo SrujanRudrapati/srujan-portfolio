@@ -10,50 +10,64 @@
    and hand-written CSS read the same values. There is one colour system: the
    @theme inline block below maps each token to a Tailwind utility name. */
 
+/* v3 tokens (design-direction, DECISIONS 11): black and white neutrals and one blue
+   accent. The v2 names stay so every component keeps working; --accent and --accent-2
+   are now the same blue (C's red is dropped). Light by default; dark from data-theme
+   or the system preference. AA ratios for every pair are in docs/v3/IA.md, Tokens. */
 :root {
   color-scheme: light;
-  --bg: #f6f6f3;
-  --surface: #ebebe6;
-  --surface-raised: #fdfdfb;
-  --border: #cfcfc8;
-  --text: #0a0a0a;
-  --text-muted: #55554f;
-  --accent: #c42a14;
-  --accent-hover: #a32310;
-  --accent-2: #1b4fd8;
-  --accent-2-hover: #1640b0;
+  --bg: #ffffff;
+  --surface: #f2f2f2;
+  --surface-raised: #ffffff;
+  --border: #d9d9d9;
+  --text: #000000;
+  --text-muted: #5c5c5c;
+  --accent: #1d4ed8;
+  --accent-hover: #1e40af;
+  --accent-2: #1d4ed8;
+  --accent-2-hover: #1e40af;
   --on-accent: #ffffff;
+  /* Data states: medallion tiers and the travelling record only. */
+  --bronze: #9a5f35;
+  --silver: #7c838b;
+  --gold: #9c7a1c;
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #161616;
-  --surface: #202020;
-  --surface-raised: #262626;
-  --border: #3a3a36;
-  --text: #f2f2ee;
-  --text-muted: #a3a39b;
-  --accent: #ff6a4e;
-  --accent-hover: #ff8a72;
-  --accent-2: #7f9cff;
+  --bg: #000000;
+  --surface: #141414;
+  --surface-raised: #1c1c1c;
+  --border: #2b2b2b;
+  --text: #ffffff;
+  --text-muted: #a3a3a3;
+  --accent: #7c9bff;
+  --accent-hover: #9db3ff;
+  --accent-2: #7c9bff;
   --accent-2-hover: #9db3ff;
-  --on-accent: #0a0a0a;
+  --on-accent: #000000;
+  --bronze: #d08b57;
+  --silver: #b5bcc3;
+  --gold: #e0b84a;
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --bg: #161616;
-    --surface: #202020;
-    --surface-raised: #262626;
-    --border: #3a3a36;
-    --text: #f2f2ee;
-    --text-muted: #a3a39b;
-    --accent: #ff6a4e;
-    --accent-hover: #ff8a72;
-    --accent-2: #7f9cff;
+    --bg: #000000;
+    --surface: #141414;
+    --surface-raised: #1c1c1c;
+    --border: #2b2b2b;
+    --text: #ffffff;
+    --text-muted: #a3a3a3;
+    --accent: #7c9bff;
+    --accent-hover: #9db3ff;
+    --accent-2: #7c9bff;
     --accent-2-hover: #9db3ff;
-    --on-accent: #0a0a0a;
+    --on-accent: #000000;
+    --bronze: #d08b57;
+    --silver: #b5bcc3;
+    --gold: #e0b84a;
   }
 }
 
@@ -72,6 +86,7 @@
 
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-martian), ui-monospace, monospace;
 }
 
 @theme {
@@ -139,9 +154,14 @@
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  h1,
+  /* v3 type (C's): page titles condensed and heavy; section and card titles wide. */
+  h1 {
+    font-weight: 800;
+    font-stretch: 62%;
+    letter-spacing: -0.03em;
+  }
   h2 {
-    font-stretch: 125%;
+    font-stretch: 112.5%;
   }
   h3 {
     font-stretch: 112.5%;
@@ -438,8 +458,8 @@
   }
 }
 
-/* Print. Recruiter mode prints alone on one page, in light colours, whatever
-   theme is on screen. Other lenses print the page as it is. */
+/* Print. /cv (and the Recruiter lens) prints alone on one page, in light colours,
+   whatever theme is on screen. Other pages print as they are. */
 @media print {
   [data-reveal] {
     opacity: 1 !important;
@@ -452,11 +472,15 @@
     --bg: #ffffff;
     --surface: #ffffff;
     --surface-raised: #ffffff;
-    --border: #cfcfc8;
-    --text: #0a0a0a;
-    --text-muted: #55554f;
-    --accent: #c42a14;
-    --accent-2: #1b4fd8;
+    --border: #d9d9d9;
+    --text: #000000;
+    --text-muted: #5c5c5c;
+    --accent: #1d4ed8;
+    --accent-2: #1d4ed8;
+  }
+  /* /cv (V3): only the one-pager prints. */
+  body:has(main[data-print="cv"]) > *:not(main) {
+    display: none !important;
   }
   html[data-lens="recruiter"] body > *:not(main),
   html[data-lens="recruiter"] main > *:not(#work),

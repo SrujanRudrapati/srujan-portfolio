@@ -25,7 +25,9 @@ class StageBoundary extends Component<{ children: ReactNode }, { failed: boolean
 export function StageHost({ poster = false }: { poster?: boolean }) {
   const slots = useSyncExternalStore(stageStore.subscribe, stageStore.get, getEmpty);
   const state = useSyncExternalStore(stageStateStore.subscribe, stageStateStore.get, stageStateStore.getServer);
-  const wanted = slots.length > 0;
+  // The poster studio (/lab/posters) renders poster slots through its own StageHost; the
+  // root layout's StageHost renders only live slots, so the two never draw the same slot.
+  const wanted = slots.some((s) => s.poster === poster);
 
   useEffect(() => {
     if (wanted && !poster && render3DTier() !== "off") requestStage();

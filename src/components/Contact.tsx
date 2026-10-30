@@ -1,4 +1,4 @@
-import { ArrowUpIcon, EnvelopeSimpleIcon, FilePdfIcon, GithubLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react/dist/ssr";
+import { EnvelopeSimpleIcon, FilePdfIcon, GithubLogoIcon, LinkedinLogoIcon } from "@phosphor-icons/react/dist/ssr";
 import { profile } from "@/content/profile";
 import { withBasePath } from "@/lib/paths";
 import { Container } from "./ui";
@@ -48,25 +48,3 @@ export function Contact() {
   );
 }
 
-// The build year: a static export bakes it in at build time, which is when the page last changed.
-const year = new Date().getFullYear();
-
-export function SiteFooter() {
-  return (
-    <footer className="border-t-2 border-ink">
-      <Container className="flex flex-col gap-4 py-8 text-sm text-muted md:flex-row md:items-center md:justify-between">
-        <div className="space-y-1">
-          <p className="text-ink">
-            © {year} {profile.name}
-          </p>
-          <p>{profile.location}</p>
-          <p>Built with Next.js, deployed on GitHub Pages.</p>
-        </div>
-        <a href="#top" className="inline-flex min-h-11 items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
-          <ArrowUpIcon aria-hidden="true" size={16} weight="bold" />
-          Back to top
-        </a>
-      </Container>
-    </footer>
-  );
-}

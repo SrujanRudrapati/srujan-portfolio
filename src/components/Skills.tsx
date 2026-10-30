@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { skills, type SkillGroup } from "@/content/portfolio";
 import { Section, TagList } from "./ui";
+import { withBasePath } from "@/lib/paths";
 
 // Short summary: each group (and each Cloud subgroup) with its first few
 // skills. The Skill map lens is the full view, with how many projects use each
@@ -73,7 +74,7 @@ export function Skills() {
         ))}
       </div>
       <div className="mt-10 flex flex-col gap-2">
-        <a href="#lens=skills" className="inline-flex min-h-11 w-fit items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+        <a href={withBasePath("/explore#lens=skills")} className="inline-flex min-h-11 w-fit items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
           See every skill and where it was used on the skill map
           <ArrowRightIcon aria-hidden="true" size={16} weight="bold" />
         </a>

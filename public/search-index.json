@@ -14,7 +14,7 @@
       "offline"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "~80% less processing time per item, about 15 min down to about 3 min; ~10 min to list a 100+ unit pallet, instead of 1 to 2 hours; 14B Qwen model across four Mac minis, offline, via MLX",
     "skills": "MLX, Flask, Bash, Apple Vision OCR, Qwen 14B, Llama 3B, local LLM serving",
@@ -33,7 +33,7 @@
       "agents"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
     "metrics": "1st place, Track 1, chosen by public student vote; 82 submissions from 350+ students; 493 automated tests in CI for Receipts",
@@ -54,7 +54,7 @@
       "web"
     ],
     "evidence": [
-      "#project-label-lens",
+      "/work/label-lens",
       "https://label-lens-iota.vercel.app"
     ],
     "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 tests: 56 unit, 6 end-to-end",
@@ -76,7 +76,7 @@
       "rag"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "3 agents in sequence on the Claude API",
     "skills": "Python, Anthropic Claude API, CrewAI, RAG, vector databases (ChromaDB), agentic workflows",
@@ -96,7 +96,7 @@
       "forecasting"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "27.7% WAPE vs. 38.5% naive baseline; about 28% lower simulated holding cost",
     "skills": "Python, LightGBM, Prophet, scikit-learn, forecasting",
@@ -114,7 +114,7 @@
       "aws"
     ],
     "evidence": [
-      "#project-aws-cicd-pipeline",
+      "/work/aws-cicd-pipeline",
       "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
     ],
     "metrics": "",
@@ -135,7 +135,7 @@
       "security"
     ],
     "evidence": [
-      "#project-wlan-forensics-toolkit"
+      "/work/wlan-forensics-toolkit"
     ],
     "metrics": "100,000+ WPA2-encrypted packets parsed",
     "skills": "Python, Pyshark, NetworkX, scikit-learn, clustering, anomaly detection",
@@ -153,7 +153,7 @@
       "ml"
     ],
     "evidence": [
-      "#project-f1-race-predictor"
+      "/work/f1-race-predictor"
     ],
     "metrics": "80% top-3 accuracy vs. 73% baseline",
     "skills": "Python, scikit-learn, HistGradientBoosting, feature engineering",
@@ -170,7 +170,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#project-flask-on-kubernetes"
+      "/work/flask-on-kubernetes"
     ],
     "metrics": "",
     "skills": "Docker, docker-compose, Kubernetes, Flask",
@@ -187,7 +187,7 @@
       "java"
     ],
     "evidence": [
-      "#project-java-group-chat"
+      "/work/java-group-chat"
     ],
     "metrics": "",
     "skills": "Java, Swing, AWT, TCP sockets",
@@ -205,7 +205,7 @@
       "robotics"
     ],
     "evidence": [
-      "#project-gesture-rc-car"
+      "/work/gesture-rc-car"
     ],
     "metrics": "",
     "skills": "Arduino C++, ADXL335, RF HT12E/HT12D, L298, Gazebo",
@@ -222,7 +222,7 @@
       "current"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "Power BI",
@@ -239,7 +239,7 @@
       "teaching"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "40+ students in office hours",
     "skills": "",
@@ -256,7 +256,7 @@
       "data-engineering"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "about 50% less time-to-insight; about 10 million records a day; about 30% less downtime",
     "skills": "Databricks, Spark, dbt, Delta Lake, Kafka, medallion architecture, Microsoft Purview, Apache Atlas, Unity Catalog, Fabric, Data Factory, Glue, S3, Redshift, Power BI, SQL, feature engineering, data lineage, metadata management",
@@ -273,7 +273,7 @@
       "internship"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "",
@@ -289,7 +289,7 @@
       "asu"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -304,7 +304,7 @@
       "education"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -320,7 +320,7 @@
       "databricks"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -337,7 +337,7 @@
       "ai"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -353,7 +353,7 @@
       "azure"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -369,7 +369,7 @@
       "azure"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -386,7 +386,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -403,7 +403,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -419,7 +419,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -434,7 +434,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -451,7 +451,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -467,7 +467,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -483,7 +483,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -498,7 +498,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -513,7 +513,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -529,7 +529,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -544,7 +544,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -559,7 +559,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -574,7 +574,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -589,7 +589,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -604,7 +604,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -620,7 +620,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -636,7 +636,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -652,7 +652,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -668,7 +668,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -684,7 +684,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -700,7 +700,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -716,7 +716,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -732,7 +732,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -748,7 +748,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -764,7 +764,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -780,7 +780,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -796,7 +796,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -812,7 +812,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -828,7 +828,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -844,7 +844,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -859,7 +859,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -876,7 +876,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -893,7 +893,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -909,7 +909,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -926,7 +926,7 @@
       "agents"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -943,7 +943,7 @@
       "agents"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -959,7 +959,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -975,7 +975,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -991,7 +991,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1007,7 +1007,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1023,7 +1023,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1039,7 +1039,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1055,7 +1055,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1071,7 +1071,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1087,7 +1087,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1103,7 +1103,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1119,7 +1119,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1135,7 +1135,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1151,7 +1151,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1167,7 +1167,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1183,7 +1183,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1199,7 +1199,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1215,7 +1215,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1231,7 +1231,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1247,7 +1247,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1263,7 +1263,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1279,7 +1279,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1295,7 +1295,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1311,7 +1311,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1327,7 +1327,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1342,7 +1342,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1358,7 +1358,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1374,7 +1374,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1390,7 +1390,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1407,7 +1407,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1423,7 +1423,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1439,7 +1439,7 @@
       "testing"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1455,7 +1455,7 @@
       "testing"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1471,7 +1471,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1487,7 +1487,7 @@
       "networking"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1502,7 +1502,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1518,7 +1518,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1534,7 +1534,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1550,7 +1550,7 @@
       "language"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1565,7 +1565,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1580,7 +1580,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1596,7 +1596,7 @@
       "networking"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1613,7 +1613,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1629,7 +1629,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1645,7 +1645,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1661,7 +1661,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1677,7 +1677,7 @@
       "simulation"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1694,7 +1694,7 @@
       "headline"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1710,7 +1710,7 @@
       "surplus-ai"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1727,7 +1727,7 @@
       "llm"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1744,7 +1744,7 @@
       "headline"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
     "metrics": "",
@@ -1761,7 +1761,7 @@
       "hackathon"
     ],
     "evidence": [
-      "#project-devhacks-cubbie"
+      "/work/devhacks-cubbie"
     ],
     "metrics": "",
     "skills": "",
@@ -1778,7 +1778,7 @@
       "testing"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/receipts"
     ],
     "metrics": "",
@@ -1796,7 +1796,7 @@
       "grounding"
     ],
     "evidence": [
-      "#project-label-lens",
+      "/work/label-lens",
       "https://label-lens-iota.vercel.app"
     ],
     "metrics": "",
@@ -1813,7 +1813,7 @@
       "label-lens"
     ],
     "evidence": [
-      "#project-label-lens"
+      "/work/label-lens"
     ],
     "metrics": "",
     "skills": "",
@@ -1830,7 +1830,7 @@
       "testing"
     ],
     "evidence": [
-      "#project-label-lens"
+      "/work/label-lens"
     ],
     "metrics": "",
     "skills": "",
@@ -1847,7 +1847,7 @@
       "agents"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "",
     "skills": "",
@@ -1864,7 +1864,7 @@
       "forecasting"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "",
     "skills": "",
@@ -1880,7 +1880,7 @@
       "capstone"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "",
     "skills": "",
@@ -1897,7 +1897,7 @@
       "networking"
     ],
     "evidence": [
-      "#project-wlan-forensics-toolkit"
+      "/work/wlan-forensics-toolkit"
     ],
     "metrics": "",
     "skills": "",
@@ -1914,7 +1914,7 @@
       "ml"
     ],
     "evidence": [
-      "#project-f1-race-predictor"
+      "/work/f1-race-predictor"
     ],
     "metrics": "",
     "skills": "",
@@ -1930,7 +1930,7 @@
       "celebal"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1948,7 +1948,7 @@
       "headline"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1965,7 +1965,7 @@
       "aws"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1982,7 +1982,7 @@
       "teaching"
     ],
     "evidence": [
-      "#experience"
+      "/about#experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1997,7 +1997,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2012,7 +2012,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2027,7 +2027,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2042,7 +2042,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2057,7 +2057,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2072,7 +2072,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2087,7 +2087,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2102,7 +2102,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2117,7 +2117,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2132,7 +2132,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2147,7 +2147,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2162,7 +2162,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2177,7 +2177,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2192,7 +2192,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2207,7 +2207,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2222,7 +2222,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2237,7 +2237,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2252,7 +2252,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2267,7 +2267,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2282,7 +2282,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2297,7 +2297,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2312,7 +2312,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2327,7 +2327,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2342,7 +2342,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2358,7 +2358,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2374,7 +2374,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2390,7 +2390,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2454,7 +2454,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "",
     "skills": "",
@@ -2502,7 +2502,7 @@
       "hackathon"
     ],
     "evidence": [
-      "#project-devhacks-cubbie"
+      "/work/devhacks-cubbie"
     ],
     "metrics": "",
     "skills": "",
@@ -2519,8 +2519,8 @@
       "production"
     ],
     "evidence": [
-      "#experience",
-      "#project-surplus-ai"
+      "/about#experience",
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2536,7 +2536,7 @@
       "education"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",

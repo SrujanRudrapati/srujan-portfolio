@@ -17,7 +17,8 @@ export type NodeType =
 
 export type EdgeType = "uses" | "achieved" | "solved" | "in" | "at" | "produced" | "during";
 
-/** `url` is a fragment ("#work"), an http(s) URL, or a root path ("/resume.pdf"). Root paths are
+/** `url` is a page on the site ("/work/label-lens", "/explore#lens=timeline"; no bare "#fragment" since V3),
+ *  a file ("/resume.pdf"), or an http(s) URL. Root paths are
  *  stored without the GitHub Pages prefix: anything that renders one from graph.json must pass it
  *  through `withBasePath` (src/lib/paths.ts). Same for `ArtifactNode.url`. */
 export type Evidence = { label: string; url: string };

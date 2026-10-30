@@ -1,6 +1,6 @@
-import { ArrowUpRightIcon } from "@phosphor-icons/react/dist/ssr";
+import Link from "next/link";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Project } from "@/data/graph/types";
-import { primaryLink } from "@/data/project-helpers";
 import { Card } from "@/components/Card";
 import { Reveal } from "@/components/Reveal";
 import { Stat } from "@/components/Stat";
@@ -13,31 +13,20 @@ import { TagList } from "@/components/ui";
 
 export function ProjectCard({ project, index }: { project: Project; index: number }) {
   const p = project;
-  const href = primaryLink(p);
   const titleId = `${p.slug}-title`;
-  const destination = p.links.live ? "live app" : p.links.repo ? "repository on GitHub" : "write-up";
 
   return (
     <Reveal delay={index * 60} className="h-full">
-      <Card as="article" id={`project-${p.slug}`} aria-labelledby={titleId} lift={!!href} className="group relative flex h-full flex-col">
+      <Card as="article" id={`project-${p.slug}`} aria-labelledby={titleId} lift className="group relative flex h-full flex-col">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted tabular-nums">
           <StatusBadge status={p.status} />
           {p.date && <span>{p.date}</span>}
         </p>
         <h4 id={titleId} className="mt-3 text-xl leading-snug text-ink">
-          {href ? (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="after:absolute after:inset-0 after:content-[''] supports-[selector(:has(a))]:focus-visible:outline-none"
-            >
-              {p.title}
-              <span className="sr-only">, {destination}</span>
-            </a>
-          ) : (
-            p.title
-          )}
+          {/* The whole card opens the project's page (V3); its live, repo and write-up links are there. */}
+          <Link href={`/work/${p.slug}`} data-cursor="open" className="-my-[11px] inline-block py-[11px] after:absolute after:inset-0 after:content-[''] supports-[selector(:has(a))]:focus-visible:outline-none">
+            {p.title}
+          </Link>
         </h4>
         {p.context && <p className="mt-1 text-xs text-muted">{p.context}</p>}
         <p className="mt-3 text-ink">{p.oneLiner}</p>
@@ -57,14 +46,12 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
 
         <div className="mt-auto flex items-end justify-between gap-4 pt-6">
           <TagList items={p.stack} label={`${p.title} stack`} />
-          {href && (
-            <span
+          <span
               aria-hidden="true"
               className="shrink-0 text-accent-2 motion-safe:transition-transform motion-safe:duration-150 motion-safe:ease-out-quart group-hover:translate-x-0.5 group-has-[a:focus-visible]:translate-x-0.5"
             >
-              <ArrowUpRightIcon size={18} weight="bold" />
+              <ArrowRightIcon size={18} weight="bold" />
             </span>
-          )}
         </div>
       </Card>
     </Reveal>

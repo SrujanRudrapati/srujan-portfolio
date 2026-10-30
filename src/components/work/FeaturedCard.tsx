@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CaretDownIcon } from "@phosphor-icons/react/dist/ssr";
 import type { Project } from "@/data/graph/types";
 import { ProjectDiagram } from "@/components/diagrams/projectDiagrams";
@@ -23,7 +24,7 @@ function Prose({ label, children }: { label: string; children: string }) {
 type NamedLink = "live" | "repo" | "writeup";
 const linkLabels: Record<NamedLink, string> = { live: "Live app", repo: "Repository", writeup: "Write-up" };
 
-export function FeaturedCard({ project, index }: { project: Project; index: number }) {
+export function FeaturedCard({ project, index, onPage = false }: { project: Project; index: number; /** On its own /work/[slug] page: no link to itself, details open. */ onPage?: boolean }) {
   const p = project;
   const titleId = `${p.slug}-title`;
   const links = (Object.keys(linkLabels) as NamedLink[]).filter((k) => p.links[k]);
@@ -41,6 +42,13 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
             {p.title}
           </h3>
           <p className="mt-2 text-lg text-ink">{p.oneLiner}</p>
+          {!onPage && (
+            <p className="mt-4">
+              <Link href={`/work/${p.slug}`} data-cursor="open" className="inline-flex min-h-11 items-center font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+                Open the project page<span className="sr-only">: {p.title}</span>
+              </Link>
+            </p>
+          )}
         </header>
 
         {p.impact.length > 0 && (
@@ -53,9 +61,10 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
           </ul>
         )}
 
-        <MoreToggle targetId={`${p.slug}-more`} title={p.title} />
+        {!onPage && <MoreToggle targetId={`${p.slug}-more`} title={p.title} />}
 
-        <div id={`${p.slug}-more`} className="featured-more">
+        {/* On its own page everything is open: this page is now the main home of the details. */}
+        <div id={`${p.slug}-more`} className="featured-more" data-open={onPage ? "" : undefined}>
           {p.diagram && (
             <div className="mt-8">
               <ProjectDiagram name={p.diagram} />

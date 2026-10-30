@@ -66,11 +66,11 @@ test.describe("Lenses", () => {
     await expect(page.getByRole("list", { name: "Work by industry" }).getByRole("heading", { level: 4, name: "E-commerce" })).toBeVisible();
   });
 
-  test("a project link from another lens returns to Highlights and lands on the card", async ({ page }) => {
+  test("a project link from a lens opens the project's page (V3)", async ({ page }) => {
     await page.goto("/#lens=recruiter");
     await page.locator("#recruiter-sheet").getByRole("link", { name: "Label Lens" }).click();
-    await expect(switcher(page).getByRole("button", { name: "Highlights" })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("#project-label-lens")).toBeInViewport();
+    await expect(page).toHaveURL(/\/work\/label-lens$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Label Lens");
   });
 
   test("Recruiter mode prints on one page", async ({ page, isMobile }) => {
@@ -83,14 +83,20 @@ test.describe("Lenses", () => {
     }
   });
 
-  test("summary links switch lens even when the hash already matches, and move focus", async ({ page }) => {
-    await switcher(page).getByRole("button", { name: "Timeline" }).click();
-    await switcher(page).getByRole("button", { name: "Highlights" }).click();
-    await page.evaluate(() => window.history.replaceState(null, "", "#lens=timeline"));
+  test("summary links open the right lens on /explore (V3)", async ({ page }) => {
     await page.locator("#experience").getByRole("link", { name: /on the timeline/ }).click();
+    await expect(page).toHaveURL(/\/explore#lens=timeline$/);
     await expect(switcher(page).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("#work h3").filter({ hasText: "Timeline" })).toBeFocused();
-    await expect(page.locator("#work")).toBeInViewport();
+  });
+
+  test("/cv prints the one-pager on one page", async ({ page, isMobile }) => {
+    test.skip(isMobile, "PDF output is the same at any viewport");
+    await page.goto("/cv");
+    await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
+    for (const format of ["Letter", "A4"] as const) {
+      const pdf = await page.pdf({ format, printBackground: true });
+      expect(pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g)?.length, format).toBe(1);
+    }
   });
 
   test.describe("printing with a dark system theme", () => {
@@ -104,7 +110,7 @@ test.describe("Lenses", () => {
       // The theme colour fade transitions the switch, so poll until it settles.
       await expect
         .poll(() => page.locator("#recruiter-sheet p").first().evaluate((el) => ({ text: getComputedStyle(el).color, bg: getComputedStyle(document.body).backgroundColor })))
-        .toEqual({ text: "rgb(10, 10, 10)", bg: "rgb(255, 255, 255)" });
+        .toEqual({ text: "rgb(0, 0, 0)", bg: "rgb(255, 255, 255)" });
     });
   });
 

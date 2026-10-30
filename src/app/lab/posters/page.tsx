@@ -14,6 +14,8 @@ const SHOTS = [
   { id: "hero-stream-portrait", scene: "hero-stream", w: 800, h: 1000 },
   { id: "surplus-line", scene: "surplus-line", w: 1280, h: 800 },
   { id: "label-lens", scene: "label-lens", w: 1280, h: 800 },
+  { id: "watchtower", scene: "watchtower", w: 1280, h: 800 },
+  { id: "receipts", scene: "receipts", w: 1280, h: 800 },
 ] as const;
 
 export default function Posters() {

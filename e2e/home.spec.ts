@@ -6,65 +6,27 @@ test.beforeEach(async ({ page }) => {
   await page.evaluate(() => document.fonts.ready);
 });
 
-test.describe("Navigation", () => {
-  test("has the section links, a Resume link that opens in a new tab, and a theme toggle", async ({ page, isMobile }) => {
+test.describe("Navigation (v3: pages, not sections)", () => {
+  test("has the name, the four pages, a Resume link that opens in a new tab, and the palette button", async ({ page, isMobile }) => {
     const header = page.getByRole("banner");
-    await expect(header.getByRole("link", { name: "Srujan Rudrapati" })).toHaveAttribute("href", "#top");
-    // On a phone the theme toggle lives in the menu panel (Resume stays in the bar), so open it first.
-    if (isMobile) await page.getByRole("button", { name: "Open menu" }).click();
-    const resume = header.getByRole("link", { name: "Resume" }).first();
+    await expect(header.getByRole("link", { name: "Srujan Rudrapati" })).toHaveAttribute("href", "/");
+    const resume = header.getByRole("link", { name: "Resume" });
     await expect(resume).toHaveAttribute("href", "/resume.pdf");
     await expect(resume).toHaveAttribute("target", "_blank");
-    await expect(header.getByRole("button", { name: /theme/ })).toBeVisible();
-
+    await expect(header.getByRole("button", { name: isMobile ? /Menu/ : /Search/ })).toBeVisible();
     if (isMobile) return;
-    for (const name of ["About", "Work", "Experience", "Skills", "Contact"]) {
-      await expect(header.getByRole("link", { name, exact: true })).toBeVisible();
+    await expect(header.getByRole("button", { name: /theme/ })).toBeVisible();
+    const nav = page.getByRole("navigation", { name: "Main" });
+    for (const [name, href] of [["Work", "/work"], ["Explore", "/explore"], ["About", "/about"], ["CV", "/cv"]]) {
+      await expect(nav.getByRole("link", { name })).toHaveAttribute("href", href);
     }
   });
 
-  test("marks the section in view with aria-current", async ({ page, isMobile }) => {
+  test("marks the current page with aria-current", async ({ page, isMobile }) => {
     test.skip(isMobile, "Desktop links only");
-    const link = page.getByRole("banner").getByRole("link", { name: "Experience", exact: true });
-    await expect(link).not.toHaveAttribute("aria-current", "location");
-    await page.evaluate(() => document.getElementById("experience")?.scrollIntoView({ block: "start" }));
-    await expect(link).toHaveAttribute("aria-current", "location");
-  });
-
-  test("gains a border after scrolling 20px", async ({ page }) => {
-    const header = page.getByRole("banner");
-    await expect(header).not.toHaveAttribute("data-scrolled", "");
-    await page.evaluate(() => window.scrollTo(0, 200));
-    await expect(header).toHaveAttribute("data-scrolled", "");
-  });
-
-  test("mobile menu opens, traps focus, closes on Escape and on link click", async ({ page, isMobile }) => {
-    test.skip(!isMobile, "Mobile menu only");
-    const button = page.getByRole("button", { name: "Open menu" });
-    const panel = page.locator("#mobile-menu");
-    await expect(panel).toBeHidden();
-
-    await button.click();
-    await expect(panel).toBeVisible();
-    await expect(page.getByRole("button", { name: "Close menu" })).toHaveAttribute("aria-expanded", "true");
-    await expect(page.locator("html")).toHaveCSS("overflow", "hidden");
-
-    // Tab from the last focusable wraps back to the first; focus never leaves the header.
-    for (let i = 0; i < 12; i++) {
-      await page.keyboard.press("Tab");
-      const inHeader = await page.evaluate(() => !!document.activeElement?.closest("header"));
-      expect(inHeader).toBe(true);
-    }
-
-    await page.keyboard.press("Escape");
-    await expect(panel).toBeHidden();
-    await expect(page.getByRole("button", { name: "Open menu" })).toBeFocused();
-    await expect(page.locator("html")).not.toHaveCSS("overflow", "hidden");
-
-    await button.click();
-    await panel.getByRole("link", { name: "Work" }).click();
-    await expect(panel).toBeHidden();
-    await expect(page).toHaveURL(/#work$/);
+    await expect(page.getByRole("banner").getByRole("link", { name: "Srujan Rudrapati" })).toHaveAttribute("aria-current", "page");
+    await page.goto("/about");
+    await expect(page.getByRole("navigation", { name: "Main" }).getByRole("link", { name: "About" })).toHaveAttribute("aria-current", "page");
   });
 });
 
@@ -76,7 +38,7 @@ test.describe("Hero", () => {
     );
     await expect(hero.getByText("Data engineer working across Databricks, Azure, and AWS.")).toBeVisible();
 
-    await expect(hero.getByRole("link", { name: "See my work" })).toHaveAttribute("href", "#work");
+    await expect(hero.getByRole("link", { name: "See my work" })).toHaveAttribute("href", "/work");
     await expect(hero.getByRole("link", { name: "Get in touch" })).toHaveAttribute("href", "#contact");
 
     const chips = hero.getByRole("list", { name: "Highlights" });
@@ -193,16 +155,16 @@ test.describe("Work", () => {
     await expect(work.getByRole("article")).toHaveCount(11);
   });
 
-  test("a linked grid card is one tab stop whose anchor is the title", async ({ page, isMobile }) => {
+  test("a grid card is one tab stop whose anchor is the title and opens the project page", async ({ page, isMobile }) => {
     test.skip(isMobile, "Keyboard-only check");
     const card = page.locator("#project-aws-cicd-pipeline");
-    const link = card.getByRole("link", { name: /End-to-End CI\/CD Deployment Pipeline/ });
-    await expect(link).toHaveAttribute("href", "https://github.com/SrujanRudrapati/aws-cicd-pipeline");
+    const link = card.getByRole("link", { name: "End-to-End CI/CD Deployment Pipeline" });
+    await expect(link).toHaveAttribute("href", "/work/aws-cicd-pipeline");
     await expect(card.getByRole("link")).toHaveCount(1);
     await link.focus();
     await expect(link).toBeFocused();
-    // Cards with nowhere to go have no tab stop at all.
-    await expect(page.locator("#project-java-group-chat").getByRole("link")).toHaveCount(0);
+    // Every project has a page now (V3), so every card is one link.
+    await expect(page.locator("#project-java-group-chat").getByRole("link")).toHaveCount(1);
   });
 
   test("diagrams are static and fully lit under reduced motion", async ({ page }) => {
@@ -289,7 +251,7 @@ test.describe("Experience", () => {
       "Intern, Data Engineering",
     ]);
     for (const title of await titles.allTextContents()) expect(title).not.toMatch(/\b(senior|lead|architect|managed)\b/i);
-    await expect(exp.getByRole("link", { name: /on the timeline/ })).toHaveAttribute("href", "#lens=timeline");
+    await expect(exp.getByRole("link", { name: /on the timeline/ })).toHaveAttribute("href", "/explore#lens=timeline");
     // Full outcomes stay in the static HTML behind a closed disclosure (rule 4, no-JS and crawlers).
     const celebal = exp.locator("li").filter({ has: page.getByRole("heading", { level: 3, name: "Associate, Data Engineering" }) });
     await expect(celebal).toContainText("about 10 million records a day");
@@ -317,7 +279,7 @@ test.describe("Skills", () => {
       "metadata management",
       "data lineage",
     ]);
-    await expect(skills.getByRole("link", { name: /on the skill map/ })).toHaveAttribute("href", "#lens=skills");
+    await expect(skills.getByRole("link", { name: /on the skill map/ })).toHaveAttribute("href", "/explore#lens=skills");
     await expect(skills.getByRole("list", { name: "Azure skills" }).getByRole("listitem").first()).toHaveText("Databricks");
     await skills.getByText(/Show all \d+ skills as a list/).click();
     await expect(skills.getByRole("list", { name: "All AWS skills" })).toContainText("CloudWatch");

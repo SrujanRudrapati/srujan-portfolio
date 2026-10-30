@@ -1,6 +1,7 @@
 import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { experience, roleFigures } from "@/content/portfolio";
 import { Section } from "./ui";
+import { withBasePath } from "@/lib/paths";
 
 // Short summary: every role on one line with its figures. The Timeline lens in
 // the Work section is the full view (outcomes plus the projects done during
@@ -52,7 +53,7 @@ export function Experience() {
         ))}
       </ol>
       <p className="mt-8">
-        <a href="#lens=timeline" className="inline-flex min-h-11 items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+        <a href={withBasePath("/explore#lens=timeline")} className="inline-flex min-h-11 items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
           See every outcome and project on the timeline
           <ArrowRightIcon aria-hidden="true" size={16} weight="bold" />
         </a>

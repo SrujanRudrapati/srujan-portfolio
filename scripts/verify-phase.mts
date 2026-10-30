@@ -146,6 +146,7 @@ async function runOne(
     hasTouch: viewport.name === "mobile",
   });
   const page = await context.newPage();
+  await page.addInitScript(() => sessionStorage.setItem("intro", "1")); // screenshots show the page, not the first-visit intro
   const consoleErrors: string[] = [];
   const failedRequests: string[] = [];
   page.on("console", (message) => {

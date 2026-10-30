@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { SceneSlot } from "@/components/three/SceneSlot";
-import { StageHost } from "@/components/three/StageHost";
 import { render3DTier } from "@/components/three/capability";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -240,7 +239,6 @@ export function Pipeline({ facts }: { facts: LabFacts }) {
           <a href={withBasePath("/resume.pdf")}>Resume</a>
         </p>
       </section>
-      <StageHost />
     </main>
   );
 }

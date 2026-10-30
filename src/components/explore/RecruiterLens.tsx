@@ -70,7 +70,7 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
           <ul className="space-y-2">
             {sheet.featured.map((f) => (
               <li key={f.title} className="text-sm text-ink">
-                <a href={f.href} className="font-semibold underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+                <a href={withBasePath(f.href)} className="font-semibold underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
                   {f.title}
                 </a>
                 <span>: {f.line}</span>

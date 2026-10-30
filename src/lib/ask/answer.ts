@@ -47,26 +47,29 @@ export function summaryLine(hits: Hit[], question = ""): string {
   return `${list} ${hits.length === 1 ? "matches" : "match"}; strongest evidence: ${top.label}${figure ? ` (${figure})` : ""}.`;
 }
 
-/** Where a node lives on the page. */
+/** Where a node lives on the site: a route path, without the GitHub Pages basePath (render it through withBasePath). */
 export function anchorFor(hit: Pick<Hit, "id" | "type" | "evidence">): string {
   switch (hit.type) {
     case "project":
-      return `#${hit.id}`;
+      return `/work/${hit.id.replace(/^project-/, "")}`;
     case "role":
     case "education":
-      return "#lens=timeline";
+      return "/explore#lens=timeline";
     case "skill":
-      return "#lens=skills";
+      return "/explore#lens=skills";
     case "problem":
-      return "#lens=problems";
+      return "/explore#lens=problems";
     case "industry":
-      return "#lens=industries";
+      return "/explore#lens=industries";
     case "certification":
-      return "#credentials";
+      return "/about#credentials";
     default:
-      return hit.evidence.find((u) => u.startsWith("#")) ?? "#work";
+      return hit.evidence.find((u) => isRoute(u)) ?? "/work";
   }
 }
 
-/** Off-page evidence: repos and live apps. Root paths are left for the caller to prefix with withBasePath. */
-export const externalEvidence = (hit: Pick<Hit, "evidence">): string[] => hit.evidence.filter((u) => /^https?:\/\//.test(u) || u.startsWith("/"));
+/** A page on this site ("/work/label-lens", "/about#skills"), as opposed to a file ("/resume.pdf") or another site. */
+export const isRoute = (u: string): boolean => u.startsWith("/") && !/^\/[^#?]*\.[a-z0-9]+([#?].*)?$/i.test(u);
+
+/** Evidence that is not a page here: repos, live apps, files. Root paths are left for the caller to prefix with withBasePath. */
+export const externalEvidence = (hit: Pick<Hit, "evidence">): string[] => hit.evidence.filter((u) => /^https?:\/\//.test(u) || (u.startsWith("/") && !isRoute(u)));

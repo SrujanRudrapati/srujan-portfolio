@@ -114,7 +114,7 @@ export default function Stage3D({ poster = false }: { poster?: boolean }) {
       >
         <LoopGovernor poster={poster} />
         <ContextWatch />
-        {slots.map((slot, i) => (
+        {slots.filter((slot) => slot.poster === poster).map((slot, i) => (
           <SlotView key={slot.id} slot={slot} index={i + 1} tier={tier} />
         ))}
       </Canvas>

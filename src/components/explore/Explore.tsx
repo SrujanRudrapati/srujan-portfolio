@@ -95,8 +95,12 @@ export function Explore({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const link = (event.target as Element | null)?.closest?.('a[href^="#lens="]');
-      const next = link ? lensFromHash(link.getAttribute("href") ?? "") : null;
+      // "#lens=x" and, since V3, "/explore#lens=x" when we are already on /explore.
+      const link = (event.target as Element | null)?.closest?.('a[href*="#lens="]');
+      if (!(link instanceof HTMLAnchorElement)) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.pathname !== window.location.pathname) return;
+      const next = lensFromHash(url.hash);
       if (!next) return;
       event.preventDefault();
       window.history.pushState(null, "", next === DEFAULT_LENS ? `${window.location.pathname}${window.location.search}` : `#lens=${next}`);

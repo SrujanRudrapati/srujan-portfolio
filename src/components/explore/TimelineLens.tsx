@@ -1,5 +1,6 @@
 import type { TimelineEntry, TimelineProject } from "@/data/graph/lenses";
 import { StatusBadge } from "@/components/StatusBadge";
+import { withBasePath } from "@/lib/paths";
 
 // One vertical axis, newest first: roles and degrees sit on a thin cobalt
 // line; projects nest under the role or degree they happened during. This is
@@ -13,7 +14,7 @@ function NestedProject({ project: p }: { project: TimelineProject }) {
         {p.date && <time dateTime={p.dateTime}>{p.date}</time>}
       </p>
       <h5 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
-        <a href={`#project-${p.slug}`} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+        <a href={withBasePath(`/work/${p.slug}`)} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
           {p.title}
         </a>
       </h5>

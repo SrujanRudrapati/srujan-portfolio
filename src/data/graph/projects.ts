@@ -6,8 +6,8 @@ import { metric } from "./factories.ts";
 // figures, stack chips, links and diagrams. Content strings are the Phase 5
 // text verbatim; see .claude/skills/portfolio-facts for sources.
 
-const anchor = (slug: string) => `#project-${slug}`;
-const site = (slug: string, label: string) => ({ label: `${label} card`, url: anchor(slug) });
+const anchor = (slug: string) => `/work/${slug}`; // the project's own page (V3)
+const site = (slug: string, label: string) => ({ label: `${label} page`, url: anchor(slug) });
 
 export const projectNodes: ProjectNode[] = [
   {

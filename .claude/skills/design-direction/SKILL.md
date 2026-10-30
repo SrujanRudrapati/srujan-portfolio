@@ -17,10 +17,12 @@ Srujan's pick (DECISIONS 11): "A's structure with C's typography, blue accent." 
 | Ink (all text, rules) | `#000000` | `#FFFFFF` |
 | Muted (meta, captions only) | `#5C5C5C` | `#A3A3A3` |
 | Hairline | `#D9D9D9` | `#2B2B2B` |
+| Surface (cards, code, the palette list) | `#F2F2F2` | `#141414` |
+| Raised (dialogs, inputs) | `#FFFFFF` | `#1C1C1C` |
 | Accent (data path, record, figures, links, focus) | `#1D4ED8` | `#7C9BFF` |
 | Bronze / silver / gold (medallion states, 3D data stages only) | `#9A5F35` / `#7C838B` / `#9C7A1C` | `#D08B57` / `#B5BCC3` / `#E0B84A` |
 
-Two neutrals plus one accent. The medallion tints are data states, never decoration: they appear only on the record, the hero particle stream, the medallion and the mini-game. No second accent hue, no gradients in the DOM.
+Two neutrals plus one accent. Live in `src/app/globals.css` since V3, under the v2 token names (`--accent` and `--accent-2` are both the blue); AA ratios in `docs/v3/IA.md`. The medallion tints are data states, never decoration: they appear only on the record, the hero particle stream, the medallion and the mini-game. No second accent hue, no gradients in the DOM.
 
 **Type (from C).** Archivo on its width axis: display (name, impact figures) 800 at 62% width, letter-spacing -0.03em, the name up to full width; section titles 600 to 800 at 112%; body 400, labels 500. Martian Mono 400 only for stage labels (`stage 02 / transform`), figure numbers (`fig. 01`), the record's state and table keys. Sentence case; mono labels lowercase.
 

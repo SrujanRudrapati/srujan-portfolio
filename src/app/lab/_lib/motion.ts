@@ -3,7 +3,6 @@
 import { useEffect, type RefObject } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,8 +10,8 @@ export const REDUCED = "(prefers-reduced-motion: reduce)";
 export const FULL = "(prefers-reduced-motion: no-preference)";
 
 /**
- * Prototype motion setup shared by /lab/a, /lab/b and /lab/c. Lenis runs on
- * GSAP's ticker and feeds ScrollTrigger; under reduced motion it never starts
+ * Prototype motion setup for /lab/a (/lab/b and /lab/c were removed in V2). Smooth scroll
+ * comes from the root layout's MotionRoot; under reduced motion nothing starts
  * and `build` is not called, so the page stays in its final, native-scroll state.
  * Everything `build` creates is scoped to `root` and reverted on unmount.
  */
@@ -27,16 +26,10 @@ export function useLabMotion(root: RefObject<HTMLElement | null>, build: (ctx: {
       // CSS keys motion-only layouts (pinned reels, the travelling packet) off this attribute,
       // so no-JS and reduced-motion visitors get the static layout.
       el.dataset.motion = "on";
-      const lenis = new Lenis({ lerp: 0.1, smoothWheel: true, syncTouch: false });
-      lenis.on("scroll", ScrollTrigger.update);
-      const tick = (time: number) => lenis.raf(time * 1000);
-      gsap.ticker.add(tick);
-      gsap.ticker.lagSmoothing(0);
+      // Smooth scroll comes from the root layout's MotionRoot since V3; the prototype only builds its timelines.
       build({ isDesktop: desktop });
       ScrollTrigger.refresh();
       return () => {
-        gsap.ticker.remove(tick);
-        lenis.destroy();
         delete el.dataset.motion;
         // Count-ups write interim numbers into the DOM; put the real figures back.
         el.querySelectorAll<HTMLElement>("[data-count]").forEach((n) => {

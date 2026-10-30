@@ -4,7 +4,7 @@ import type { SkillNode } from "./types.ts";
 // render order). A skill in two groups has two entries in `groups`. Summaries
 // are filled in by ./index.ts from the groups and the projects that use the skill.
 
-const SKILLS = "#skills";
+const SKILLS = "/about#skills";
 
 type Spec = [id: string, label: string, groups: { group: string; sub?: string; position?: number }[], tags?: string[]];
 

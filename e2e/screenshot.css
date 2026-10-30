@@ -1,0 +1,5 @@
+/* Applied only while Playwright takes toHaveScreenshot images: element screenshots scroll the
+   element to the viewport top, where the fixed v3 nav would cover it. */
+body > header.fixed {
+  visibility: hidden !important;
+}

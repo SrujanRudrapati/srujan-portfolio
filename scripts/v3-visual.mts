@@ -15,6 +15,7 @@ const browser = await chromium.launch({ channel: "chromium", args: GPU });
 const errors: string[] = [];
 
 async function open(page: Page) {
+  await page.addInitScript(() => sessionStorage.setItem("intro", "1")); // evidence shows the page, not the intro
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => m.type() === "error" && !m.text().includes("favicon") && errors.push(m.text()));
   await page.goto(`${base}${path}`, { waitUntil: "networkidle" });
@@ -46,6 +47,7 @@ await steps("mobile-light", { width: 390, height: 844 }, "light");
 // Reduced motion: posters only, nothing moves, the page reads in full.
 {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });
+  await page.addInitScript(() => sessionStorage.setItem("intro", "1"));
   await page.goto(`${base}${path}`, { waitUntil: "networkidle" });
   await page.waitForTimeout(1500);
   const live = await page.$$eval("[data-live]", (e) => e.length);

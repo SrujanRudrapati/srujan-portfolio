@@ -10,11 +10,12 @@ const OUT = "public/posters";
 mkdirSync(OUT, { recursive: true });
 
 const browser = await chromium.launch({ args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"] });
-const page = await browser.newPage({ viewport: { width: 1280, height: 3600 }, deviceScaleFactor: 1 });
+const page = await browser.newPage({ viewport: { width: 1280, height: 5400 }, deviceScaleFactor: 1 });
+await page.addInitScript(() => sessionStorage.setItem("intro", "1")); // no first-visit intro over the capture
 const errors: string[] = [];
 page.on("pageerror", (e) => errors.push(e.message));
 await page.goto(`${base}/lab/posters`, { waitUntil: "networkidle" });
-await page.addStyleTag({ content: "html, body, main { background: transparent !important; } nextjs-portal { display: none !important; }" });
+await page.addStyleTag({ content: "html, body, main { background: transparent !important; } nextjs-portal, body > header, body > footer { display: none !important; }" });
 const ids = await page.$$eval("[data-poster]", (els) => els.map((e) => e.getAttribute("data-poster")!));
 await page.waitForFunction((n) => document.querySelectorAll("[data-live]").length === n, ids.length, { timeout: 120_000 });
 await page.waitForTimeout(1500);

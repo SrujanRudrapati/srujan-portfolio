@@ -28,19 +28,10 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
       <p className="text-xs font-medium text-muted">{TYPE_LABEL[hit.type] ?? hit.type}</p>
       <h3 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
         <a
-          href={anchorFor(hit)}
-          onClick={() => {
-            onNavigate();
-            const target = anchorFor(hit);
-            // Project cards: land focus on the card once the hash handler has scrolled to it. Lens links focus their own heading.
-            if (target.startsWith("#project-"))
-              window.setTimeout(() => {
-                const card = document.getElementById(target.slice(1));
-                if (!card) return;
-                card.tabIndex = -1;
-                card.focus({ preventScroll: true });
-              }, 50);
-          }}
+          href={withBasePath(anchorFor(hit))}
+          // A page on the site: the Ask panel closes and the route transition takes over
+          // (it scrolls to any #anchor and moves focus there).
+          onClick={onNavigate}
           className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2"
         >
           {hit.label}

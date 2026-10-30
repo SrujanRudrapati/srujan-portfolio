@@ -5,8 +5,8 @@ import { metric } from "./factories.ts";
 // contain as metric nodes. Content strings are the Experience and Credentials
 // sections verbatim (facts 2.4 applied in Phase 5).
 
-const EXPERIENCE = "#experience";
-const CREDENTIALS = "#credentials";
+const EXPERIENCE = "/about#experience";
+const CREDENTIALS = "/about#credentials";
 
 export const roleNodes: RoleNode[] = [
   {

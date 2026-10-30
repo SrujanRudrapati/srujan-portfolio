@@ -19,8 +19,8 @@ export type LensItem = {
   metric?: string;
 };
 
-const projectHref = (slug: string) => `#project-${slug}`;
-const ROLE_HREF = "#lens=timeline";
+const projectHref = (slug: string) => `/work/${slug}`;
+const ROLE_HREF = "/explore#lens=timeline";
 
 const metricText = (m: MetricNode) => `${m.value} ${m.valueLabel}`;
 

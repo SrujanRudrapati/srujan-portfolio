@@ -10,4 +10,6 @@ export const SceneByName: Record<SceneName, ComponentType<SceneProps>> = {
   "hero-stream": lazy(() => import("./HeroStream")),
   "surplus-line": lazy(() => import("./SurplusLine")),
   "label-lens": lazy(() => import("./LabelLens")),
+  watchtower: lazy(() => import("./Watchtower")),
+  receipts: lazy(() => import("./Receipts")),
 };

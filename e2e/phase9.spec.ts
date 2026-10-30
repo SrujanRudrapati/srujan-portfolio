@@ -65,15 +65,17 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
     });
   }
 
-  test("touch: theme toggle, menu, lens switcher and Ask work by tap", async ({ page, isMobile }) => {
+  test("touch: palette (theme), lens switcher and Ask work by tap", async ({ page, isMobile }) => {
     test.skip(!isMobile, "Touch device project");
-    await page.getByRole("button", { name: "Open menu" }).tap();
+    // V3: the phone menu is the command palette.
+    await page.getByRole("banner").getByRole("button", { name: /Menu/ }).tap();
     const before = await page.locator("html").getAttribute("data-theme");
-    await page.locator("#mobile-menu").getByRole("button", { name: /theme/ }).tap();
+    await page.getByRole("dialog", { name: "Command palette" }).getByRole("option", { name: "Toggle light and dark" }).tap();
     await expect(page.locator("html")).not.toHaveAttribute("data-theme", before ?? "");
-    await page.locator("#mobile-menu").getByRole("link", { name: "Work" }).tap();
+    await page.goto("/explore");
     await page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" }).tap();
     await expect(page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
+    await page.goto("/");
     await page.locator("#hero-ask").scrollIntoViewIfNeeded();
     await page.locator("#hero-ask").tap();
     await page.locator("#hero-ask").fill("What runs in production?");

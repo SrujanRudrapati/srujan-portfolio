@@ -1,14 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Archivo, Martian_Mono } from "next/font/google";
+import { AskPanel } from "@/components/ask/AskPanel";
+import { MotionRoot } from "@/components/motion/MotionRoot";
+import { CommandPalette } from "@/components/site/CommandPalette";
+import { Footer } from "@/components/site/Footer";
+import { Nav } from "@/components/site/Nav";
+import { projects } from "@/data/projects";
 import "./globals.css";
 
-// One family. The width axis gives headlines their expanded cut and body its normal cut.
+// v3 type (design-direction): Archivo on its width axis for display and body, Martian Mono
+// only for stage labels, figure numbers and keys.
 const archivo = Archivo({
   subsets: ["latin"],
   axes: ["wdth"],
   variable: "--font-archivo",
   display: "swap",
 });
+const martian = Martian_Mono({ subsets: ["latin"], variable: "--font-martian", display: "swap" });
 
 // Runs synchronously while the HTML parses, before first paint. It marks the
 // page as scripted (data-js: phone-only collapses key off it), then a stored choice
@@ -25,6 +33,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  // Defaults for the home page; every other route sets its own canonical and card (src/lib/meta.ts).
   alternates: { canonical: SITE_URL },
   openGraph: {
     type: "website",
@@ -39,18 +48,29 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#161616" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f6f3" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${archivo.variable} antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${archivo.variable} ${martian.variable} antialiased`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        {/* Motion, transitions, the intro and the one shared 3D canvas persist across routes. */}
+        <MotionRoot />
+        <a href="#main" className="sr-only z-50 bg-accent px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
+          Skip to content
+        </a>
+        <Nav />
+        {children}
+        <Footer />
+        <CommandPalette projects={projects.map((p) => ({ slug: p.slug, title: p.title, oneLiner: p.oneLiner }))} />
+        <AskPanel />
+      </body>
     </html>
   );
 }

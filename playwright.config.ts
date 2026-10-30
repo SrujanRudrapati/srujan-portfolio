@@ -10,7 +10,7 @@ export default defineConfig({
   reporter: process.env.CI ? "github" : [["list"], ["html", { open: "never" }]],
   expect: {
     // Small tolerance for font anti-aliasing differences between runs.
-    toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled" },
+    toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: "disabled", stylePath: "./e2e/screenshot.css" },
   },
   use: {
     baseURL: `http://localhost:${PORT}`,

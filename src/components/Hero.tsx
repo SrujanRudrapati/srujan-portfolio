@@ -5,6 +5,7 @@ import { Button } from "./Button";
 import { AnimateInView } from "./AnimateInView";
 import { MedallionDiagram } from "./MedallionDiagram";
 import { Container, TagList } from "./ui";
+import { withBasePath } from "@/lib/paths";
 
 // Staggered entrance: each block gets an index that globals.css turns into a
 // 70ms delay (.enter). Five blocks, 400ms each, finishes under 700ms. Skipped
@@ -28,11 +29,11 @@ export function Hero() {
           </p>
 
           <div className="enter mt-8 flex flex-wrap gap-3" style={enter(2)}>
-            <Button href="#work">See my work</Button>
+            <Button href={withBasePath("/work")}>See my work</Button>
             <Button variant="secondary" href="#contact">
               Get in touch
             </Button>
-            <Button variant="secondary" href="#lens=recruiter">
+            <Button variant="secondary" href={withBasePath("/cv")}>
               One-page summary
             </Button>
           </div>

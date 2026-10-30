@@ -1,34 +1,24 @@
 import { About } from "@/components/About";
-import { Contact, SiteFooter } from "@/components/Contact";
+import { Contact } from "@/components/Contact";
 import { Credentials } from "@/components/Credentials";
 import { Experience } from "@/components/Experience";
 import { Hero } from "@/components/Hero";
-import { SiteHeader } from "@/components/SiteNav";
 import { Work } from "@/components/work/Work";
 import { Skills } from "@/components/Skills";
-import { AskPanel } from "@/components/ask/AskPanel";
 
+// V3: the nav, footer, Ask panel and skip link moved to the root layout; the v2 sections
+// stay here unchanged until V4 rebuilds the home page as the short pipeline story, and each
+// also lives on its own route now (docs/v3/IA.md).
 export default function Home() {
   return (
-    <>
-      <a
-        href="#main"
-        className="sr-only z-50 bg-accent px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-      >
-        Skip to content
-      </a>
-      <SiteHeader />
-      <main id="main">
-        <Hero />
-        <About />
-        <Work />
-        <Experience />
-        <Skills />
-        <Credentials />
-        <Contact />
-      </main>
-      <SiteFooter />
-      <AskPanel />
-    </>
+    <main id="main" className="pt-16">
+      <Hero />
+      <About />
+      <Work />
+      <Experience />
+      <Skills />
+      <Credentials />
+      <Contact />
+    </main>
   );
 }
