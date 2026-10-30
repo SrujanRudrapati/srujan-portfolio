@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 
-// Shape rule: controls and tags use rounded-md (6px); containers use rounded-xl (12px).
+// Layout primitives. Card, Button, Stat, Reveal and ThemeToggle live in their own files.
+// Shape rule: square corners everywhere; the focus ring is the only rounded thing.
 
 export function Container({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`mx-auto w-full max-w-[1200px] px-4 sm:px-6 lg:px-10 ${className}`}>{children}</div>;
+  return <div className={`mx-auto w-full max-w-page px-gutter ${className}`}>{children}</div>;
 }
 
 export function Section({
@@ -13,21 +14,18 @@ export function Section({
   children,
 }: {
   id: string;
-  title: string;
-  intro?: string;
+  title: ReactNode;
+  intro?: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="border-t border-line">
-      <Container className="py-20 md:py-28">
-        <header className="mb-12 max-w-[65ch] md:mb-16">
-          <h2
-            id={`${id}-heading`}
-            className="font-display text-3xl font-semibold tracking-tight text-ink md:text-4xl"
-          >
+    <section id={id} aria-labelledby={`${id}-heading`} className="border-t-2 border-ink">
+      <Container className="py-section">
+        <header className="mb-10 max-w-measure md:mb-14">
+          <h2 id={`${id}-heading`} className="text-3xl text-ink">
             {title}
           </h2>
-          {intro && <p className="mt-4 text-lg leading-relaxed text-muted">{intro}</p>}
+          {intro && <p className="mt-4 text-lg text-muted">{intro}</p>}
         </header>
         {children}
       </Container>
@@ -37,13 +35,9 @@ export function Section({
 
 export function TagList({ items, label }: { items: string[]; label: string }) {
   return (
-    <ul aria-label={label} className="flex flex-wrap gap-2">
+    <ul aria-label={label} className="flex flex-wrap gap-1.5">
       {items.map((item) => (
-        <li
-          key={item}
-          translate="no"
-          className="rounded-md bg-tag px-2 py-1 font-mono text-[12.5px] leading-none text-tag-ink"
-        >
+        <li key={item} translate="no" className="border border-ink px-2 py-1 text-xs leading-none font-medium text-ink">
           {item}
         </li>
       ))}
@@ -69,7 +63,7 @@ export function TextLink({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`inline-flex items-center gap-1.5 font-medium text-accent underline decoration-line decoration-1 underline-offset-4 transition-colors duration-150 hover:text-accent-hover hover:decoration-accent-hover ${className}`}
+      className={`inline-flex items-center gap-1.5 font-medium text-accent-2 underline decoration-1 underline-offset-4 transition-colors duration-150 hover:text-accent-2-hover hover:decoration-2 ${className}`}
       {...rest}
     >
       {children}

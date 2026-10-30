@@ -317,3 +317,108 @@ If you want the site to keep its current dark-first identity, Night shift is the
 - URL: `http://localhost:3000/design-preview`
 - Files: `src/app/design-preview/page.tsx`, `src/app/design-preview/preview.module.css`
 - Verified: typecheck and lint clean, no console errors, no horizontal overflow at 1440 or 390 wide, static export writes the route to `out/design-preview.html`.
+
+---
+
+# Phase 2: design system (Spec sheet)
+
+Chosen direction: **C, Spec sheet**, as proposed in Phase 1 with no palette changes. The site now wears the new skin on the old layout; no section was restructured. Content is untouched.
+
+## Tokens (`src/app/globals.css`)
+
+One colour system. Runtime-switchable colours live on `:root` as plain custom properties; the `@theme inline` block maps each one to a Tailwind utility name, so there is no second palette in a config file (Tailwind v4 has no `tailwind.config`; `@theme` is its equivalent). Everything that does not change with theme is declared once in `@theme` and is available both as a utility and as a CSS variable.
+
+| Token | Utility | Light | Dark |
+|-------|---------|-------|------|
+| `--bg` | `bg-bg` | `#F6F6F3` | `#161616` |
+| `--surface` | `bg-surface` | `#EBEBE6` | `#202020` |
+| `--surface-raised` | `bg-raised` | `#FDFDFB` | `#262626` |
+| `--border` | `border-line` | `#CFCFC8` | `#3A3A36` |
+| `--text` | `text-ink` / `border-ink` | `#0A0A0A` | `#F2F2EE` |
+| `--text-muted` | `text-muted` | `#55554F` | `#A3A39B` |
+| `--accent` (red) | `text-accent` / `bg-accent` | `#C42A14` | `#FF6A4E` |
+| `--accent-hover` | `*-accent-hover` | `#A32310` | `#FF8A72` |
+| `--accent-2` (cobalt) | `text-accent-2` / `border-accent-2` | `#1B4FD8` | `#7F9CFF` |
+| `--accent-2-hover` | `*-accent-2-hover` | `#1640B0` | `#9DB3FF` |
+| `--on-accent` | `text-on-accent` | `#FFFFFF` | `#0A0A0A` |
+
+No success or warning tokens: status is a dot plus a word, drawn in cobalt (filled = running, outlined = in progress), so no extra hue was needed.
+
+Theme selection order: `data-theme` on `<html>` wins; with no attribute, `prefers-color-scheme` decides. The same dark values are declared under `:root[data-theme="dark"]` and under the media query for `:root:not([data-theme="light"])`. `.theme-light` / `.theme-dark` carry the same sets so the style guide can pin a subtree.
+
+Other scales, all in `@theme`:
+
+- **Type**, fluid with `clamp()` from a 390px phone to a 1280px desktop: `text-xs` 12px, `text-sm` 14px, `text-base` 16 to 17px, `text-lg` 18 to 20px, `text-xl` 20 to 24px, `text-2xl` 24 to 32px, `text-3xl` 30 to 44px (section h2), `text-4xl` 40 to 72px (hero h1). Each carries its own line-height (1.55 body, 1.0 at the top).
+- **Spacing**: Tailwind's 4px base (`--spacing: 0.25rem`) is the scale. Two named rhythms: `gutter` (16 to 40px, `px-gutter`) and `section` (64 to 112px, `py-section`).
+- **Widths**: `max-w-page` 1200px, `max-w-measure` 65ch.
+- **Radii**: `rounded-sm` 2px (focus ring only), `rounded-full` for status dots. Everything else is square.
+- **Shadow**: `shadow-lift` for hovered cards. No other shadows.
+- **Easing**: `ease-out-quart`.
+
+Base layer sets body font/size/line-height, heading family and weight (`h1`/`h2` at 125% width, `h3` at 112.5%), the cobalt focus ring, and `scroll-margin-top` for anchors.
+
+## Theme toggle
+
+- `src/lib/theme.ts`: reads and writes `data-theme`, persists to `localStorage("theme")` inside try/catch, notifies subscribers, and listens for system changes and cross-tab `storage` events.
+- `src/components/ThemeToggle.tsx`: a 36px square `<button type="button">` with Phosphor sun/moon icons. `useSyncExternalStore` with a `null` server snapshot, so the server renders a generic "Switch color theme" label and the client replaces it with "Switch to dark theme" / "Switch to light theme" without a hydration mismatch. Which icon shows is decided in CSS (`.theme-icon-*` in `globals.css`), so it is right before hydration.
+- `src/app/layout.tsx`: a one-line inline `<script>` in `<head>` reads the stored value and sets `data-theme` before first paint. Verified on the static export: after a keyboard toggle and reload, `data-theme="dark"` is already present at `DOMContentLoaded` and the body background is dark with no flash.
+
+## Typography
+
+Archivo only, via `next/font/google` (self-hosted, `latin` subset, `display: swap`, variable weight, `wdth` axis loaded). Space Grotesk, IBM Plex Sans and IBM Plex Mono are no longer loaded by the layout. Data-shaped text (dates, IPs, GPAs) uses `tabular-nums` instead of a mono face. Body measure is `max-w-measure` (65ch).
+
+## Primitives (`src/components`)
+
+| Component | File | Notes |
+|-----------|------|-------|
+| `Container` | `ui.tsx` | `max-w-page px-gutter` |
+| `Section` | `ui.tsx` | 2px top rule, `py-section`, `id` + `aria-labelledby`, `title` and optional `intro` slots |
+| `TagList` | `ui.tsx` | Outlined 1px chips, `translate="no"` |
+| `TextLink` | `ui.tsx` | Cobalt underline; external adds `rel="noopener noreferrer"` |
+| `Button` | `Button.tsx` | `primary` (red fill), `secondary` (2px ink outline, inverts on hover), `ghost` (cobalt underline); sizes `md` 44px, `sm` 36px; renders `<a>` with `href` else `<button>`; cobalt `focus-visible` ring |
+| `Card` | `Card.tsx` | Surface, 3px top rule, lift on hover (`-translate-y-0.5` + `shadow-lift`), `as` div/article/li, `lift` off switch |
+| `Stat` | `Stat.tsx` | Big red expanded figure + muted label, `md` and `lg` |
+| `Reveal` | `Reveal.tsx` | Client wrapper; sets `data-reveal` only from an effect, so no JS, reduced motion, or already-on-screen all render children visible. 600ms fade and 14px lift via CSS |
+| `ThemeToggle` | `ThemeToggle.tsx` | See above |
+
+`Reveal` replaces the previous CSS scroll-driven `.reveal` on the four case-study diagram panels. The hero diagram still draws with pure CSS.
+
+## Applied site-wide
+
+Every component picked up the tokens and type scale. Visible changes, all restyling: cobalt replaces amber for links, flow lines and status; red is reserved for impact figures and the two resume buttons; all corners are square; section dividers are 2px ink rules; cards and diagram panels get a 3px top rule; tags are outlined; the hero diagram boxes are ink-outlined with cobalt flow; the nav has the theme toggle next to the Resume button. Sub-lines and body copy are full-strength ink; muted is for meta and captions only. The "View Repo" aria-label now begins with its visible text, which clears the Phase 0 Lighthouse note.
+
+## Contrast (WCAG AA)
+
+Computed for every pairing used. Requirement: 4.5:1 for text, 3:1 for large text and UI graphics.
+
+| Pair | Light | Dark |
+|------|-------|------|
+| Text on bg / surface / raised | 18.3 / 16.6 / 19.4 | 16.1 / 14.5 / 13.5 |
+| Muted on bg / surface / raised | 6.9 / 6.3 / 7.4 | 7.1 / 6.4 / 6.0 |
+| Cobalt (links) on bg / surface / raised | 6.1 / 5.6 / 6.5 | 7.0 / 6.3 / 5.8 |
+| Cobalt hover on bg | 8.1 | 8.9 |
+| Red (figures, 30px+) on bg / surface / raised | 5.3 / 4.8 / 5.6 | 6.4 / 5.8 / 5.4 |
+| Red hover on bg | 6.9 | 7.9 |
+| Button label on red / red hover | 5.7 / 7.5 | 7.0 / 8.6 |
+| Secondary button hover label (bg on ink) | 18.3 | 16.1 |
+| Ink rules on bg (non-text) | 18.3 | 16.1 |
+| Soft border on bg (decorative only) | 1.45 | 1.58 |
+
+Everything that carries text clears 4.5:1 in both themes, including red, which only needs 3:1 at the sizes it is used. The soft border is used for swatch outlines and the footer rule only, never as the sole indicator of anything.
+
+## Verification
+
+- `tsc --noEmit` and `eslint` clean; `next build` exports `/`, `/design-preview`, `/_not-found`.
+- No console warnings or errors on `/` or `/design-preview`; no horizontal overflow at 1440 or 390.
+- Playwright functional and axe suites (29 tests across desktop light, desktop dark, mobile dark) pass against the export. The three visual-baseline tests were skipped on purpose: the screenshots in `e2e/home.spec.ts-snapshots/` still show the old skin and need `npm run test:e2e:update` once this look is approved.
+- Theme toggle exercised by keyboard on the export: attribute, storage, label and background all switch, and the choice survives reload without a flash.
+
+## Style guide
+
+`http://localhost:3000/design-preview` now opens with the living style guide: type scale, colour tokens with hex, all button variants and sizes, text link, tags, both stat sizes, a card, a section header, the Reveal block, and the toggle, pinned light on the left and dark on the right. The Phase 1 three-direction comparison follows below it.
+
+## Follow-ups not done here
+
+- `DESIGN.md` still documents the v1 tokens (dark-first amber). A one-line note at its top now points here; rewriting it is a separate task.
+- Visual baselines need regenerating (see above).
+- The Lighthouse re-run belongs at the end of Phase 3, after sections are restructured.

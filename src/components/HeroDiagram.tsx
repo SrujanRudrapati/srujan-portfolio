@@ -24,6 +24,8 @@ const lines: [string, number, number, number, "up" | "right"][] = [
 ];
 
 const delay = (ms: number) => ({ "--d": `${ms}ms` }) as CSSProperties;
+const display = { fontFamily: "var(--font-archivo)", fontStretch: "112.5%" } as CSSProperties;
+const small = { fontFamily: "var(--font-archivo)" } as CSSProperties;
 
 export function HeroDiagram() {
   return (
@@ -39,22 +41,22 @@ export function HeroDiagram() {
         modeled data. Gold feeds a serving layer, and LLMs and agents run on top of it.
       </desc>
 
-      <text x="20" y="254" className="draw-appear" style={{ ...delay(300), fontFamily: "var(--font-plex-mono)" }} fontSize="11" fill="var(--muted)">
+      <text x="20" y="254" className="draw-appear" style={{ ...delay(300), ...small }} fontSize="11" fontWeight={500} fill="var(--text-muted)">
         Medallion architecture
       </text>
 
       {lines.map(([d, ms, x, y, dir]) => (
         <g key={d}>
-          <path d={d} pathLength={1} className="draw-line" style={delay(ms)} fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+          <path d={d} pathLength={1} className="draw-line" style={delay(ms)} fill="none" stroke="var(--accent-2)" strokeWidth="2" />
           <path
             d={dir === "up" ? `M${x - 5} ${y + 7} L${x} ${y} L${x + 5} ${y + 7}` : `M${x - 7} ${y - 5} L${x} ${y} L${x - 7} ${y + 5}`}
             className="draw-appear"
             style={delay(ms + 300)}
             fill="none"
-            stroke="var(--accent)"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            stroke="var(--accent-2)"
+            strokeWidth="2"
+            strokeLinecap="square"
+            strokeLinejoin="miter"
           />
         </g>
       ))}
@@ -66,31 +68,23 @@ export function HeroDiagram() {
             y={b.y}
             width={b.w}
             height={b.h}
-            rx="6"
-            fill="var(--raised)"
-            stroke={b.accent ? "var(--accent)" : "var(--border)"}
-            strokeWidth={b.accent ? 1.5 : 1}
+            fill="var(--surface)"
+            stroke={b.accent ? "var(--accent-2)" : "var(--text)"}
+            strokeWidth={b.accent ? 2 : 1}
           />
           <text
             x={b.x + b.w / 2}
             y={b.y + (b.sub ? b.h / 2 - 3 : b.h / 2 + 5)}
             textAnchor="middle"
             fontSize={b.accent ? 17 : 14}
-            fontWeight={500}
+            fontWeight={700}
             fill="var(--text)"
-            style={{ fontFamily: "var(--font-space-grotesk)" }}
+            style={display}
           >
             {b.label}
           </text>
           {b.sub && (
-            <text
-              x={b.x + b.w / 2}
-              y={b.y + b.h / 2 + 15}
-              textAnchor="middle"
-              fontSize="11"
-              fill="var(--muted)"
-              style={{ fontFamily: "var(--font-plex-mono)" }}
-            >
+            <text x={b.x + b.w / 2} y={b.y + b.h / 2 + 15} textAnchor="middle" fontSize="11" fill="var(--text-muted)" style={small}>
               {b.sub}
             </text>
           )}

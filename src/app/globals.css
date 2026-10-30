@@ -1,119 +1,227 @@
 @import "tailwindcss";
 
-/* Dark-first: deep blue-slate ground, one amber accent. */
-:root {
-  color-scheme: dark;
-  --bg: #0e1a2b;
-  --raised: #15253b;
-  --border: #2a3f5c;
-  --text: #e7edf5;
-  --muted: #9db0c8;
-  --accent: #f0b44c;
-  --accent-hover: #f5c773;
-  --on-accent: #0e1a2b;
-  --tag-bg: #1d3150;
-  --tag-fg: #c9d6e6;
-}
+/* Spec sheet. Light by default, dark when the user asks for it (data-theme on
+   <html>, set before first paint by the inline script in layout.tsx) or when
+   the system prefers it and nothing is stored.
 
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #f3f6fa;
-    --raised: #e6ecf4;
-    --border: #c3cedc;
-    --text: #0e1a2b;
-    --muted: #46566e;
-    --accent: #8a5600;
-    --accent-hover: #6e4400;
-    --on-accent: #f3f6fa;
-    --tag-bg: #dce4ee;
-    --tag-fg: #26364d;
-  }
-}
+   Colour tokens live on :root as plain custom properties because they change at
+   runtime. Everything that never changes with theme (type scale, spacing,
+   radii, shadows, easing) is declared once inside @theme, so Tailwind utilities
+   and hand-written CSS read the same values. There is one colour system: the
+   @theme inline block below maps each token to a Tailwind utility name.
 
-:root[data-theme="light"] {
+   .theme-light / .theme-dark exist so the style guide can pin a subtree to one
+   theme. They carry the same values as the :root sets. */
+
+:root,
+.theme-light {
   color-scheme: light;
-  --bg: #f3f6fa;
-  --raised: #e6ecf4;
-  --border: #c3cedc;
-  --text: #0e1a2b;
-  --muted: #46566e;
-  --accent: #8a5600;
-  --accent-hover: #6e4400;
-  --on-accent: #f3f6fa;
-  --tag-bg: #dce4ee;
-  --tag-fg: #26364d;
+  --bg: #f6f6f3;
+  --surface: #ebebe6;
+  --surface-raised: #fdfdfb;
+  --border: #cfcfc8;
+  --text: #0a0a0a;
+  --text-muted: #55554f;
+  --accent: #c42a14;
+  --accent-hover: #a32310;
+  --accent-2: #1b4fd8;
+  --accent-2-hover: #1640b0;
+  --on-accent: #ffffff;
+}
+
+:root[data-theme="dark"],
+.theme-dark {
+  color-scheme: dark;
+  --bg: #161616;
+  --surface: #202020;
+  --surface-raised: #262626;
+  --border: #3a3a36;
+  --text: #f2f2ee;
+  --text-muted: #a3a39b;
+  --accent: #ff6a4e;
+  --accent-hover: #ff8a72;
+  --accent-2: #7f9cff;
+  --accent-2-hover: #9db3ff;
+  --on-accent: #0a0a0a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #161616;
+    --surface: #202020;
+    --surface-raised: #262626;
+    --border: #3a3a36;
+    --text: #f2f2ee;
+    --text-muted: #a3a39b;
+    --accent: #ff6a4e;
+    --accent-hover: #ff8a72;
+    --accent-2: #7f9cff;
+    --accent-2-hover: #9db3ff;
+    --on-accent: #0a0a0a;
+  }
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-raised: var(--raised);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
   --color-line: var(--border);
   --color-ink: var(--text);
-  --color-muted: var(--muted);
+  --color-muted: var(--text-muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-hover: var(--accent-2-hover);
   --color-on-accent: var(--on-accent);
-  --color-tag: var(--tag-bg);
-  --color-tag-ink: var(--tag-fg);
-  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-tap-highlight-color: transparent;
+@theme {
+  /* Type scale. Fluid between a 390px phone and a 1280px desktop. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --text-base--line-height: 1.55;
+  --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
+  --text-lg--line-height: 1.5;
+  --text-xl: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
+  --text-xl--line-height: 1.3;
+  --text-2xl: clamp(1.5rem, 1.28rem + 0.9vw, 2rem);
+  --text-2xl--line-height: 1.15;
+  --text-3xl: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+  --text-3xl--line-height: 1.05;
+  --text-4xl: clamp(2.5rem, 1.55rem + 4vw, 4.5rem);
+  --text-4xl--line-height: 1;
+
+  /* Spacing. Tailwind's --spacing (0.25rem) is the 4px base scale; p-4 is 16px,
+     gap-6 is 24px. These two name the rhythms the layout repeats. */
+  --spacing-gutter: clamp(1rem, 0.4rem + 2.4vw, 2.5rem);
+  --spacing-section: clamp(4rem, 2.4rem + 6.5vw, 7rem);
+
+  /* Widths */
+  --container-page: 1200px;
+  --container-measure: 65ch;
+
+  /* Shape. Spec sheet has square corners; the only radii are the focus ring and dots. */
+  --radius-sm: 2px;
+  --radius-full: 9999px;
+
+  /* Depth. Flat by default; one lift for hovered cards. */
+  --shadow-lift: 0 10px 24px -14px rgb(0 0 0 / 0.35);
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  text-rendering: optimizeLegibility;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings: one family, hierarchy through weight and width. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h1,
+  h2 {
+    font-stretch: 125%;
+  }
+  h3 {
+    font-stretch: 112.5%;
+    letter-spacing: -0.015em;
+  }
+  h4 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  a,
+  button {
+    touch-action: manipulation;
+  }
 }
 
-h1, h2, h3 {
-  text-wrap: balance;
-}
-
-p {
-  text-wrap: pretty;
-}
-
-/* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
-[id] {
-  scroll-margin-top: 5rem;
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-a, button {
-  touch-action: manipulation;
+@layer components {
+  /* Theme toggle icons. CSS decides which icon shows, so the button is correct
+     before hydration and never mismatches the server render. */
+  .theme-icon-sun {
+    display: none;
+  }
+  .theme-icon-moon {
+    display: block;
+  }
+  :root[data-theme="dark"] .theme-icon-sun {
+    display: block;
+  }
+  :root[data-theme="dark"] .theme-icon-moon {
+    display: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-icon-sun {
+      display: block;
+    }
+    :root:not([data-theme="light"]) .theme-icon-moon {
+      display: none;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 }
 
-/* Diagram motion. Only defined when the user has not asked for reduced motion,
-   so the reduced-motion default is the finished, static diagram. */
+/* Motion. Only defined when the user has not asked for reduced motion, so the
+   reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
+  /* Hero diagram draws once on load. */
   .draw-line {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: draw-line 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: draw-line 450ms var(--ease-out-quart) forwards;
     animation-delay: var(--d, 0ms);
   }
   .draw-appear {
@@ -121,22 +229,29 @@ a, button {
     animation: draw-appear 350ms ease-out forwards;
     animation-delay: var(--d, 0ms);
   }
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 25%;
-    }
+
+  /* Reveal primitive. The attribute is only ever set by JavaScript, so without
+     it (no JS, reduced motion, already on screen) children are simply visible. */
+  [data-reveal="pending"] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 600ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-quart);
   }
 }
 
 @keyframes draw-line {
-  to { stroke-dashoffset: 0; }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 @keyframes draw-appear {
-  to { opacity: 1; }
-}
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+  to {
+    opacity: 1;
+  }
 }
