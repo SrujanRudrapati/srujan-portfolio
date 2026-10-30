@@ -11,7 +11,7 @@ const out = (s = "") => lines.push(s);
 for (const p of projects) {
   out(`## ${p.title}`);
   out(`status: ${p.status}${p.featured ? " (featured)" : ""}`);
-  out(`date: ${p.date}`);
+  if (p.date) out(`date: ${p.date}`);
   if (p.context) out(`context: ${p.context}`);
   out(`one-liner: ${p.oneLiner}`);
   for (const m of p.impact) out(`impact: ${m.value} ${m.label}`);
@@ -26,7 +26,11 @@ for (const p of projects) {
   if (p.statusDetail) out(`status detail: ${p.statusDetail}`);
   if (p.credit) out(`credit: ${p.credit}`);
   out(`stack: ${p.stack.join(", ")}`);
-  for (const [k, v] of Object.entries(p.links)) out(`link ${k}: ${v}`);
+  for (const [k, v] of Object.entries(p.links)) {
+    if (k === "more") for (const link of v as { label: string; url: string }[]) out(`link: ${link.label}: ${link.url}`);
+    else if (k === "repoLabel") continue;
+    else out(`link ${k}: ${v}`);
+  }
   if (p.diagram) out(`diagram: ${[p.diagram, ...(p.secondaryDiagrams ?? [])].join(", ")}`);
   out();
 }

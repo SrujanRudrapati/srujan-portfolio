@@ -12,7 +12,7 @@ export const profile = {
   // Hero status line. Same facts as the About paragraph and `status`, so a
   // recruiter sees "where he is now and when he is free" on the first screen.
   now: "M.S. student at Arizona State University. Graduating December 2026, available early 2027.",
-  email: "srujanrudrapati07@gmail.com",
+  email: "rudrapati.srujan@gmail.com",
   linkedin: "https://www.linkedin.com/in/srujan-rudrapati",
   linkedinLabel: "linkedin.com/in/srujan-rudrapati",
   github: "https://github.com/SrujanRudrapati",
@@ -21,7 +21,7 @@ export const profile = {
   // Hero proof chips. Each one restates a fact that already appears on the
   // site: the Surplus AI status line, the About paragraph, and Certifications.
   proof: [
-    "Surplus AI, in active use at ASU Surplus",
+    "Surplus AI, in production at ASU Surplus",
     "Two years of data engineering at Celebal",
     "Databricks Certified Data Engineer Professional",
   ],
@@ -30,7 +30,7 @@ export const profile = {
 // Written for the site from facts in the brief (the brief asks for 3-4 sentences but gives no draft).
 export const about = [
   "I'm a data engineer finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University.",
-  "Before that I spent two years at Celebal Technologies building data platforms on Azure Databricks for clients in healthcare, energy, and manufacturing.",
+  "Before that I spent two years at Celebal Technologies building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing, and e-commerce.",
   "Lately I build LLM systems that run on real data, like a private, offline AI system for ASU Surplus.",
   "I graduate in December 2026 and I'm available early 2027.",
 ];
@@ -51,9 +51,9 @@ export const experience: Role[] = [
     title: "Tech Assistant, Surplus Operations",
     org: "Arizona State University",
     place: "Tempe, AZ",
-    dates: "May 2026 to present",
+    dates: "June 2026 to present",
     outcomes: [
-      { text: "Built Surplus AI, a private, offline AI system for ASU Surplus." },
+      { text: "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production." },
       { text: "Built a Power BI dashboard on asset sorting data showing where items stall." },
       { text: "Advise university departments and outside buyers on what equipment fits their needs." },
     ],
@@ -75,7 +75,7 @@ export const experience: Role[] = [
     place: "Jaipur, India",
     dates: "September 2022 to November 2024",
     summary:
-      "A data and AI consultancy. I worked on client engagements across healthcare, energy, and manufacturing, mostly on Azure Databricks.",
+      "A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks.",
     outcomes: [
       {
         label: "Telehealth client in New Zealand, Microsoft Fabric",
@@ -83,7 +83,11 @@ export const experience: Role[] = [
       },
       {
         label: "A US materials engineering client, AWS",
-        text: "Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them.",
+        text: "Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems, and was on call for it. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them.",
+      },
+      {
+        label: "A major fashion e-commerce client, Databricks",
+        text: "Kafka and Spark pipelines on Databricks modeling impressions, clicks, conversions, spend, and attribution, with Power BI dashboards on top.",
       },
       {
         label: "A major US utility, data governance (10 months)",
@@ -110,10 +114,25 @@ export const experience: Role[] = [
         text: "Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results.",
       },
       {
+        label: "Performance and cost",
+        text: "Tuned Spark jobs and SQL on Databricks for performance and cost.",
+      },
+      {
+        label: "Code review and mentoring",
+        text: "Reviewed teammates' code as senior data engineer on one project, and mentored two interns.",
+      },
+      {
         label: "Pre-sales",
         text: "Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team.",
       },
     ],
+  },
+  {
+    title: "Intern, Data Engineering",
+    org: "Celebal Technologies",
+    place: "Jaipur, India",
+    dates: "July to August 2022",
+    outcomes: [],
   },
 ];
 

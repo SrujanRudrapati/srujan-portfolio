@@ -5,6 +5,7 @@ import { profile } from "@/content/portfolio";
 import { useActiveSection } from "@/hooks/use-active-section";
 import { useMobileMenu } from "@/hooks/use-mobile-menu";
 import { useScrolled } from "@/hooks/use-scrolled";
+import { withBasePath } from "@/lib/paths";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { Container } from "./ui";
@@ -50,7 +51,7 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <Button variant="secondary" size="sm" href={profile.resume} external>
+          <Button variant="secondary" size="sm" href={withBasePath(profile.resume)} external>
             Resume
           </Button>
           <span className="hidden md:inline-flex">

@@ -19,12 +19,13 @@ function Prose({ label, children }: { label: string; children: string }) {
   );
 }
 
-const linkLabels: Record<keyof Project["links"], string> = { live: "Live app", repo: "Repository", writeup: "Write-up" };
+type NamedLink = "live" | "repo" | "writeup";
+const linkLabels: Record<NamedLink, string> = { live: "Live app", repo: "Repository", writeup: "Write-up" };
 
 export function FeaturedCard({ project, index }: { project: Project; index: number }) {
   const p = project;
   const titleId = `${p.slug}-title`;
-  const links = (Object.keys(linkLabels) as (keyof Project["links"])[]).filter((k) => p.links[k]);
+  const links = (Object.keys(linkLabels) as NamedLink[]).filter((k) => p.links[k]);
 
   return (
     <Reveal delay={index * 80}>
@@ -32,7 +33,7 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
         <header className="max-w-measure">
           <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted tabular-nums">
             <StatusBadge status={p.status} />
-            <span>{p.date}</span>
+            {p.date && <span>{p.date}</span>}
             {p.context && <span>{p.context}</span>}
           </p>
           <h3 id={titleId} className="mt-3 text-2xl text-ink">
@@ -42,10 +43,10 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
         </header>
 
         {p.impact.length > 0 && (
-          <ul aria-label={`${p.title} results`} className="mt-8 flex flex-wrap gap-x-12 gap-y-5 border-t border-line pt-6">
+          <ul aria-label={`${p.title} results`} className="mt-8 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-line pt-6 sm:grid-cols-3">
             {p.impact.map((m) => (
               <li key={m.label}>
-                <Stat value={m.value} label={m.label} size="lg" />
+                <Stat value={m.value} label={m.label} stacked />
               </li>
             ))}
           </ul>
@@ -88,18 +89,27 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
                 {p.statusDetail && <p className="mt-3 max-w-measure text-sm text-muted">{p.statusDetail}</p>}
               </div>
             )}
-            <div>
-              <h4 className="mb-3 text-ink">Stack</h4>
-              <TagList items={p.stack} label={`${p.title} stack`} />
-            </div>
-            {links.length > 0 && (
+            {p.stack.length > 0 && (
+              <div>
+                <h4 className="mb-3 text-ink">Stack</h4>
+                <TagList items={p.stack} label={`${p.title} stack`} />
+              </div>
+            )}
+            {(links.length > 0 || p.links.more) && (
               <div>
                 <h4 className="mb-3 text-ink">Links</h4>
                 <ul className="flex flex-wrap gap-x-6 gap-y-2">
                   {links.map((k) => (
                     <li key={k}>
                       <TextLink href={p.links[k]!} external>
-                        {linkLabels[k]}
+                        {k === "repo" && p.links.repoLabel ? p.links.repoLabel : linkLabels[k]}
+                      </TextLink>
+                    </li>
+                  ))}
+                  {p.links.more?.map((link) => (
+                    <li key={link.url}>
+                      <TextLink href={link.url} external>
+                        {link.label}
                       </TextLink>
                     </li>
                   ))}

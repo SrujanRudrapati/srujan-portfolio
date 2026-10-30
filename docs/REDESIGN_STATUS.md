@@ -10,13 +10,53 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 2 — Design system | done | b89d2ac | Tokens on `:root` + `[data-theme="dark"]`, no-flash toggle in localStorage, Archivo via `next/font`, primitives Container/Section/Card/Tag/Button/Stat/Reveal, AA contrast table in NOTES. Verified by reading the code; the Phase S screenshots show it rendering. |
 | 3 — Hero + nav | done | 1d08a21 | Sticky nav with `aria-current`, toggle, Resume (now visible on phones too), mobile menu with focus trap + Escape, skip link; hero with headline, subhead, status line (M.S. at ASU, available early 2027), two buttons, three quiet proof chips, animated medallion SVG, `.enter` stagger < 700 ms, chips above the fold at 390. Verify 4/4 pass, axe 0, e2e 48 pass (snapshots re-baselined), code-review approve, recruiter-eyes findings fixed. Checklist below. |
 | 4 — Project system + diagrams | done | 71cca15 | `src/data/projects.ts` (8 projects migrated verbatim), Work section with filter chips, featured cards with large Stats, 3/2/1 grid, four inline SVG diagrams on one flow engine (dots, stages light on arrival, in-view only, static under reduced motion). Verify 4/4, axe 0, e2e 62 pass, fe-reviewer and fact-checker findings fixed. Checklist below. |
-| 5 — Content updates | todo | | |
+| 5 — Content updates | done | HASH_PENDING | Facts Section 2 applied: Surplus AI metrics and production status, DevHacks × Cubbie and Label Lens featured, RC Car in the grid, featured order per facts, Celebal additions and intern stint, e-commerce, June 2026 start, new email everywhere, hero chip. `withBasePath` + CI env for the resume link, `.nojekyll`. Content dump for proofreading. Verify 4/4, e2e 62 pass, fact-checker run. Checklist below. |
 | 6 — Knowledge graph | todo | | |
 | 7 — Lenses | todo | | |
 | 8 — Ask Srujan | todo | | |
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 5 checklist
+
+Closed out 2026-10-30. Skills loaded: portfolio-facts, phase-verify, static-export-check.
+
+- [x] lint 0/0, typecheck clean, build passes (routes `/`, `/_not-found`, `/design-preview`)
+- [x] `npm run verify -- --phase 5` passed (path `/`; 390 and 1280, light and dark). Evidence: `docs/screenshots/phase-5/verify.md`
+- [x] screenshots inspected: 390 light fold, 390 dark (Surplus card), 1280 light (Work header, Surplus, DevHacks, Label Lens, Watchtower cards)
+- [x] axe: 0 violations; console: 0 errors; requests: 0 failed; overflow: 0
+- Section 2 applied, item by item:
+  - [x] 2.1 Surplus AI: status production, date "June 2026 to present", three impact figures with their markers (~80% per item, ~10 min per 100+ unit pallet instead of 1 to 2 hours, 14B via MLX), highlights for identification/grading/pricing/label printing/database export, merge rules keyed on serial number, cluster failures traced to macOS permissions and network routing; the "in progress" / "files still copying" chips, status detail, node notes, caption and desc are gone (authorised by 2.1); status chips now read "Qwen 14B on four Mac minis" and "Llama 3B on one"
+  - [x] 2.2 DevHacks × Cubbie: featured, status hackathon, October 2026, 1st place Track 1 by public student vote, 82 submissions from 350+ students, Cooked / Receipts (493 tests) / Bailout descriptions, Cooked and Receipts repo links
+  - [x] 2.3 Label Lens: featured, status live, live link, 44/44 quotes, 16 s to 4 to 9 s, 56 unit + 6 end-to-end tests, stack chips
+  - [x] 2.4 Celebal: e-commerce added to About and the role summary; fashion e-commerce client bullet (Kafka and Spark on Databricks, impressions/clicks/conversions/spend/attribution, Power BI); on call for the 10M-records/day AWS pipeline (appended to the existing AWS bullet); tuned Spark and SQL for performance and cost; code review as senior data engineer on one project and two interns mentored; "Intern, Data Engineering, July to August 2022" as its own role; all existing bullets kept
+  - [x] 2.5 RC Car under Other projects, status academic, B.Tech major project team of three, full parts list
+  - [x] 2.6 email rudrapati.srujan@gmail.com everywhere (`profile.email` is the only source; Contact mailto and text; no JSON-LD or meta carried the old one); resume link stays `/resume.pdf` through `withBasePath`
+  - [x] 2.7 kept unchanged: Watchtower, capstone, CI/CD, WLAN toolkit, F1 predictor, Kubernetes, Java chat, skills, certifications, education
+  - [x] featured order Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower (e2e asserts the h3 order)
+- [x] `grep -rn` for the old email, "in progress", "copying" in `src/` and `public/`: zero hits
+- [x] `docs/screenshots/phase-5/content-dump.md`: plain-text render of every project and experience entry plus hero, about, contact, certifications and education (from `npm run content:dump`)
+- [x] hero proof chip updated: "Surplus AI, in production at ASU Surplus" (was "in active use")
+- Runbook checklist:
+  - [x] four featured cards in order
+  - [x] RC Car under other projects (last card; e2e asserts)
+  - [x] resume link → `/resume.pdf`; CI-parity build (`NEXT_PUBLIC_BASE_PATH=/srujan-portfolio npm run build`) emits `href="/srujan-portfolio/resume.pdf"`; local build emits `/resume.pdf`
+  - [x] all repo/live links resolve: cooked 200, receipts 200, label-lens-iota.vercel.app 200, aws-cicd-pipeline 200 (curl -I -L)
+- [x] `npm run test:e2e`: 62 passed, 6 skipped; Work, hero and Experience expectations updated to the new content (11 projects, 4 featured, 7 in the grid, four roles, 12 Celebal headings); snapshots re-baselined
+- [x] fact-checker run: 190 claims checked, 190 supported, 0 contradicted, 0 unsupported, 0 missing; verdict CLEAN. Its two notes acted on: the dump script printed `[object Object]` for the extra links and `date: undefined` for undated projects (fixed, dump regenerated); the Intern role reuses the site's Celebal location "Jaipur, India" (same employer, same string; kept, noted here).
+- [x] STATUS row updated, commit `redesign: phase 5 — content updates`
+
+### Rulings made in Phase 5
+
+- Removal of the Surplus "in progress" / "copying" wording (two status chips, the status detail sentence, three node notes, one caption sentence) is the removal the runbook itself orders in 2.1, so no DECISIONS question was raised. The "3B engine runs now" chip went with them: it described the interim state and would contradict "in production"; its fact survives as the "Llama 3B on one" chip.
+- Cluster diagram node roles: nodes 1 to 4 "Qwen 14B" (node 1 also "Head node"), node 5 "Llama 3B", derived from 2.1 (four plus one) and the old diagram (node 1 head, nodes 2 to 4 receiving the 14B files). Asked as DECISIONS question 3 with this default.
+- Label Lens has no date and DevHacks no stack in the facts; both omitted (empty beats invented) and asked as DECISIONS questions 1 and 2.
+- Capstone date reworded from "2026, in progress" to "2026, ongoing": the capstone is still unfinished (2.7 keeps it), but the runbook's zero-hit grep for "in progress" is literal. Same fact, one word.
+- The Tech Assistant role now starts "June 2026" (2.1), replacing "May 2026" that the old site carried.
+- Featured impact figures sit in a three-column row at `text-3xl` with the label under the figure (`Stat stacked`) instead of three stacked `text-4xl` figures: still the largest and only red element on the card, but one row rather than three.
+- `src/lib/paths.ts` (`withBasePath`), `basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined` in `next.config.ts`, and `NEXT_PUBLIC_BASE_PATH: /srujan-portfolio` as `env:` on the workflow's build step (the only workflow change the runbook allows). `public/.nojekyll` added per rule 6.
+- `public/resume.pdf` is still absent (Srujan drops it in; DECISIONS item 4). The link target name is unchanged.
 
 ## Phase 4 checklist
 

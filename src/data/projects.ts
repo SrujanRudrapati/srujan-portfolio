@@ -1,7 +1,7 @@
-// Project data. Phase 4 of docs/REDESIGN_RUNBOOK.md: one typed list, migrated
-// field by field from src/content/portfolio.ts (commit 491260e). Every string
-// here was already on the site; Phase 5 applies the Section 2 facts. Do not add
-// numbers, titles, or client names that are not in .claude/skills/portfolio-facts.
+// Project data. One typed list (runbook Phase 4), with the Section 2 facts from
+// .claude/skills/portfolio-facts applied in Phase 5. Every number, date, title
+// and link here traces to that file or to the old site text. Approximate
+// numbers keep their marker. Empty beats invented.
 
 export type ProjectStatus = "production" | "live" | "hackathon" | "academic" | "personal";
 
@@ -9,7 +9,15 @@ export type ProjectStatus = "production" | "live" | "hackathon" | "academic" | "
 export type ProjectTag = "ai" | "data";
 
 export type Impact = { value: string; label: string };
-export type ProjectLinks = { live?: string; repo?: string; writeup?: string };
+export type ProjectLinks = {
+  live?: string;
+  repo?: string;
+  /** Link text for `repo` when "Repository" is ambiguous, e.g. several hackathon entries. */
+  repoLabel?: string;
+  writeup?: string;
+  /** Further repos, e.g. the other hackathon entries. */
+  more?: { label: string; url: string }[];
+};
 export type StatusNote = { state: "running" | "pending" | "neutral"; text: string };
 
 export type Project = {
@@ -27,7 +35,8 @@ export type Project = {
   diagram?: string;
 
   // Fields beyond the runbook schema. All optional, so nothing from the old site is dropped.
-  date: string;
+  /** Omitted when the facts give no date. */
+  date?: string;
   context?: string;
   credit?: string;
   tags: ProjectTag[];
@@ -48,20 +57,23 @@ export const projects: Project[] = [
     oneLiner: "Private, offline AI system for ASU Surplus",
     status: "production",
     featured: true,
-    date: "2026",
-    context: "Built on the job, in active use",
+    date: "June 2026 to present",
+    context: "Built on the job, in production",
     tags: ["ai", "data"],
     impact: [
-      { value: "5", label: "Mac minis in an offline cluster" },
-      { value: "14B", label: "Qwen model split across four nodes with MLX" },
+      { value: "~80%", label: "less processing time per item, about 15 min down to about 3 min" },
+      { value: "~10 min", label: "to list a 100+ unit pallet, instead of 1 to 2 hours" },
+      { value: "14B", label: "Qwen model across four Mac minis, offline, via MLX" },
     ],
     problem:
       "Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual.",
     built:
       "One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet.",
     highlights: [
-      "Two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word.",
-      "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine.",
+      "Handles identification, condition grading, pricing, label printing, and database export.",
+      "Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word.",
+      "Merge rules keyed on serial number, so a low-quality read never overwrites good data.",
+      "Traced repeated cluster failures to macOS permissions and network routing.",
       "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds.",
     ],
     diagram: "surplus-pipeline",
@@ -96,13 +108,55 @@ export const projects: Project[] = [
       ],
     },
     statusNotes: [
-      { state: "running", text: "3B engine runs now" },
-      { state: "pending", text: "14B cluster engine in progress" },
+      { state: "running", text: "Qwen 14B on four Mac minis" },
+      { state: "running", text: "Llama 3B on one" },
     ],
-    statusDetail:
-      "Everything works except the 14B cluster engine, which is waiting on model files being copied to nodes 2 through 4.",
     stack: ["MLX", "Flask", "Bash", "Apple Vision OCR", "Qwen 14B", "Llama 3B"],
     links: {},
+  },
+  {
+    slug: "devhacks-cubbie",
+    title: "DevHacks × Cubbie hackathon",
+    oneLiner: "Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout.",
+    status: "hackathon",
+    featured: true,
+    date: "October 2026",
+    tags: ["ai"],
+    impact: [
+      { value: "1st", label: "place, Track 1, chosen by public student vote" },
+      { value: "82", label: "submissions from 350+ students" },
+      { value: "493", label: "automated tests in CI for Receipts" },
+    ],
+    highlights: [
+      "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
+      "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
+      "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step.",
+    ],
+    stack: [],
+    links: {
+      repo: "https://github.com/SrujanRudrapati/cooked",
+      repoLabel: "Cooked repository",
+      more: [{ label: "Receipts repository", url: "https://github.com/SrujanRudrapati/receipts" }],
+    },
+  },
+  {
+    slug: "label-lens",
+    title: "Label Lens",
+    oneLiner: "Reads food and medicine labels from a photo and checks them against the user's allergies and medications.",
+    status: "live",
+    featured: true,
+    tags: ["ai"],
+    impact: [
+      { value: "44/44", label: "AI warnings verified to quote the label word for word" },
+      { value: "4 to 9 s", label: "response time, down from 16 s, with a fast and a deep model in parallel" },
+      { value: "56 + 6", label: "unit and end-to-end tests" },
+    ],
+    highlights: [
+      "Every AI warning must quote the label word for word (44 of 44 verified).",
+      "Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s.",
+    ],
+    stack: ["Next.js", "TypeScript", "Claude API", "zod", "Vitest", "Playwright"],
+    links: { live: "https://label-lens-iota.vercel.app" },
   },
   {
     slug: "supply-chain-watchtower",
@@ -130,7 +184,7 @@ export const projects: Project[] = [
     oneLiner: "Forecasting demand across 250 SKU and warehouse series, with a strict time-based test window.",
     status: "academic",
     featured: false,
-    date: "2026, in progress",
+    date: "2026, ongoing",
     context: "MS capstone, team of four",
     tags: ["ai", "data"],
     impact: [{ value: "27.7%", label: "WAPE vs. 38.5% naive baseline" }],
@@ -212,6 +266,21 @@ export const projects: Project[] = [
       "A server handles concurrent TCP socket connections and broadcasts messages, with client and server code kept modular.",
     ],
     stack: ["Java", "Swing", "AWT", "TCP sockets"],
+    links: {},
+  },
+  {
+    slug: "gesture-rc-car",
+    title: "Hand Gesture Controlled RC Car",
+    oneLiner: "An RC car steered by hand gestures, read by an accelerometer and sent over RF.",
+    status: "academic",
+    featured: false,
+    context: "B.Tech major project, team of three",
+    tags: [],
+    impact: [],
+    highlights: [
+      "Arduino C++, ADXL335 accelerometer, RF modules with HT12E/HT12D encoder and decoder, L298 motor driver, IR obstacle detection; tested in Gazebo simulation.",
+    ],
+    stack: ["Arduino C++", "ADXL335", "RF HT12E/HT12D", "L298", "Gazebo"],
     links: {},
   },
 ];

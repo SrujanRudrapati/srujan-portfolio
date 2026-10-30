@@ -4,7 +4,12 @@ The only place Claude Code asks Srujan anything (runbook rule 7). Each question 
 
 ## Open
 
-_None yet._
+Nothing below blocks a phase; each has a default already applied. Answer whenever convenient.
+
+1. **Label Lens has no date in the facts** (Phase 5). Default applied: the card shows no date (empty beats invented). If you want one, reply with the month and year.
+2. **DevHacks × Cubbie has no stack in the facts** (Phase 5). Default applied: no stack chips on the card; Canvas, Google Calendar and Discord appear only in the sentences that describe each entry. Reply with the stack if you want chips.
+3. **Which cluster nodes run which model** (Phase 5, Surplus network diagram). Facts 2.1 say Qwen 14B across four Mac minis plus Llama 3B on one; the old diagram marked nodes 2 to 4 as receiving the 14B files, with node 1 the head node. Default applied: nodes 1 to 4 labelled "Qwen 14B" (node 1 also "Head node"), node 5 "Llama 3B". Reply if the split is different.
+4. **Resume file** (Phase 5, not a question so much as a reminder): the nav links to `/resume.pdf` and the link now carries the GitHub Pages prefix in CI, but `public/resume.pdf` does not exist, so the button 404s until you drop the file in. No reply needed.
 
 ## Answered
 

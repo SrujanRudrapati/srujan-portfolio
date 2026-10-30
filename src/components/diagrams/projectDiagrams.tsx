@@ -69,8 +69,8 @@ export function SurplusPipelineDiagram() {
 /* Surplus AI: the five-node cluster. Head node reaches every node over SSH; nothing reaches the internet. */
 
 const nodeIps = ["10.0.0.1", "10.0.0.2", "10.0.0.3", "10.0.0.4", "10.0.0.5"];
-const nodeSub = (i: number): string[] =>
-  i === 0 ? [nodeIps[i], "Head node"] : i === 4 ? [nodeIps[i]] : [nodeIps[i], "14B model files", "still copying"];
+// Qwen 14B runs across four nodes and Llama 3B on one (facts 2.1); node 1 is the head node.
+const nodeSub = (i: number): string[] => [nodeIps[i], i === 0 ? "Head node, Qwen 14B" : i === 4 ? "Llama 3B" : "Qwen 14B"];
 const networkEdges: FlowLayout["edges"] = [
   { from: "internet", to: "switch", dashed: true, arrow: false },
   ...nodeIps.map((_, i) => ({ from: "switch", to: `node${i + 1}` })),
@@ -83,7 +83,7 @@ const surplusNetworkWide: FlowLayout = {
   nodes: [
     { id: "internet", x: 390, y: 12, w: 140, h: 36, label: "Internet", variant: "ghost" },
     { id: "switch", x: 60, y: 104, w: 800, h: 44, label: "Gigabit switch", variant: "accent" },
-    ...nodeIps.map((_, i) => ({ id: `node${i + 1}`, x: 60 + i * 165, y: 210, w: 140, h: 80, label: `Node ${i + 1}`, sub: nodeSub(i) })),
+    ...nodeIps.map((_, i) => ({ id: `node${i + 1}`, x: 60 + i * 165, y: 210, w: 140, h: 64, label: `Node ${i + 1}`, sub: nodeSub(i) })),
   ],
   edges: networkEdges,
   tracks: networkTracks,
@@ -96,7 +96,7 @@ const surplusNetworkNarrow: FlowLayout = {
   nodes: [
     { id: "internet", x: 10, y: 10, w: 110, h: 34, label: "Internet", variant: "ghost" },
     { id: "switch", x: 10, y: 70, w: 44, h: 400, label: "Gigabit switch", variant: "accent", vertical: true },
-    ...nodeIps.map((_, i) => ({ id: `node${i + 1}`, x: 84, y: 70 + i * 84, w: 206, h: 68, label: `Node ${i + 1}`, sub: nodeSub(i) })),
+    ...nodeIps.map((_, i) => ({ id: `node${i + 1}`, x: 84, y: 70 + i * 84, w: 206, h: 60, label: `Node ${i + 1}`, sub: nodeSub(i) })),
   ],
   edges: networkEdges,
   tracks: networkTracks,
@@ -107,8 +107,8 @@ export function SurplusNetworkDiagram() {
   return (
     <FlowDiagram
       title="Cluster network: five Mac minis on a switch with no internet uplink"
-      desc="A gigabit switch with no uplink to the internet connects five Mac mini nodes with fixed IPs 10.0.0.1 to 10.0.0.5. Node 1 is the head node and reaches the others over SSH. Nodes 2 through 4 are still receiving the 14B model files."
-      caption="Five M1 Mac minis on an isolated gigabit switch with fixed IPs and passwordless SSH from the head node. Nodes 2 through 4 are still receiving the 14B model files."
+      desc="A gigabit switch with no uplink to the internet connects five Mac mini nodes with fixed IPs 10.0.0.1 to 10.0.0.5. Node 1 is the head node and reaches the others over SSH. Qwen 14B runs across nodes 1 to 4 and Llama 3B on node 5."
+      caption="Five M1 Mac minis on an isolated gigabit switch with fixed IPs and passwordless SSH from the head node. Qwen 14B runs across four nodes and Llama 3B on one, all through MLX."
       wide={surplusNetworkWide}
       narrow={surplusNetworkNarrow}
     />

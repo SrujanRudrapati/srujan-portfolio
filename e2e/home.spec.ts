@@ -96,7 +96,7 @@ test.describe("Hero", () => {
 
     const chips = hero.getByRole("list", { name: "Highlights" });
     await expect(chips.getByRole("listitem")).toHaveText([
-      "Surplus AI, in active use at ASU Surplus",
+      "Surplus AI, in production at ASU Surplus",
       "Two years of data engineering at Celebal",
       "Databricks Certified Data Engineer Professional",
     ]);
@@ -142,7 +142,9 @@ test.describe("Work", () => {
     await expect(surplus).toBeVisible();
     await expect(surplus.getByText("Production", { exact: true })).toBeVisible();
     await expect(surplus.getByRole("img", { name: /Surplus AI pipeline/ })).toBeVisible();
-    await expect(surplus.getByText("14B cluster engine in progress")).toBeVisible();
+    await expect(surplus.getByText("Qwen 14B on four Mac minis")).toBeVisible();
+    // Facts 2.1: in production, no "in progress" or "copying" wording anywhere.
+    await expect(work).not.toContainText(/in progress|copying/i);
 
     // The long "How it works" block and the two secondary diagrams sit behind a disclosure.
     const details = surplus.locator("details");
@@ -159,10 +161,19 @@ test.describe("Work", () => {
     await expect(watchtower).not.toContainText(/shipped|deployed|production|users/i);
   });
 
-  test("keeps every project: two featured and six in the grid, impact figures loudest", async ({ page }) => {
+  test("keeps every project: four featured in order, seven in the grid, impact figures loudest", async ({ page }) => {
     const work = page.locator("#work");
-    await expect(work.getByRole("article")).toHaveCount(8);
-    await expect(work.locator("#projects").getByRole("article")).toHaveCount(6);
+    await expect(work.getByRole("article")).toHaveCount(11);
+    await expect(work.locator("#projects").getByRole("article")).toHaveCount(7);
+    // Facts: featured order Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower; RC Car under other projects.
+    await expect(work.getByRole("heading", { level: 3 })).toHaveText([
+      "Surplus AI",
+      "DevHacks × Cubbie hackathon",
+      "Label Lens",
+      "Autonomous Supply Chain Watchtower",
+      "Other projects",
+    ]);
+    await expect(work.locator("#projects").getByRole("heading", { level: 4 }).last()).toHaveText("Hand Gesture Controlled RC Car");
     // The Stat figure is the largest text on a featured card.
     const stat = work.getByRole("article", { name: "Surplus AI" }).getByRole("list", { name: "Surplus AI results" }).locator("span").first();
     const title = work.getByRole("heading", { level: 3, name: "Surplus AI" });
@@ -185,13 +196,14 @@ test.describe("Work", () => {
     await expect(production).toHaveAttribute("aria-pressed", "true");
     await expect(all).toHaveAttribute("aria-pressed", "false");
     await expect(work.getByRole("article")).toHaveCount(1);
-    await expect(work.getByText("1 of 8 projects")).toBeVisible();
+    await expect(work.getByText("1 of 11 projects")).toBeVisible();
     expect(page.url()).toBe(url);
 
     await work.getByRole("button", { name: "Hackathon" }).click();
-    await expect(work.getByText("Nothing matches this filter yet.")).toBeVisible();
-    await work.getByRole("button", { name: "Show all projects" }).click();
-    await expect(work.getByRole("article")).toHaveCount(8);
+    await expect(work.getByRole("article", { name: "DevHacks × Cubbie hackathon" })).toBeVisible();
+    await expect(work.getByRole("article")).toHaveCount(1);
+    await all.click();
+    await expect(work.getByRole("article")).toHaveCount(11);
   });
 
   test("a linked grid card is one tab stop whose anchor is the title", async ({ page, isMobile }) => {
@@ -253,21 +265,26 @@ test.describe("Work", () => {
 });
 
 test.describe("Experience", () => {
-  test("renders all three roles with brief-approved titles", async ({ page }) => {
+  test("renders all four roles with brief-approved titles", async ({ page }) => {
     const exp = page.locator("#experience");
     const titles = exp.getByRole("heading", { level: 3 });
     await expect(titles).toHaveText([
       "Tech Assistant, Surplus Operations",
       "Graduate Teaching Assistant",
       "Associate, Data Engineering",
+      "Intern, Data Engineering",
     ]);
 
-    const celebal = exp.getByRole("article").filter({ hasText: "Celebal Technologies" });
-    await expect(celebal.getByRole("heading", { level: 4 })).toHaveCount(9);
+    const celebal = exp.getByRole("article").filter({ hasText: "A data and AI consultancy" });
+    await expect(celebal.getByRole("heading", { level: 4 })).toHaveCount(12);
     await expect(celebal).toContainText("Time-to-insight dropped about 50%");
     await expect(celebal).toContainText("Cut downtime about 30%");
-    // Brief rules: no inflated titles, no "led" or "managed".
-    await expect(exp).not.toContainText(/\b(senior|lead|architect|managed)\b/i);
+    await expect(celebal).toContainText("on call for it");
+    await expect(celebal).toContainText("mentored two interns");
+    // Brief rules: no inflated titles, no "led" or "managed". Titles only; the
+    // facts file itself says "reviewed teammates' code as senior data engineer on one project".
+    for (const title of await titles.allTextContents()) expect(title).not.toMatch(/\b(senior|lead|architect|managed)\b/i);
+    await expect(exp).not.toContainText(/\b(led|managed)\b/i);
   });
 
   test("has no accessibility violations", async ({ page }) => {

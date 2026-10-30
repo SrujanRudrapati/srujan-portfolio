@@ -21,7 +21,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
       <Card as="article" id={`project-${p.slug}`} aria-labelledby={titleId} lift={!!href} className="group relative flex h-full flex-col">
         <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted tabular-nums">
           <StatusBadge status={p.status} />
-          <span>{p.date}</span>
+          {p.date && <span>{p.date}</span>}
         </p>
         <h4 id={titleId} className="mt-3 text-xl leading-snug text-ink">
           {href ? (
