@@ -43,5 +43,5 @@ npm run verify -- --phase N                  # screenshots, axe, console, overfl
 - [ ] No `fetch("/...")` without `withBasePath`.
 - [ ] Nothing in the list of forbidden features above was added.
 - [ ] Fonts still come from `next/font` (self-hosted at build; no external stylesheet).
-- [ ] `/design-preview` is still `robots: noindex` (until Phase 10 removes it).
+- [ ] No new routes beyond `/` without `generateStaticParams` (`/design-preview` was removed in Phase 10).
 - [ ] Live check after deploy (Phase 11): `curl -I` the home page, `resume.pdf`, `graph.json`, and every `_next` asset URL parsed from the HTML returns 200.

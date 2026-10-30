@@ -1,5 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /design-preview
 
 Sitemap: https://srujanrudrapati.github.io/srujan-portfolio/sitemap.xml

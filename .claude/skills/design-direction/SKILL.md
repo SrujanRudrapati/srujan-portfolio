@@ -61,4 +61,4 @@ Gradient heroes, glass or frosted cards, neon grids, stock tech imagery, centred
 
 ## When tokens change
 
-Edit `globals.css` first, then this file, then the `/design-preview` style guide if it still exists. Re-check AA contrast for every changed pair in both themes and record the ratios in `docs/REDESIGN_NOTES.md`.
+Edit `globals.css` first, then this file (the `/design-preview` style guide was removed in Phase 10). Re-check AA contrast for every changed pair in both themes and record the ratios in `docs/REDESIGN_NOTES.md`.

@@ -10,6 +10,3 @@ export type { Impact, Project, ProjectLinks, ProjectStatus, ProjectTag, StatusNo
 export { primaryLink, statusLabel } from "./project-helpers.ts";
 
 export const projects: Project[] = selectProjects(graph);
-
-export const featuredProjects = projects.filter((p) => p.featured);
-export const otherProjects = projects.filter((p) => !p.featured);

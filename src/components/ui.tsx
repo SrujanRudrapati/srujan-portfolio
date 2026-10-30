@@ -10,12 +10,10 @@ export function Container({ children, className = "" }: { children: ReactNode; c
 export function Section({
   id,
   title,
-  intro,
   children,
 }: {
   id: string;
   title: ReactNode;
-  intro?: ReactNode;
   children: ReactNode;
 }) {
   return (
@@ -25,7 +23,6 @@ export function Section({
           <h2 id={`${id}-heading`} className="text-3xl text-ink">
             {title}
           </h2>
-          {intro && <p className="mt-4 text-lg text-muted">{intro}</p>}
         </header>
         {children}
       </Container>
