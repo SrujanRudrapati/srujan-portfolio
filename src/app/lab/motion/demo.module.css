@@ -1,0 +1,166 @@
+/* /lab/motion demo, in the v3 tokens (design-direction): black and white, one blue accent. */
+.root {
+  --bg: #ffffff;
+  --ink: #000000;
+  --muted: #5c5c5c;
+  --hair: #d9d9d9;
+  --accent-2: #1d4ed8;
+  --text-muted: var(--muted);
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--a-display), system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme="light"])) .root {
+    --bg: #000000;
+    --ink: #ffffff;
+    --muted: #a3a3a3;
+    --hair: #2b2b2b;
+    --accent-2: #7c9bff;
+  }
+}
+:global(html[data-theme="dark"]) .root {
+  --bg: #000000;
+  --ink: #ffffff;
+  --muted: #a3a3a3;
+  --hair: #2b2b2b;
+  --accent-2: #7c9bff;
+}
+.root :where(h1, h2, h3) {
+  font-family: inherit;
+  font-stretch: normal;
+}
+.main {
+  overflow-x: clip;
+}
+.section {
+  padding: 96px clamp(16px, 8vw, 128px);
+  max-width: 1440px;
+}
+.sectionFlush {
+  padding-bottom: 96px;
+}
+.sectionFlush .section {
+  padding-bottom: 48px;
+}
+.label {
+  margin: 0 0 20px;
+  font-family: var(--font-mono), monospace;
+  font-size: 13px;
+  color: var(--muted);
+}
+.h1 {
+  margin: 0;
+  font-size: clamp(4rem, 14vw, 12rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+}
+.h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-size: clamp(2.5rem, 7vw, 6rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.lede {
+  margin: 28px 0 0;
+  max-width: 52ch;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}
+.link,
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 28px;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent-2);
+  text-underline-offset: 0.25em;
+}
+.button {
+  padding: 0 22px;
+  border: 1px solid var(--ink);
+  text-decoration: none;
+}
+.button:hover,
+.link:hover {
+  color: var(--accent-2);
+}
+:is(.link, .button):focus-visible,
+.root a:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 3px;
+}
+.figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 32px 48px;
+  margin: 48px 0 0;
+}
+.figures dd {
+  margin: 8px 0 0;
+  max-width: 30ch;
+  line-height: 1.4;
+}
+.figure {
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent-2);
+}
+.rail {
+  position: relative;
+  width: 2px;
+  height: 60vh;
+  margin: 48px 0 0 8px;
+  background: var(--hair);
+}
+.railFill {
+  position: absolute;
+  inset: 0;
+  background: var(--accent-2);
+  transform-origin: top;
+}
+.record {
+  position: absolute;
+  top: 0;
+  left: -7px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--accent-2);
+  box-shadow: 0 0 0 4px var(--bg);
+}
+.pinned {
+  background: var(--bg);
+}
+.slot {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16 / 10;
+  margin-top: 32px;
+}
+.card {
+  border-top: 2px solid var(--ink);
+  padding-top: 20px;
+}
+.card h3 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 700;
+  font-stretch: 112%;
+}
+.card p {
+  margin: 12px 0 0;
+  max-width: 40ch;
+  color: var(--muted);
+  line-height: 1.5;
+}

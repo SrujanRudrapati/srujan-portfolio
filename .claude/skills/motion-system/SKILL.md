@@ -41,3 +41,23 @@ A full alternate mode: Lenis off, nothing pinned or scrubbed, entrances skipped,
 ## Not allowed
 
 Autoplay sound, scroll-jacking that fights the wheel, preloaders that block content, animation of layout properties, WebGL on the server, third-party CDN requests for decoders, HDRIs or fonts.
+
+## Primitives (V2, `src/components/motion/`)
+
+Use these instead of ad-hoc GSAP. Every one is a client component or hook, SSR-safe for static export, builds only under `gsap.matchMedia(FULL)` (reduced motion gets the finished markup), and reverts itself on unmount, so route changes leak nothing (checked by `e2e/motion.spec.ts`: 10 round trips, equal ScrollTrigger, slot and canvas counts).
+
+| Primitive | Use | Notes |
+|---|---|---|
+| `MotionRoot` | Once per document, in a layout | Smooth scroll, page transitions, cursor, first-visit intro, the shared 3D `StageHost` (so the canvas persists across pages), and `window.__motion` counters for tests |
+| `SmoothScroll` | (inside MotionRoot) | Lenis lerp 0.1 on GSAP's ticker, `syncTouch` off, `anchors` on; native scroll underneath so keyboard, find-in-page and scrollbars work |
+| `<SplitReveal as by>` | Headings and short lines | SplitText with masks, `aria: "auto"` (unsplit text for screen readers), `autoSplit` re-splits on resize and font load; plain-string children only |
+| `useScrubTimeline(ref, build, opts)` | Scroll-scrubbed sequences (rail fills, diagrams drawing) | Timeline with `ease: "none"`; markup must already show the finished state |
+| `<Pin heights>` | Hold a section for N viewport heights | 768 px and wider only |
+| `<HorizontalReel label>` | Project reels (pass `<li>` children) | Desktop: pinned sideways scrub. Phones and reduced motion: native swipe with snap, focusable |
+| `<CountUp value>` | Impact figures | Real value in the HTML and in `data-count`; counts once on entry; keeps `~` and `about` |
+| `<Magnetic>` | The primary button or two per page | Fine pointers only; at most 10 px |
+| `Cursor` | (inside MotionRoot) | Accent ring beside the native cursor (never hides it); grows on links; shows `data-cursor="open"` labels |
+| `PageTransitions` | (inside MotionRoot) | Internal links only (not files, not new tabs, not same-page anchors). View Transitions API: the new page wipes in under a sweeping accent line (520 ms); otherwise a GSAP panel led by the line; reduced motion: 150 ms crossfade. Then scroll to top (our navigations only), `ScrollTrigger.refresh()`, focus on `main h1` |
+| `Intro` | (inside MotionRoot) | First visit per session, about 1.1 s, any key/click/wheel/touch skips; shown only when the pre-paint script sets `html[data-intro]`, and a CSS timeout hides it even if JS fails |
+
+React here is 19.2, which has no `<ViewTransition>` component; the transition calls `document.startViewTransition` directly. Revisit when React 19.3 lands.

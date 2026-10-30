@@ -7,13 +7,34 @@ Ledger for `docs/REDESIGN_V3_RUNBOOK.md` (same format as `docs/REDESIGN_STATUS.m
 | V0 — Reference teardown | done | `redesign: phase V0 — reference teardown` | All four sites captured at 1440 and 390 (9 steps each plus interaction passes); `docs/v3/REFERENCES.md` with one section per site, 11 principles to borrow, 9 things to avoid. Checklist below. |
 | V1 — Three concepts, prototypes (G4) | done (G4 answered 2026-10-30: A's structure, C's typography, blue accent) | `redesign: phase V1 — three concept prototypes` | `/lab/a` Pipeline, `/lab/b` Notebook, `/lab/c` Spec Sheet, each a scrolling, animated hero + scroll sequence + project teaser from real facts; `docs/v3/CONCEPTS.md`; screenshots and scroll videos in `docs/v3/concepts/`. Recommended: A's structure with C's typography. Checklist below. |
 | V1.5 — Visual layer: 3D and physics | done | `redesign: phase V1.5 — visual layer, 3D and physics` | One shared canvas, poster-first 3D: physics particle hero, Surplus AI conveyor, Label Lens bottle; CC0 KTX2 textures and gain-map HDRI (about 1.0 MB); 59.6 fps on M2; fallbacks tested in `e2e/three.spec.ts`. Checklist below. |
-| V2 — Motion foundation | todo | | |
+| V2 — Motion foundation | done | `redesign: phase V2 — motion foundation` | `/lab/b`, `/lab/c` removed; primitives in `src/components/motion/` with `MotionRoot`; demo at `/lab/motion` and `/lab/motion/next`; leak test (10 round trips) and transition, intro, keyboard, reduced-motion tests in `e2e/motion.spec.ts`. Checklist below. |
 | V3 — IA and routing | todo | | |
 | V4 — Home page story | todo | | |
 | V5 — Case study pages | todo | | |
 | V6 — Secondary pages | todo | | |
 | V7 — Polish, mobile, perf, a11y | todo | | |
 | V8 — Ship (G1) | todo | | |
+
+## Phase V2 checklist
+
+- [x] Skills loaded: `frontend-design`, `design-direction`, `static-export-check`, `motion-system` (extended with a primitives table and the transition, intro and cleanup rules).
+- [x] First step: `/lab/b` and `/lab/c` removed (DECISIONS 11 is the G2 yes). `scripts/v3-concepts.mts` notes that only `/lab/a` remains.
+- [x] `SmoothScroll`: Lenis (lerp 0.1, `syncTouch` off, `anchors` on) on GSAP's ticker, synced with ScrollTrigger; `lenis/dist/lenis.css` imported (it turns off the global `scroll-behavior: smooth` while Lenis drives). Keyboard scrolling checked (PageDown moves the page). Off under reduced motion.
+- [x] Primitives, all SSR-safe for static export with a reduced-motion branch: `SplitReveal` (masked lines or words; screen readers get one visually hidden plain copy), `useScrubTimeline`, `Pin` (768 px and wider), `HorizontalReel` (pinned sideways scrub on desktop, swipe with snap on phones; pinned items reachable by Tab), `CountUp` (real value in the HTML and `data-count`, `~` kept), `Magnetic` (fine pointers, at most 10 px), `Cursor` (accent ring beside the native cursor, grows on links, `data-cursor` labels).
+- [x] Page transitions: internal links intercepted in the capture phase (`preventDefault` only, so link handlers still run and `next/link` stands down). View Transitions API: the new page wipes in under a sweeping accent line (520 ms); otherwise a GSAP panel led by the line; reduced motion: 150 ms crossfade. Our navigations land at the top, or on the link's `#anchor`; focus moves to the anchor or `main h1`; back and forward keep the browser's scroll restoration. One transition at a time; a 4 s timeout releases a stuck one. The GitHub Pages basePath is stripped before `router.push` (unit test `PageTransitions.test.ts`).
+- [x] Intro: about 1.1 s, first visit of the session, pre-paint script sets `html[data-intro]` and wires the skip (any key, click, wheel, touch), a CSS timeout hides it even without JS, never under reduced motion, content always in the HTML underneath.
+- [x] 3D in the motion system (runbook V2 step 7): `MotionRoot` mounts the shared `StageHost`, so one canvas persists across routes; the leak test counts ScrollTriggers, 3D slots and canvases.
+- [x] Demo of every primitive at `/lab/motion` (real figures from the graph) and `/lab/motion/next`; evidence in `docs/v3/motion/` (1440 light and dark, 390 light, reduced, scroll video; mean 58.9 fps, p95 frame 16.7 ms on the M2).
+- [x] Tests: `e2e/motion.spec.ts` (10 back-and-forth navigations leave ScrollTrigger, slot and canvas counts unchanged; arrival at the top with focus on h1; leaving while a section is pinned throws nothing; a cross-page `#anchor` lands on the anchor; intro once per session and skippable; keyboard scrolling with Lenis; reduced motion starts nothing and keeps the real figures), stable over 3 repeats; `count.test.ts`, `PageTransitions.test.ts`. Full Playwright suite 166 passed, 38 project-scoped skips; unit 65 passed.
+- [x] `phase-verify`: lint, typecheck, build; `npm run verify -- --phase V2 --path /lab/motion --path /lab/motion/next --path /lab/a`: 12 of 12 pass; 3D assets 1009 of 1536 KB.
+- [x] Review: `react-reviewer` on the V2 diff (no critical, 4 high, 6 medium, 5 low), all fixed: basePath doubled on Pages by `router.push`; pins reverted in layout effects so a route change cannot hit a `removeChild` error; a timed-out navigation no longer counts as ours; cross-page anchors; `CountUp` cleanup and first-frame flash; no `stopPropagation` in the click interceptor; Lenis CSS; pinned reel focus; GSAP lag smoothing restored; `window.__motion` only in development or with `?motion-debug`; intro under StrictMode; overlay timeline killed on unmount; SVG anchors and `rel="external"` skipped; scrub pins desktop-only.
+
+### Rulings made in Phase V2
+
+- React 19.2 has no `<ViewTransition>`; the transition calls `document.startViewTransition` directly with a GSAP fallback. Revisit when React 19.3 is in use.
+- `MotionRoot` is mounted in `/lab/motion/layout.tsx` for this phase; V3 moves it into the root layout with the new routes.
+- `npm run verify` ignores aborted Next.js prefetches (RSC requests, and the router's own extensionless route probe that Next cancels by design); every other failed request still fails the run.
+- Found while testing: Lenis keeps the previous page's scroll limit until its resize observer runs, so a cross-page anchor could stop short; arrivals call `lenis.resize()` first.
 
 ## Phase V1.5 checklist
 

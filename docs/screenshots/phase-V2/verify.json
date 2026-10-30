@@ -1,0 +1,144 @@
+{
+  "phase": "V2",
+  "generatedAt": "2026-10-30T23:09:52.133Z",
+  "runs": [
+    {
+      "path": "/lab/motion",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lab-motion-mobile-light.png",
+      "foldScreenshot": "home-lab-motion-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lab-motion-mobile-dark.png",
+      "foldScreenshot": "home-lab-motion-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lab-motion-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lab-motion-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion/next",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lab-motion-next-mobile-light.png",
+      "foldScreenshot": "home-lab-motion-next-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion/next",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lab-motion-next-mobile-dark.png",
+      "foldScreenshot": "home-lab-motion-next-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion/next",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lab-motion-next-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/motion/next",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lab-motion-next-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lab-a-mobile-light.png",
+      "foldScreenshot": "home-lab-a-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lab-a-mobile-dark.png",
+      "foldScreenshot": "home-lab-a-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lab-a-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lab-a-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

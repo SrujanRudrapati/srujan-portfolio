@@ -1,0 +1,186 @@
+/* Motion primitives (V2). Colours come from the page tokens; the v3 accent is the
+   data path. Only transform, opacity and clip-path animate. */
+
+.reel {
+  --reel-accent: var(--accent-2, #1d4ed8);
+  position: relative;
+  overflow: hidden;
+}
+.reelTrack {
+  list-style: none;
+  margin: 0;
+  padding: 0 16px 8px 0;
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+}
+.reelTrack > li {
+  flex: 0 0 82%;
+  scroll-snap-align: start;
+}
+.reelTrack:focus-visible {
+  outline: 2px solid var(--reel-accent);
+  outline-offset: 4px;
+}
+@media (min-width: 768px) {
+  .reelTrack > li {
+    flex: 0 0 min(42vw, 620px);
+  }
+  .reel[data-reel="pinned"] {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .reel[data-reel="pinned"] .reelTrack {
+    overflow: visible;
+    width: max-content;
+    gap: 6vw;
+    will-change: transform;
+  }
+}
+
+/* Cursor: an accent ring beside the native cursor (never replaces it). */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 60;
+  width: 28px;
+  height: 28px;
+  margin: -14px 0 0 -14px;
+  border: 1.5px solid var(--accent-2, #1d4ed8);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms linear, scale 200ms cubic-bezier(0.25, 1, 0.5, 1), background-color 200ms;
+  display: grid;
+  place-items: center;
+}
+.cursor[data-on] {
+  opacity: 1;
+}
+.cursor[data-state="link"] {
+  scale: 1.6;
+}
+.cursor[data-state="label"] {
+  scale: 2.4;
+  background: var(--accent-2, #1d4ed8);
+}
+.cursorLabel {
+  font-family: var(--font-mono, ui-monospace), monospace;
+  font-size: 5px;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .cursor {
+    display: none;
+  }
+}
+
+/* Route transition without the View Transitions API: a page-colour panel led by the data line. */
+.routeOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: none;
+  background: var(--bg, #fff);
+  pointer-events: none;
+}
+.routeOverlayLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 2px;
+  background: var(--accent-2, #1d4ed8);
+}
+
+/* With the View Transitions API: the new page wipes in left to right under the line. */
+.routeLine {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 2px;
+  z-index: 70;
+  background: var(--accent-2, #1d4ed8);
+  pointer-events: none;
+  view-transition-name: route-line;
+}
+:global(html[data-vt="sweep"])::view-transition-old(root) {
+  animation: 520ms cubic-bezier(0.25, 1, 0.5, 1) both route-dim;
+}
+:global(html[data-vt="sweep"])::view-transition-new(root) {
+  animation: 520ms cubic-bezier(0.25, 1, 0.5, 1) both route-wipe;
+}
+:global(html[data-vt="sweep"])::view-transition-group(route-line) {
+  animation: none;
+}
+:global(html[data-vt="sweep"])::view-transition-new(route-line) {
+  animation: 520ms cubic-bezier(0.25, 1, 0.5, 1) both route-line;
+}
+:global(html[data-vt="fade"])::view-transition-old(root),
+:global(html[data-vt="fade"])::view-transition-new(root) {
+  animation-duration: 150ms;
+}
+@keyframes route-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes route-dim {
+  to {
+    opacity: 0.35;
+  }
+}
+@keyframes route-line {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(100vw);
+  }
+}
+
+/* First-visit intro: hidden unless the pre-paint script set html[data-intro]. A CSS
+   timeout hides it even if the script that plays it never runs. */
+.intro {
+  display: none;
+}
+:global(html[data-intro]) .intro {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+  padding: 0 clamp(16px, 8vw, 128px);
+  background: var(--bg, #fff);
+  clip-path: inset(0 0 0 0);
+  animation: intro-timeout 0s linear 1.6s forwards;
+}
+.introLabel {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace), monospace;
+  font-size: 13px;
+  color: var(--text-muted, #555);
+}
+.introLine {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--accent-2, #1d4ed8);
+}
+@keyframes intro-timeout {
+  to {
+    visibility: hidden;
+  }
+}

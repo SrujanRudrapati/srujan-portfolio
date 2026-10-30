@@ -1,13 +1,13 @@
 // Evidence for runbook V1.5: screenshots of /lab/a (1440 and 390, light and dark,
 // first screen plus scroll steps), a reduced-motion full page, a scroll video, and
 // frame timing while scrolling with the real GPU.
-// Usage: node --experimental-strip-types scripts/v3-visual.mts [baseUrl] [path]
+// Usage: node --experimental-strip-types scripts/v3-visual.mts [baseUrl] [path] [outDir]
 import { mkdirSync, renameSync, writeFileSync } from "node:fs";
 import { chromium, type Page } from "@playwright/test";
 
 const base = process.argv[2] ?? "http://localhost:4321";
 const path = process.argv[3] ?? "/lab/a";
-const OUT = "docs/v3/visual";
+const OUT = process.argv[4] ?? "docs/v3/visual";
 const GPU = ["--use-angle=metal", "--enable-gpu", "--ignore-gpu-blocklist"];
 mkdirSync(OUT, { recursive: true });
 
@@ -18,7 +18,9 @@ async function open(page: Page) {
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => m.type() === "error" && !m.text().includes("favicon") && errors.push(m.text()));
   await page.goto(`${base}${path}`, { waitUntil: "networkidle" });
-  await page.waitForFunction(() => document.querySelectorAll("[data-live]").length >= 1, null, { timeout: 30_000 }).catch(() => errors.push("no live scene within 30 s"));
+  // Covers go live only once on screen, so wait only when one starts in the first viewport.
+  const sceneAboveFold = await page.$$eval("[data-scene]", (els) => els.some((e) => e.getBoundingClientRect().top < innerHeight));
+  if (sceneAboveFold) await page.waitForFunction(() => document.querySelectorAll("[data-live]").length >= 1, null, { timeout: 30_000 }).catch(() => errors.push("no live scene within 30 s"));
   await page.waitForTimeout(2500);
 }
 

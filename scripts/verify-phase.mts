@@ -152,7 +152,15 @@ async function runOne(
     if ((message.type() === "error" || message.type() === "warning") && !KNOWN_WARNINGS.some((k) => message.text().includes(k))) consoleErrors.push(`${message.type()}: ${message.text()}`);
   });
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
-  page.on("requestfailed", (request) => failedRequests.push(`${request.url()} (${request.failure()?.errorText ?? "failed"})`));
+  page.on("requestfailed", (request) => {
+    // next/link prefetching: Next aborts its own route probe (a plain fetch of the route path)
+    // once segment prefetches start, and RSC prefetches are cancelled when the page closes.
+    // Neither is a broken asset.
+    const aborted = request.failure()?.errorText === "net::ERR_ABORTED";
+    const routeProbe = request.resourceType() === "fetch" && !/\.[a-z0-9]+$/i.test(new URL(request.url()).pathname);
+    if (aborted && (request.headers()["rsc"] || routeProbe)) return;
+    failedRequests.push(`${request.url()} (${request.failure()?.errorText ?? "failed"})`);
+  });
   page.on("response", (response) => {
     if (response.status() >= 400) failedRequests.push(`${response.url()} (${response.status()})`);
   });

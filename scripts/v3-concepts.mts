@@ -1,6 +1,7 @@
 // Phase V1 evidence: screenshots and a ~10 s scroll video of each /lab prototype
 // at 1440 and 390, light and dark, plus a reduced-motion pass. Console errors fail the run.
 // Usage: node --experimental-strip-types scripts/v3-concepts.mts [--base http://localhost:3000] [--only a]
+// Since V2 only /lab/a exists (/lab/b and /lab/c were removed per DECISIONS 11): run with --only a.
 import { chromium, type Page } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
