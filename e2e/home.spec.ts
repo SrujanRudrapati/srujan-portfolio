@@ -265,7 +265,7 @@ test.describe("Work", () => {
 });
 
 test.describe("Experience", () => {
-  test("renders all four roles with brief-approved titles", async ({ page }) => {
+  test("summarises all four roles and links to the timeline", async ({ page }) => {
     const exp = page.locator("#experience");
     const titles = exp.getByRole("heading", { level: 3 });
     await expect(titles).toHaveText([
@@ -274,17 +274,8 @@ test.describe("Experience", () => {
       "Associate, Data Engineering",
       "Intern, Data Engineering",
     ]);
-
-    const celebal = exp.getByRole("article").filter({ hasText: "A data and AI consultancy" });
-    await expect(celebal.getByRole("heading", { level: 4 })).toHaveCount(12);
-    await expect(celebal).toContainText("Time-to-insight dropped about 50%");
-    await expect(celebal).toContainText("Cut downtime about 30%");
-    await expect(celebal).toContainText("on call for it");
-    await expect(celebal).toContainText("mentored two interns");
-    // Brief rules: no inflated titles, no "led" or "managed". Titles only; the
-    // facts file itself says "reviewed teammates' code as senior data engineer on one project".
     for (const title of await titles.allTextContents()) expect(title).not.toMatch(/\b(senior|lead|architect|managed)\b/i);
-    await expect(exp).not.toContainText(/\b(led|managed)\b/i);
+    await expect(exp.getByRole("link", { name: /on the timeline/ })).toHaveAttribute("href", "#lens=timeline");
   });
 
   test("has no accessibility violations", async ({ page }) => {
@@ -297,7 +288,7 @@ test.describe("Experience", () => {
 });
 
 test.describe("Skills", () => {
-  test("groups and chip order come from the graph unchanged", async ({ page }) => {
+  test("summarises every group and links to the skill map", async ({ page }) => {
     const skills = page.locator("#skills");
     await expect(skills.getByRole("heading", { level: 3 })).toHaveText(["Data engineering", "Cloud", "AI and ML", "Governance", "Infrastructure", "BI"]);
     await expect(skills.getByRole("list", { name: "Governance skills" }).getByRole("listitem")).toHaveText([
@@ -307,11 +298,111 @@ test.describe("Skills", () => {
       "metadata management",
       "data lineage",
     ]);
-    await expect(skills.getByRole("list", { name: "Azure skills" }).getByRole("listitem").first()).toHaveText("Databricks");
+    await expect(skills.getByRole("link", { name: /on the skill map/ })).toHaveAttribute("href", "#lens=skills");
   });
 
   test("visual", async ({ page }) => {
     await expect(page.locator("#skills")).toHaveScreenshot("skills.png");
+  });
+});
+
+test.describe("Lenses", () => {
+  const switcher = (page: Page) => page.getByRole("group", { name: "View work as" });
+
+  test("Highlights is the default and the switcher is real buttons with aria-pressed", async ({ page }) => {
+    const buttons = switcher(page).getByRole("button");
+    await expect(buttons).toHaveText(["Highlights", "Timeline", "Skill map", "By problem", "By industry", "Recruiter"]);
+    await expect(switcher(page).getByRole("button", { name: "Highlights" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#project-surplus-ai")).toBeVisible();
+  });
+
+  test("a lens click updates the hash, arrow keys move between lenses", async ({ page }) => {
+    const timeline = switcher(page).getByRole("button", { name: "Timeline" });
+    await timeline.click();
+    await expect(page).toHaveURL(/#lens=timeline$/);
+    await expect(timeline).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#project-surplus-ai")).toBeHidden();
+
+    await page.keyboard.press("ArrowRight");
+    const skills = switcher(page).getByRole("button", { name: "Skill map" });
+    await expect(skills).toBeFocused();
+    await expect(skills).toHaveAttribute("aria-pressed", "true");
+    await expect(page).toHaveURL(/#lens=skills$/);
+
+    await page.keyboard.press("Home");
+    await expect(switcher(page).getByRole("button", { name: "Highlights" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page).not.toHaveURL(/#lens=/);
+  });
+
+  test("Timeline carries every role outcome and nests projects under their role", async ({ page }) => {
+    await page.goto("/#lens=timeline");
+    const work = page.locator("#work");
+    await expect(work.getByRole("heading", { level: 4 }).first()).toHaveText("Tech Assistant, Surplus Operations");
+    const celebal = work.locator("li").filter({ has: page.getByRole("heading", { level: 4, name: "Associate, Data Engineering" }) });
+    await expect(celebal.locator("dt")).toHaveCount(12);
+    await expect(celebal).toContainText("Time-to-insight dropped about 50%");
+    await expect(celebal).toContainText("Cut downtime about 30%");
+    await expect(celebal).toContainText("on call for it");
+    await expect(celebal).toContainText("mentored two interns");
+    await expect(work.getByRole("list", { name: "Projects during Graduate Teaching Assistant" })).toContainText("WLAN Traffic Forensics Toolkit");
+    await expect(work.locator("time").first()).toHaveAttribute("datetime", /^\d{4}/);
+  });
+
+  test("Skill map counts usage and filters the list beneath", async ({ page }) => {
+    await page.goto("/#lens=skills");
+    const work = page.locator("#work");
+    await expect(work.getByRole("heading", { name: "All projects" })).toBeVisible();
+    const python = work.getByRole("button", { name: /^Python/ });
+    await python.click();
+    await expect(python).toHaveAttribute("aria-pressed", "true");
+    await expect(work.getByRole("heading", { name: "Where Python is used" })).toBeVisible();
+    await expect(work.getByRole("list", { name: "Projects and roles using Python" }).getByRole("listitem")).toHaveCount(4);
+    await work.getByRole("button", { name: "Show all projects" }).click();
+    await expect(work.getByRole("list", { name: "All projects" }).getByRole("listitem")).toHaveCount(11);
+  });
+
+  test("By problem and By industry key cards on graph nodes", async ({ page }) => {
+    await page.goto("/#lens=problems");
+    await expect(page.getByRole("list", { name: "Work by problem solved" }).getByRole("heading", { level: 4, name: "Ungrounded AI output" })).toBeVisible();
+    await page.goto("/#lens=industries");
+    await expect(page.getByRole("list", { name: "Work by industry" }).getByRole("heading", { level: 4, name: "E-commerce" })).toBeVisible();
+  });
+
+  test("a project link from another lens returns to Highlights and lands on the card", async ({ page }) => {
+    await page.goto("/#lens=recruiter");
+    await page.locator("#recruiter-sheet").getByRole("link", { name: "Label Lens" }).click();
+    await expect(switcher(page).getByRole("button", { name: "Highlights" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#project-label-lens")).toBeInViewport();
+  });
+
+  test("Recruiter mode prints on one page", async ({ page, isMobile }) => {
+    test.skip(isMobile, "PDF output is the same at any viewport");
+    await page.goto("/#lens=recruiter");
+    await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
+    for (const format of ["Letter", "A4"] as const) {
+      const pdf = await page.pdf({ format, printBackground: true });
+      expect(pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g)?.length, format).toBe(1);
+    }
+  });
+
+  test("one h1 and one h2 per section in every lens", async ({ page }) => {
+    for (const lens of ["highlights", "timeline", "skills", "problems", "industries", "recruiter"]) {
+      await page.goto(lens === "highlights" ? "/" : `/#lens=${lens}`);
+      await expect(page.locator("#work [data-lens-panel]:not([hidden])").first()).toBeVisible();
+      await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+      const h2 = await page.getByRole("heading", { level: 2 }).allTextContents();
+      expect(h2, lens).toEqual(["About", "Work", "Experience", "Skills", "Certifications and education", "Contact"]);
+      await expectNoA11yViolations(page, "#work");
+    }
+  });
+
+  test.describe("without JavaScript", () => {
+    test.use({ javaScriptEnabled: false });
+
+    test("the default lens is complete static HTML", async ({ page }) => {
+      await expect(page.locator("#work").getByRole("article")).toHaveCount(11);
+      await expect(page.locator("#project-surplus-ai")).toBeVisible();
+    });
   });
 });
 

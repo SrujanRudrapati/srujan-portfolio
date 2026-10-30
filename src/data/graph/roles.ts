@@ -133,7 +133,7 @@ export const certificationNodes: CertificationNode[] = [
 
 export const roleMetricNodes: MetricNode[] = [
   metric("time-to-insight", "about 50%", "less time-to-insight", "For a telehealth client in New Zealand, on Microsoft Fabric. The dashboards ended up in their weekly operational meetings.", [{ label: "Experience", url: EXPERIENCE }], ["celebal"]),
-  metric("records-per-day", "about 10 million", "records a day", "A production pipeline on Glue, S3, and Redshift from 7+ source systems, for a US materials engineering client.", [{ label: "Experience", url: EXPERIENCE }], ["celebal", "aws"]),
+  metric("records-per-day", "about 10 million", "records a day", "A production pipeline on Glue, S3, and Redshift from 7+ source systems, for a US materials engineering client.", [{ label: "Experience", url: EXPERIENCE }], ["celebal", "aws", "headline"]),
   metric("downtime", "about 30%", "less downtime", "By tracing recurring failures of the AWS pipeline to root causes instead of patching them.", [{ label: "Experience", url: EXPERIENCE }], ["celebal", "aws"]),
   metric("students", "40+", "students in office hours", "As Graduate Teaching Assistant for two 400-level networking courses.", [{ label: "Experience", url: EXPERIENCE }], ["asu", "teaching"]),
 ];

@@ -272,6 +272,10 @@
     transition-delay: var(--reveal-delay, 0ms);
   }
 
+  [data-lens-panel]:not([hidden]) {
+    animation: lens-in 200ms var(--ease-out-quart);
+  }
+
   /* Project diagrams (FlowDiagram). Dots ride each track; a box's lit overlay
      fades in the moment a dot reaches it. Runs only while the figure is on
      screen (data-animate set by useInView). Overlays animate opacity only. */
@@ -339,6 +343,16 @@
   }
 }
 
+/* Lens switch: the incoming panel fades in over 200ms (motion allowed only). */
+@keyframes lens-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes flow-travel {
   from {
     offset-distance: 0%;
@@ -394,3 +408,40 @@
   92%, 100% { fill: var(--stage-lit); }
 }
 
+
+/* Print. Recruiter mode prints alone on one page, in light colours, whatever
+   theme is on screen. Other lenses print the page as it is. */
+@media print {
+  :root,
+  :root[data-theme="dark"] {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --border: #cfcfc8;
+    --text: #0a0a0a;
+    --text-muted: #55554f;
+    --accent: #c42a14;
+    --accent-2: #1b4fd8;
+  }
+  html[data-lens="recruiter"] body > *:not(main),
+  html[data-lens="recruiter"] main > *:not(#work),
+  html[data-lens="recruiter"] #work-heading,
+  html[data-lens="recruiter"] #work [data-lens-panel][hidden] {
+    display: none !important;
+  }
+  html[data-lens="recruiter"] #work {
+    border: 0;
+  }
+  html[data-lens="recruiter"] #work > div {
+    padding: 0;
+    max-width: none;
+  }
+  html[data-lens="recruiter"] #work header {
+    margin: 0;
+  }
+  @page {
+    size: auto;
+    margin: 14mm;
+  }
+}

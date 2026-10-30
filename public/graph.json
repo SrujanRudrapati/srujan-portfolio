@@ -2404,7 +2404,8 @@
       ],
       "tags": [
         "metric",
-        "surplus-ai"
+        "surplus-ai",
+        "headline"
       ],
       "value": "~80%",
       "valueLabel": "less processing time per item, about 15 min down to about 3 min"
@@ -2463,7 +2464,8 @@
       ],
       "tags": [
         "metric",
-        "hackathon"
+        "hackathon",
+        "headline"
       ],
       "value": "1st",
       "valueLabel": "place, Track 1, chosen by public student vote"
@@ -2695,7 +2697,8 @@
       "tags": [
         "metric",
         "celebal",
-        "aws"
+        "aws",
+        "headline"
       ],
       "value": "about 10 million",
       "valueLabel": "records a day"

@@ -122,12 +122,4 @@ export const skillNodes: SkillNode[] = specs.map(([id, label, groups, tags = []]
   groups,
 }));
 
-/** Skills section group order and subgroup order, as rendered. */
-export const skillGroupOrder: { name: string; subs?: string[] }[] = [
-  { name: "Data engineering" },
-  { name: "Cloud", subs: ["Azure", "AWS", "Other"] },
-  { name: "AI and ML" },
-  { name: "Governance" },
-  { name: "Infrastructure" },
-  { name: "BI" },
-];
+export { skillGroupOrder } from "./groups.ts";

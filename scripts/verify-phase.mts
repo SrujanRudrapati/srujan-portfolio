@@ -1,6 +1,6 @@
 // Phase evidence routine for docs/REDESIGN_RUNBOOK.md rule 9.
 //
-//   npm run verify -- --phase 4 [--no-build] [--path /] [--path "/#lens=timeline"] [--port 4321]
+//   npm run verify -- --phase 4 [--no-build] [--tablet] [--path /] [--path "/#lens=timeline"] [--port 4321]
 //
 // Builds the static export (unless --no-build), serves out/ with `serve`, then for
 // each path drives headless Chrome at 390px and 1280px in light and dark:
@@ -29,7 +29,7 @@ type AxeViolation = {
   nodes: { target: unknown[] }[];
 };
 
-type Viewport = { name: "mobile" | "desktop"; width: number; height: number };
+type Viewport = { name: "mobile" | "tablet" | "desktop"; width: number; height: number };
 type Theme = "light" | "dark";
 
 type Run = {
@@ -49,19 +49,21 @@ const VIEWPORTS: Viewport[] = [
   { name: "mobile", width: 390, height: 844 },
   { name: "desktop", width: 1280, height: 800 },
 ];
+const TABLET: Viewport = { name: "tablet", width: 768, height: 1024 };
 const THEMES: Theme[] = ["light", "dark"];
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const SERVER_START_TIMEOUT_MS = 20_000;
 const REVEAL_SETTLE_MS = 800;
 
-type Args = { phase: string; build: boolean; paths: string[]; port: number };
+type Args = { phase: string; build: boolean; paths: string[]; port: number; tablet: boolean };
 
 function parseArgs(argv: string[]): Args {
-  const args: Args = { phase: "", build: true, paths: [], port: 4321 };
+  const args: Args = { phase: "", build: true, paths: [], port: 4321, tablet: false };
   for (let i = 0; i < argv.length; i += 1) {
     const arg = argv[i];
     if (arg === "--phase") args.phase = argv[++i] ?? "";
     else if (arg === "--no-build") args.build = false;
+    else if (arg === "--tablet") args.tablet = true;
     else if (arg === "--path") args.paths = [...args.paths, argv[++i] ?? "/"];
     else if (arg === "--port") args.port = Number(argv[++i] ?? "4321");
     else if (arg.startsWith("--phase=")) args.phase = arg.slice("--phase=".length);
@@ -213,8 +215,9 @@ async function main(): Promise<void> {
     await waitForServer(`${baseUrl}/`);
     browser = await chromium.launch({ channel: "chrome" }).catch(() => chromium.launch());
     const runs: Run[] = [];
+    const viewports = args.tablet ? [VIEWPORTS[0], TABLET, VIEWPORTS[1]] : VIEWPORTS;
     for (const path of args.paths) {
-      for (const viewport of VIEWPORTS) {
+      for (const viewport of viewports) {
         for (const theme of THEMES) {
           console.log(`▸ ${path} ${viewport.name} ${theme}`);
           runs.push(await runOne(browser, baseUrl, outDir, path, viewport, theme));

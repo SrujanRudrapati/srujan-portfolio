@@ -502,3 +502,24 @@ Each diagram has a wide and a narrow layout; both SVGs are in the DOM and CSS sh
 Motion gates, in order: `prefers-reduced-motion: no-preference`, `@supports (offset-path)`, and `data-animate="on"` set by `useInView` (IntersectionObserver plus `visibilitychange`). The default with none of those is every box lit and still. Dots use `offset-distance` like the hero medallion (the documented exception to transform/opacity); the lighting overlays animate opacity only, which is the fix the Phase 3 code review suggested for the hero.
 
 Diagrams: Surplus pipeline (two spec sources into one inventory and an LLM), Surplus cluster network (switch, five nodes with their IPs, dots from the head node), Surplus privacy layers (nested rings; the dot leaves the app and never reaches the Internet box), Watchtower agent flow (three agents in sequence, the dot detours through the RAG tool).
+
+---
+
+# Phase 7: lenses (2026-10-30)
+
+## Structure
+
+- The Work section (`#work`, h2 "Work") holds the lens switcher. `Work.tsx` is a server component: it renders the Highlights lens (`WorkExplorer`, the Phase 4 view, unchanged) as static HTML and passes it as children to the client `Explore` shell (`src/components/explore/`).
+- The other five lenses render from `public/graph.json`, fetched once on first use through `withBasePath` (`src/hooks/use-graph.ts`, with a shape check). Their view models are pure functions in `src/data/graph/lenses.ts`, built on `src/data/graph/selectors.ts`, which import types and structure only, so the client bundle never carries the graph data.
+- The lens lives in the hash: `#lens=timeline`, `skills`, `problems`, `industries`, `recruiter`; Highlights clears it. The shell follows `hashchange`, so the Experience and Skills summaries link straight into Timeline and Skill map, and any `#project-<slug>` link (Recruiter mode, Timeline, the lens lists, later the Ask panel) switches back to Highlights and scrolls to the card.
+- Highlights stays mounted and hidden while another lens shows, so its filter state survives and its diagrams stop animating (`display: none`, so the in-view observer reports false).
+
+## Design
+
+- Switcher: one ink-bordered segmented bar, pressed segment ink-filled, 3 by 2 on phones so every lens stays visible, one row from `md`. Arrow keys, Home and End move and select. Filter chips stay separate and lighter.
+- Timeline: a 2px cobalt axis (the only flow-line colour), date column right-aligned against it from `md`, filled dot for the current role, outlined for the rest, dashed for undated work. Roles and degrees are on the axis; projects nest under the role or degree their `during` edge names. The full Experience bullets now live here.
+- Skill map: Skills-section groups plus "Also in project stacks" for tools only projects use. Counted skills are buttons with a cobalt count; unused skills are muted tags, not buttons. The list beneath defaults to all projects.
+- By problem and By industry: one card shape, summary first (it carries the figure), linked projects and roles beneath with their lead figure in ink. Red stays reserved for Stats.
+- Recruiter mode: name, headline, subline, current role, status line, the three metrics tagged `headline` in red, featured projects as single lines, the eight most-used skills, contact. A "Print or save as PDF" button opens the print dialog; print CSS keyed on `html[data-lens="recruiter"]` hides everything else and forces light colours. One page on Letter and A4 (checked in e2e with `page.pdf`).
+- Motion: the incoming panel fades in over 200 ms under `prefers-reduced-motion: no-preference` only.
+- Experience and Skills sections shrink to summaries (every role on one line plus the Celebal summary; each skill group with its first six skills and a count of the rest), each with a link into its lens. Contact: status line, large mailto, three icon links (LinkedIn, GitHub, Resume) with visible labels and aria-labels; footer with name, build year, location, "Built with Next.js, deployed on GitHub Pages.", and Back to top.

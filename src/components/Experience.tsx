@@ -1,57 +1,34 @@
-import { experience, type Role } from "@/content/portfolio";
+import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
+import { experience } from "@/content/portfolio";
 import { Section } from "./ui";
 
+// Short summary: every role on one line. The full outcomes, and the projects
+// done during each role, live in the Timeline lens of the Work section, so the
+// page does not carry them at full length twice (runbook Phase 7).
 export function Experience() {
   return (
     <Section id="experience" title="Experience">
-      <ol className="space-y-16 md:space-y-20">
+      <ol className="divide-y divide-line border-y border-line">
         {experience.map((role) => (
-          <li key={`${role.org}-${role.title}`}>
-            <RoleBlock role={role} />
+          <li key={`${role.org}-${role.title}`} className="grid grid-cols-1 gap-x-8 gap-y-1 py-5 md:grid-cols-12">
+            <p className="text-xs font-medium text-muted tabular-nums md:col-span-3 md:pt-1.5">{role.dates}</p>
+            <div className="md:col-span-9">
+              <h3 className="text-lg leading-snug text-ink md:text-xl">{role.title}</h3>
+              <p className="mt-0.5 font-medium text-ink">
+                {role.org}
+                <span className="font-normal text-muted">, {role.place}</span>
+              </p>
+              {role.summary && <p className="mt-2 max-w-measure text-ink">{role.summary}</p>}
+            </div>
           </li>
         ))}
       </ol>
+      <p className="mt-8">
+        <a href="#lens=timeline" className="inline-flex min-h-11 items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+          See every outcome and project on the timeline
+          <ArrowRightIcon aria-hidden="true" size={16} weight="bold" />
+        </a>
+      </p>
     </Section>
-  );
-}
-
-function RoleBlock({ role }: { role: Role }) {
-  const labelled = role.outcomes.some((o) => o.label);
-
-  return (
-    <article className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-10">
-      <header className="lg:col-span-4">
-        <div className="lg:sticky lg:top-24">
-          <p className="text-xs font-medium tabular-nums text-muted">{role.dates}</p>
-          <h3 className="mt-3 text-xl leading-snug text-ink md:text-2xl">{role.title}</h3>
-          <p className="mt-1 font-medium text-ink">{role.org}</p>
-          <p className="mt-1 text-sm text-muted">{role.place}</p>
-        </div>
-      </header>
-
-      <div className="lg:col-span-8">
-        {role.summary && <p className="mb-8 max-w-measure text-lg text-ink">{role.summary}</p>}
-
-        {labelled ? (
-          <ul className="grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2">
-            {role.outcomes.map((o) => (
-              <li key={o.label} className="border-t border-ink pt-4">
-                <h4 className="leading-snug text-ink">{o.label}</h4>
-                <p className="mt-2 text-muted">{o.text}</p>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <ul className="max-w-measure space-y-3">
-            {role.outcomes.map((o) => (
-              <li key={o.text} className="relative pl-5 text-ink">
-                <span aria-hidden="true" className="absolute top-[0.7em] left-0 h-0.5 w-2.5 bg-ink" />
-                {o.text}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </article>
   );
 }

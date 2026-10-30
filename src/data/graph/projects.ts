@@ -251,10 +251,10 @@ const devhacks = site("devhacks-cubbie", "DevHacks × Cubbie");
 const labelLens = site("label-lens", "Label Lens");
 
 export const projectMetricNodes: MetricNode[] = [
-  metric("surplus-processing-time", "~80%", "less processing time per item, about 15 min down to about 3 min", "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.", [surplus], ["surplus-ai"]),
+  metric("surplus-processing-time", "~80%", "less processing time per item, about 15 min down to about 3 min", "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.", [surplus], ["surplus-ai", "headline"]),
   metric("surplus-pallet-time", "~10 min", "to list a 100+ unit pallet, instead of 1 to 2 hours", "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.", [surplus], ["surplus-ai"]),
   metric("surplus-model-size", "14B", "Qwen model across four Mac minis, offline, via MLX", "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.", [surplus], ["surplus-ai", "llm"]),
-  metric("devhacks-place", "1st", "place, Track 1, chosen by public student vote", "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.", [devhacks, { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }], ["hackathon"]),
+  metric("devhacks-place", "1st", "place, Track 1, chosen by public student vote", "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.", [devhacks, { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }], ["hackathon", "headline"]),
   metric("devhacks-submissions", "82", "submissions from 350+ students", "The field Cooked was chosen from, by public student vote.", [devhacks], ["hackathon"]),
   metric("receipts-tests", "493", "automated tests in CI for Receipts", "Receipts, the Discord bot that catches promises in chat, runs 493 automated tests in CI.", [devhacks, { label: "Receipts repository", url: "https://github.com/SrujanRudrapati/receipts" }], ["hackathon", "testing"]),
   metric("label-lens-quotes", "44/44", "AI warnings verified to quote the label word for word", "Every AI warning in Label Lens must quote the label word for word; 44 of 44 verified.", [labelLens, { label: "Live app", url: "https://label-lens-iota.vercel.app" }], ["label-lens", "grounding"]),

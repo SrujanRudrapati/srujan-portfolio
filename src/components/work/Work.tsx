@@ -1,13 +1,17 @@
 import { projects } from "@/data/projects";
 import { Section } from "@/components/ui";
+import { Explore } from "@/components/explore/Explore";
 import { WorkExplorer } from "./WorkExplorer";
 
-// Server component: selects the projects from the graph at build time and hands
-// the plain Project[] to the client-side explorer (filters need state).
+// Server component. The Highlights lens (projects selected from the graph at
+// build time) is rendered here and passed into the client-side lens switcher,
+// so the default view is static HTML.
 export function Work() {
   return (
     <Section id="work" title="Work">
-      <WorkExplorer projects={projects} />
+      <Explore>
+        <WorkExplorer projects={projects} />
+      </Explore>
     </Section>
   );
 }
