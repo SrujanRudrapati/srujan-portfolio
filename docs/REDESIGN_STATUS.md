@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (third session: Phases 3, 4, 5, 6 done).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (third session: Phases 3, 4, 5, 6 done; stopped at Srujan's request after the Phase 6 commit, before starting Phase 7).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -12,7 +12,7 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 4 — Project system + diagrams | done | 71cca15 | `src/data/projects.ts` (8 projects migrated verbatim), Work section with filter chips, featured cards with large Stats, 3/2/1 grid, four inline SVG diagrams on one flow engine (dots, stages light on arrival, in-view only, static under reduced motion). Verify 4/4, axe 0, e2e 62 pass, fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 5 — Content updates | done | 7f78b08 | Facts Section 2 applied: Surplus AI metrics and production status, DevHacks × Cubbie and Label Lens featured, RC Car in the grid, featured order per facts, Celebal additions and intern stint, e-commerce, June 2026 start, new email everywhere, hero chip. `withBasePath` + CI env for the resume link, `.nojekyll`. Content dump for proofreading. Verify 4/4, e2e 62 pass, fact-checker run. Checklist below. |
 | 6 — Knowledge graph | done | 6b59b3d | `src/data/graph/` (157 nodes, 143 edges) is the source of truth; `projects.ts` and the experience, skills, certifications and education exports are `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild`; `docs/GRAPH.md`. Site pixel-identical to Phase 5 at 390/1280 light/dark. Client bundle no longer carries the graph. fe-reviewer and fact-checker findings fixed. Checklist below. |
-| 7 — Lenses | todo | | |
+| 7 — Lenses | todo | | Next up. Resume point: load frontend-design, design-direction, portfolio-facts, phase-verify (runbook §7); read `docs/GRAPH.md` first; the Work section is `src/components/work/Work.tsx` (server) + `WorkExplorer.tsx` (client), which becomes the Highlights lens unchanged. |
 | 8 — Ask Srujan | todo | | |
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
@@ -35,7 +35,7 @@ Closed out 2026-10-30. Skills loaded: portfolio-facts, static-export-check, phas
   - [x] build passes with validation
   - [x] `graph.json` served at `<basePath>/graph.json`: present in `out/` (local, no prefix); CI build puts it under `/srujan-portfolio/graph.json` by the same `public/` copy; consumers must use `withBasePath` (documented in `types.ts` and GRAPH.md)
   - [x] site renders identically to end of Phase 5: pixel compare identical; `npm run -s content:dump` identical except the capstone's second metric (ruling below); skills, certifications, education arrays byte-identical (JSON compare against `a7d1652`)
-- [x] `npm run test:e2e`: 68 passed (new "Skills" block guards group order and chip order and adds a `#skills` snapshot, so a selector regression like the Governance one fails CI)
+- [x] `npm run test:e2e`: 68 passed in 43 s on a clean run after the final build (an earlier run in the same chain reported 4 timeouts, including a 10-minute axe test, because it ran starved behind other processes; the clean re-run confirmed). New "Skills" block guards group order and chip order and adds a `#skills` snapshot, so a selector regression like the Governance one fails CI.
 - [x] fe-reviewer (WARN: 1 High, 4 Medium, 7 Low) and fact-checker (NEEDS FIXES: 2 contradicted, 8 unsupported, all in node summaries that the page does not render). Resolved:
   - High, fixed before the report arrived: Governance chip order (Unity Catalog pinned to its slot with `position`; e2e guard added).
   - Medium, fixed: the client bundle carried the whole graph. `Work` is now a server component that passes `Project[]` to the client `WorkExplorer`; `statusLabel`/`primaryLink` moved to `src/data/project-helpers.ts`; `profile`/`about` moved to `src/content/profile.ts` so the client nav stops importing the graph. Graph text no longer appears in any client chunk; the affected chunk went from 22.9 KB to 11.2 KB gzipped; total client JS 184 KB gzipped.
