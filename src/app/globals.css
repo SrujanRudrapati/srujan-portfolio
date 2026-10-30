@@ -272,7 +272,7 @@
     transition-delay: var(--reveal-delay, 0ms);
   }
 
-  [data-lens-panel]:not([hidden]) {
+  [data-switched] > [data-lens-panel]:not([hidden]) {
     animation: lens-in 200ms var(--ease-out-quart);
   }
 
@@ -413,7 +413,8 @@
    theme is on screen. Other lenses print the page as it is. */
 @media print {
   :root,
-  :root[data-theme="dark"] {
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]) {
     color-scheme: light;
     --bg: #ffffff;
     --surface: #ffffff;

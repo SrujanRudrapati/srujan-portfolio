@@ -156,8 +156,8 @@ export const roleEdges: Edge[] = [
     (skill): Edge => ({ from: "role-associate-celebal", to: `skill-${skill}`, type: "uses" }),
   ),
   { from: "role-tech-assistant-asu", to: "skill-power-bi", type: "uses" },
-  { from: "role-associate-celebal", to: "problem-slow-reporting", type: "solved" },
-  { from: "role-associate-celebal", to: "problem-pipeline-downtime", type: "solved" },
+  { from: "role-associate-celebal", to: "problem-slow-reporting", type: "solved", metric: "metric-time-to-insight" },
+  { from: "role-associate-celebal", to: "problem-pipeline-downtime", type: "solved", metric: "metric-downtime" },
   { from: "role-associate-celebal", to: "problem-pipeline-cost", type: "solved" },
   { from: "role-associate-celebal", to: "problem-manual-governance", type: "solved" },
 ];

@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (third session: Phases 3, 4, 5, 6 done; stopped at Srujan's request after the Phase 6 commit, before starting Phase 7).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phase 7 done).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -12,11 +12,51 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 4 — Project system + diagrams | done | 71cca15 | `src/data/projects.ts` (8 projects migrated verbatim), Work section with filter chips, featured cards with large Stats, 3/2/1 grid, four inline SVG diagrams on one flow engine (dots, stages light on arrival, in-view only, static under reduced motion). Verify 4/4, axe 0, e2e 62 pass, fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 5 — Content updates | done | 7f78b08 | Facts Section 2 applied: Surplus AI metrics and production status, DevHacks × Cubbie and Label Lens featured, RC Car in the grid, featured order per facts, Celebal additions and intern stint, e-commerce, June 2026 start, new email everywhere, hero chip. `withBasePath` + CI env for the resume link, `.nojekyll`. Content dump for proofreading. Verify 4/4, e2e 62 pass, fact-checker run. Checklist below. |
 | 6 — Knowledge graph | done | 6b59b3d | `src/data/graph/` (157 nodes, 143 edges) is the source of truth; `projects.ts` and the experience, skills, certifications and education exports are `select*(graph)` views; `scripts/build-graph.mts` validates and emits `public/graph.json` + `public/search-index.json` in `prebuild`; `docs/GRAPH.md`. Site pixel-identical to Phase 5 at 390/1280 light/dark. Client bundle no longer carries the graph. fe-reviewer and fact-checker findings fixed. Checklist below. |
-| 7 — Lenses | in progress | | Started 2026-10-30 (fourth session). Skills loaded: frontend-design, design-direction, portfolio-facts, phase-verify. |
+| 7 — Lenses | done | HASH_PENDING | Work section with a six-lens switcher (Highlights static, Timeline, Skill map, By problem, By industry, Recruiter from graph.json, lazy code chunk); lens in `#lens=`; Recruiter prints to one page; Experience and Skills shortened to summaries with full text in closed disclosures; Contact and footer reshaped; hero link to the one-pager. Verify 36/36 (390/768/1280, light/dark, six lenses), e2e 99 pass. fe-reviewer, fact-checker and recruiter-eyes findings fixed or ruled. Checklist below. |
 | 8 — Ask Srujan | todo | | |
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 7 checklist
+
+Closed out 2026-10-30. Skills loaded: frontend-design, design-direction, portfolio-facts, phase-verify. Design notes: `docs/REDESIGN_NOTES.md`, "Phase 7" section.
+
+- [x] lint 0/0, typecheck clean, build passes (graph validated in `prebuild`: 157 nodes, 142 edges)
+- [x] `npm run verify -- --phase 7 --tablet --path / --path "/#lens=timeline" --path "/#lens=skills" --path "/#lens=problems" --path "/#lens=industries" --path "/#lens=recruiter"`: 36 of 36 pass. Evidence: `docs/screenshots/phase-7/verify.md` (`--tablet` added to the verify script for the 768 width the checklist asks for)
+- [x] screenshots inspected: every lens at 1280 light, Timeline and Recruiter at 390, By industry at 768 dark, Recruiter print render, the 390 fold after the hero change
+- [x] axe: 0 violations in every lens (verify, plus an e2e test that runs axe on `#work` per lens); console 0; requests 0 failed; overflow 0
+- Runbook Phase 7 items:
+  - [x] Highlights (default): the Phase 4 view, server-rendered, unchanged
+  - [x] Timeline: vertical, newest first, roles and degrees on a 2px cobalt axis, `<time datetime>` on every date, projects nested under their `during` role or degree; carries every Experience outcome
+  - [x] Skill map: Skills-section groups plus stack-only tools, each counted chip a button with aria-pressed filtering the list beneath; no graph library
+  - [x] By problem and By industry: one card per problem or industry node with linked projects and roles and the figure
+  - [x] Recruiter mode: name, one line, three strongest metrics, current role, core skills (8), four featured projects as single lines, contact; prints to one page (Letter and A4, light and dark system theme, e2e via `page.pdf`), "Print or save as PDF" button with the print-dialog hint
+  - [x] Switcher: real buttons with aria-pressed in a labelled group; lens in `location.hash`; 200 ms fade on user switches, none under reduced motion; arrow keys, Home and End
+  - [x] Experience and Skills kept and reduced to summaries linking into Timeline and Skill map
+  - [x] Contact: short copy, large mailto, icon links with visible labels and aria-labels; footer with name, year, location, back to top, "Built with Next.js, deployed on GitHub Pages."
+- Runbook checklist:
+  - [x] default lens visible with JS disabled (e2e with `javaScriptEnabled: false`: 11 project articles)
+  - [x] each lens correct at 390/768/1280 in both themes (verify 36 runs, inspected)
+  - [x] heading order: one h1, one h2 per section, sr-only h3 per lens, h4 entries, h5 nested projects (e2e per lens)
+  - [x] Recruiter mode prints to one page
+  - [x] screenshots of all six lenses (`docs/screenshots/phase-7/home[-lens-*]-*.png`)
+- [x] `npm run test:e2e`: 99 passed (Lenses block: default and switcher, hash and arrow keys, Timeline outcomes and nesting, Skill map filter, keyed lenses, project link back to Highlights, one-page print, dark-theme print colours, same-hash summary links with focus, headings and axe per lens, no-JS default)
+- [x] Review agents. All Critical and High fixed; Medium and Low fixed unless noted:
+  - fe-reviewer (WARN, 2 High): print palette lost to the system-dark rule (fixed, test added); summary links did nothing when the hash already matched (delegated click handler, test added); focus now moves to the lens heading after a link-driven switch; skill chips 44 px on phones; graph.json retry ("Try again"); lens code lazy-loaded with graph.json (home chunk 12.8 KB gz, lens chunk 9.6 KB gz); arrow keys count from the focused button; count label is sr-only text; Recruiter uses `Stat`; headline metrics capped at three; fade only after a user switch; empty hash returns to Highlights; error boundary around the graph lenses.
+  - fact-checker (no contradictions, 4 unsupported): DevHacks no longer tied to ASU in the industry summary; "Not tied to a role or degree" became "Other work" with no date label; the Java chat's guessed B.Tech placement removed; By problem shows only the figure a `solved` edge names (validator-checked); Skill map now orders groups with the same code as the Skills section; Cloud summary keeps its Azure/AWS/Other labels; "Most-used skills" replaced by tagged core skills. Its note that Celebal bullets and 22 skills had left the static HTML: fixed by closed disclosures (see rulings).
+  - recruiter-eyes (6/10): hero gained a "One-page summary" link; Recruiter card puts contact under the name, leads with the data-engineering figure, shows core skills, drops the duplicate headline and location; Experience rows show their figures; filter chips lighter with a "Filter" label; a caption explains the six views; Skill map legend. Deferred to Phase 9 (mobile): the long Surplus card on phones and the medallion on the phone fold. Its "Critical" that a deep link shows the hero is partly a capture artefact (the verify script scrolls to the top before its full-page shot; a real `#lens=recruiter` visit scrolls to the card, asserted in e2e), the discoverability half is fixed by the hero link.
+- [x] STATUS row updated, commit `redesign: phase 7 — lenses`
+
+### Rulings made in Phase 7
+
+- The section stays `#work` with the h2 "Work" (nav label and anchor unchanged); the runbook's name "Explore" is the component, not the visible heading.
+- Lens ids in the hash: `highlights` (no hash), `timeline`, `skills`, `problems`, `industries`, `recruiter`.
+- Experience and Skills keep their full text in the static HTML behind closed `<details>`, server-rendered. The runbook says "short summaries ... so content is not duplicated at full length twice"; the disclosures keep it from showing twice while honouring rule 4 for no-JS visitors and crawlers.
+- Recruiter "three strongest metrics": tagged `headline` in the graph and ordered about 10 million records a day (Celebal), ~80% (Surplus AI), 1st (DevHacks). "Top 8 skills": tagged `core` (Python, SQL, Spark, Databricks, Delta Lake, Kafka, Anthropic Claude API, RAG), each linked to work on the site; a pure link count ranked scikit-learn and Flask above Spark and Databricks, which misrepresents a data engineer.
+- Timeline: degrees sit on the axis with roles so academic projects have a parent; Label Lens and the Java chat have no `during` edge and appear under "Other work" at the end.
+- The fade is a fade-in of the incoming panel (200 ms), not a two-panel crossfade; the outgoing panel is unmounted or hidden at once.
+- `scripts/verify-phase.mts` gained `--tablet` (adds 768 by 1024).
 
 ## Phase 6 checklist
 

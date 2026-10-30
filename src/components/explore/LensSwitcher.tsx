@@ -10,7 +10,8 @@ export function LensSwitcher({ lens, onChange }: { lens: LensId; onChange: (lens
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const current = LENSES.findIndex((l) => l.id === lens);
+    const focused = refs.current.findIndex((el) => el === document.activeElement);
+    const current = focused === -1 ? LENSES.findIndex((l) => l.id === lens) : focused;
     const last = LENSES.length - 1;
     const next =
       event.key === "ArrowRight" || event.key === "ArrowDown"

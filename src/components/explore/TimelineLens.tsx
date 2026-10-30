@@ -57,7 +57,7 @@ function Entry({ entry: e }: { entry: TimelineEntry }) {
     <li className="relative grid grid-cols-1 gap-x-8 gap-y-2 pb-12 pl-8 md:grid-cols-12 md:pl-0">
       <span aria-hidden="true" className={`absolute top-1.5 left-[-5px] h-3 w-3 rounded-full md:left-[calc(25%-5px)] ${marker}`} />
       <p className="text-xs font-medium text-muted tabular-nums md:col-span-3 md:pr-8 md:pt-1 md:text-right">
-        {e.datesText ? <time dateTime={e.dateTime}>{e.datesText}</time> : "No date on record"}
+        {e.datesText && <time dateTime={e.dateTime}>{e.datesText}</time>}
         {e.current && <span className="mt-1 block text-accent-2">Current</span>}
       </p>
       <div className="md:col-span-9 md:pl-8">

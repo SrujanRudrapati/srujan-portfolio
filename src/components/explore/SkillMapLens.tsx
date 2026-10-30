@@ -11,7 +11,7 @@ import { LensItemList } from "./LensItemList";
 
 function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; onToggle: () => void }) {
   if (chip.count === 0) {
-    return <li className="inline-flex min-h-8 items-center border border-line px-2 text-xs font-medium text-muted">{chip.label}</li>;
+    return <li className="inline-flex min-h-11 items-center border border-line px-2.5 text-xs font-medium text-muted md:min-h-8 md:px-2">{chip.label}</li>;
   }
   return (
     <li>
@@ -19,14 +19,13 @@ function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; 
         type="button"
         aria-pressed={pressed}
         onClick={onToggle}
-        className={`inline-flex min-h-8 items-center gap-1.5 border px-2 text-xs font-medium transition-colors duration-150 ${
+        className={`inline-flex min-h-11 items-center gap-1.5 border px-2.5 text-xs font-medium transition-colors duration-150 md:min-h-8 md:px-2 ${
           pressed ? "border-ink bg-ink text-bg" : "border-ink text-ink hover:bg-surface"
         }`}
       >
         {chip.label}
-        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent-2"}`} aria-label={`, used in ${chip.count}`}>
-          {chip.count}
-        </span>
+        <span className="sr-only">, used in </span>
+        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent-2"}`}>{chip.count}</span>
       </button>
     </li>
   );
@@ -48,6 +47,9 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
 
   return (
     <div className="space-y-12">
+      <p className="text-sm text-muted">
+        The number on a skill counts the projects and roles that use it. Pick one to list them. Grey skills are on my skills list but not tied to work on this site.
+      </p>
       <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => (
           <section key={g.name} aria-label={g.name}>

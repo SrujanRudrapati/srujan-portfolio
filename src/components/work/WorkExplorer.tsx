@@ -45,6 +45,7 @@ export function WorkExplorer({ projects }: { projects: Project[] }) {
   return (
     <>
       <div className="mb-10 flex flex-wrap items-center gap-x-6 gap-y-3 md:mb-14">
+        <span aria-hidden="true" className="text-sm font-medium text-muted">Filter</span>
         <ul aria-label="Filter projects" className="flex flex-wrap gap-2">
           {filters.map((f) => {
             const pressed = filter === f.id;
@@ -54,8 +55,8 @@ export function WorkExplorer({ projects }: { projects: Project[] }) {
                   type="button"
                   aria-pressed={pressed}
                   onClick={() => setFilter(f.id)}
-                  className={`inline-flex h-11 items-center border-2 border-ink px-4 text-sm font-medium transition-colors duration-150 md:h-9 md:px-3 ${
-                    pressed ? "bg-ink text-bg" : "text-ink hover:bg-ink hover:text-bg"
+                  className={`inline-flex h-11 items-center border px-4 text-sm font-medium transition-colors duration-150 md:h-9 md:px-3 ${
+                    pressed ? "border-ink bg-ink text-bg" : "border-line text-ink hover:border-ink"
                   }`}
                 >
                   {f.label}

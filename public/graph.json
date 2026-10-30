@@ -758,7 +758,8 @@
       ],
       "tags": [
         "skill",
-        "language"
+        "language",
+        "core"
       ],
       "groups": [
         {
@@ -779,7 +780,8 @@
       ],
       "tags": [
         "skill",
-        "language"
+        "language",
+        "core"
       ],
       "groups": [
         {
@@ -799,7 +801,8 @@
         }
       ],
       "tags": [
-        "skill"
+        "skill",
+        "core"
       ],
       "groups": [
         {
@@ -840,7 +843,8 @@
       ],
       "tags": [
         "skill",
-        "azure"
+        "azure",
+        "core"
       ],
       "groups": [
         {
@@ -864,7 +868,8 @@
         }
       ],
       "tags": [
-        "skill"
+        "skill",
+        "core"
       ],
       "groups": [
         {
@@ -949,7 +954,8 @@
         }
       ],
       "tags": [
-        "skill"
+        "skill",
+        "core"
       ],
       "groups": [
         {
@@ -1421,7 +1427,8 @@
       ],
       "tags": [
         "skill",
-        "llm"
+        "llm",
+        "core"
       ],
       "groups": [
         {
@@ -1442,7 +1449,8 @@
       ],
       "tags": [
         "skill",
-        "llm"
+        "llm",
+        "core"
       ],
       "groups": [
         {
@@ -2760,7 +2768,7 @@
       "id": "industry-higher-education",
       "type": "industry",
       "label": "Higher education",
-      "summary": "Students and teaching at Arizona State University: a Canvas-reading study planner and two 400-level networking courses.",
+      "summary": "Students and teaching: a Canvas-reading study planner and two 400-level networking courses.",
       "evidence": [
         {
           "label": "Work section",
@@ -3385,7 +3393,8 @@
     {
       "from": "project-surplus-ai",
       "to": "problem-manual-processing-bottleneck",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-surplus-processing-time"
     },
     {
       "from": "project-surplus-ai",
@@ -3511,7 +3520,8 @@
     {
       "from": "project-label-lens",
       "to": "problem-ungrounded-ai-output",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-label-lens-quotes"
     },
     {
       "from": "project-label-lens",
@@ -3563,7 +3573,8 @@
     {
       "from": "project-supply-chain-watchtower",
       "to": "problem-manual-logistics-planning",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-watchtower-agents"
     },
     {
       "from": "project-supply-chain-watchtower",
@@ -3624,7 +3635,8 @@
     {
       "from": "project-demand-forecasting",
       "to": "problem-inventory-cost",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-capstone-holding-cost"
     },
     {
       "from": "project-demand-forecasting",
@@ -3774,7 +3786,8 @@
     {
       "from": "project-f1-race-predictor",
       "to": "problem-backtest-leakage",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-f1-top3"
     },
     {
       "from": "project-f1-race-predictor",
@@ -3832,11 +3845,6 @@
       "from": "project-java-group-chat",
       "to": "skill-tcp-sockets",
       "type": "uses"
-    },
-    {
-      "from": "project-java-group-chat",
-      "to": "education-btech-rtu",
-      "type": "during"
     },
     {
       "from": "project-gesture-rc-car",
@@ -4041,12 +4049,14 @@
     {
       "from": "role-associate-celebal",
       "to": "problem-slow-reporting",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-time-to-insight"
     },
     {
       "from": "role-associate-celebal",
       "to": "problem-pipeline-downtime",
-      "type": "solved"
+      "type": "solved",
+      "metric": "metric-downtime"
     },
     {
       "from": "role-associate-celebal",

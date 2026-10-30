@@ -61,6 +61,10 @@ function validate(): string[] {
     if (!rule.from.includes(from.type) || !rule.to.includes(to.type)) errors.push(`edge ${e.type} ${e.from} -> ${e.to}: ${from.type} -> ${to.type} is not allowed`);
     if (e.chip !== undefined && e.type !== "uses") errors.push(`edge ${e.type} ${e.from} -> ${e.to}: "chip" only applies to uses edges`);
     if (e.label !== undefined && e.type !== "uses") errors.push(`edge ${e.type} ${e.from} -> ${e.to}: "label" only applies to uses edges`);
+    if (e.metric !== undefined) {
+      if (e.type !== "solved") errors.push(`edge ${e.type} ${e.from} -> ${e.to}: "metric" only applies to solved edges`);
+      else if (!graph.edges.some((a) => a.type === "achieved" && a.from === e.from && a.to === e.metric)) errors.push(`edge solved ${e.from} -> ${e.to}: metric "${e.metric}" is not achieved by ${e.from}`);
+    }
   }
   // Projects, metrics, industries and problems only mean something through
   // their edges. Skills the section lists but no project uses, certifications,

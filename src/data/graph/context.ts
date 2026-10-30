@@ -14,7 +14,7 @@ const industry = (id: string, label: string, summary: string, tags: string[] = [
 
 export const industryNodes: IndustryNode[] = [
   industry("higher-ed-surplus", "Higher-ed surplus", "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus AI runs here."),
-  industry("higher-education", "Higher education", "Students and teaching at Arizona State University: a Canvas-reading study planner and two 400-level networking courses."),
+  industry("higher-education", "Higher education", "Students and teaching: a Canvas-reading study planner and two 400-level networking courses."),
   industry("e-commerce", "E-commerce", "A major fashion e-commerce client at Celebal: impressions, clicks, conversions, spend and attribution pipelines."),
   industry("healthcare", "Healthcare", "A telehealth client in New Zealand and a US medical device manufacturer, both at Celebal."),
   industry("energy", "Energy", "A major US utility, where the data governance work ran for 10 months."),

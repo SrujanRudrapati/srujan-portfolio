@@ -20,16 +20,16 @@ const tool = (id: string, label: string, tags: string[] = []): Spec => [id, labe
 
 const specs: Spec[] = [
   // Data engineering
-  de("python", "Python", ["language"]),
-  de("sql", "SQL", ["language"]),
-  de("spark", "Spark"),
+  de("python", "Python", ["language", "core"]),
+  de("sql", "SQL", ["language", "core"]),
+  de("spark", "Spark", ["core"]),
   de("pyspark", "PySpark"),
-  ["databricks", "Databricks", [{ group: "Data engineering" }, { group: "Cloud", sub: "Azure" }], ["azure"]],
-  de("delta-lake", "Delta Lake"),
+  ["databricks", "Databricks", [{ group: "Data engineering" }, { group: "Cloud", sub: "Azure" }], ["azure", "core"]],
+  de("delta-lake", "Delta Lake", ["core"]),
   ["unity-catalog", "Unity Catalog", [{ group: "Data engineering" }, { group: "Governance", position: 2 }], ["governance"]],
   de("databricks-workflows", "Databricks Workflows"),
   de("dbt", "dbt"),
-  de("kafka", "Kafka"),
+  de("kafka", "Kafka", ["core"]),
   de("airflow", "Airflow"),
   de("medallion-architecture", "medallion architecture"),
   de("etl-elt", "ETL/ELT"),
@@ -55,8 +55,8 @@ const specs: Spec[] = [
   // Cloud: Other
   ["snowflake", "Snowflake", [{ group: "Cloud", sub: "Other" }], []],
   // AI and ML
-  ai("anthropic-claude-api", "Anthropic Claude API", ["llm"]),
-  ai("rag", "RAG", ["llm"]),
+  ai("anthropic-claude-api", "Anthropic Claude API", ["llm", "core"]),
+  ai("rag", "RAG", ["llm", "core"]),
   ai("vector-databases", "vector databases (ChromaDB)", ["llm"]),
   ai("crewai", "CrewAI", ["llm", "agents"]),
   ai("agentic-workflows", "agentic workflows", ["llm", "agents"]),

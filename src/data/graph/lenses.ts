@@ -3,7 +3,7 @@
 // node content and summaries; nothing here writes new copy.
 
 import { skillGroupOrder } from "./groups.ts";
-import { index, node, selectProjects, type NodeIndex } from "./selectors.ts";
+import { groupSkills, index, node, selectProjects, type NodeIndex } from "./selectors.ts";
 import type { Graph, GraphNode, MetricNode, Project, RoleContent, SkillNode } from "./types.ts";
 
 /** A project or role as a one-line entry in a lens list. */
@@ -38,11 +38,20 @@ function lensItem(g: Graph, byId: NodeIndex, n: GraphNode): LensItem | null {
   return null;
 }
 
-/** Projects first (graph order), then roles, that link to `targetId` with `type`. */
+/** Projects first (graph order), then roles, that link to `targetId` with `type`. On `solved` edges the figure is the one the edge names (or none), never a project's unrelated lead figure. */
 function itemsLinkedTo(g: Graph, byId: NodeIndex, targetId: string, type: "uses" | "solved" | "in"): LensItem[] {
-  const sources = g.edges.filter((e) => e.to === targetId && e.type === type).map((e) => e.from);
-  const unique = [...new Set(sources)].map((id) => byId.get(id)).filter((n): n is GraphNode => !!n);
-  const items = unique.map((n) => lensItem(g, byId, n)).filter((i): i is LensItem => !!i);
+  const links = g.edges.filter((e) => e.to === targetId && e.type === type);
+  const seen = new Set<string>();
+  const items = links
+    .filter((e) => !seen.has(e.from) && !!seen.add(e.from))
+    .map((e) => {
+      const n = byId.get(e.from);
+      const item = n ? lensItem(g, byId, n) : null;
+      if (!item || type !== "solved") return item;
+      const named = e.metric ? byId.get(e.metric) : undefined;
+      return { ...item, metric: named && named.type === "metric" ? metricText(named) : undefined };
+    })
+    .filter((i): i is LensItem => !!i);
   const order = new Map(g.nodes.map((n, i) => [n.id, i]));
   const rank = (i: LensItem) => (i.kind === "project" ? 0 : 1) * 10_000 + (order.get(i.id) ?? 0);
   return [...items].sort((a, b) => rank(a) - rank(b));
@@ -104,7 +113,7 @@ export function selectTimeline(g: Graph): TimelineEntry[] {
   const placed = new Set(g.edges.filter((e) => e.type === "during").map((e) => e.from));
   const undated = g.nodes.filter((n) => n.type === "project" && !placed.has(n.id)).map(toTimelineProject).filter((p): p is TimelineProject => !!p);
   return undated.length > 0
-    ? [...entries, { id: "undated", kind: "undated", title: "Not tied to a role or degree", org: "", current: false, outcomes: [], projects: undated }]
+    ? [...entries, { id: "undated", kind: "undated", title: "Other work", org: "", current: false, outcomes: [], projects: undated }]
     : entries;
 }
 
@@ -121,14 +130,7 @@ export function selectSkillMap(g: Graph): SkillMapGroup[] {
   const counts = new Map<string, number>();
   for (const e of g.edges) if (e.type === "uses") counts.set(e.to, (counts.get(e.to) ?? 0) + 1);
   const chip = (s: SkillNode): SkillChip => ({ id: s.id, label: s.label, count: counts.get(s.id) ?? 0 });
-  const inGroup = (name: string, sub?: string) =>
-    skills
-      .flatMap((s) => {
-        const entry = s.groups.find((x) => x.group === name && x.sub === sub);
-        return entry ? [{ s, position: entry.position }] : [];
-      })
-      .reduce<SkillNode[]>((list, { s, position }) => (position === undefined ? [...list, s] : [...list.slice(0, position), s, ...list.slice(position)]), [])
-      .map(chip);
+  const inGroup = (name: string, sub?: string) => groupSkills(skills, name, sub).map(chip);
   const groups: SkillMapGroup[] = skillGroupOrder.map(({ name, subs }) =>
     subs ? { name, skills: [], subgroups: subs.map((sub) => ({ name: sub, skills: inGroup(name, sub) })) } : { name, skills: inGroup(name) },
   );
@@ -167,9 +169,14 @@ export type RecruiterSheet = {
   featured: { title: string; line: string; href: string }[];
 };
 
-const TOP_SKILLS = 8;
+/** Recruiter metric order: the employer-backed data engineering figure first, then the two project results. Unlisted headline metrics follow in graph order. */
+const HEADLINE_ORDER = ["metric-records-per-day", "metric-surplus-processing-time", "metric-devhacks-place"];
+const headlineRank = (id: string) => {
+  const i = HEADLINE_ORDER.indexOf(id);
+  return i === -1 ? HEADLINE_ORDER.length : i;
+};
 
-/** Metrics tagged "headline", the current role, the most-used skills, and the featured projects as single lines. */
+/** Metrics tagged "headline", the current role, the skills tagged "core" (each linked to work on the site), and the featured projects as single lines. */
 export function selectRecruiter(g: Graph): RecruiterSheet {
   const byId = index(g);
   const sourceOf = (metricId: string) => {
@@ -180,15 +187,13 @@ export function selectRecruiter(g: Graph): RecruiterSheet {
   };
   const metrics = g.nodes
     .filter((n): n is MetricNode => n.type === "metric" && n.tags.includes("headline"))
+    .sort((a, b) => headlineRank(a.id) - headlineRank(b.id))
+    .slice(0, HEADLINE_ORDER.length)
     .map((m) => ({ value: m.value, label: m.valueLabel, source: sourceOf(m.id) }));
   const current = g.nodes.find((n) => n.type === "role" && n.dates && !n.dates.end);
-  const counts = new Map<string, number>();
-  for (const e of g.edges) if (e.type === "uses") counts.set(e.to, (counts.get(e.to) ?? 0) + 1);
-  const order = new Map(g.nodes.map((n, i) => [n.id, i]));
+  const used = new Set(g.edges.filter((e) => e.type === "uses").map((e) => e.to));
   const topSkills = g.nodes
-    .filter((n): n is SkillNode => n.type === "skill" && (counts.get(n.id) ?? 0) > 0)
-    .sort((a, b) => (counts.get(b.id) ?? 0) - (counts.get(a.id) ?? 0) || (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0))
-    .slice(0, TOP_SKILLS)
+    .filter((n): n is SkillNode => n.type === "skill" && n.tags.includes("core") && used.has(n.id))
     .map((s) => s.label);
   const featured = selectProjects(g)
     .filter((p) => p.featured)

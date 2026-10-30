@@ -56,6 +56,19 @@ export function selectProjects(g: Graph): Project[] {
     });
 }
 
+/** Figures each role achieved, keyed by "title|org", as value plus label. */
+export function selectRoleFigures(g: Graph): Map<string, string[]> {
+  const byId = index(g);
+  return new Map(
+    g.nodes
+      .filter((n): n is Extract<GraphNode, { type: "role" }> => n.type === "role")
+      .map((r) => [`${r.content.title}|${r.content.org}`, out(g, r.id, "achieved").map((e) => {
+        const m = node(byId, e.to, "metric");
+        return `${m.value} ${m.valueLabel}`;
+      })]),
+  );
+}
+
 export const selectExperience = (g: Graph): Role[] =>
   g.nodes.filter((n): n is Extract<GraphNode, { type: "role" }> => n.type === "role").map((r) => r.content);
 
@@ -65,16 +78,18 @@ export const selectCertifications = (g: Graph): string[] =>
 export const selectEducation = (g: Graph) =>
   g.nodes.filter((n): n is Extract<GraphNode, { type: "education" }> => n.type === "education").map((n) => n.content);
 
-/** Chips for one group: declaration order, with pinned positions spliced in. */
-function groupItems(skills: SkillNode[], name: string, sub?: string): string[] {
+/** Skill nodes for one group: declaration order, with pinned positions spliced in. */
+export function groupSkills(skills: SkillNode[], name: string, sub?: string): SkillNode[] {
   const members = skills.flatMap((s) => {
     const entry = s.groups.find((x) => x.group === name && x.sub === sub);
-    return entry ? [{ label: s.label, position: entry.position }] : [];
+    return entry ? [{ s, position: entry.position }] : [];
   });
-  const items = members.filter((m) => m.position === undefined).map((m) => m.label);
-  for (const m of members.filter((m) => m.position !== undefined).sort((a, b) => a.position! - b.position!)) items.splice(m.position!, 0, m.label);
-  return items;
+  const ordered = members.filter((m) => m.position === undefined).map((m) => m.s);
+  const pinned = members.filter((m) => m.position !== undefined).sort((a, b) => a.position! - b.position!);
+  return pinned.reduce((list, m) => [...list.slice(0, m.position!), m.s, ...list.slice(m.position!)], ordered);
 }
+
+const groupItems = (skills: SkillNode[], name: string, sub?: string): string[] => groupSkills(skills, name, sub).map((s) => s.label);
 
 /** Skills section groups in render order; a skill may appear in two groups. */
 export function selectSkillGroups(g: Graph): SkillGroup[] {

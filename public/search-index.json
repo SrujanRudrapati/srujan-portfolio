@@ -340,7 +340,8 @@
     "summary": "Listed under Data engineering in the Skills section. Used in Autonomous Supply Chain Watchtower, Demand Forecasting & Inventory Optimization, WLAN Traffic Forensics Toolkit and F1 Race Outcome Predictor.",
     "tags": [
       "skill",
-      "language"
+      "language",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -354,7 +355,8 @@
     "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
     "tags": [
       "skill",
-      "language"
+      "language",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -367,7 +369,8 @@
     "label": "Spark",
     "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
     "tags": [
-      "skill"
+      "skill",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -394,7 +397,8 @@
     "summary": "Listed under Data engineering and Cloud, Azure in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
     "tags": [
       "skill",
-      "azure"
+      "azure",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -407,7 +411,8 @@
     "label": "Delta Lake",
     "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
     "tags": [
-      "skill"
+      "skill",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -460,7 +465,8 @@
     "label": "Kafka",
     "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
     "tags": [
-      "skill"
+      "skill",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -762,7 +768,8 @@
     "summary": "Listed under AI and ML in the Skills section. Used in Label Lens and Autonomous Supply Chain Watchtower.",
     "tags": [
       "skill",
-      "llm"
+      "llm",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -776,7 +783,8 @@
     "summary": "Listed under AI and ML in the Skills section. Used in Autonomous Supply Chain Watchtower.",
     "tags": [
       "skill",
-      "llm"
+      "llm",
+      "core"
     ],
     "evidence": [
       "#skills"
@@ -1755,7 +1763,7 @@
     "id": "industry-higher-education",
     "type": "industry",
     "label": "Higher education",
-    "summary": "Students and teaching at Arizona State University: a Canvas-reading study planner and two 400-level networking courses.",
+    "summary": "Students and teaching: a Canvas-reading study planner and two 400-level networking courses.",
     "tags": [
       "industry"
     ],

@@ -276,6 +276,11 @@ test.describe("Experience", () => {
     ]);
     for (const title of await titles.allTextContents()) expect(title).not.toMatch(/\b(senior|lead|architect|managed)\b/i);
     await expect(exp.getByRole("link", { name: /on the timeline/ })).toHaveAttribute("href", "#lens=timeline");
+    // Full outcomes stay in the static HTML behind a closed disclosure (rule 4, no-JS and crawlers).
+    const celebal = exp.locator("li").filter({ has: page.getByRole("heading", { level: 3, name: "Associate, Data Engineering" }) });
+    await expect(celebal).toContainText("about 10 million records a day");
+    await celebal.getByText("Show all 12 outcomes").click();
+    await expect(celebal).toContainText("mentored two interns");
   });
 
   test("has no accessibility violations", async ({ page }) => {
@@ -299,6 +304,9 @@ test.describe("Skills", () => {
       "data lineage",
     ]);
     await expect(skills.getByRole("link", { name: /on the skill map/ })).toHaveAttribute("href", "#lens=skills");
+    await expect(skills.getByRole("list", { name: "Azure skills" }).getByRole("listitem").first()).toHaveText("Databricks");
+    await skills.getByText(/Show all \d+ skills as a list/).click();
+    await expect(skills.getByRole("list", { name: "All AWS skills" })).toContainText("CloudWatch");
   });
 
   test("visual", async ({ page }) => {
@@ -383,6 +391,29 @@ test.describe("Lenses", () => {
       const pdf = await page.pdf({ format, printBackground: true });
       expect(pdf.toString("latin1").match(/\/Type\s*\/Page[^s]/g)?.length, format).toBe(1);
     }
+  });
+
+  test("summary links switch lens even when the hash already matches, and move focus", async ({ page }) => {
+    await switcher(page).getByRole("button", { name: "Timeline" }).click();
+    await switcher(page).getByRole("button", { name: "Highlights" }).click();
+    await page.evaluate(() => window.history.replaceState(null, "", "#lens=timeline"));
+    await page.locator("#experience").getByRole("link", { name: /on the timeline/ }).click();
+    await expect(switcher(page).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("#work h3").filter({ hasText: "Timeline" })).toBeFocused();
+    await expect(page.locator("#work")).toBeInViewport();
+  });
+
+  test.describe("printing with a dark system theme", () => {
+    test.use({ colorScheme: "dark" });
+
+    test("Recruiter mode prints dark text on white", async ({ page, isMobile }) => {
+      test.skip(isMobile, "Desktop only");
+      await page.goto("/#lens=recruiter");
+      await expect(page.locator("#recruiter-sheet")).toBeVisible();
+      await page.emulateMedia({ media: "print", colorScheme: "dark" });
+      const colors = await page.locator("#recruiter-sheet p").first().evaluate((el) => ({ text: getComputedStyle(el).color, bg: getComputedStyle(document.body).backgroundColor }));
+      expect(colors).toEqual({ text: "rgb(10, 10, 10)", bg: "rgb(255, 255, 255)" });
+    });
   });
 
   test("one h1 and one h2 per section in every lens", async ({ page }) => {

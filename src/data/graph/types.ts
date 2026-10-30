@@ -117,6 +117,8 @@ export type Edge = {
   label?: string;
   /** `false` keeps a `uses` edge in the graph (Skill map, Ask) without adding a stack chip to the card. */
   chip?: false;
+  /** On a `solved` edge: the metric (achieved by the same source) that shows the problem solved. */
+  metric?: string;
 };
 
 export type Graph = { nodes: GraphNode[]; edges: Edge[] };

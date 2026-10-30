@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { Graph } from "@/data/graph/types";
 import { withBasePath } from "@/lib/paths";
 
@@ -28,15 +28,20 @@ function loadGraph(): Promise<Graph> {
       if (!isGraph(data)) throw new Error("graph.json is not a graph");
       return data;
     })
+    .catch((error: unknown) => {
+      pending = null; // the next attempt fetches again
+      throw error;
+    })
 
   return pending;
 }
 
 type Result = { status: "ready"; graph: Graph } | { status: "error"; message: string };
 
-/** idle until enabled; loading until the fetch settles; then ready or error for the rest of the page view (no retry loop). */
-export function useGraph(enabled: boolean): GraphState {
+/** idle until enabled; loading until the fetch settles; then ready, or error until `retry` is called (no automatic retry loop). */
+export function useGraph(enabled: boolean): { state: GraphState; retry: () => void } {
   const [result, setResult] = useState<Result | null>(null);
+  const retry = useCallback(() => setResult(null), []);
 
   useEffect(() => {
     if (!enabled || result) return;
@@ -53,7 +58,6 @@ export function useGraph(enabled: boolean): GraphState {
     };
   }, [enabled, result]);
 
-  if (result?.status === "ready") return result;
-  if (!enabled) return { status: "idle" };
-  return result ?? { status: "loading" };
+  const state: GraphState = result?.status === "ready" ? result : !enabled ? { status: "idle" } : (result ?? { status: "loading" });
+  return { state, retry };
 }

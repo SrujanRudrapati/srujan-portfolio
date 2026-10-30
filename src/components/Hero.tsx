@@ -29,6 +29,9 @@ export function Hero() {
             <Button variant="secondary" href="#contact">
               Get in touch
             </Button>
+            <Button variant="ghost" href="#lens=recruiter">
+              One-page summary
+            </Button>
           </div>
 
           <div className="enter mt-8" style={enter(3)}>

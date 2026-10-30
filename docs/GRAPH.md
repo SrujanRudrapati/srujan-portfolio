@@ -11,7 +11,8 @@ One typed graph is the source of truth for everything the site says about Srujan
 | `src/data/graph/roles.ts` | Role, education and certification nodes, role metrics, role edges |
 | `src/data/graph/skills.ts` | Skill nodes in Skills-section order, plus stack-only tools |
 | `src/data/graph/context.ts` | Industry, problem and event nodes |
-| `src/data/graph/index.ts` | Assembles `graph`, fills derived skill summaries, exports the selectors |
+| `src/data/graph/index.ts` | Assembles `graph`, fills derived skill summaries, re-exports the selectors |
+| `src/data/graph/selectors.ts`, `lenses.ts`, `groups.ts` | Pure selectors and lens view models; import types and structure only, so client code can run them on the fetched `graph.json` |
 | `src/data/graph.ts` | Entry point: `graph`, `nodes`, `edges`, types, selectors |
 | `src/data/projects.ts` | `projects = selectProjects(graph)` and the helpers the Work section uses |
 | `src/content/portfolio.ts` | `profile`, `about`, and `experience`, `skills`, `certifications`, `education` selected from the graph |
@@ -19,7 +20,7 @@ One typed graph is the source of truth for everything the site says about Srujan
 
 ## Counts (2026-10-30)
 
-157 nodes: project 11, role 4, education 2, certification 4, skill 82, metric 18, industry 12, problem 12, artifact 9, event 3. 144 edges. `npm run graph` prints the current numbers.
+157 nodes: project 11, role 4, education 2, certification 4, skill 82, metric 18, industry 12, problem 12, artifact 9, event 3. 142 edges (Phase 7). `npm run graph` prints the current numbers.
 
 ## Node and edge types
 
@@ -36,6 +37,10 @@ Edge types and the endpoints the validator allows:
 | `at` | project | role, education | the org or programme it was done for |
 | `produced` | project, role | artifact | repo, live app, write-up, diagram, resume; in edge order |
 | `during` | project, event | role, education | the period it happened in |
+
+Edge extras: `label` and `chip: false` apply to `uses` edges (chip text override; link without a stack chip). `metric` applies to `solved` edges and names the metric, achieved by the same source, that shows the problem solved; the By problem lens shows that figure and no other. The validator rejects these fields on any other edge type.
+
+Tags with a job: `headline` on a metric puts it in Recruiter mode (three of them, ordered in `src/data/graph/lenses.ts`); `core` on a skill puts it in Recruiter mode's "Core skills" (only if something on the site uses it).
 
 `uses`, `solved` and `in` also accept a role as the source so the Celebal bullets count in the Skill map and the By problem lens; the runbook lists only projects.
 

@@ -3,10 +3,11 @@
 import { EnvelopeSimpleIcon, FilePdfIcon, GithubLogoIcon, LinkedinLogoIcon, PrinterIcon } from "@phosphor-icons/react";
 import type { RecruiterSheet } from "@/data/graph/lenses";
 import { profile } from "@/content/profile";
+import { Stat } from "@/components/Stat";
 import { withBasePath } from "@/lib/paths";
 
-// One screen, one printed page: who, what, the three strongest figures, where
-// now, top skills, the four featured projects as single lines, and contact.
+// One screen, one printed page: who, what, how to reach him, the three strongest
+// figures, where now, core skills, the four featured projects as single lines, and contact.
 // Print styles (globals.css, html[data-lens="recruiter"]) hide everything else.
 
 export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
@@ -15,8 +16,31 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
       <header className="grid grid-cols-1 gap-6 border-b border-line pb-6 md:grid-cols-12">
         <div className="md:col-span-7">
           <p className="font-display text-3xl font-bold text-ink font-stretch-expanded">{profile.name}</p>
-          <p className="mt-2 text-lg text-ink">{profile.headline}</p>
-          <p className="mt-1 text-ink">{profile.subline}</p>
+          <p className="mt-2 text-lg text-ink">{profile.subline}</p>
+          <div className="mt-4">
+            <ul aria-label="Contact" className="flex flex-col gap-2 text-sm">
+              <li>
+                <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-2 font-semibold text-ink underline decoration-1 underline-offset-4">
+                  <EnvelopeSimpleIcon aria-hidden="true" size={16} />
+                  {profile.email}
+                </a>
+              </li>
+              <li className="flex flex-wrap gap-x-5 gap-y-2">
+                <a href={profile.linkedin} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+                  <LinkedinLogoIcon aria-hidden="true" size={16} />
+                  {profile.linkedinLabel}
+                </a>
+                <a href={profile.github} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+                  <GithubLogoIcon aria-hidden="true" size={16} />
+                  {profile.githubLabel}
+                </a>
+                <a href={withBasePath(profile.resume)} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+                  <FilePdfIcon aria-hidden="true" size={16} />
+                  Resume (PDF)
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="space-y-1 text-sm md:col-span-5">
           {sheet.currentRole && (
@@ -26,15 +50,13 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
             </p>
           )}
           <p className="text-ink">{profile.now}</p>
-          <p className="text-muted">{profile.location}</p>
         </div>
       </header>
 
       <ul aria-label="Strongest results" className="grid grid-cols-1 gap-6 border-b border-line py-6 sm:grid-cols-3">
         {sheet.metrics.map((m) => (
           <li key={m.value + m.label}>
-            <p className="font-display text-3xl leading-none font-bold tracking-tight text-accent tabular-nums font-stretch-expanded">{m.value}</p>
-            <p className="mt-2 text-sm text-ink">{m.label}</p>
+            <Stat value={m.value} label={m.label} stacked />
             <p className="mt-0.5 text-xs text-muted">{m.source}</p>
           </li>
         ))}
@@ -58,9 +80,9 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
         </section>
         <section aria-labelledby="recruiter-skills" className="md:col-span-5">
           <h4 id="recruiter-skills" className="mb-3 text-base text-ink">
-            Most-used skills
+            Core skills
           </h4>
-          <ul aria-label="Top skills" className="flex flex-wrap gap-1.5">
+          <ul aria-label="Core skills" className="flex flex-wrap gap-1.5">
             {sheet.topSkills.map((s) => (
               <li key={s} className="border border-ink px-2 py-1 text-xs leading-none font-medium text-ink">
                 {s}
@@ -70,29 +92,7 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
         </section>
       </div>
 
-      <footer className="flex flex-col gap-4 border-t border-line pt-6 md:flex-row md:items-end md:justify-between">
-        <ul aria-label="Contact" className="flex flex-col gap-2 text-sm">
-          <li>
-            <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-2 font-semibold text-ink underline decoration-1 underline-offset-4">
-              <EnvelopeSimpleIcon aria-hidden="true" size={16} />
-              {profile.email}
-            </a>
-          </li>
-          <li className="flex flex-wrap gap-x-5 gap-y-2">
-            <a href={profile.linkedin} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
-              <LinkedinLogoIcon aria-hidden="true" size={16} />
-              {profile.linkedinLabel}
-            </a>
-            <a href={profile.github} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
-              <GithubLogoIcon aria-hidden="true" size={16} />
-              {profile.githubLabel}
-            </a>
-            <a href={withBasePath(profile.resume)} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
-              <FilePdfIcon aria-hidden="true" size={16} />
-              Resume (PDF)
-            </a>
-          </li>
-        </ul>
+      <footer className="border-t border-line pt-6 print:hidden">
         <div className="print:hidden">
           <button
             type="button"

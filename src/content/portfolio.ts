@@ -8,11 +8,12 @@ export { about, profile } from "./profile.ts";
 // knowledge graph (src/data/graph, runbook Phase 6). Edit the graph, not these.
 
 // Relative import so Node can run scripts/content-dump.mts without the "@/" alias.
-import { graph, selectCertifications, selectEducation, selectExperience, selectSkillGroups } from "../data/graph.ts";
+import { graph, selectCertifications, selectEducation, selectExperience, selectRoleFigures, selectSkillGroups } from "../data/graph.ts";
 
 export type { Role, SkillGroup } from "../data/graph.ts";
 
 export const experience = selectExperience(graph);
+export const roleFigures = selectRoleFigures(graph);
 export const skills = selectSkillGroups(graph);
 export const certifications = selectCertifications(graph);
 export const education = selectEducation(graph);
