@@ -1,5 +1,7 @@
 # DESIGN.md: Srujan Portfolio
 
+> **v2 note (2026-10-29):** the tokens, fonts and component rules below describe the v1 dark-first amber design. Phase 2 of the redesign replaced them with the Spec sheet system; see `docs/REDESIGN_NOTES.md` (Phase 2) and `src/app/globals.css` for the current source of truth. This file is kept as history until it is rewritten.
+
 A plain-text design system for AI agents and humans. It follows the
 [Stitch DESIGN.md format](https://stitch.withgoogle.com/docs/design-md/specification/)
 as extended by [awesome-design-md](https://github.com/VoltAgent/awesome-design-md),

@@ -1,0 +1,20 @@
+{
+  "name": "srujan-portfolio-ask",
+  "private": true,
+  "type": "module",
+  "description": "Optional generation proxy for the portfolio's Ask panel (runbook Phase 8). Not deployed by Claude Code (gate G3).",
+  "scripts": {
+    "dev": "wrangler dev",
+    "typecheck": "tsc --noEmit",
+    "build": "wrangler deploy --dry-run --outdir dist",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261030.1",
+    "typescript": "^5.9.3",
+    "wrangler": "^4.156.0"
+  }
+}

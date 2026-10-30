@@ -1,115 +1,56 @@
-import {
-  EnvelopeSimpleIcon,
-  FileArrowDownIcon,
-  GithubLogoIcon,
-  LinkedinLogoIcon,
-} from "@phosphor-icons/react/dist/ssr";
+import type { CSSProperties } from "react";
 import { profile } from "@/content/portfolio";
-import { HeroDiagram } from "./HeroDiagram";
-import { Container } from "./ui";
+import { HeroAsk } from "./ask/HeroAsk";
+import { Button } from "./Button";
+import { AnimateInView } from "./AnimateInView";
+import { MedallionDiagram } from "./MedallionDiagram";
+import { Container, TagList } from "./ui";
 
-const navLinks = [
-  { href: "#work", label: "Work" },
-  { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Skills" },
-  { href: "#contact", label: "Contact" },
-];
-
-export function SiteHeader() {
-  return (
-    <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
-      <Container className="flex h-16 items-center justify-between gap-6">
-        <a href="#top" className="font-display text-base font-semibold tracking-tight text-ink">
-          {profile.name}
-        </a>
-        <nav aria-label="Primary" className="flex items-center gap-6">
-          <ul className="hidden items-center gap-6 md:flex">
-            {navLinks.map((l) => (
-              <li key={l.href}>
-                <a href={l.href} className="text-[15px] text-muted transition-colors duration-150 hover:text-ink">
-                  {l.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-          <a
-            href={profile.resume}
-            download
-            className="inline-flex h-9 items-center rounded-md border border-line px-3 text-sm font-medium text-ink transition-colors duration-150 hover:border-accent hover:text-accent"
-          >
-            Resume
-          </a>
-        </nav>
-      </Container>
-    </header>
-  );
-}
+// Staggered entrance: each block gets an index that globals.css turns into a
+// 70ms delay (.enter). Five blocks, 400ms each, finishes under 700ms. Skipped
+// entirely under prefers-reduced-motion.
+const enter = (index: number) => ({ "--i": index }) as CSSProperties;
 
 export function Hero() {
   return (
     <section id="top" aria-labelledby="hero-heading">
-      <Container className="grid grid-cols-1 gap-12 pt-16 pb-20 md:pt-24 md:pb-28 lg:grid-cols-12 lg:items-center">
+      <Container className="grid grid-cols-1 gap-10 pt-10 pb-16 md:pt-20 md:pb-24 lg:grid-cols-12 lg:items-center lg:gap-12">
         <div className="lg:col-span-7">
-          <h1
-            id="hero-heading"
-            className="font-display text-4xl leading-[1.05] font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl"
-          >
+          {/* No entrance fade on the headline: it is the largest paint, and fading it in delays LCP. */}
+          <h1 id="hero-heading" className="text-4xl text-ink">
             {profile.headline}
           </h1>
-          <p className="mt-6 max-w-[48ch] text-lg leading-relaxed text-muted md:text-xl">{profile.subline}</p>
+          <p className="enter mt-5 max-w-[40ch] text-xl text-ink" style={enter(1)}>
+            {profile.subline}
+          </p>
+          <p className="enter mt-4 max-w-[48ch] text-base text-muted tabular-nums" style={enter(1)}>
+            {profile.now}
+          </p>
 
-          <ul className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
-            <li>
-              <a
-                href={profile.resume}
-                download
-                className="inline-flex h-11 items-center gap-2 rounded-md bg-accent px-5 font-medium text-on-accent transition-[background-color,transform] duration-150 hover:bg-accent-hover active:scale-[0.98]"
-              >
-                <FileArrowDownIcon aria-hidden="true" size={18} weight="bold" />
-                Download Resume
-              </a>
-            </li>
-            <HeroLink href={profile.github} label="GitHub" external>
-              <GithubLogoIcon aria-hidden="true" size={20} />
-            </HeroLink>
-            <HeroLink href={profile.linkedin} label="LinkedIn" external>
-              <LinkedinLogoIcon aria-hidden="true" size={20} />
-            </HeroLink>
-            <HeroLink href={`mailto:${profile.email}`} label="Email">
-              <EnvelopeSimpleIcon aria-hidden="true" size={20} />
-            </HeroLink>
-          </ul>
+          <div className="enter mt-8 flex flex-wrap gap-3" style={enter(2)}>
+            <Button href="#work">See my work</Button>
+            <Button variant="secondary" href="#contact">
+              Get in touch
+            </Button>
+            <Button variant="secondary" href="#lens=recruiter">
+              One-page summary
+            </Button>
+          </div>
+
+          <div className="enter mt-8" style={enter(3)}>
+            <TagList items={profile.proof} label="Highlights" size="md" tone="quiet" />
+          </div>
+          <div className="enter mt-6" style={enter(3)}>
+            <HeroAsk />
+          </div>
         </div>
 
-        <div className="flex justify-center lg:col-span-5 lg:justify-end">
-          <HeroDiagram />
+        <div className="enter flex justify-center lg:col-span-5 lg:justify-end" style={enter(4)}>
+          <AnimateInView className="w-full sm:max-w-[360px] lg:max-w-[460px]">
+            <MedallionDiagram />
+          </AnimateInView>
         </div>
       </Container>
     </section>
-  );
-}
-
-function HeroLink({
-  href,
-  label,
-  external = false,
-  children,
-}: {
-  href: string;
-  label: string;
-  external?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <li>
-      <a
-        href={href}
-        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-        className="inline-flex min-h-11 items-center gap-2 font-medium text-ink transition-colors duration-150 hover:text-accent"
-      >
-        {children}
-        {label}
-      </a>
-    </li>
   );
 }

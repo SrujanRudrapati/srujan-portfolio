@@ -1,0 +1,4072 @@
+{
+  "nodes": [
+    {
+      "id": "project-surplus-ai",
+      "type": "project",
+      "label": "Surplus AI",
+      "summary": "Private, offline AI system for ASU Surplus, in production. Built on the job from June 2026; processing per item dropped from about 15 min to about 3 min.",
+      "dates": {
+        "start": "2026-06"
+      },
+      "evidence": [
+        {
+          "label": "Surplus AI card",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "production",
+        "ai",
+        "data",
+        "llm",
+        "offline"
+      ],
+      "content": {
+        "title": "Surplus AI",
+        "oneLiner": "Private, offline AI system for ASU Surplus",
+        "status": "production",
+        "featured": true,
+        "date": "June 2026 to present",
+        "context": "Built on the job, in production",
+        "tags": [
+          "ai",
+          "data"
+        ],
+        "problem": "Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual.",
+        "built": "One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet.",
+        "highlights": [
+          "Handles identification, condition grading, pricing, label printing, and database export.",
+          "Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word.",
+          "Merge rules keyed on serial number, so a low-quality read never overwrites good data.",
+          "Traced repeated cluster failures to macOS permissions and network routing.",
+          "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+        ],
+        "details": {
+          "heading": "How it works",
+          "items": [
+            {
+              "name": "Five-node cluster",
+              "text": "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually."
+            },
+            {
+              "name": "USB spec collector",
+              "text": "A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number."
+            },
+            {
+              "name": "Camera inventory scanner",
+              "text": "For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)."
+            },
+            {
+              "name": "Merge logic",
+              "text": "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine."
+            },
+            {
+              "name": "Surplus AI app",
+              "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+            },
+            {
+              "name": "Launchers",
+              "text": "One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
+            }
+          ]
+        },
+        "statusNotes": [
+          {
+            "state": "running",
+            "text": "Qwen 14B on four Mac minis"
+          },
+          {
+            "state": "running",
+            "text": "Llama 3B on one"
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-devhacks-cubbie",
+      "type": "project",
+      "label": "DevHacks × Cubbie hackathon",
+      "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, by public student vote among 82 submissions from 350+ students.",
+      "dates": {
+        "start": "2026-10",
+        "end": "2026-10"
+      },
+      "evidence": [
+        {
+          "label": "DevHacks × Cubbie card",
+          "url": "#project-devhacks-cubbie"
+        },
+        {
+          "label": "Cooked repository",
+          "url": "https://github.com/SrujanRudrapati/cooked"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "hackathon",
+        "ai",
+        "agents"
+      ],
+      "content": {
+        "title": "DevHacks × Cubbie hackathon",
+        "oneLiner": "Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout.",
+        "status": "hackathon",
+        "featured": true,
+        "date": "October 2026",
+        "tags": [
+          "ai"
+        ],
+        "highlights": [
+          "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
+          "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
+          "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
+        ]
+      }
+    },
+    {
+      "id": "project-label-lens",
+      "type": "project",
+      "label": "Label Lens",
+      "summary": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+      "evidence": [
+        {
+          "label": "Label Lens card",
+          "url": "#project-label-lens"
+        },
+        {
+          "label": "Live app",
+          "url": "https://label-lens-iota.vercel.app"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "live",
+        "ai",
+        "llm",
+        "web"
+      ],
+      "content": {
+        "title": "Label Lens",
+        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications.",
+        "status": "live",
+        "featured": true,
+        "tags": [
+          "ai"
+        ],
+        "highlights": [
+          "Every AI warning must quote the label word for word (44 of 44 verified).",
+          "Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
+        ]
+      }
+    },
+    {
+      "id": "project-supply-chain-watchtower",
+      "type": "project",
+      "label": "Autonomous Supply Chain Watchtower",
+      "summary": "Multi-agent LLM system: three agents in sequence on the Anthropic Claude API through CrewAI turn sales history into a logistics plan. The Risk Analyst is grounded in real shipping-disruption data over ChromaDB.",
+      "dates": {
+        "start": "2025-11",
+        "end": "2025-11"
+      },
+      "evidence": [
+        {
+          "label": "Watchtower card",
+          "url": "#project-supply-chain-watchtower"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "personal",
+        "ai",
+        "llm",
+        "agents",
+        "rag"
+      ],
+      "content": {
+        "title": "Autonomous Supply Chain Watchtower",
+        "oneLiner": "Multi-agent LLM system",
+        "status": "personal",
+        "featured": true,
+        "date": "November 2025",
+        "context": "Personal project, built solo",
+        "tags": [
+          "ai"
+        ],
+        "problem": "Turning raw sales history into a logistics plan normally takes several manual steps by different people.",
+        "built": "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
+        "highlights": [],
+        "statusNotes": [
+          {
+            "state": "neutral",
+            "text": "Personal prototype"
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-demand-forecasting",
+      "type": "project",
+      "label": "Demand Forecasting & Inventory Optimization",
+      "summary": "MS capstone, team of four: demand forecasts across 250 SKU and warehouse series with a strict time-based test window. 27.7% WAPE against a 38.5% naive baseline, turned into a reorder-point policy.",
+      "dates": {
+        "start": "2026"
+      },
+      "evidence": [
+        {
+          "label": "Demand Forecasting card",
+          "url": "#project-demand-forecasting"
+        }
+      ],
+      "tags": [
+        "project",
+        "academic",
+        "ai",
+        "data",
+        "ml",
+        "forecasting"
+      ],
+      "content": {
+        "title": "Demand Forecasting & Inventory Optimization",
+        "oneLiner": "Forecasting demand across 250 SKU and warehouse series, with a strict time-based test window.",
+        "status": "academic",
+        "featured": false,
+        "date": "2026, ongoing",
+        "context": "MS capstone, team of four",
+        "tags": [
+          "ai",
+          "data"
+        ],
+        "highlights": [
+          "Turned the forecast into a reorder-point policy that cuts simulated holding cost about 28% at comparable service levels."
+        ],
+        "credit": "Team project with Rakshit Govind Thota, Sanjana Parmareddy Gari, and Yashwanth Sai Tondapu."
+      }
+    },
+    {
+      "id": "project-aws-cicd-pipeline",
+      "type": "project",
+      "label": "End-to-End CI/CD Deployment Pipeline",
+      "summary": "Multi-tier AWS environment in Terraform, parameterized so one codebase deploys dev or prod. GitHub Actions tests every push to main, builds a Docker image, pushes to ECR, and triggers a Terraform deploy.",
+      "dates": {
+        "start": "2026-10",
+        "end": "2026-10"
+      },
+      "evidence": [
+        {
+          "label": "CI/CD pipeline card",
+          "url": "#project-aws-cicd-pipeline"
+        },
+        {
+          "label": "Repository",
+          "url": "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
+        }
+      ],
+      "tags": [
+        "project",
+        "personal",
+        "infrastructure",
+        "aws"
+      ],
+      "content": {
+        "title": "End-to-End CI/CD Deployment Pipeline",
+        "oneLiner": "Multi-tier AWS environment in Terraform, parameterized so one codebase deploys dev or prod.",
+        "status": "personal",
+        "featured": false,
+        "date": "October 2026",
+        "tags": [],
+        "highlights": [
+          "GitHub Actions runs tests on every push to main, builds a Docker image, pushes to ECR, and triggers a Terraform deploy."
+        ]
+      }
+    },
+    {
+      "id": "project-wlan-forensics-toolkit",
+      "type": "project",
+      "label": "WLAN Traffic Forensics Toolkit",
+      "summary": "Parses 100,000+ WPA2-encrypted packets, rebuilds the network topology as a directed graph, and classifies device types with K-Means. A Z-score detector caught a live deauthentication attack.",
+      "dates": {
+        "start": "2026-01",
+        "end": "2026-05"
+      },
+      "evidence": [
+        {
+          "label": "WLAN toolkit card",
+          "url": "#project-wlan-forensics-toolkit"
+        }
+      ],
+      "tags": [
+        "project",
+        "academic",
+        "ai",
+        "data",
+        "networking",
+        "security"
+      ],
+      "content": {
+        "title": "WLAN Traffic Forensics Toolkit",
+        "oneLiner": "Rebuilds the network topology as a directed graph and classifies device types with K-Means clustering.",
+        "status": "academic",
+        "featured": false,
+        "date": "January to May 2026",
+        "context": "Built as a TA for ACO 430 under Prof. Feng Wang",
+        "tags": [
+          "ai",
+          "data"
+        ],
+        "highlights": [
+          "A Z-score detector on top caught a live denial-of-service deauthentication attack."
+        ]
+      }
+    },
+    {
+      "id": "project-f1-race-predictor",
+      "type": "project",
+      "label": "F1 Race Outcome Predictor",
+      "summary": "Ranks drivers by win probability with rolling features shifted forward to prevent look-ahead leakage. 52% top-1 and 80% top-3 accuracy on 44 held-out races, against a 43% / 73% baseline.",
+      "dates": {
+        "start": "2026-03",
+        "end": "2026-03"
+      },
+      "evidence": [
+        {
+          "label": "F1 predictor card",
+          "url": "#project-f1-race-predictor"
+        }
+      ],
+      "tags": [
+        "project",
+        "personal",
+        "ai",
+        "ml"
+      ],
+      "content": {
+        "title": "F1 Race Outcome Predictor",
+        "oneLiner": "Ranks drivers by win probability, with rolling features shifted forward to prevent look-ahead leakage.",
+        "status": "personal",
+        "featured": false,
+        "date": "March 2026",
+        "tags": [
+          "ai"
+        ],
+        "highlights": [
+          "Backtested on 44 held-out races: 52% top-1 and 80% top-3 accuracy, against a 43% / 73% baseline."
+        ]
+      }
+    },
+    {
+      "id": "project-flask-on-kubernetes",
+      "type": "project",
+      "label": "Containerized Flask Service on Kubernetes",
+      "summary": "Flask API with Postgres and Redis in a multi-stage Dockerfile, run locally through docker-compose and deployed to a local kind cluster.",
+      "dates": {
+        "start": "2026-09",
+        "end": "2026-09"
+      },
+      "evidence": [
+        {
+          "label": "Flask on Kubernetes card",
+          "url": "#project-flask-on-kubernetes"
+        }
+      ],
+      "tags": [
+        "project",
+        "personal",
+        "infrastructure"
+      ],
+      "content": {
+        "title": "Containerized Flask Service on Kubernetes",
+        "oneLiner": "Flask API with Postgres and Redis in a multi-stage Dockerfile, run locally through docker-compose and deployed to a local kind cluster.",
+        "status": "personal",
+        "featured": false,
+        "date": "September 2026",
+        "tags": [],
+        "highlights": []
+      }
+    },
+    {
+      "id": "project-java-group-chat",
+      "type": "project",
+      "label": "Real-Time Group Chat Application",
+      "summary": "Multi-client chat in Core Java. A server handles concurrent TCP socket connections and broadcasts messages, with client and server code kept modular.",
+      "dates": {
+        "start": "2023",
+        "end": "2023"
+      },
+      "evidence": [
+        {
+          "label": "Group chat card",
+          "url": "#project-java-group-chat"
+        }
+      ],
+      "tags": [
+        "project",
+        "personal",
+        "java"
+      ],
+      "content": {
+        "title": "Real-Time Group Chat Application",
+        "oneLiner": "Multi-client chat in Core Java.",
+        "status": "personal",
+        "featured": false,
+        "date": "2023",
+        "tags": [],
+        "highlights": [
+          "A server handles concurrent TCP socket connections and broadcasts messages, with client and server code kept modular."
+        ]
+      }
+    },
+    {
+      "id": "project-gesture-rc-car",
+      "type": "project",
+      "label": "Hand Gesture Controlled RC Car",
+      "summary": "B.Tech major project, team of three: an RC car steered by hand gestures read by an ADXL335 accelerometer and sent over RF. Arduino C++, L298 motor driver, IR obstacle detection, tested in Gazebo.",
+      "evidence": [
+        {
+          "label": "RC Car card",
+          "url": "#project-gesture-rc-car"
+        }
+      ],
+      "tags": [
+        "project",
+        "academic",
+        "hardware",
+        "robotics"
+      ],
+      "content": {
+        "title": "Hand Gesture Controlled RC Car",
+        "oneLiner": "An RC car steered by hand gestures, read by an accelerometer and sent over RF.",
+        "status": "academic",
+        "featured": false,
+        "context": "B.Tech major project, team of three",
+        "tags": [],
+        "highlights": [
+          "Arduino C++, ADXL335 accelerometer, RF modules with HT12E/HT12D encoder and decoder, L298 motor driver, IR obstacle detection; tested in Gazebo simulation."
+        ]
+      }
+    },
+    {
+      "id": "role-tech-assistant-asu",
+      "type": "role",
+      "label": "Tech Assistant, Surplus Operations, Arizona State University",
+      "summary": "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production. Also a Power BI dashboard on asset sorting data, and advice to departments and buyers on equipment.",
+      "dates": {
+        "start": "2026-06"
+      },
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "role",
+        "asu",
+        "current"
+      ],
+      "content": {
+        "title": "Tech Assistant, Surplus Operations",
+        "org": "Arizona State University",
+        "place": "Tempe, AZ",
+        "dates": "June 2026 to present",
+        "outcomes": [
+          {
+            "text": "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production."
+          },
+          {
+            "text": "Built a Power BI dashboard on asset sorting data showing where items stall."
+          },
+          {
+            "text": "Advise university departments and outside buyers on what equipment fits their needs."
+          }
+        ]
+      }
+    },
+    {
+      "id": "role-teaching-assistant-asu",
+      "type": "role",
+      "label": "Graduate Teaching Assistant, Arizona State University",
+      "summary": "Designed hands-on labs for two 400-level networking courses and held office hours for 40+ students. Built and presented the WLAN forensics toolkit to the class.",
+      "dates": {
+        "start": "2025-08",
+        "end": "2026-05"
+      },
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "role",
+        "asu",
+        "teaching"
+      ],
+      "content": {
+        "title": "Graduate Teaching Assistant",
+        "org": "Arizona State University",
+        "place": "Network Security & Wireless Networks, Glendale, AZ",
+        "dates": "August 2025 to May 2026",
+        "outcomes": [
+          {
+            "text": "Designed hands-on labs for two 400-level networking courses covering traffic analysis and packet-level debugging."
+          },
+          {
+            "text": "Held office hours for 40+ students."
+          },
+          {
+            "text": "Built and presented the WLAN forensics toolkit to the class."
+          }
+        ]
+      }
+    },
+    {
+      "id": "role-associate-celebal",
+      "type": "role",
+      "label": "Associate, Data Engineering, Celebal Technologies",
+      "summary": "A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks.",
+      "dates": {
+        "start": "2022-09",
+        "end": "2024-11"
+      },
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "role",
+        "celebal",
+        "data-engineering"
+      ],
+      "content": {
+        "title": "Associate, Data Engineering",
+        "org": "Celebal Technologies",
+        "place": "Jaipur, India",
+        "dates": "September 2022 to November 2024",
+        "summary": "A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks.",
+        "outcomes": [
+          {
+            "label": "Telehealth client in New Zealand, Microsoft Fabric",
+            "text": "Clinical and operations teams were waiting days for reports. I designed the Lakehouse architecture and coordinated a five-person team. Time-to-insight dropped about 50%, and the dashboards ended up in their weekly operational meetings."
+          },
+          {
+            "label": "A US materials engineering client, AWS",
+            "text": "Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems, and was on call for it. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them."
+          },
+          {
+            "label": "A major fashion e-commerce client, Databricks",
+            "text": "Kafka and Spark pipelines on Databricks modeling impressions, clicks, conversions, spend, and attribution, with Power BI dashboards on top."
+          },
+          {
+            "label": "A major US utility, data governance (10 months)",
+            "text": "Their Microsoft Purview catalog was maintained by hand. I built automation on Databricks that pushed entities and custom classifications into Purview on a schedule, plus Apache Atlas lineage pipelines and a business glossary mapped to their governance policies."
+          },
+          {
+            "label": "Medallion architecture on Databricks",
+            "text": "Built bronze, silver, and gold layers plus a serving layer on Azure Databricks and Delta Lake. Wrote the Spark transformations and dbt models."
+          },
+          {
+            "label": "A US medical device manufacturer",
+            "text": "Audited their existing Azure Data Factory pipelines before changing anything, and shipped updates with zero disruption to production."
+          },
+          {
+            "label": "A large FMCG client",
+            "text": "Data governance engineer, using Unity Catalog alongside Microsoft Purview to manage access, lineage, and classification across the Databricks workspace."
+          },
+          {
+            "label": "Production ML pipeline",
+            "text": "Built the Spark and Databricks pipelines feeding a production machine learning model, worked with the data science team on feature engineering, and built the serving layer that delivered model-ready data."
+          },
+          {
+            "label": "A/B testing",
+            "text": "Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results."
+          },
+          {
+            "label": "Performance and cost",
+            "text": "Tuned Spark jobs and SQL on Databricks for performance and cost."
+          },
+          {
+            "label": "Code review and mentoring",
+            "text": "Reviewed teammates' code as senior data engineer on one project, and mentored two interns."
+          },
+          {
+            "label": "Pre-sales",
+            "text": "Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team."
+          }
+        ]
+      }
+    },
+    {
+      "id": "role-intern-celebal",
+      "type": "role",
+      "label": "Intern, Data Engineering, Celebal Technologies",
+      "summary": "Data engineering internship at Celebal Technologies in July and August 2022, before joining as Associate.",
+      "dates": {
+        "start": "2022-07",
+        "end": "2022-08"
+      },
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "role",
+        "celebal",
+        "internship"
+      ],
+      "content": {
+        "title": "Intern, Data Engineering",
+        "org": "Celebal Technologies",
+        "place": "Jaipur, India",
+        "dates": "July to August 2022",
+        "outcomes": []
+      }
+    },
+    {
+      "id": "education-ms-asu",
+      "type": "education",
+      "label": "M.S. in Data Science, Analytics, and Engineering, Arizona State University",
+      "summary": "Expected December 2026. GPA 3.96 / 4.0.",
+      "dates": {
+        "end": "2026-12"
+      },
+      "evidence": [
+        {
+          "label": "Education",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "education",
+        "asu"
+      ],
+      "content": {
+        "degree": "M.S. in Data Science, Analytics, and Engineering",
+        "school": "Arizona State University",
+        "dates": "Expected December 2026",
+        "gpa": "GPA 3.96 / 4.0"
+      }
+    },
+    {
+      "id": "education-btech-rtu",
+      "type": "education",
+      "label": "B.Tech in Computer Science, Rajasthan Technical University",
+      "summary": "2019 to 2023. GPA 3.38 / 4.0.",
+      "dates": {
+        "start": "2019",
+        "end": "2023"
+      },
+      "evidence": [
+        {
+          "label": "Education",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "education"
+      ],
+      "content": {
+        "degree": "B.Tech in Computer Science",
+        "school": "Rajasthan Technical University",
+        "dates": "2019 to 2023",
+        "gpa": "GPA 3.38 / 4.0"
+      }
+    },
+    {
+      "id": "certification-databricks-de-professional",
+      "type": "certification",
+      "label": "Databricks Certified Data Engineer Professional",
+      "summary": "Databricks' professional-level data engineering certification.",
+      "evidence": [
+        {
+          "label": "Certifications",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "certification",
+        "databricks"
+      ]
+    },
+    {
+      "id": "certification-aws-ai-practitioner",
+      "type": "certification",
+      "label": "AWS Certified AI Practitioner",
+      "summary": "AWS's AI Practitioner certification.",
+      "evidence": [
+        {
+          "label": "Certifications",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "certification",
+        "aws",
+        "ai"
+      ]
+    },
+    {
+      "id": "certification-azure-data-engineer",
+      "type": "certification",
+      "label": "Microsoft Certified: Azure Data Engineer Associate",
+      "summary": "Microsoft's associate-level Azure data engineering certification.",
+      "evidence": [
+        {
+          "label": "Certifications",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "certification",
+        "azure"
+      ]
+    },
+    {
+      "id": "certification-azure-administrator",
+      "type": "certification",
+      "label": "Microsoft Certified: Azure Administrator Associate",
+      "summary": "Microsoft's associate-level Azure administration certification.",
+      "evidence": [
+        {
+          "label": "Certifications",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "certification",
+        "azure"
+      ]
+    },
+    {
+      "id": "skill-python",
+      "type": "skill",
+      "label": "Python",
+      "summary": "Listed under Data engineering in the Skills section. Used in Autonomous Supply Chain Watchtower, Demand Forecasting & Inventory Optimization, WLAN Traffic Forensics Toolkit and F1 Race Outcome Predictor.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "language",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-sql",
+      "type": "skill",
+      "label": "SQL",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "language",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-spark",
+      "type": "skill",
+      "label": "Spark",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-pyspark",
+      "type": "skill",
+      "label": "PySpark",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-databricks",
+      "type": "skill",
+      "label": "Databricks",
+      "summary": "Listed under Data engineering and Cloud, Azure in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "azure",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        },
+        {
+          "group": "Cloud",
+          "sub": "Azure"
+        }
+      ]
+    },
+    {
+      "id": "skill-delta-lake",
+      "type": "skill",
+      "label": "Delta Lake",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-unity-catalog",
+      "type": "skill",
+      "label": "Unity Catalog",
+      "summary": "Listed under Data engineering and Governance in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "governance"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        },
+        {
+          "group": "Governance",
+          "position": 2
+        }
+      ]
+    },
+    {
+      "id": "skill-databricks-workflows",
+      "type": "skill",
+      "label": "Databricks Workflows",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-dbt",
+      "type": "skill",
+      "label": "dbt",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-kafka",
+      "type": "skill",
+      "label": "Kafka",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-airflow",
+      "type": "skill",
+      "label": "Airflow",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-medallion-architecture",
+      "type": "skill",
+      "label": "medallion architecture",
+      "summary": "Listed under Data engineering in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-etl-elt",
+      "type": "skill",
+      "label": "ETL/ELT",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-dimensional-modeling",
+      "type": "skill",
+      "label": "dimensional modeling",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-data-warehousing",
+      "type": "skill",
+      "label": "data warehousing",
+      "summary": "Listed under Data engineering in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Data engineering"
+        }
+      ]
+    },
+    {
+      "id": "skill-data-factory",
+      "type": "skill",
+      "label": "Data Factory",
+      "summary": "Listed under Cloud, Azure in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "azure"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "Azure"
+        }
+      ]
+    },
+    {
+      "id": "skill-fabric",
+      "type": "skill",
+      "label": "Fabric",
+      "summary": "Listed under Cloud, Azure in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "azure"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "Azure"
+        }
+      ]
+    },
+    {
+      "id": "skill-adls",
+      "type": "skill",
+      "label": "ADLS",
+      "summary": "Listed under Cloud, Azure in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "azure"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "Azure"
+        }
+      ]
+    },
+    {
+      "id": "skill-synapse",
+      "type": "skill",
+      "label": "Synapse",
+      "summary": "Listed under Cloud, Azure in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "azure"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "Azure"
+        }
+      ]
+    },
+    {
+      "id": "skill-glue",
+      "type": "skill",
+      "label": "Glue",
+      "summary": "Listed under Cloud, AWS in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-s3",
+      "type": "skill",
+      "label": "S3",
+      "summary": "Listed under Cloud, AWS in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-redshift",
+      "type": "skill",
+      "label": "Redshift",
+      "summary": "Listed under Cloud, AWS in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-lambda",
+      "type": "skill",
+      "label": "Lambda",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-ec2",
+      "type": "skill",
+      "label": "EC2",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-rds",
+      "type": "skill",
+      "label": "RDS",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-iam",
+      "type": "skill",
+      "label": "IAM",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-vpc",
+      "type": "skill",
+      "label": "VPC",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-cloudwatch",
+      "type": "skill",
+      "label": "CloudWatch",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-ecr",
+      "type": "skill",
+      "label": "ECR",
+      "summary": "Listed under Cloud, AWS in the Skills section. Used in End-to-End CI/CD Deployment Pipeline.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-ecs",
+      "type": "skill",
+      "label": "ECS",
+      "summary": "Listed under Cloud, AWS in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "AWS"
+        }
+      ]
+    },
+    {
+      "id": "skill-snowflake",
+      "type": "skill",
+      "label": "Snowflake",
+      "summary": "Listed under Cloud, Other in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": [
+        {
+          "group": "Cloud",
+          "sub": "Other"
+        }
+      ]
+    },
+    {
+      "id": "skill-anthropic-claude-api",
+      "type": "skill",
+      "label": "Anthropic Claude API",
+      "summary": "Listed under AI and ML in the Skills section. Used in Label Lens and Autonomous Supply Chain Watchtower.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-rag",
+      "type": "skill",
+      "label": "RAG",
+      "summary": "Listed under AI and ML in the Skills section. Used in Autonomous Supply Chain Watchtower.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm",
+        "core"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-vector-databases",
+      "type": "skill",
+      "label": "vector databases (ChromaDB)",
+      "summary": "Listed under AI and ML in the Skills section. Used in Autonomous Supply Chain Watchtower.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-crewai",
+      "type": "skill",
+      "label": "CrewAI",
+      "summary": "Listed under AI and ML in the Skills section. Used in Autonomous Supply Chain Watchtower.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm",
+        "agents"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-agentic-workflows",
+      "type": "skill",
+      "label": "agentic workflows",
+      "summary": "Listed under AI and ML in the Skills section. Used in Autonomous Supply Chain Watchtower.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm",
+        "agents"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-mlx",
+      "type": "skill",
+      "label": "MLX",
+      "summary": "Listed under AI and ML in the Skills section. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-local-llm-serving",
+      "type": "skill",
+      "label": "local LLM serving",
+      "summary": "Listed under AI and ML in the Skills section. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-lightgbm",
+      "type": "skill",
+      "label": "LightGBM",
+      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-prophet",
+      "type": "skill",
+      "label": "Prophet",
+      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-scikit-learn",
+      "type": "skill",
+      "label": "scikit-learn",
+      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization, WLAN Traffic Forensics Toolkit and F1 Race Outcome Predictor.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-forecasting",
+      "type": "skill",
+      "label": "forecasting",
+      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-clustering",
+      "type": "skill",
+      "label": "clustering",
+      "summary": "Listed under AI and ML in the Skills section. Used in WLAN Traffic Forensics Toolkit.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-anomaly-detection",
+      "type": "skill",
+      "label": "anomaly detection",
+      "summary": "Listed under AI and ML in the Skills section. Used in WLAN Traffic Forensics Toolkit.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-feature-engineering",
+      "type": "skill",
+      "label": "feature engineering",
+      "summary": "Listed under AI and ML in the Skills section. Used in F1 Race Outcome Predictor and Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": [
+        {
+          "group": "AI and ML"
+        }
+      ]
+    },
+    {
+      "id": "skill-microsoft-purview",
+      "type": "skill",
+      "label": "Microsoft Purview",
+      "summary": "Listed under Governance in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "governance"
+      ],
+      "groups": [
+        {
+          "group": "Governance"
+        }
+      ]
+    },
+    {
+      "id": "skill-apache-atlas",
+      "type": "skill",
+      "label": "Apache Atlas",
+      "summary": "Listed under Governance in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "governance"
+      ],
+      "groups": [
+        {
+          "group": "Governance"
+        }
+      ]
+    },
+    {
+      "id": "skill-metadata-management",
+      "type": "skill",
+      "label": "metadata management",
+      "summary": "Listed under Governance in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "governance"
+      ],
+      "groups": [
+        {
+          "group": "Governance"
+        }
+      ]
+    },
+    {
+      "id": "skill-data-lineage",
+      "type": "skill",
+      "label": "data lineage",
+      "summary": "Listed under Governance in the Skills section. Used in Associate, Data Engineering, Celebal Technologies.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "governance"
+      ],
+      "groups": [
+        {
+          "group": "Governance"
+        }
+      ]
+    },
+    {
+      "id": "skill-terraform",
+      "type": "skill",
+      "label": "Terraform",
+      "summary": "Listed under Infrastructure in the Skills section. Used in End-to-End CI/CD Deployment Pipeline.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-docker",
+      "type": "skill",
+      "label": "Docker",
+      "summary": "Listed under Infrastructure in the Skills section. Used in End-to-End CI/CD Deployment Pipeline and Containerized Flask Service on Kubernetes.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-kubernetes",
+      "type": "skill",
+      "label": "Kubernetes",
+      "summary": "Listed under Infrastructure in the Skills section. Used in Containerized Flask Service on Kubernetes.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-github-actions",
+      "type": "skill",
+      "label": "GitHub Actions",
+      "summary": "Listed under Infrastructure in the Skills section. Used in End-to-End CI/CD Deployment Pipeline.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-ci-cd",
+      "type": "skill",
+      "label": "CI/CD",
+      "summary": "Listed under Infrastructure in the Skills section. Used in End-to-End CI/CD Deployment Pipeline.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-linux",
+      "type": "skill",
+      "label": "Linux",
+      "summary": "Listed under Infrastructure in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-bash",
+      "type": "skill",
+      "label": "Bash",
+      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-flask",
+      "type": "skill",
+      "label": "Flask",
+      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus AI and Containerized Flask Service on Kubernetes.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": [
+        {
+          "group": "Infrastructure"
+        }
+      ]
+    },
+    {
+      "id": "skill-power-bi",
+      "type": "skill",
+      "label": "Power BI",
+      "summary": "Listed under BI in the Skills section. Used in Associate, Data Engineering, Celebal Technologies and Tech Assistant, Surplus Operations, Arizona State University.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "bi"
+      ],
+      "groups": [
+        {
+          "group": "BI"
+        }
+      ]
+    },
+    {
+      "id": "skill-tableau",
+      "type": "skill",
+      "label": "Tableau",
+      "summary": "Listed under BI in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "bi"
+      ],
+      "groups": [
+        {
+          "group": "BI"
+        }
+      ]
+    },
+    {
+      "id": "skill-qlik",
+      "type": "skill",
+      "label": "Qlik",
+      "summary": "Listed under BI in the Skills section.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "bi"
+      ],
+      "groups": [
+        {
+          "group": "BI"
+        }
+      ]
+    },
+    {
+      "id": "skill-apple-vision-ocr",
+      "type": "skill",
+      "label": "Apple Vision OCR",
+      "summary": "Part of a project stack. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-qwen-14b",
+      "type": "skill",
+      "label": "Qwen 14B",
+      "summary": "Part of a project stack. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-llama-3b",
+      "type": "skill",
+      "label": "Llama 3B",
+      "summary": "Part of a project stack. Used in Surplus AI.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-nextjs",
+      "type": "skill",
+      "label": "Next.js",
+      "summary": "Part of a project stack. Used in Label Lens.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "web"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-typescript",
+      "type": "skill",
+      "label": "TypeScript",
+      "summary": "Part of a project stack. Used in Label Lens.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "language",
+        "web"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-zod",
+      "type": "skill",
+      "label": "zod",
+      "summary": "Part of a project stack. Used in Label Lens.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "web"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-vitest",
+      "type": "skill",
+      "label": "Vitest",
+      "summary": "Part of a project stack. Used in Label Lens.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "testing"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-playwright",
+      "type": "skill",
+      "label": "Playwright",
+      "summary": "Part of a project stack. Used in Label Lens.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "testing"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-aws",
+      "type": "skill",
+      "label": "AWS",
+      "summary": "Part of a project stack. Used in End-to-End CI/CD Deployment Pipeline.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "aws"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-pyshark",
+      "type": "skill",
+      "label": "Pyshark",
+      "summary": "Part of a project stack. Used in WLAN Traffic Forensics Toolkit.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "networking"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-networkx",
+      "type": "skill",
+      "label": "NetworkX",
+      "summary": "Part of a project stack. Used in WLAN Traffic Forensics Toolkit.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-histgradientboosting",
+      "type": "skill",
+      "label": "HistGradientBoosting",
+      "summary": "Part of a project stack. Used in F1 Race Outcome Predictor.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "ml"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-docker-compose",
+      "type": "skill",
+      "label": "docker-compose",
+      "summary": "Part of a project stack. Used in Containerized Flask Service on Kubernetes.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "infrastructure"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-java",
+      "type": "skill",
+      "label": "Java",
+      "summary": "Part of a project stack. Used in Real-Time Group Chat Application.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "language"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-swing",
+      "type": "skill",
+      "label": "Swing",
+      "summary": "Part of a project stack. Used in Real-Time Group Chat Application.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-awt",
+      "type": "skill",
+      "label": "AWT",
+      "summary": "Part of a project stack. Used in Real-Time Group Chat Application.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-tcp-sockets",
+      "type": "skill",
+      "label": "TCP sockets",
+      "summary": "Part of a project stack. Used in Real-Time Group Chat Application.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "networking"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-arduino-cpp",
+      "type": "skill",
+      "label": "Arduino C++",
+      "summary": "Part of a project stack. Used in Hand Gesture Controlled RC Car.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "language",
+        "hardware"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-adxl335",
+      "type": "skill",
+      "label": "ADXL335",
+      "summary": "Part of a project stack. Used in Hand Gesture Controlled RC Car.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "hardware"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-rf-ht12e-ht12d",
+      "type": "skill",
+      "label": "RF HT12E/HT12D",
+      "summary": "Part of a project stack. Used in Hand Gesture Controlled RC Car.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "hardware"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-l298",
+      "type": "skill",
+      "label": "L298",
+      "summary": "Part of a project stack. Used in Hand Gesture Controlled RC Car.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "hardware"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-gazebo",
+      "type": "skill",
+      "label": "Gazebo",
+      "summary": "Part of a project stack. Used in Hand Gesture Controlled RC Car.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "simulation"
+      ],
+      "groups": []
+    },
+    {
+      "id": "metric-surplus-processing-time",
+      "type": "metric",
+      "label": "~80% less processing time per item, about 15 min down to about 3 min",
+      "summary": "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.",
+      "evidence": [
+        {
+          "label": "Surplus AI card",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "metric",
+        "surplus-ai",
+        "headline"
+      ],
+      "value": "~80%",
+      "valueLabel": "less processing time per item, about 15 min down to about 3 min"
+    },
+    {
+      "id": "metric-surplus-pallet-time",
+      "type": "metric",
+      "label": "~10 min to list a 100+ unit pallet, instead of 1 to 2 hours",
+      "summary": "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.",
+      "evidence": [
+        {
+          "label": "Surplus AI card",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "metric",
+        "surplus-ai"
+      ],
+      "value": "~10 min",
+      "valueLabel": "to list a 100+ unit pallet, instead of 1 to 2 hours"
+    },
+    {
+      "id": "metric-surplus-model-size",
+      "type": "metric",
+      "label": "14B Qwen model across four Mac minis, offline, via MLX",
+      "summary": "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.",
+      "evidence": [
+        {
+          "label": "Surplus AI card",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "metric",
+        "surplus-ai",
+        "llm"
+      ],
+      "value": "14B",
+      "valueLabel": "Qwen model across four Mac minis, offline, via MLX"
+    },
+    {
+      "id": "metric-devhacks-place",
+      "type": "metric",
+      "label": "1st place, Track 1, chosen by public student vote",
+      "summary": "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.",
+      "evidence": [
+        {
+          "label": "DevHacks × Cubbie card",
+          "url": "#project-devhacks-cubbie"
+        },
+        {
+          "label": "Cooked repository",
+          "url": "https://github.com/SrujanRudrapati/cooked"
+        }
+      ],
+      "tags": [
+        "metric",
+        "hackathon",
+        "headline"
+      ],
+      "value": "1st",
+      "valueLabel": "place, Track 1, chosen by public student vote"
+    },
+    {
+      "id": "metric-devhacks-submissions",
+      "type": "metric",
+      "label": "82 submissions from 350+ students",
+      "summary": "The field Cooked was chosen from, by public student vote.",
+      "evidence": [
+        {
+          "label": "DevHacks × Cubbie card",
+          "url": "#project-devhacks-cubbie"
+        }
+      ],
+      "tags": [
+        "metric",
+        "hackathon"
+      ],
+      "value": "82",
+      "valueLabel": "submissions from 350+ students"
+    },
+    {
+      "id": "metric-receipts-tests",
+      "type": "metric",
+      "label": "493 automated tests in CI for Receipts",
+      "summary": "Receipts, the Discord bot that catches promises in chat, runs 493 automated tests in CI.",
+      "evidence": [
+        {
+          "label": "DevHacks × Cubbie card",
+          "url": "#project-devhacks-cubbie"
+        },
+        {
+          "label": "Receipts repository",
+          "url": "https://github.com/SrujanRudrapati/receipts"
+        }
+      ],
+      "tags": [
+        "metric",
+        "hackathon",
+        "testing"
+      ],
+      "value": "493",
+      "valueLabel": "automated tests in CI for Receipts"
+    },
+    {
+      "id": "metric-label-lens-quotes",
+      "type": "metric",
+      "label": "44/44 AI warnings verified to quote the label word for word",
+      "summary": "Every AI warning in Label Lens must quote the label word for word; 44 of 44 verified.",
+      "evidence": [
+        {
+          "label": "Label Lens card",
+          "url": "#project-label-lens"
+        },
+        {
+          "label": "Live app",
+          "url": "https://label-lens-iota.vercel.app"
+        }
+      ],
+      "tags": [
+        "metric",
+        "label-lens",
+        "grounding"
+      ],
+      "value": "44/44",
+      "valueLabel": "AI warnings verified to quote the label word for word"
+    },
+    {
+      "id": "metric-label-lens-latency",
+      "type": "metric",
+      "label": "4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel",
+      "summary": "Running a fast and a deep model in parallel cut Label Lens response time from 16 s to 4 to 9 s.",
+      "evidence": [
+        {
+          "label": "Label Lens card",
+          "url": "#project-label-lens"
+        }
+      ],
+      "tags": [
+        "metric",
+        "label-lens"
+      ],
+      "value": "4 to 9 s",
+      "valueLabel": "response time, down from 16 s, with a fast and a deep model in parallel"
+    },
+    {
+      "id": "metric-label-lens-tests",
+      "type": "metric",
+      "label": "56 + 6 tests: 56 unit, 6 end-to-end",
+      "summary": "Label Lens has 56 unit tests and 6 end-to-end tests.",
+      "evidence": [
+        {
+          "label": "Label Lens card",
+          "url": "#project-label-lens"
+        }
+      ],
+      "tags": [
+        "metric",
+        "label-lens",
+        "testing"
+      ],
+      "value": "56 + 6",
+      "valueLabel": "tests: 56 unit, 6 end-to-end"
+    },
+    {
+      "id": "metric-watchtower-agents",
+      "type": "metric",
+      "label": "3 agents in sequence on the Claude API",
+      "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.",
+      "evidence": [
+        {
+          "label": "Watchtower card",
+          "url": "#project-supply-chain-watchtower"
+        }
+      ],
+      "tags": [
+        "metric",
+        "watchtower",
+        "agents"
+      ],
+      "value": "3",
+      "valueLabel": "agents in sequence on the Claude API"
+    },
+    {
+      "id": "metric-capstone-wape",
+      "type": "metric",
+      "label": "27.7% WAPE vs. 38.5% naive baseline",
+      "summary": "Forecast error across 250 SKU and warehouse series with a strict time-based test window.",
+      "evidence": [
+        {
+          "label": "Demand Forecasting card",
+          "url": "#project-demand-forecasting"
+        }
+      ],
+      "tags": [
+        "metric",
+        "capstone",
+        "forecasting"
+      ],
+      "value": "27.7%",
+      "valueLabel": "WAPE vs. 38.5% naive baseline"
+    },
+    {
+      "id": "metric-capstone-holding-cost",
+      "type": "metric",
+      "label": "about 28% lower simulated holding cost",
+      "summary": "A reorder-point policy on the forecast, at comparable service levels.",
+      "evidence": [
+        {
+          "label": "Demand Forecasting card",
+          "url": "#project-demand-forecasting"
+        }
+      ],
+      "tags": [
+        "metric",
+        "capstone"
+      ],
+      "value": "about 28%",
+      "valueLabel": "lower simulated holding cost"
+    },
+    {
+      "id": "metric-wlan-packets",
+      "type": "metric",
+      "label": "100,000+ WPA2-encrypted packets parsed",
+      "summary": "The toolkit rebuilds the network topology from the parsed packets as a directed graph.",
+      "evidence": [
+        {
+          "label": "WLAN toolkit card",
+          "url": "#project-wlan-forensics-toolkit"
+        }
+      ],
+      "tags": [
+        "metric",
+        "wlan",
+        "networking"
+      ],
+      "value": "100,000+",
+      "valueLabel": "WPA2-encrypted packets parsed"
+    },
+    {
+      "id": "metric-f1-top3",
+      "type": "metric",
+      "label": "80% top-3 accuracy vs. 73% baseline",
+      "summary": "Backtested on 44 held-out races; 52% top-1 against a 43% baseline.",
+      "evidence": [
+        {
+          "label": "F1 predictor card",
+          "url": "#project-f1-race-predictor"
+        }
+      ],
+      "tags": [
+        "metric",
+        "f1",
+        "ml"
+      ],
+      "value": "80%",
+      "valueLabel": "top-3 accuracy vs. 73% baseline"
+    },
+    {
+      "id": "metric-time-to-insight",
+      "type": "metric",
+      "label": "about 50% less time-to-insight",
+      "summary": "For a telehealth client in New Zealand, on Microsoft Fabric. The dashboards ended up in their weekly operational meetings.",
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "metric",
+        "celebal"
+      ],
+      "value": "about 50%",
+      "valueLabel": "less time-to-insight"
+    },
+    {
+      "id": "metric-records-per-day",
+      "type": "metric",
+      "label": "about 10 million records a day",
+      "summary": "A production pipeline on Glue, S3, and Redshift from 7+ source systems, for a US materials engineering client.",
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "metric",
+        "celebal",
+        "aws",
+        "headline"
+      ],
+      "value": "about 10 million",
+      "valueLabel": "records a day"
+    },
+    {
+      "id": "metric-downtime",
+      "type": "metric",
+      "label": "about 30% less downtime",
+      "summary": "By tracing recurring failures of the AWS pipeline to root causes instead of patching them.",
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "metric",
+        "celebal",
+        "aws"
+      ],
+      "value": "about 30%",
+      "valueLabel": "less downtime"
+    },
+    {
+      "id": "metric-students",
+      "type": "metric",
+      "label": "40+ students in office hours",
+      "summary": "As Graduate Teaching Assistant for two 400-level networking courses.",
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        }
+      ],
+      "tags": [
+        "metric",
+        "asu",
+        "teaching"
+      ],
+      "value": "40+",
+      "valueLabel": "students in office hours"
+    },
+    {
+      "id": "industry-higher-ed-surplus",
+      "type": "industry",
+      "label": "Higher-ed surplus",
+      "summary": "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus AI runs here.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-higher-education",
+      "type": "industry",
+      "label": "Higher education",
+      "summary": "Students and teaching: a Canvas-reading study planner and two 400-level networking courses.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-e-commerce",
+      "type": "industry",
+      "label": "E-commerce",
+      "summary": "A major fashion e-commerce client at Celebal: impressions, clicks, conversions, spend and attribution pipelines.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-healthcare",
+      "type": "industry",
+      "label": "Healthcare",
+      "summary": "A telehealth client in New Zealand and a US medical device manufacturer, both at Celebal.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-energy",
+      "type": "industry",
+      "label": "Energy",
+      "summary": "A major US utility, where the data governance work ran for 10 months.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-manufacturing",
+      "type": "industry",
+      "label": "Manufacturing",
+      "summary": "A US materials engineering client with an AWS pipeline handling about 10 million records a day.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-consumer-goods",
+      "type": "industry",
+      "label": "Consumer goods",
+      "summary": "A large FMCG client, where Unity Catalog and Microsoft Purview managed access, lineage and classification.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-consumer-health",
+      "type": "industry",
+      "label": "Consumer health",
+      "summary": "Food and medicine labels checked against a person's allergies and medications, in Label Lens.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-supply-chain",
+      "type": "industry",
+      "label": "Supply chain",
+      "summary": "Demand forecasting, inventory policy and logistics planning: the capstone and the Watchtower prototype.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-network-security",
+      "type": "industry",
+      "label": "Network security",
+      "summary": "WLAN traffic forensics and the network security course it was built for.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-motorsport",
+      "type": "industry",
+      "label": "Motorsport",
+      "summary": "Formula 1 race outcomes, ranked by win probability and backtested on held-out races.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "industry-robotics",
+      "type": "industry",
+      "label": "Robotics",
+      "summary": "A hand gesture controlled RC car built as a B.Tech major project.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "industry"
+      ]
+    },
+    {
+      "id": "problem-manual-processing-bottleneck",
+      "type": "problem",
+      "label": "Manual processing bottleneck",
+      "summary": "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus AI cut processing per item from about 15 min to about 3 min.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-ungrounded-ai-output",
+      "type": "problem",
+      "label": "Ungrounded AI output",
+      "summary": "Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-slow-reporting",
+      "type": "problem",
+      "label": "Slow reporting",
+      "summary": "Clinical and operations teams were waiting days for reports. A Lakehouse on Microsoft Fabric dropped time-to-insight about 50%.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-pipeline-downtime",
+      "type": "problem",
+      "label": "Pipeline downtime",
+      "summary": "An AWS pipeline handling about 10 million records a day kept failing in the same ways. Tracing recurring failures to root causes cut downtime about 30%.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-pipeline-cost",
+      "type": "problem",
+      "label": "Pipeline cost",
+      "summary": "Spark jobs and SQL on Databricks tuned for performance and cost.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-manual-governance",
+      "type": "problem",
+      "label": "Governance by hand",
+      "summary": "A Microsoft Purview catalog maintained by hand. Scheduled automation on Databricks pushed entities and classifications into Purview, with Apache Atlas lineage and a business glossary.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-inventory-cost",
+      "type": "problem",
+      "label": "Inventory cost",
+      "summary": "Forecast error and holding cost across 250 SKU and warehouse series. A reorder-point policy on the forecast cut simulated holding cost about 28% at comparable service levels.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-manual-logistics-planning",
+      "type": "problem",
+      "label": "Manual logistics planning",
+      "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-deadline-overload",
+      "type": "problem",
+      "label": "Deadline overload",
+      "summary": "Students juggling Canvas deadlines and grade weights. Cooked scores the week 0 to 100 and books study blocks after the student says yes.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-network-attack-detection",
+      "type": "problem",
+      "label": "Network attack detection",
+      "summary": "Finding a live attack inside 100,000+ WPA2-encrypted packets. A Z-score detector caught a denial-of-service deauthentication attack.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-backtest-leakage",
+      "type": "problem",
+      "label": "Backtest leakage",
+      "summary": "Rolling features shifted forward so predictions never see the future. 80% top-3 accuracy on 44 held-out races against a 73% baseline.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "problem-manual-deployment",
+      "type": "problem",
+      "label": "Manual deployment",
+      "summary": "One Terraform codebase deploys dev or prod; GitHub Actions tests, builds and deploys on every push to main.",
+      "evidence": [
+        {
+          "label": "Work section",
+          "url": "#work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
+      "id": "artifact-surplus-pipeline-diagram",
+      "type": "artifact",
+      "label": "Surplus AI pipeline diagram",
+      "summary": "From spec collection to AI-written listings.",
+      "evidence": [
+        {
+          "label": "Surplus AI pipeline diagram",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "diagram"
+      ],
+      "kind": "diagram",
+      "url": "surplus-pipeline"
+    },
+    {
+      "id": "artifact-surplus-network-diagram",
+      "type": "artifact",
+      "label": "Surplus AI cluster network diagram",
+      "summary": "Five Mac minis on a switch with no internet uplink.",
+      "evidence": [
+        {
+          "label": "Surplus AI cluster network diagram",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "diagram"
+      ],
+      "kind": "diagram",
+      "url": "surplus-network"
+    },
+    {
+      "id": "artifact-surplus-privacy-diagram",
+      "type": "artifact",
+      "label": "Surplus AI privacy layers diagram",
+      "summary": "Four layers between the model and the internet.",
+      "evidence": [
+        {
+          "label": "Surplus AI privacy layers diagram",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "diagram"
+      ],
+      "kind": "diagram",
+      "url": "surplus-privacy"
+    },
+    {
+      "id": "artifact-cooked-repo",
+      "type": "artifact",
+      "label": "Cooked repository",
+      "summary": "Source for Cooked, the DevHacks × Cubbie winner.",
+      "evidence": [
+        {
+          "label": "Cooked repository",
+          "url": "https://github.com/SrujanRudrapati/cooked"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "repo"
+      ],
+      "kind": "repo",
+      "url": "https://github.com/SrujanRudrapati/cooked",
+      "linkLabel": "Cooked repository"
+    },
+    {
+      "id": "artifact-receipts-repo",
+      "type": "artifact",
+      "label": "Receipts repository",
+      "summary": "Source for Receipts, the Discord bot with 493 automated tests.",
+      "evidence": [
+        {
+          "label": "Receipts repository",
+          "url": "https://github.com/SrujanRudrapati/receipts"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "repo"
+      ],
+      "kind": "repo",
+      "url": "https://github.com/SrujanRudrapati/receipts",
+      "linkLabel": "Receipts repository"
+    },
+    {
+      "id": "artifact-label-lens-live",
+      "type": "artifact",
+      "label": "Label Lens live app",
+      "summary": "Label Lens, live app.",
+      "evidence": [
+        {
+          "label": "Label Lens live app",
+          "url": "https://label-lens-iota.vercel.app"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "live"
+      ],
+      "kind": "live",
+      "url": "https://label-lens-iota.vercel.app"
+    },
+    {
+      "id": "artifact-watchtower-flow-diagram",
+      "type": "artifact",
+      "label": "Watchtower agent flow diagram",
+      "summary": "Three agents in sequence; only the Risk Analyst has a tool.",
+      "evidence": [
+        {
+          "label": "Watchtower agent flow diagram",
+          "url": "#project-supply-chain-watchtower"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "diagram"
+      ],
+      "kind": "diagram",
+      "url": "watchtower-flow"
+    },
+    {
+      "id": "artifact-aws-cicd-repo",
+      "type": "artifact",
+      "label": "CI/CD pipeline repository",
+      "summary": "Terraform, Docker and GitHub Actions for the multi-tier AWS environment.",
+      "evidence": [
+        {
+          "label": "CI/CD pipeline repository",
+          "url": "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "repo"
+      ],
+      "kind": "repo",
+      "url": "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
+    },
+    {
+      "id": "artifact-resume",
+      "type": "artifact",
+      "label": "Resume",
+      "summary": "Srujan's resume as a PDF.",
+      "evidence": [
+        {
+          "label": "Resume",
+          "url": "/resume.pdf"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "resume"
+      ],
+      "kind": "resume",
+      "url": "/resume.pdf"
+    },
+    {
+      "id": "event-devhacks-win",
+      "type": "event",
+      "label": "1st place, DevHacks × Cubbie hackathon",
+      "summary": "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.",
+      "dates": {
+        "start": "2026-10",
+        "end": "2026-10"
+      },
+      "evidence": [
+        {
+          "label": "DevHacks × Cubbie card",
+          "url": "#project-devhacks-cubbie"
+        }
+      ],
+      "tags": [
+        "event",
+        "hackathon"
+      ]
+    },
+    {
+      "id": "event-asu-surplus-start",
+      "type": "event",
+      "label": "Started at ASU Surplus",
+      "summary": "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.",
+      "dates": {
+        "start": "2026-06"
+      },
+      "evidence": [
+        {
+          "label": "Experience",
+          "url": "#experience"
+        },
+        {
+          "label": "Surplus AI card",
+          "url": "#project-surplus-ai"
+        }
+      ],
+      "tags": [
+        "event",
+        "role",
+        "production"
+      ]
+    },
+    {
+      "id": "event-graduation",
+      "type": "event",
+      "label": "M.S. graduation (expected)",
+      "summary": "Expected December 2026 from Arizona State University. Available early 2027.",
+      "dates": {
+        "start": "2026-12",
+        "end": "2026-12"
+      },
+      "evidence": [
+        {
+          "label": "Education",
+          "url": "#credentials"
+        }
+      ],
+      "tags": [
+        "event",
+        "education"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "project-surplus-ai",
+      "to": "metric-surplus-processing-time",
+      "type": "achieved"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "metric-surplus-pallet-time",
+      "type": "achieved"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "metric-surplus-model-size",
+      "type": "achieved"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-mlx",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-flask",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-bash",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-apple-vision-ocr",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-qwen-14b",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-llama-3b",
+      "type": "uses"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "skill-local-llm-serving",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "problem-manual-processing-bottleneck",
+      "type": "solved",
+      "metric": "metric-surplus-processing-time"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "problem-ungrounded-ai-output",
+      "type": "solved"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "industry-higher-ed-surplus",
+      "type": "in"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "role-tech-assistant-asu",
+      "type": "at"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "role-tech-assistant-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "artifact-surplus-pipeline-diagram",
+      "type": "produced"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "artifact-surplus-network-diagram",
+      "type": "produced"
+    },
+    {
+      "from": "project-surplus-ai",
+      "to": "artifact-surplus-privacy-diagram",
+      "type": "produced"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "metric-devhacks-place",
+      "type": "achieved"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "metric-devhacks-submissions",
+      "type": "achieved"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "metric-receipts-tests",
+      "type": "achieved"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "problem-deadline-overload",
+      "type": "solved"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "industry-higher-education",
+      "type": "in"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "artifact-cooked-repo",
+      "type": "produced"
+    },
+    {
+      "from": "project-devhacks-cubbie",
+      "to": "artifact-receipts-repo",
+      "type": "produced"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "metric-label-lens-quotes",
+      "type": "achieved"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "metric-label-lens-latency",
+      "type": "achieved"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "metric-label-lens-tests",
+      "type": "achieved"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-nextjs",
+      "type": "uses"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-typescript",
+      "type": "uses"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-anthropic-claude-api",
+      "type": "uses",
+      "label": "Claude API"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-zod",
+      "type": "uses"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-vitest",
+      "type": "uses"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "skill-playwright",
+      "type": "uses"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "problem-ungrounded-ai-output",
+      "type": "solved",
+      "metric": "metric-label-lens-quotes"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "industry-consumer-health",
+      "type": "in"
+    },
+    {
+      "from": "project-label-lens",
+      "to": "artifact-label-lens-live",
+      "type": "produced"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "metric-watchtower-agents",
+      "type": "achieved"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-anthropic-claude-api",
+      "type": "uses"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-crewai",
+      "type": "uses"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-rag",
+      "type": "uses"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-vector-databases",
+      "type": "uses",
+      "label": "ChromaDB"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "skill-agentic-workflows",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "problem-manual-logistics-planning",
+      "type": "solved",
+      "metric": "metric-watchtower-agents"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "problem-ungrounded-ai-output",
+      "type": "solved"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "industry-supply-chain",
+      "type": "in"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-supply-chain-watchtower",
+      "to": "artifact-watchtower-flow-diagram",
+      "type": "produced"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "metric-capstone-wape",
+      "type": "achieved"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "metric-capstone-holding-cost",
+      "type": "achieved"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "skill-lightgbm",
+      "type": "uses"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "skill-prophet",
+      "type": "uses"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "skill-scikit-learn",
+      "type": "uses"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "skill-forecasting",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "problem-inventory-cost",
+      "type": "solved",
+      "metric": "metric-capstone-holding-cost"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "industry-supply-chain",
+      "type": "in"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "education-ms-asu",
+      "type": "at"
+    },
+    {
+      "from": "project-demand-forecasting",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-terraform",
+      "type": "uses"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-docker",
+      "type": "uses"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-github-actions",
+      "type": "uses"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-aws",
+      "type": "uses"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-ci-cd",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "skill-ecr",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "problem-manual-deployment",
+      "type": "solved"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-aws-cicd-pipeline",
+      "to": "artifact-aws-cicd-repo",
+      "type": "produced"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "metric-wlan-packets",
+      "type": "achieved"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-pyshark",
+      "type": "uses"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-networkx",
+      "type": "uses"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-scikit-learn",
+      "type": "uses"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-clustering",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "skill-anomaly-detection",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "problem-network-attack-detection",
+      "type": "solved"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "industry-network-security",
+      "type": "in"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "role-teaching-assistant-asu",
+      "type": "at"
+    },
+    {
+      "from": "project-wlan-forensics-toolkit",
+      "to": "role-teaching-assistant-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "metric-f1-top3",
+      "type": "achieved"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "skill-scikit-learn",
+      "type": "uses"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "skill-histgradientboosting",
+      "type": "uses"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "skill-feature-engineering",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "problem-backtest-leakage",
+      "type": "solved",
+      "metric": "metric-f1-top3"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "industry-motorsport",
+      "type": "in"
+    },
+    {
+      "from": "project-f1-race-predictor",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-flask-on-kubernetes",
+      "to": "skill-docker",
+      "type": "uses"
+    },
+    {
+      "from": "project-flask-on-kubernetes",
+      "to": "skill-docker-compose",
+      "type": "uses"
+    },
+    {
+      "from": "project-flask-on-kubernetes",
+      "to": "skill-kubernetes",
+      "type": "uses",
+      "label": "Kubernetes (kind)"
+    },
+    {
+      "from": "project-flask-on-kubernetes",
+      "to": "skill-flask",
+      "type": "uses",
+      "chip": false
+    },
+    {
+      "from": "project-flask-on-kubernetes",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-java-group-chat",
+      "to": "skill-java",
+      "type": "uses"
+    },
+    {
+      "from": "project-java-group-chat",
+      "to": "skill-swing",
+      "type": "uses"
+    },
+    {
+      "from": "project-java-group-chat",
+      "to": "skill-awt",
+      "type": "uses"
+    },
+    {
+      "from": "project-java-group-chat",
+      "to": "skill-tcp-sockets",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "skill-arduino-cpp",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "skill-adxl335",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "skill-rf-ht12e-ht12d",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "skill-l298",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "skill-gazebo",
+      "type": "uses"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "industry-robotics",
+      "type": "in"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "education-btech-rtu",
+      "type": "at"
+    },
+    {
+      "from": "project-gesture-rc-car",
+      "to": "education-btech-rtu",
+      "type": "during"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "metric-time-to-insight",
+      "type": "achieved"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "metric-records-per-day",
+      "type": "achieved"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "metric-downtime",
+      "type": "achieved"
+    },
+    {
+      "from": "role-teaching-assistant-asu",
+      "to": "metric-students",
+      "type": "achieved"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "industry-healthcare",
+      "type": "in"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "industry-energy",
+      "type": "in"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "industry-manufacturing",
+      "type": "in"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "industry-e-commerce",
+      "type": "in"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "industry-consumer-goods",
+      "type": "in"
+    },
+    {
+      "from": "role-tech-assistant-asu",
+      "to": "industry-higher-ed-surplus",
+      "type": "in"
+    },
+    {
+      "from": "role-teaching-assistant-asu",
+      "to": "industry-higher-education",
+      "type": "in"
+    },
+    {
+      "from": "role-teaching-assistant-asu",
+      "to": "industry-network-security",
+      "type": "in"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-databricks",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-spark",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-dbt",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-delta-lake",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-kafka",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-medallion-architecture",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-microsoft-purview",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-apache-atlas",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-unity-catalog",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-fabric",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-data-factory",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-glue",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-s3",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-redshift",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-power-bi",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-sql",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-feature-engineering",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-data-lineage",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "skill-metadata-management",
+      "type": "uses"
+    },
+    {
+      "from": "role-tech-assistant-asu",
+      "to": "skill-power-bi",
+      "type": "uses"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "problem-slow-reporting",
+      "type": "solved",
+      "metric": "metric-time-to-insight"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "problem-pipeline-downtime",
+      "type": "solved",
+      "metric": "metric-downtime"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "problem-pipeline-cost",
+      "type": "solved"
+    },
+    {
+      "from": "role-associate-celebal",
+      "to": "problem-manual-governance",
+      "type": "solved"
+    }
+  ]
+}

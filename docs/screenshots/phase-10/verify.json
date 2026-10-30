@@ -1,0 +1,210 @@
+{
+  "phase": "10",
+  "generatedAt": "2026-10-30T07:54:11.979Z",
+  "runs": [
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-mobile-light.png",
+      "foldScreenshot": "home-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-mobile-dark.png",
+      "foldScreenshot": "home-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "home-tablet-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "home-tablet-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lens-timeline-mobile-light.png",
+      "foldScreenshot": "home-lens-timeline-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lens-timeline-mobile-dark.png",
+      "foldScreenshot": "home-lens-timeline-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "home-lens-timeline-tablet-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "home-lens-timeline-tablet-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lens-timeline-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=timeline",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lens-timeline-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lens-recruiter-mobile-light.png",
+      "foldScreenshot": "home-lens-recruiter-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lens-recruiter-mobile-dark.png",
+      "foldScreenshot": "home-lens-recruiter-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "home-lens-recruiter-tablet-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "home-lens-recruiter-tablet-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lens-recruiter-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/#lens=recruiter",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lens-recruiter-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

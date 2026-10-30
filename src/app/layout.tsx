@@ -1,48 +1,55 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
+import { Archivo } from "next/font/google";
 import "./globals.css";
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+// One family. The width axis gives headlines their expanded cut and body its normal cut.
+const archivo = Archivo({
   subsets: ["latin"],
-  weight: ["500", "600"],
+  axes: ["wdth"],
+  variable: "--font-archivo",
   display: "swap",
 });
 
-const plexSans = IBM_Plex_Sans({
-  variable: "--font-plex-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
+// Runs synchronously while the HTML parses, before first paint. It marks the
+// page as scripted (data-js: phone-only collapses key off it), then a stored choice
+// sets data-theme so the matching token set applies immediately; no stored
+// choice leaves the attribute off and the system preference decides.
+const themeScript = `(function(){document.documentElement.setAttribute("data-js","");try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
 
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  display: "swap",
-});
+const SITE_URL = "https://srujanrudrapati.github.io/srujan-portfolio/";
+const TITLE = "Srujan Rudrapati | Data Engineer";
+const DESCRIPTION = "Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data.";
 
 export const metadata: Metadata = {
-  title: "Srujan Rudrapati | Data Engineer",
-  description:
-    "Data engineer working across Databricks, Azure, and AWS. Lately building LLM systems that run on real data.",
+  // Absolute base for social cards: relative image paths resolve under the Pages project URL.
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: SITE_URL },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Srujan Rudrapati",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [{ url: "og.png", width: 1200, height: 630, alt: "Srujan Rudrapati: I build the data layer, and the AI on top of it." }],
+  },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESCRIPTION, images: ["og.png"] },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#0e1a2b" },
-    { media: "(prefers-color-scheme: light)", color: "#f3f6fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#161616" },
+    { media: "(prefers-color-scheme: light)", color: "#f6f6f3" },
   ],
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={`${spaceGrotesk.variable} ${plexSans.variable} ${plexMono.variable} antialiased`}
-    >
+    <html lang="en" suppressHydrationWarning className={`${archivo.variable} antialiased`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body className="min-h-dvh">{children}</body>
     </html>
   );

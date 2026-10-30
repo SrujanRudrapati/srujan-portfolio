@@ -1,0 +1,10 @@
+# Cloudflare Worker for the Ask panel. Deploy steps (Srujan runs them, gate G3)
+# are in docs/REDESIGN_DECISIONS.md. The API key is a secret, never a var:
+#   npx wrangler secret put ANTHROPIC_API_KEY
+name = "srujan-portfolio-ask"
+main = "src/index.ts"
+compatibility_date = "2026-10-01"
+
+[vars]
+# CORS: only the live site may call the Worker.
+ALLOWED_ORIGIN = "https://srujanrudrapati.github.io"

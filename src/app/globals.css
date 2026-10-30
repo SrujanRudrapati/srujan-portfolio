@@ -1,142 +1,481 @@
 @import "tailwindcss";
 
-/* Dark-first: deep blue-slate ground, one amber accent. */
+/* Spec sheet. Light by default, dark when the user asks for it (data-theme on
+   <html>, set before first paint by the inline script in layout.tsx) or when
+   the system prefers it and nothing is stored.
+
+   Colour tokens live on :root as plain custom properties because they change at
+   runtime. Everything that never changes with theme (type scale, spacing,
+   radii, shadows, easing) is declared once inside @theme, so Tailwind utilities
+   and hand-written CSS read the same values. There is one colour system: the
+   @theme inline block below maps each token to a Tailwind utility name. */
+
 :root {
-  color-scheme: dark;
-  --bg: #0e1a2b;
-  --raised: #15253b;
-  --border: #2a3f5c;
-  --text: #e7edf5;
-  --muted: #9db0c8;
-  --accent: #f0b44c;
-  --accent-hover: #f5c773;
-  --on-accent: #0e1a2b;
-  --tag-bg: #1d3150;
-  --tag-fg: #c9d6e6;
-}
-
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
-    color-scheme: light;
-    --bg: #f3f6fa;
-    --raised: #e6ecf4;
-    --border: #c3cedc;
-    --text: #0e1a2b;
-    --muted: #46566e;
-    --accent: #8a5600;
-    --accent-hover: #6e4400;
-    --on-accent: #f3f6fa;
-    --tag-bg: #dce4ee;
-    --tag-fg: #26364d;
-  }
-}
-
-:root[data-theme="light"] {
   color-scheme: light;
-  --bg: #f3f6fa;
-  --raised: #e6ecf4;
-  --border: #c3cedc;
-  --text: #0e1a2b;
-  --muted: #46566e;
-  --accent: #8a5600;
-  --accent-hover: #6e4400;
-  --on-accent: #f3f6fa;
-  --tag-bg: #dce4ee;
-  --tag-fg: #26364d;
+  --bg: #f6f6f3;
+  --surface: #ebebe6;
+  --surface-raised: #fdfdfb;
+  --border: #cfcfc8;
+  --text: #0a0a0a;
+  --text-muted: #55554f;
+  --accent: #c42a14;
+  --accent-hover: #a32310;
+  --accent-2: #1b4fd8;
+  --accent-2-hover: #1640b0;
+  --on-accent: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #161616;
+  --surface: #202020;
+  --surface-raised: #262626;
+  --border: #3a3a36;
+  --text: #f2f2ee;
+  --text-muted: #a3a39b;
+  --accent: #ff6a4e;
+  --accent-hover: #ff8a72;
+  --accent-2: #7f9cff;
+  --accent-2-hover: #9db3ff;
+  --on-accent: #0a0a0a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #161616;
+    --surface: #202020;
+    --surface-raised: #262626;
+    --border: #3a3a36;
+    --text: #f2f2ee;
+    --text-muted: #a3a39b;
+    --accent: #ff6a4e;
+    --accent-hover: #ff8a72;
+    --accent-2: #7f9cff;
+    --accent-2-hover: #9db3ff;
+    --on-accent: #0a0a0a;
+  }
 }
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-raised: var(--raised);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
   --color-line: var(--border);
   --color-ink: var(--text);
-  --color-muted: var(--muted);
+  --color-muted: var(--text-muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-hover: var(--accent-2-hover);
   --color-on-accent: var(--on-accent);
-  --color-tag: var(--tag-bg);
-  --color-tag-ink: var(--tag-fg);
-  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
-  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 }
 
-html {
-  scroll-behavior: smooth;
-  -webkit-tap-highlight-color: transparent;
+@theme {
+  /* Type scale. Fluid between a 390px phone and a 1280px desktop. */
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1.45;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5;
+  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --text-base--line-height: 1.55;
+  --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
+  --text-lg--line-height: 1.5;
+  --text-xl: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
+  --text-xl--line-height: 1.3;
+  --text-2xl: clamp(1.5rem, 1.28rem + 0.9vw, 2rem);
+  --text-2xl--line-height: 1.15;
+  --text-3xl: clamp(1.875rem, 1.5rem + 1.6vw, 2.75rem);
+  --text-3xl--line-height: 1.05;
+  --text-4xl: clamp(2.5rem, 1.55rem + 4vw, 4.5rem);
+  --text-4xl--line-height: 1;
+
+  /* Spacing. Tailwind's --spacing (0.25rem) is the 4px base scale; p-4 is 16px,
+     gap-6 is 24px. These two name the rhythms the layout repeats. */
+  --spacing-gutter: clamp(1rem, 0.4rem + 2.4vw, 2.5rem);
+  --spacing-section: clamp(4rem, 2.4rem + 6.5vw, 7rem);
+
+  /* Widths */
+  --container-page: 1200px;
+  --container-measure: 65ch;
+
+  /* Shape. Spec sheet has square corners; the only radii are the focus ring and dots. */
+  --radius-sm: 2px;
+  --radius-full: 9999px;
+
+  /* Depth. Flat by default; one lift for hovered cards. */
+  --shadow-lift: 0 10px 24px -14px rgb(0 0 0 / 0.35);
+
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  /* One easing family: every transition without its own ease- utility uses the house curve. */
+  --default-transition-timing-function: var(--ease-out-quart);
 }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-sans);
-  text-rendering: optimizeLegibility;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings: one family, hierarchy through weight and width. */
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  h1,
+  h2 {
+    font-stretch: 125%;
+  }
+  h3 {
+    font-stretch: 112.5%;
+    letter-spacing: -0.015em;
+  }
+  h4 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
+  [id] {
+    scroll-margin-top: 5rem;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent-2);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+  }
+
+  a,
+  button {
+    touch-action: manipulation;
+  }
 }
 
-h1, h2, h3 {
-  text-wrap: balance;
-}
-
-p {
-  text-wrap: pretty;
-}
-
-/* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
-[id] {
-  scroll-margin-top: 5rem;
-}
-
-:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-  border-radius: 4px;
-}
-
-a, button {
-  touch-action: manipulation;
+@layer components {
+  /* Theme toggle icons. CSS decides which icon shows, so the button is correct
+     before hydration and never mismatches the server render. */
+  .theme-icon-sun {
+    display: none;
+  }
+  .theme-icon-moon {
+    display: block;
+  }
+  :root[data-theme="dark"] .theme-icon-sun {
+    display: block;
+  }
+  :root[data-theme="dark"] .theme-icon-moon {
+    display: none;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .theme-icon-sun {
+      display: block;
+    }
+    :root:not([data-theme="light"]) .theme-icon-moon {
+      display: none;
+    }
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
 }
 
-/* Diagram motion. Only defined when the user has not asked for reduced motion,
-   so the reduced-motion default is the finished, static diagram. */
+/* Hero diagram: default (reduced motion, or no offset-path support) is fully
+   lit and still. Fonts are set here so the SVG follows the site family. */
+.medallion {
+  --stage-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+}
+.medallion-label {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-stretch: 112.5%;
+}
+.medallion-text {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+/* Phones: the diagram is scaled to about 0.8, so the small sub-labels would
+   render under 12px. Hide them (the SVG title and desc carry the full text)
+   and enlarge the stage labels. */
+@media (max-width: 39.99rem) {
+  .medallion-text {
+    display: none;
+  }
+  .medallion-label {
+    font-size: 18px;
+  }
+  /* With the sub-label hidden, centre the stage label in its box. */
+  .medallion-stage[data-sub] .medallion-label {
+    transform: translateY(8px);
+  }
+}
+.medallion-base {
+  fill: var(--surface);
+}
+.medallion-lit {
+  fill: var(--stage-lit);
+}
+.medallion-dot {
+  display: none;
+}
+
+/* Project diagrams: default (no JavaScript, offscreen, reduced motion, or no
+   offset-path support) is every box lit and still. */
+.flow {
+  --flow-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+}
+.flow-text {
+  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+}
+.flow-label {
+  font-stretch: 112.5%;
+}
+.flow-dot {
+  display: none;
+}
+
+/* Motion. Only defined when the user has not asked for reduced motion, so the
+   reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
-  .draw-line {
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-    animation: draw-line 450ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: var(--d, 0ms);
+  /* Hero entrance: five blocks, 70ms apart, 400ms each, done by 680ms. */
+  .enter {
+    animation: enter 400ms var(--ease-out-quart) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
   }
-  .draw-appear {
+
+  /* Reveal primitive. The attribute is only ever set by JavaScript, so without
+     it (no JS, reduced motion, already on screen) children are simply visible. */
+  [data-reveal="pending"] {
     opacity: 0;
-    animation: draw-appear 350ms ease-out forwards;
-    animation-delay: var(--d, 0ms);
+    transform: translateY(14px);
   }
-  @supports (animation-timeline: view()) {
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 5% cover 25%;
+  [data-reveal="in"] {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 600ms var(--ease-out-quart),
+      transform 600ms var(--ease-out-quart);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+
+  [data-switched] > [data-lens-panel]:not([hidden]) {
+    animation: lens-in 200ms var(--ease-out-quart);
+  }
+
+  /* Project diagrams (FlowDiagram). Dots ride each track; a box's lit overlay
+     fades in the moment a dot reaches it. Runs only while the figure is on
+     screen (data-animate set by useInView). Overlays animate opacity only. */
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .flow[data-animate="on"] .flow-dot {
+      display: block;
+      offset-rotate: 0deg;
+      animation: flow-travel var(--loop) linear infinite;
+    }
+    .flow[data-animate="on"] .flow-lit {
+      opacity: 0;
+      animation: flow-flash var(--period) linear infinite;
+      animation-delay: calc((var(--arrive) - 1) * var(--period));
+    }
+  }
+
+  /* Medallion diagram. Two dots share one 5s loop, 2.5s apart, so every stage
+     sees an arrival every 2.5s; the stage keyframes run on that 2.5s period.
+     Arrival points were measured along the offset path (906 units long). */
+  @supports (offset-path: path("M0 0 L1 1")) {
+    [data-animate="on"] > .medallion .medallion-dot {
+      display: block;
+      offset-path: path("M220 402 H76 V296 H364 V190 H220 V72");
+      offset-rotate: 0deg;
+      animation: medallion-travel 5s linear infinite;
+    }
+    [data-animate="on"] > .medallion .medallion-dot-2 {
+      animation-delay: -2.5s;
+    }
+    [data-animate="on"] > .medallion .medallion-lit {
+      opacity: 0;
+      animation-duration: 2.5s;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    [data-animate="on"] > .medallion [data-stage="source"] .medallion-lit {
+      animation-name: stage-source;
+    }
+    [data-animate="on"] > .medallion [data-stage="bronze"] .medallion-lit {
+      animation-name: stage-bronze;
+    }
+    [data-animate="on"] > .medallion [data-stage="silver"] .medallion-lit {
+      animation-name: stage-silver;
+    }
+    [data-animate="on"] > .medallion [data-stage="gold"] .medallion-lit {
+      animation-name: stage-gold;
+    }
+    [data-animate="on"] > .medallion [data-stage="serving"] .medallion-lit {
+      animation-name: stage-serving;
+    }
+    [data-animate="on"] > .medallion [data-stage="llm"] .medallion-lit {
+      animation-name: stage-llm;
     }
   }
 }
 
-@keyframes draw-line {
-  to { stroke-dashoffset: 0; }
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-@keyframes draw-appear {
-  to { opacity: 1; }
+
+/* Lens switch: the incoming panel fades in over 200ms (motion allowed only). */
+@keyframes lens-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
-@keyframes reveal {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: none; }
+
+@keyframes flow-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* A box lights when a dot arrives (0%), holds, then fades over 14% of its period. */
+@keyframes flow-flash {
+  0%, 8% { opacity: 1; }
+  22%, 100% { opacity: 0; }
+}
+
+@keyframes medallion-travel {
+  from {
+    offset-distance: 0%;
+  }
+  to {
+    offset-distance: 100%;
+  }
+}
+
+/* Each stage: snap to lit when a dot arrives, hold 8%, fade back over 14%. */
+@keyframes stage-source {
+  0%, 6% { opacity: 1; }
+  20%, 100% { opacity: 0; }
+}
+@keyframes stage-bronze {
+  0%, 48% { opacity: 0; }
+  49%, 57% { opacity: 1; }
+  71%, 100% { opacity: 0; }
+}
+@keyframes stage-silver {
+  0%, 73.6% { opacity: 0; }
+  74.6%, 82.6% { opacity: 1; }
+  96.6%, 100% { opacity: 0; }
+}
+@keyframes stage-gold {
+  0%, 5.4% { opacity: 0; }
+  6.4%, 14.4% { opacity: 1; }
+  28.4%, 100% { opacity: 0; }
+}
+@keyframes stage-serving {
+  0%, 36.4% { opacity: 0; }
+  37.4%, 45.4% { opacity: 1; }
+  59.4%, 100% { opacity: 0; }
+}
+@keyframes stage-llm {
+  0% { opacity: 1; }
+  14%, 91% { opacity: 0; }
+  92%, 100% { opacity: 1; }
+}
+
+
+/* Featured cards on phones: title, figures and one line first; the rest opens
+   with "Show details". Only when scripted (data-js), so no-JS shows all. */
+.featured-toggle {
+  display: none;
+}
+@media (max-width: 47.99rem) {
+  html[data-js] .featured-toggle {
+    display: inline-flex;
+  }
+  html[data-js] .featured-more:not([data-open]) {
+    display: none;
+  }
+}
+
+/* Print. Recruiter mode prints alone on one page, in light colours, whatever
+   theme is on screen. Other lenses print the page as it is. */
+@media print {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  :root,
+  :root[data-theme="dark"],
+  :root:not([data-theme="light"]) {
+    color-scheme: light;
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-raised: #ffffff;
+    --border: #cfcfc8;
+    --text: #0a0a0a;
+    --text-muted: #55554f;
+    --accent: #c42a14;
+    --accent-2: #1b4fd8;
+  }
+  html[data-lens="recruiter"] body > *:not(main),
+  html[data-lens="recruiter"] main > *:not(#work),
+  html[data-lens="recruiter"] #work-heading,
+  html[data-lens="recruiter"] #work [data-lens-panel][hidden] {
+    display: none !important;
+  }
+  html[data-lens="recruiter"] #work {
+    border: 0;
+  }
+  html[data-lens="recruiter"] #work > div {
+    padding: 0;
+    max-width: none;
+  }
+  html[data-lens="recruiter"] #work header {
+    margin: 0;
+  }
+  @page {
+    size: auto;
+    margin: 14mm;
+  }
 }
