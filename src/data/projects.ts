@@ -61,7 +61,7 @@ export const projects: Project[] = [
       "One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet.",
     highlights: [
       "Two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word.",
-      "Both spec sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine.",
+      "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine.",
       "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds.",
     ],
     diagram: "surplus-pipeline",
@@ -118,6 +118,8 @@ export const projects: Project[] = [
     built:
       "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
     highlights: [],
+    // The old site's status chip, kept verbatim (rule 3: nothing removed).
+    statusNotes: [{ state: "neutral", text: "Personal prototype" }],
     diagram: "watchtower-flow",
     stack: ["Python", "Anthropic Claude API", "CrewAI", "RAG", "ChromaDB"],
     links: {},

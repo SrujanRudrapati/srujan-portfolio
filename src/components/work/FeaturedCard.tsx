@@ -109,32 +109,38 @@ export function FeaturedCard({ project, index }: { project: Project; index: numb
           </div>
         </div>
 
-        {p.details && (
-          <details className="group mt-8 border-t border-line pt-4">
-            <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-2 font-display text-lg font-bold text-ink font-stretch-semi-expanded [&::-webkit-details-marker]:hidden">
-              {p.details.heading}
-              <CaretDownIcon aria-hidden="true" size={20} weight="bold" className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
-            </summary>
-            <dl className="mt-4 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-              {p.details.items.map((item) => (
-                <div key={item.name} className="border-t border-ink pt-4">
-                  <dt className="font-semibold text-ink">{item.name}</dt>
-                  <dd className="mt-2 text-sm text-muted">{item.text}</dd>
-                </div>
-              ))}
-            </dl>
-            {p.secondaryDiagrams && (
-              <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-12">
-                {p.secondaryDiagrams.map((name, i) => (
-                  <div key={name} className={i === 0 ? "lg:col-span-7" : "lg:col-span-5"}>
-                    <ProjectDiagram name={name} />
-                  </div>
-                ))}
-              </div>
-            )}
-          </details>
-        )}
+        {p.details && <FeaturedDetails project={p} />}
       </article>
     </Reveal>
+  );
+}
+
+// The long "How it works" block: six parts and the secondary diagrams, behind a
+// native disclosure so the card stays scannable. Diagrams stack full width so
+// their text keeps its size.
+function FeaturedDetails({ project: p }: { project: Project }) {
+  if (!p.details) return null;
+  return (
+    <details className="group mt-8 border-t border-line pt-4">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-2 font-display text-lg font-bold text-ink font-stretch-semi-expanded [&::-webkit-details-marker]:hidden">
+        {p.details.heading}
+        <CaretDownIcon aria-hidden="true" size={20} weight="bold" className="shrink-0 transition-transform duration-200 group-open:rotate-180" />
+      </summary>
+      <dl className="mt-4 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {p.details.items.map((item) => (
+          <div key={item.name} className="border-t border-ink pt-4">
+            <dt className="font-semibold text-ink">{item.name}</dt>
+            <dd className="mt-2 text-ink">{item.text}</dd>
+          </div>
+        ))}
+      </dl>
+      {p.secondaryDiagrams && (
+        <div className="mt-8 space-y-6">
+          {p.secondaryDiagrams.map((name) => (
+            <ProjectDiagram key={name} name={name} />
+          ))}
+        </div>
+      )}
+    </details>
   );
 }

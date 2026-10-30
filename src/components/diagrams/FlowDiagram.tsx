@@ -5,15 +5,19 @@ import { useInView } from "@/hooks/use-in-view";
 
 // One engine for every project diagram. A diagram is a set of boxes, the
 // connectors drawn between them, and "tracks": ordered lists of boxes a dot
-// travels through. Each box lights (an opacity-animated overlay) the moment a
-// dot reaches it, so stages light in order. Timing is computed from the path
-// length, so the data drives the motion and nothing is hand-measured.
+// travels through. Each box gets a lit overlay (opacity animated) per dot
+// arrival, phased from the path length, so stages light in order and the data
+// drives the timing; nothing is hand-measured.
 //
 // Motion rules (design-direction skill): dots and lighting run only while the
 // figure is on screen and the tab is visible (useInView), only under
 // prefers-reduced-motion: no-preference, and only where offset-path is
 // supported. The default, with no JavaScript or reduced motion, is every box
 // lit and still, which reads fully on its own. Styles: .flow-* in globals.css.
+//
+// Sizing: SVG text scales with the container, so each diagram ships a wide
+// layout (1024px and up) and a narrow one sized to the ~280px slot a phone
+// gives it. Rendered text never drops below 12px at the breakpoints we serve.
 
 export type FlowNode = {
   id: string;
@@ -21,10 +25,11 @@ export type FlowNode = {
   y: number;
   w: number;
   h: number;
-  label: string;
+  /** Bold line(s). Pass an array to break a long label by hand. */
+  label: string | string[];
   /** Small muted line above the label, e.g. "Agent 2". */
   kicker?: string;
-  /** Muted line(s) under the label. Pass an array to break lines by hand. */
+  /** Muted line(s) under the label. */
   sub?: string | string[];
   variant?: "solid" | "accent" | "ghost";
   /** Box fill. Nested layers alternate so each ring stays visible. */
@@ -33,6 +38,8 @@ export type FlowNode = {
   anchor?: "center" | "top";
   /** Left-aligned text, for wide layer boxes. */
   align?: "start" | "middle";
+  /** Rotate the label 90 degrees counter-clockwise, for a tall bar. Only the label is drawn. */
+  vertical?: boolean;
 };
 
 export type FlowEdge = { from: string; to: string; dashed?: boolean; arrow?: boolean };
@@ -41,11 +48,13 @@ export type FlowTrack = {
   nodes: string[];
   /** Dots sharing this path, spread evenly over the loop. */
   dots?: number;
-  /** Delay in seconds, so parallel tracks alternate. */
+  /** Delay in seconds (negative = already under way), so parallel tracks alternate. */
   offset?: number;
 };
 
 export type FlowNote = { x: number; y: number; text: string };
+
+export type FlowType = { label: number; small: number };
 
 export type FlowLayout = {
   width: number;
@@ -54,8 +63,7 @@ export type FlowLayout = {
   edges: FlowEdge[];
   tracks: FlowTrack[];
   notes?: FlowNote[];
-  /** Font sizes for the label and the kicker/sub lines. Narrow layouts use larger type. */
-  type?: { label: number; small: number };
+  type?: FlowType;
 };
 
 type Props = {
@@ -70,10 +78,25 @@ type Props = {
 };
 
 type Point = { x: number; y: number };
+type Dir = "up" | "down" | "left" | "right";
+type Lit = { arrive: number; period: number };
+type DotPath = { d: string; dots: number; offset: number };
+type NodeMap = Map<string, FlowNode>;
+
+const DEFAULT_TYPE: FlowType = { label: 15, small: 13 };
+const LINE_GAP = 3;
 
 const centre = (n: FlowNode): Point => ({ x: n.x + n.w / 2, y: n.y + n.h / 2 });
 const anchorOf = (n: FlowNode): Point => (n.anchor === "top" ? { x: n.x + n.w / 2, y: n.y + 12 } : centre(n));
 const inside = (p: Point, n: FlowNode) => p.x >= n.x && p.x <= n.x + n.w && p.y >= n.y && p.y <= n.y + n.h;
+const manhattan = (p: Point, q: Point) => Math.abs(p.x - q.x) + Math.abs(p.y - q.y);
+const lines = (value: string | string[] | undefined): string[] => (value === undefined ? [] : Array.isArray(value) ? value : [value]);
+
+function nodeById(byId: NodeMap, id: string): FlowNode {
+  const node = byId.get(id);
+  if (!node) throw new Error(`FlowDiagram: unknown node "${id}"`);
+  return node;
+}
 
 /** Orthogonal route from p to q. The elbow corner is the one that sits inside either box, so the dot rides along a bar instead of cutting across empty space. */
 function route(p: Point, q: Point, a: FlowNode, b: FlowNode): Point[] {
@@ -85,38 +108,43 @@ function route(p: Point, q: Point, a: FlowNode, b: FlowNode): Point[] {
   return [vh, q];
 }
 
-const manhattan = (p: Point, q: Point) => Math.abs(p.x - q.x) + Math.abs(p.y - q.y);
-
-type TrackGeometry = { d: string; arrivals: Map<string, number> };
-
-function trackGeometry(track: FlowTrack, byId: Map<string, FlowNode>): TrackGeometry {
-  const nodes = track.nodes.map((id) => {
-    const node = byId.get(id);
-    if (!node) throw new Error(`FlowDiagram: track references unknown node "${id}"`);
-    return node;
-  });
-  const first = nodes[0];
-  let point = anchorOf(first);
+/** Path through the track's anchors, plus every arrival as a fraction of the path length. */
+function trackGeometry(track: FlowTrack, byId: NodeMap): { d: string; arrivals: { id: string; at: number }[] } {
+  const nodes = track.nodes.map((id) => nodeById(byId, id));
+  let point = anchorOf(nodes[0]);
   let d = `M${point.x} ${point.y}`;
   let length = 0;
-  const distances = new Map<string, number>([[first.id, 0]]);
-
+  const distances = [{ id: nodes[0].id, at: 0 }];
   nodes.slice(1).forEach((node, i) => {
-    const target = anchorOf(node);
-    for (const step of route(point, target, nodes[i], node)) {
+    for (const step of route(point, anchorOf(node), nodes[i], node)) {
       d += ` L${step.x} ${step.y}`;
       length += manhattan(point, step);
       point = step;
     }
-    if (!distances.has(node.id)) distances.set(node.id, length);
+    distances.push({ id: node.id, at: length });
   });
-
-  const arrivals = new Map<string, number>();
-  distances.forEach((at, id) => arrivals.set(id, length === 0 ? 0 : at / length));
-  return { d, arrivals };
+  return { d, arrivals: distances.map(({ id, at }) => ({ id, at: length === 0 ? 0 : at / length })) };
 }
 
-type Dir = "up" | "down" | "left" | "right";
+/** One lit overlay per (track, arrival). A node on two tracks, or visited twice, lights every time a dot reaches it. */
+function lighting(layout: FlowLayout, byId: NodeMap, loopSeconds: number): { lit: Map<string, Lit[]>; paths: DotPath[] } {
+  const lit = new Map<string, Lit[]>();
+  const paths: DotPath[] = [];
+  for (const track of layout.tracks) {
+    const dots = Math.max(1, track.dots ?? 1);
+    const offset = track.offset ?? 0;
+    const { d, arrivals } = trackGeometry(track, byId);
+    paths.push({ d, dots, offset });
+    // A node sees `dots` arrivals per loop, so its flash period is loop/dots.
+    // The dot's delay shifts every arrival by the same amount.
+    const period = loopSeconds / dots;
+    for (const { id, at } of arrivals) {
+      const phase = at * dots + offset / period;
+      lit.set(id, [...(lit.get(id) ?? []), { arrive: ((phase % 1) + 1) % 1, period }]);
+    }
+  }
+  return { lit, paths };
+}
 
 function edgeGeometry(a: FlowNode, b: FlowNode): { d: string; tip: Point; dir: Dir } {
   const xOverlap = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
@@ -152,58 +180,76 @@ function arrowhead({ x, y }: Point, dir: Dir): string {
   }
 }
 
-type Lit = { arrive: number; period: number };
-
-function lighting(layout: FlowLayout, byId: Map<string, FlowNode>, loopSeconds: number) {
-  const lit = new Map<string, Lit>();
-  const paths: { d: string; dots: number; offset: number }[] = [];
-  for (const track of layout.tracks) {
-    const dots = Math.max(1, track.dots ?? 1);
-    const offset = track.offset ?? 0;
-    const { d, arrivals } = trackGeometry(track, byId);
-    paths.push({ d, dots, offset });
-    const period = loopSeconds / dots;
-    arrivals.forEach((fraction, id) => {
-      if (lit.has(id)) return;
-      // A node sees `dots` arrivals per loop, so its flash period is loop/dots.
-      // The dot's negative delay shifts every arrival earlier by the same amount.
-      const phase = fraction * dots + offset / period;
-      lit.set(id, { arrive: ((phase % 1) + 1) % 1, period });
-    });
-  }
-  return { lit, paths };
+function Edges({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
+  return (
+    <g fill="none" stroke="var(--accent-2)" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
+      {layout.edges.map((edge) => {
+        const { d, tip, dir } = edgeGeometry(nodeById(byId, edge.from), nodeById(byId, edge.to));
+        return (
+          <g key={`${edge.from}-${edge.to}`} strokeDasharray={edge.dashed ? "4 4" : undefined}>
+            <path d={d} />
+            {edge.arrow !== false && <path d={arrowhead(tip, dir)} strokeDasharray="none" />}
+          </g>
+        );
+      })}
+    </g>
+  );
 }
 
-function TextBlock({ node, type }: { node: FlowNode; type: { label: number; small: number } }) {
-  const subLines = node.sub === undefined ? [] : Array.isArray(node.sub) ? node.sub : [node.sub];
+function Dots({ paths, loopSeconds }: { paths: DotPath[]; loopSeconds: number }) {
+  // Drawn before the boxes so dots pass beneath each one.
+  return (
+    <g aria-hidden="true">
+      {paths.map((path, i) =>
+        Array.from({ length: path.dots }, (_, k) => (
+          <circle
+            key={`${i}-${k}`}
+            className="flow-dot"
+            r="4.5"
+            fill="var(--accent-2)"
+            style={{ offsetPath: `path("${path.d}")`, animationDelay: `${path.offset - (k * loopSeconds) / path.dots}s` }}
+          />
+        )),
+      )}
+    </g>
+  );
+}
+
+function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
   const muted = "var(--text-muted)";
   const ink = node.variant === "ghost" ? muted : "var(--text)";
-  const lines = [
+  const c = centre(node);
+  if (node.vertical) {
+    return (
+      <text x={c.x} y={c.y + type.label * 0.35} textAnchor="middle" fontSize={type.label} fontWeight={700} fill={ink} className="flow-text flow-label" transform={`rotate(-90 ${c.x} ${c.y})`}>
+        {lines(node.label).join(" ")}
+      </text>
+    );
+  }
+  const rows = [
     ...(node.kicker ? [{ text: node.kicker, size: type.small, weight: 500, fill: muted }] : []),
-    { text: node.label, size: type.label, weight: 700, fill: ink },
-    ...subLines.map((text) => ({ text, size: type.small, weight: 400, fill: muted })),
+    ...lines(node.label).map((text) => ({ text, size: type.label, weight: 700, fill: ink })),
+    ...lines(node.sub).map((text) => ({ text, size: type.small, weight: 400, fill: muted })),
   ];
-  const gap = 3;
-  const total = lines.reduce((sum, line) => sum + line.size, 0) + gap * (lines.length - 1);
-  const top = node.align === "start" ? node.y + 12 : centre(node).y - total / 2;
-  const x = node.align === "start" ? node.x + 14 : centre(node).x;
-  let baseline = top;
+  const total = rows.reduce((sum, row) => sum + row.size, 0) + LINE_GAP * (rows.length - 1);
+  const start = node.align === "start" ? { x: node.x + 14, y: node.y + 12 } : { x: c.x, y: c.y - total / 2 };
+  let baseline = start.y;
   return (
     <>
-      {lines.map((line, i) => {
-        baseline += line.size + (i === 0 ? 0 : gap);
+      {rows.map((row, i) => {
+        baseline += row.size + (i === 0 ? 0 : LINE_GAP);
         return (
           <text
             key={`${node.id}-${i}`}
-            x={x}
-            y={baseline - line.size * 0.15}
+            x={start.x}
+            y={baseline - row.size * 0.15}
             textAnchor={node.align === "start" ? "start" : "middle"}
-            fontSize={line.size}
-            fontWeight={line.weight}
-            fill={line.fill}
-            className={line.weight === 700 ? "flow-text flow-label" : "flow-text"}
+            fontSize={row.size}
+            fontWeight={row.weight}
+            fill={row.fill}
+            className={row.weight === 700 ? "flow-text flow-label" : "flow-text"}
           >
-            {line.text}
+            {row.text}
           </text>
         );
       })}
@@ -211,102 +257,37 @@ function TextBlock({ node, type }: { node: FlowNode; type: { label: number; smal
   );
 }
 
-function Layout({
-  layout,
-  loopSeconds,
-  titleId,
-  descId,
-  title,
-  desc,
-  className,
-}: {
-  layout: FlowLayout;
-  loopSeconds: number;
-  titleId: string;
-  descId: string;
-  title: string;
-  desc: string;
-  className: string;
-}) {
-  const byId = new Map(layout.nodes.map((n) => [n.id, n]));
-  const { lit, paths } = lighting(layout, byId, loopSeconds);
-  const type = layout.type ?? { label: 14, small: 11 };
-
+function Nodes({ layout, lit, type }: { layout: FlowLayout; lit: Map<string, Lit[]>; type: FlowType }) {
   return (
-    <svg
-      viewBox={`0 0 ${layout.width} ${layout.height}`}
-      role="img"
-      aria-labelledby={`${titleId} ${descId}`}
-      className={`flow-svg h-auto w-full ${className}`}
-      style={{ "--loop": `${loopSeconds}s` } as CSSProperties}
-    >
-      <title id={titleId}>{title}</title>
-      <desc id={descId}>{desc}</desc>
-
-      <g fill="none" stroke="var(--accent-2)" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
-        {layout.edges.map((edge) => {
-          const a = byId.get(edge.from);
-          const b = byId.get(edge.to);
-          if (!a || !b) throw new Error(`FlowDiagram: edge references unknown node "${edge.from}" or "${edge.to}"`);
-          const { d, tip, dir } = edgeGeometry(a, b);
-          return (
-            <g key={`${edge.from}-${edge.to}`} strokeDasharray={edge.dashed ? "4 4" : undefined}>
-              <path d={d} />
-              {edge.arrow !== false && <path d={arrowhead(tip, dir)} strokeDasharray="none" />}
-            </g>
-          );
-        })}
-      </g>
-
-      {/* Dots are drawn before the boxes so they pass beneath each one. */}
-      <g aria-hidden="true">
-        {paths.map((path, i) =>
-          Array.from({ length: path.dots }, (_, k) => (
-            <circle
-              key={`${i}-${k}`}
-              className="flow-dot"
-              r="4.5"
-              fill="var(--accent-2)"
-              style={{
-                offsetPath: `path("${path.d}")`,
-                animationDelay: `${path.offset - (k * loopSeconds) / path.dots}s`,
-              }}
-            />
-          )),
-        )}
-      </g>
-
+    <>
       {layout.nodes.map((node) => {
-        const glow = lit.get(node.id);
         const stroke = node.variant === "accent" ? "var(--accent-2)" : node.variant === "ghost" ? "var(--text-muted)" : "var(--text)";
+        const box = { x: node.x, y: node.y, width: node.w, height: node.h };
         return (
-          <g key={node.id} className="flow-node" data-variant={node.variant ?? "solid"}>
-            <rect
-              x={node.x}
-              y={node.y}
-              width={node.w}
-              height={node.h}
-              fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"}
-              stroke={stroke}
-              strokeWidth={node.variant === "accent" ? 2 : 1}
-              strokeDasharray={node.variant === "ghost" ? "4 3" : undefined}
-            />
-            {glow && (
-              <rect
-                className="flow-lit"
-                x={node.x}
-                y={node.y}
-                width={node.w}
-                height={node.h}
-                fill="var(--flow-lit)"
-                style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties}
-              />
-            )}
-            <TextBlock node={node} type={type} />
+          <g key={node.id} className="flow-node">
+            <rect {...box} fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"} stroke={stroke} strokeWidth={node.variant === "accent" ? 2 : 1} strokeDasharray={node.variant === "ghost" ? "4 3" : undefined} />
+            {(lit.get(node.id) ?? []).map((glow, i) => (
+              <rect key={i} className="flow-lit" {...box} fill="var(--flow-lit)" style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties} />
+            ))}
+            <NodeText node={node} type={type} />
           </g>
         );
       })}
+    </>
+  );
+}
 
+function Layout({ layout, loopSeconds, ids, title, desc, className }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string }) {
+  const byId: NodeMap = new Map(layout.nodes.map((n) => [n.id, n]));
+  const { lit, paths } = lighting(layout, byId, loopSeconds);
+  const type = layout.type ?? DEFAULT_TYPE;
+  return (
+    <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`h-auto w-full ${className}`} style={{ "--loop": `${loopSeconds}s` } as CSSProperties}>
+      <title id={ids[0]}>{title}</title>
+      <desc id={ids[1]}>{desc}</desc>
+      <Edges layout={layout} byId={byId} />
+      <Dots paths={paths} loopSeconds={loopSeconds} />
+      <Nodes layout={layout} lit={lit} type={type} />
       {layout.notes?.map((note) => (
         <text key={`${note.x}-${note.y}`} x={note.x} y={note.y} fontSize={type.small} fontWeight={500} fill="var(--text-muted)" className="flow-text">
           {note.text}
@@ -320,14 +301,10 @@ export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 
   const uid = useId();
   const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px");
   return (
-    <figure
-      ref={ref}
-      data-animate={active ? "on" : undefined}
-      className={`flow border-t-[3px] border-ink bg-surface p-5 md:p-8 ${className}`}
-    >
-      {/* Two layouts, one per breakpoint. The hidden one is display:none, so it has no animation cost and screen readers skip it. */}
-      <Layout layout={wide} loopSeconds={loopSeconds} titleId={`${uid}-wt`} descId={`${uid}-wd`} title={title} desc={desc} className="hidden md:block" />
-      <Layout layout={narrow} loopSeconds={loopSeconds} titleId={`${uid}-nt`} descId={`${uid}-nd`} title={title} desc={desc} className="md:hidden" />
+    <figure ref={ref} data-animate={active ? "on" : undefined} className={`flow border-t-[3px] border-ink bg-surface p-4 md:p-8 ${className}`}>
+      {/* One layout per breakpoint. The hidden one is display:none, so it has no animation cost and screen readers skip it. */}
+      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="hidden lg:block" />
+      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="max-w-[400px] lg:hidden" />
       <figcaption className="mt-5 max-w-measure text-sm text-muted">{caption}</figcaption>
     </figure>
   );

@@ -9,7 +9,7 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 1 — Direction | done | c51492e | Three directions at `/design-preview`; pick recorded in NOTES ("Chosen direction: C, Spec sheet"). |
 | 2 — Design system | done | b89d2ac | Tokens on `:root` + `[data-theme="dark"]`, no-flash toggle in localStorage, Archivo via `next/font`, primitives Container/Section/Card/Tag/Button/Stat/Reveal, AA contrast table in NOTES. Verified by reading the code; the Phase S screenshots show it rendering. |
 | 3 — Hero + nav | done | 1d08a21 | Sticky nav with `aria-current`, toggle, Resume (now visible on phones too), mobile menu with focus trap + Escape, skip link; hero with headline, subhead, status line (M.S. at ASU, available early 2027), two buttons, three quiet proof chips, animated medallion SVG, `.enter` stagger < 700 ms, chips above the fold at 390. Verify 4/4 pass, axe 0, e2e 48 pass (snapshots re-baselined), code-review approve, recruiter-eyes findings fixed. Checklist below. |
-| 4 — Project system + diagrams | in progress | | Started 2026-10-30. Skills loaded: frontend-design, design-direction, portfolio-facts, phase-verify. |
+| 4 — Project system + diagrams | done | HASH_PENDING | `src/data/projects.ts` (8 projects migrated verbatim), Work section with filter chips, featured cards with large Stats, 3/2/1 grid, four inline SVG diagrams on one flow engine (dots, stages light on arrival, in-view only, static under reduced motion). Verify 4/4, axe 0, e2e 62 pass, fe-reviewer and fact-checker findings fixed. Checklist below. |
 | 5 — Content updates | todo | | |
 | 6 — Knowledge graph | todo | | |
 | 7 — Lenses | todo | | |
@@ -17,6 +17,53 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 9 — Motion, a11y, perf, mobile | todo | | |
 | 10 — Pre-release review | todo | | |
 | 11 — Build, deploy, verify (G1) | todo | | |
+
+## Phase 4 checklist
+
+Closed out 2026-10-30. Skills loaded: frontend-design, design-direction, portfolio-facts, phase-verify. Design notes: `docs/REDESIGN_NOTES.md`, "Phase 4" section.
+
+- [x] lint 0/0, typecheck clean, build passes (routes `/`, `/_not-found`, `/design-preview`)
+- [x] `npm run verify -- --phase 4` passed (path `/`; 390 and 1280, light and dark). Evidence: `docs/screenshots/phase-4/verify.md`
+- [x] screenshots inspected: 390 light and dark, 1280 light and dark (Work section crops in both themes), plus per-diagram crops at 390, 768 and 1280 with rendered text sizes measured (minimum 12.0 px at 390, 12.3 px at 1280, 17 px at 768)
+- [x] axe: 0 violations; console: 0 errors; requests: 0 failed; overflow: 0
+- Runbook Phase 4 items:
+  - [x] 1. `src/data/projects.ts` with the runbook schema plus optional fields so nothing is dropped; every existing project migrated; `docs/screenshots/phase-4/content-diff.md` has the field mapping, both dumps and a unified diff (generated with `npm run content:dump`)
+  - [x] 2. featured cards: status badge, title, one-liner, Stats large (`text-4xl`, the only red), highlights, stack chips, links; main diagram inline, "How it works" parts and the two secondary diagrams in a native `<details>`
+  - [x] 3. grid cards 3/2/1 columns: title, one-liner, one Stat, highlights, stack, link; title is the single anchor whose `::after` covers the card (one tab stop); cards with no link have no tab stop
+  - [x] 4. hover and `:focus-visible` identical: 2 px lift (`motion-safe` only), top rule to cobalt, one shadow, arrow slides 2 px, 150 to 200 ms ease-out-quart
+  - [x] 5. Surplus pipeline, cluster network, privacy layers and Watchtower agent flow as inline SVG on tokens; dots on connectors, stages light in order (one overlay per dot arrival); loop only in view and while the tab is visible (`useInView`); static and fully lit under reduced motion; `<title>` + `<desc>` + visible caption each
+  - [x] 6. filter chips All / Production / AI/LLM / Data engineering / Hackathon as real buttons with `aria-pressed`, live count, empty state with "Show all projects"; no URL change
+  - [x] 7. cards wrapped in Reveal with a 60 to 80 ms stagger (`delay` prop, `--reveal-delay`)
+- Runbook checklist:
+  - [x] every original project still present: 8 (2 featured + 6 grid), matches NOTES §6 (2 case studies + 6 cards); e2e asserts the counts
+  - [x] impact numbers loudest element: Stat `text-4xl` on featured, `text-3xl` on grid; e2e asserts the figure is larger than the title
+  - [x] keyboard reaches each card once: e2e covers a linked and an unlinked grid card
+  - [x] diagrams animate only in view and are static with reduced motion: e2e has one test under `reducedMotion: reduce` (dots hidden, overlays opaque) and one under `no-preference` (`data-animate` on only while on screen, `flow-travel` and `flow-flash` running)
+  - [x] readable both themes: diagram text never below 12 px rendered at 390 / 768 / 1280 (measured); tokens only
+  - [x] grid reflows at 390/768/1280: `grid-cols-1 md:grid-cols-2 lg:grid-cols-3`; diagrams switch layouts at `lg`, narrow layout capped at 400 px on tablets
+- [x] `npm run test:e2e`: 62 passed, 6 skipped. The old "Featured work" block was rewritten as "Work" (6 tests) and the `featured-work-*` snapshots were replaced by `work-*` baselines; hero and experience baselines re-written because the hero gained the status line in Phase 3's close-out.
+- [x] `/code-review` equivalent: fe-reviewer (verdict WARN, 2 High, 4 Medium, 3 Low) and fact-checker (no invented facts; 2 in-scope nits). All High and Medium items fixed in this phase:
+  - High: SVG text scaled below 12 px at real viewports. Fixed: breakpoint moved from `md` to `lg`, type raised to 15/13 units, narrow layouts redrawn on a 300-unit canvas for the 278 px phone slot, figure padding 16 px on phones, Watchtower wide layout tightened.
+  - High: secondary diagrams squeezed into a 7/5 split. Fixed: stacked full width inside the details block.
+  - Medium: only the first track lit a node. Fixed: one lit overlay per (track, arrival).
+  - Medium: highlights and "How it works" paragraphs in muted 14 px. Fixed: ink at base size; muted stays for dates, credit, captions.
+  - Medium: filter chips 36 px tall. Fixed: 44 px on phones (`h-11`), 36 px from `md`.
+  - Medium: no test of the animated path. Fixed: "diagrams animate only while on screen" under `reducedMotion: no-preference`.
+  - Low: `Layout` and `FeaturedCard` over 50 lines. Partly fixed: `Edges`, `Dots`, `Nodes`, `NodeText` and `FeaturedDetails` extracted; `FeaturedCard` body is still about 80 lines of JSX, accepted.
+  - Low: focus ring relied on `:has()`. Fixed: the anchor keeps its own ring unless `@supports selector(:has(a))`.
+  - Low: dead `flow-svg` class. Fixed: removed.
+  - fact-checker: "Personal prototype" chip restored on Watchtower as a status note (rule 3); "Both spec sources" reverted to the original "Both sources".
+- [x] STATUS row updated, commit `redesign: phase 4 — project system and diagrams`
+
+### Rulings made in Phase 4
+
+- Phase 4 is a faithful migration; Section 2 facts (DevHacks, Label Lens, RC Car, Surplus metrics, Celebal additions, email, in-progress wording) wait for Phase 5 as the runbook orders them. The fact-checker's full list is the Phase 5 worklist, plus one item it found that the runbook does not name: the Tech Assistant role says "May 2026 to present" while facts 2.1 say "started June 2026"; Phase 5 aligns it.
+- Surplus AI shows the "Production" status word (facts 2.1) next to the old "in progress" status chips until Phase 5 removes the chips; both are facts on file today.
+- Status strings were normalised to the five-word vocabulary (`production`, `live`, `hackathon`, `academic`, `personal`); the old "Personal prototype" chip is kept verbatim as a status note so no wording is lost.
+- Filter facets (`tags`): `ai` = an LLM or ML model does real work (Surplus AI, Watchtower, capstone, WLAN toolkit, F1 predictor); `data` = a pipeline or dataset is the job (Surplus AI, capstone, WLAN toolkit). "Hackathon" matches nothing until Phase 5 adds DevHacks; the empty state covers it.
+- `scripts/verify-phase.mts` now forces `scroll-behavior: auto` while it steps through the page: with the site's smooth scrolling the stepped scroll never settled, so Reveal blocks below the fold stayed hidden in desktop screenshots (the first Phase 4 run showed empty cards). The e2e suite never saw this because it runs under reduced motion.
+- `tsconfig.json` gained `allowImportingTsExtensions` so `scripts/content-dump.mts` can import the data files by their real paths; `npm run content:dump` prints the plain-text render Phase 5 needs.
+- Dots animate `offset-distance` (same documented exception as the hero); the stage lighting animates opacity only, which is the overlay approach the Phase 3 review suggested for the hero (Phase 9 may port it there).
 
 ## Phase 3 checklist
 

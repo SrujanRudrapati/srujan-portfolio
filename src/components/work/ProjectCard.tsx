@@ -29,7 +29,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="after:absolute after:inset-0 after:content-[''] focus-visible:outline-none"
+              className="after:absolute after:inset-0 after:content-[''] supports-[selector(:has(a))]:focus-visible:outline-none"
             >
               {p.title}
               <span className="sr-only">, {destination}</span>
@@ -48,7 +48,7 @@ export function ProjectCard({ project, index }: { project: Project; index: numbe
         )}
 
         {p.highlights.map((h) => (
-          <p key={h} className="mt-3 text-sm text-muted">
+          <p key={h} className="mt-3 text-ink">
             {h}
           </p>
         ))}

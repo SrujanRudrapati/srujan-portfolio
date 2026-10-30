@@ -223,6 +223,26 @@ test.describe("Work", () => {
     expect(state.animate).toBe("on");
   });
 
+  test.describe("with motion allowed", () => {
+    test.use({ reducedMotion: "no-preference" });
+
+    test("diagrams animate only while on screen", async ({ page }) => {
+      const figure = page.locator(".flow").first();
+      await expect(figure).not.toHaveAttribute("data-animate", "on");
+      await figure.scrollIntoViewIfNeeded();
+      await expect(figure).toHaveAttribute("data-animate", "on");
+      const running = await figure.evaluate((el) => {
+        const svg = Array.from(el.querySelectorAll("svg")).find((s) => getComputedStyle(s).display !== "none")!;
+        const dot = getComputedStyle(svg.querySelector(".flow-dot")!);
+        const lit = getComputedStyle(svg.querySelector(".flow-lit")!);
+        return { dot: dot.display, dotAnimation: dot.animationName, litAnimation: lit.animationName };
+      });
+      expect(running).toEqual({ dot: "block", dotAnimation: "flow-travel", litAnimation: "flow-flash" });
+      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
+      await expect(figure).not.toHaveAttribute("data-animate", "on");
+    });
+  });
+
   test("has no accessibility violations", async ({ page }) => {
     await expectNoA11yViolations(page, "#work");
   });

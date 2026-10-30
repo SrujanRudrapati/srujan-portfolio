@@ -53,7 +53,7 @@ export function Work() {
                   type="button"
                   aria-pressed={pressed}
                   onClick={() => setFilter(f.id)}
-                  className={`inline-flex h-9 items-center border-2 border-ink px-3 text-sm font-medium transition-colors duration-150 ${
+                  className={`inline-flex h-11 items-center border-2 border-ink px-4 text-sm font-medium transition-colors duration-150 md:h-9 md:px-3 ${
                     pressed ? "bg-ink text-bg" : "text-ink hover:bg-ink hover:text-bg"
                   }`}
                 >
