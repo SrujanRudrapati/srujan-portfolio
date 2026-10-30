@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 to 10 done; Phase 11 waits on DECISIONS 4 and gate G1).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 to 10 done; Phase 11 stopped at gate G1, waiting on DECISIONS 4 and 10).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -16,7 +16,15 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 8 — Ask Srujan | done | db06808 | Ask panel (native dialog) from the nav and a hero prompt box; MiniSearch retrieval in the browser over `search-index.json` (both lazy); template summary plus evidence cards; grounded refusal for misses and injection; optional proxy client behind `NEXT_PUBLIC_ASK_ENDPOINT` (unset: no network calls). Worker scaffold in `worker/` (claude-sonnet-5-5, server-side refusal fallback, CORS, rate limit, 300 chars, injection stripping, leak check), dry-run builds, not deployed (G3 in DECISIONS 6). Vitest 57, e2e 114, verify 6/6. Checklist below. |
 | 9 — Motion, a11y, perf, mobile | done | 8f410bb | Lighthouse mobile median 96/100/100/100 (targets 90/90/95/95), CLS 0; axe 0 via @axe-core/playwright (CLI blocked, see checklist); 44 px targets and no overflow at 360/390/414/768/1024 (e2e); touch flows; medallion lighting on opacity overlays, paused offscreen and in hidden tabs; one easing family; OG image, Open Graph and Twitter cards, canonical. Verify 12/12, e2e 142, Vitest 57. Checklist below. |
 | 10 — Pre-release review | done | e33ba39 | `docs/REVIEW.md`: fe-reviewer and recruiter-eyes top fives (recruiter 8/10, up from 6) plus a full fact check (0 contradicted). Fixed everything not needing content: phone featured-card collapse, legible phone diagram, lens retry, 44 px targets in Ask and Skill map, 16 px lens copy, filter reset for hidden cards, inert background, print, Next 16.4.3, dead code. `/design-preview` removed (pre-approved). Content items in DECISIONS 4 (resume.pdf blocks G1), 5, 7, 8, 9. Verify 18/18, e2e 156, Vitest 57. Checklist below. |
-| 11 — Build, deploy, verify (G1) | todo | | |
+| 11 — Build, deploy, verify (G1) | blocked: awaiting decision | | Steps 1 to 3 done except `resume.pdf`: lint and typecheck clean, CI-parity build smoke-tested at `localhost:4000/srujan-portfolio/` (all assets 200, no console errors, lenses and Ask load their JSON), `v1-before-redesign` tagged on `main` locally. Stopped at gate G1 (DECISIONS 10): needs `public/resume.pdf` (DECISIONS 4) and a reply `merge`. Steps 4 to 6 (merge, push, live verify, Lighthouse on the live URL, final note) run after that. |
+
+## Phase 11 progress (stopped at gate G1)
+
+- [x] 1. lint and typecheck clean; production build with `NEXT_PUBLIC_BASE_PATH=/srujan-portfolio` (CI parity); `out/` has `.nojekyll`, `index.html`, `graph.json`, `search-index.json`, `og.png`; every root-relative reference in `index.html` carries the prefix (14 of 14); served at `http://localhost:4000/srujan-portfolio/` and smoke-tested (home 200, 11 `_next` assets 200, no responses at 400 or above, no console errors, Timeline lens loads `graph.json`, Ask loads `search-index.json` and answers "What runs in production?" with Surplus AI).
+- [ ] 1 (part). `resume.pdf` in `out/`: missing; `npm run release:check` fails on it. Waiting on Srujan (DECISIONS 4).
+- [x] 2. `git tag v1-before-redesign main` (local; pushed with `main` in step 4).
+- [x] 3. STOP: DECISIONS 10 asks for `merge`, after `public/resume.pdf` is committed.
+- [ ] 4 to 6: merge, push, deploy through the existing workflow, live checks, Lighthouse on the live URL, final note. Not started (gate G1).
 
 ## Phase 10 checklist
 
