@@ -20,10 +20,10 @@ export const profile = {
   githubLabel: "github.com/SrujanRudrapati",
   resume: "/resume.pdf",
   // Hero proof chips. Each one restates a fact that already appears on the
-  // site: the Surplus AI status line, the About paragraph, and Certifications.
+  // site: the Surplus AI status line, the Celebal role in Experience, and Certifications.
   proof: [
     "Surplus AI, in production at ASU Surplus",
-    "Two years of data engineering at Celebal",
+    "Celebal: a pipeline handling about 10 million records a day",
     "Databricks Certified Data Engineer Professional",
   ],
 };
@@ -33,5 +33,4 @@ export const about = [
   "I'm a data engineer finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University.",
   "Before that I spent two years at Celebal Technologies building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing, and e-commerce.",
   "Lately I build LLM systems that run on real data, like a private, offline AI system for ASU Surplus.",
-  "I graduate in December 2026 and I'm available early 2027.",
 ];

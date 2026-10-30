@@ -82,7 +82,7 @@ test.describe("Hero", () => {
     const chips = hero.getByRole("list", { name: "Highlights" });
     await expect(chips.getByRole("listitem")).toHaveText([
       "Surplus AI, in production at ASU Surplus",
-      "Two years of data engineering at Celebal",
+      "Celebal: a pipeline handling about 10 million records a day",
       "Databricks Certified Data Engineer Professional",
     ]);
 

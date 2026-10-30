@@ -41,4 +41,12 @@ Nothing below blocks a phase; each has a default already applied. Answer wheneve
 
 ## Answered
 
-_None yet._
+Srujan's replies of 2026-10-30, applied in the Phase 11 session:
+
+- **4. Resume file**: done. `public/resume.pdf` committed in da3bf69; `npm run release:check` passes.
+- **5. How CI gets `graph.json`**: "switch CI". The workflow now uses Node 22, runs `npm run lint && npm run test:unit`, then `npm run build` (prebuild validates the graph and regenerates the JSON). Checkout, configure-pages, cache, upload and deploy steps are unchanged.
+- **6. Ask Worker (G3)**: later. Not deployed; Ask stays retrieval-only. The commands above remain valid when you want it.
+- **7. Hero proof chip**: recommended change applied, worded as "Celebal: a pipeline handling about 10 million records a day". The recommendation said "pipelines", but the site (`src/data/graph/roles.ts`) and facts 2.4 describe one pipeline, so the chip uses the singular.
+- **8. Repeated availability sentence**: recommended change applied (counts as the G2 yes). About's last sentence, "I graduate in December 2026 and I'm available early 2027.", was removed; the hero status line and Contact still say it.
+- **9. Intern title**: default kept, "Intern, Data Engineering, Celebal Technologies, Jaipur, India, July to August 2022".
+- **10. Gate G1**: "merge". Phase 11 steps 4 to 6 run; results in STATUS and NOTES.
