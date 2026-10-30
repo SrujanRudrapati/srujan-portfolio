@@ -551,3 +551,21 @@ Bundle: client JS 214 KB gzipped before and after (no new runtime code in Phase 
 - The hero medallion now animates opacity overlays (`.medallion-lit`) instead of `fill`, and only while on screen and the tab is visible (`AnimateInView`, the same `useInView` the project diagrams use). Reduced motion, no JavaScript, and offscreen all show every stage lit and still. Dots keep `offset-distance` (the documented exception since Phase 3).
 - Card hover shadow is a `before:` layer that fades its opacity; the card itself only translates.
 - One easing family: `--default-transition-timing-function` is the house `--ease-out-quart`, so transitions without their own `ease-` utility (including the card's shadow layer) share the curve.
+
+# Phase 11: release (2026-10-30)
+
+- Merged `redesign/v2` into `main` as 9dc7e7c (`--no-ff`) and pushed it with the rollback tag `v1-before-redesign` (78d7a7b). The Pages workflow run 41111138727 built and deployed it (build 1m1s, deploy 11s). Live: https://srujanrudrapati.github.io/srujan-portfolio/
+- Changes in the merge besides the redesign: DECISIONS 5 (CI on Node 22, `npm run lint && npm run test:unit`, then `npm run build`), 7 (hero chip with the Celebal figure) and 8 (About drops the repeated availability sentence).
+- Live checks with `curl`: 20 of 20 URLs return 200. They cover the home page, `resume.pdf` (`application/pdf`, 133,110 bytes, starts `%PDF-1.5`), `graph.json` (157 nodes, 142 edges, byte-identical to the local build), `search-index.json`, `og.png`, `sitemap.xml`, `robots.txt`, `.nojekyll`, `404.html` and every root-relative `href`/`src` in the live HTML, which includes all `_next` assets. The new chip is live and the old chip and About sentence are gone.
+
+## Lighthouse on the live URL (mobile preset, `npm run lighthouse -- <live url> 3`)
+
+| | Performance | Accessibility | Best Practices | SEO | LCP | TBT | CLS |
+|---|---|---|---|---|---|---|---|
+| Phase 0 baseline (v1 site, local export) | 97 | 100 | 100 | 100 | | | |
+| Phase 9 end (local export) | 96 | 100 | 100 | 100 | 2.6 to 2.7 s | 32 ms | 0 |
+| **Phase 11, live** (runs 100, 100, 99) | **100** | **100** | **100** | **100** | 1.58 s | 11 ms | 0 |
+
+There was an earlier three-run batch just before this one. Its output got cut off and only part of it was kept: SEO 100 on every run, median LCP 2.36 s, TBT 46 ms, CLS 0. The live score beats the local export because GitHub Pages serves compressed files with cache headers, and local `serve` does not. Simulated-throttling LCP moves by about 0.8 s between batches.
+
+- Not confirmed: the job-steps API and the job log for run 41111138727 list only Setup Pages and the cache steps, so this session could not see the new lint and test step's output. The run did succeed on the merge commit, and the deployed `graph.json` matches a local `npm run build`.

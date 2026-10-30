@@ -1,6 +1,6 @@
 # Redesign status
 
-Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fourth session: Phases 7 to 10 done; Phase 11 stopped at gate G1, waiting on DECISIONS 4 and 10).
+Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (decisions Claude took without asking) are listed under the phase that made them so later sessions inherit them. Last updated 2026-10-30 (fifth session: Phase 11 done, site live; v3 runbook not started).
 
 | Phase | Status | Commit | Notes |
 |---|---|---|---|
@@ -16,15 +16,27 @@ Ledger for `docs/REDESIGN_RUNBOOK.md` (rule 2). One row per phase. Rulings (deci
 | 8 — Ask Srujan | done | db06808 | Ask panel (native dialog) from the nav and a hero prompt box; MiniSearch retrieval in the browser over `search-index.json` (both lazy); template summary plus evidence cards; grounded refusal for misses and injection; optional proxy client behind `NEXT_PUBLIC_ASK_ENDPOINT` (unset: no network calls). Worker scaffold in `worker/` (claude-sonnet-5-5, server-side refusal fallback, CORS, rate limit, 300 chars, injection stripping, leak check), dry-run builds, not deployed (G3 in DECISIONS 6). Vitest 57, e2e 114, verify 6/6. Checklist below. |
 | 9 — Motion, a11y, perf, mobile | done | 8f410bb | Lighthouse mobile median 96/100/100/100 (targets 90/90/95/95), CLS 0; axe 0 via @axe-core/playwright (CLI blocked, see checklist); 44 px targets and no overflow at 360/390/414/768/1024 (e2e); touch flows; medallion lighting on opacity overlays, paused offscreen and in hidden tabs; one easing family; OG image, Open Graph and Twitter cards, canonical. Verify 12/12, e2e 142, Vitest 57. Checklist below. |
 | 10 — Pre-release review | done | e33ba39 | `docs/REVIEW.md`: fe-reviewer and recruiter-eyes top fives (recruiter 8/10, up from 6) plus a full fact check (0 contradicted). Fixed everything not needing content: phone featured-card collapse, legible phone diagram, lens retry, 44 px targets in Ask and Skill map, 16 px lens copy, filter reset for hidden cards, inert background, print, Next 16.4.3, dead code. `/design-preview` removed (pre-approved). Content items in DECISIONS 4 (resume.pdf blocks G1), 5, 7, 8, 9. Verify 18/18, e2e 156, Vitest 57. Checklist below. |
-| 11 — Build, deploy, verify (G1) | blocked: awaiting decision | | Steps 1 to 3 done except `resume.pdf`: lint and typecheck clean, CI-parity build smoke-tested at `localhost:4000/srujan-portfolio/` (all assets 200, no console errors, lenses and Ask load their JSON), `v1-before-redesign` tagged on `main` locally. Stopped at gate G1 (DECISIONS 10): needs `public/resume.pdf` (DECISIONS 4) and a reply `merge`. Steps 4 to 6 (merge, push, live verify, Lighthouse on the live URL, final note) run after that. |
+| 11 — Build, deploy, verify (G1) | done | 9dc7e7c | `redesign/v2` merged `--no-ff` into `main` and pushed with tag `v1-before-redesign`; Pages run 41111138727 deployed it. Live at https://srujanrudrapati.github.io/srujan-portfolio/ : 20 of 20 URLs 200 (home, `resume.pdf`, `graph.json`, `search-index.json`, every asset in the HTML). Lighthouse mobile live median 100/100/100/100, LCP 1.58 s, CLS 0 (NOTES, "Phase 11"). DECISIONS 4, 5, 7, 8, 9, 10 answered; 6 (Worker) left for later. Checklist below. |
 
-## Phase 11 progress (stopped at gate G1)
+## Phase 11 checklist
 
 - [x] 1. lint and typecheck clean; production build with `NEXT_PUBLIC_BASE_PATH=/srujan-portfolio` (CI parity); `out/` has `.nojekyll`, `index.html`, `graph.json`, `search-index.json`, `og.png`; every root-relative reference in `index.html` carries the prefix (14 of 14); served at `http://localhost:4000/srujan-portfolio/` and smoke-tested (home 200, 11 `_next` assets 200, no responses at 400 or above, no console errors, Timeline lens loads `graph.json`, Ask loads `search-index.json` and answers "What runs in production?" with Surplus AI).
 - [x] 1 (part). `resume.pdf` in `out/`: DECISIONS 4 done. Srujan added `public/resume.pdf` (PDF 1.5, 133 KB), committed in da3bf69; after a CI-parity rebuild `npm run release:check` passes (9 required files, 3 root-relative links resolve).
 - [x] 2. `git tag v1-before-redesign main` (local; pushed with `main` in step 4).
 - [x] 3. STOP: DECISIONS 10 asks for `merge`, after `public/resume.pdf` is committed.
-- [ ] 4 to 6: merge, push, deploy through the existing workflow, live checks, Lighthouse on the live URL, final note. Not started (gate G1).
+- [x] DECISIONS 10 answered `merge` (2026-10-30). Before the merge, on `redesign/v2`: `release:check` fixed (b00a3fb, defaults to the Pages base path and rebuilds first), v3 runbook committed as docs only (702fd6a, not started), DECISIONS 5, 7, 8 applied (aa61306). Lint, typecheck, Vitest 57, `release:check` ok, e2e 153 pass plus 3 Hero visual snapshots re-baselined for the new chip (mobile fold re-checked; the chip wraps to two lines at 390 and stays above the fold).
+- [x] 4. `git checkout main && git merge --no-ff redesign/v2` (9dc7e7c), pushed `main` and `v1-before-redesign`. Deploy used the existing workflow; its only edits are the DECISIONS 5 build steps and Node 22. The Worker is not deployed, so `NEXT_PUBLIC_ASK_ENDPOINT` stays unset.
+- [x] 5. Live checks: home, `resume.pdf` (`application/pdf`, 133,110 bytes), `graph.json` (identical to the local build), `search-index.json` and every asset URL in the HTML all return 200, with no 404s. Lighthouse mobile on the live URL: 100/100/100/100 median, recorded in NOTES next to the Phase 0 baseline (97/100/100/100).
+- [ ] 5 (part). Not confirmed: the CI log for run 41111138727 did not show the new lint and unit-test step's output (the API listed only three steps). Check the run page once by hand.
+- [x] 6. Phase 11 done.
+- `/code-review` and the agents were not run: the runbook assigns no agents to Phase 11, and the copy edits (DECISIONS 7, 8) were checked by hand against facts 2.4 and `roles.ts:68`.
+
+### What Srujan still has to do by hand
+
+- Optional: deploy the Ask Worker and set `NEXT_PUBLIC_ASK_ENDPOINT` (DECISIONS 6). Without it, Ask answers from the graph only.
+- Optional: answer DECISIONS 1 to 3 (Label Lens date, DevHacks stack, cluster model split). Defaults are live.
+- Run the runbook §12 checklist on the live site (private window, both themes, phone and desktop, every lens, five Ask questions).
+- The v3 runbook (`docs/REDESIGN_V3_RUNBOOK.md`) is committed but not started.
 
 ## Phase 10 checklist
 
