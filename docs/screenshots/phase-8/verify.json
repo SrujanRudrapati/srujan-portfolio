@@ -1,0 +1,74 @@
+{
+  "phase": "8",
+  "generatedAt": "2026-10-30T07:03:06.046Z",
+  "runs": [
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-mobile-light.png",
+      "foldScreenshot": "home-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-mobile-dark.png",
+      "foldScreenshot": "home-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "tablet",
+      "theme": "light",
+      "screenshot": "home-tablet-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "tablet",
+      "theme": "dark",
+      "screenshot": "home-tablet-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import type { CSSProperties } from "react";
 import { profile } from "@/content/portfolio";
+import { HeroAsk } from "./ask/HeroAsk";
 import { Button } from "./Button";
 import { MedallionDiagram } from "./MedallionDiagram";
 import { Container, TagList } from "./ui";
@@ -36,6 +37,9 @@ export function Hero() {
 
           <div className="enter mt-8" style={enter(3)}>
             <TagList items={profile.proof} label="Highlights" size="md" tone="quiet" />
+          </div>
+          <div className="enter mt-6" style={enter(3)}>
+            <HeroAsk />
           </div>
         </div>
 

@@ -46,3 +46,8 @@ PORTFOLIO_BRIEF.md
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Ask proxy (worker/) build output and local state
+worker/node_modules/
+worker/dist/
+worker/.wrangler/

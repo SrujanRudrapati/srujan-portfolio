@@ -16,7 +16,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": "~80% less processing time per item, about 15 min down to about 3 min; ~10 min to list a 100+ unit pallet, instead of 1 to 2 hours; 14B Qwen model across four Mac minis, offline, via MLX"
+    "metrics": "~80% less processing time per item, about 15 min down to about 3 min; ~10 min to list a 100+ unit pallet, instead of 1 to 2 hours; 14B Qwen model across four Mac minis, offline, via MLX",
+    "skills": "MLX, Flask, Bash, Apple Vision OCR, Qwen 14B, Llama 3B, local LLM serving",
+    "text": "Private, offline AI system for ASU Surplus Built on the job, in production Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual. One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet. Handles identification, condition grading, pricing, label printing, and database export. Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word. Merge rules keyed on serial number, so a low-quality read never overwrites good data. Traced repeated cluster failures to macOS permissions and network routing. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Five-node cluster. Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually. USB spec collector. A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number. Camera inventory scanner. For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts). Merge logic. Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine. Surplus AI app. A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Launchers. One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
   },
   {
     "id": "project-devhacks-cubbie",
@@ -34,7 +36,9 @@
       "#project-devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
-    "metrics": "1st place, Track 1, chosen by public student vote; 82 submissions from 350+ students; 493 automated tests in CI for Receipts"
+    "metrics": "1st place, Track 1, chosen by public student vote; 82 submissions from 350+ students; 493 automated tests in CI for Receipts",
+    "skills": "",
+    "text": "Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout. Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes. Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI. Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
   },
   {
     "id": "project-label-lens",
@@ -53,7 +57,9 @@
       "#project-label-lens",
       "https://label-lens-iota.vercel.app"
     ],
-    "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 unit and end-to-end tests"
+    "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 unit and end-to-end tests",
+    "skills": "Next.js, TypeScript, Anthropic Claude API, zod, Vitest, Playwright",
+    "text": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
   },
   {
     "id": "project-supply-chain-watchtower",
@@ -72,7 +78,9 @@
     "evidence": [
       "#project-supply-chain-watchtower"
     ],
-    "metrics": "3 agents in sequence on the Claude API"
+    "metrics": "3 agents in sequence on the Claude API",
+    "skills": "Python, Anthropic Claude API, CrewAI, RAG, vector databases (ChromaDB), agentic workflows",
+    "text": "Multi-agent LLM system Personal project, built solo Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code."
   },
   {
     "id": "project-demand-forecasting",
@@ -90,7 +98,9 @@
     "evidence": [
       "#project-demand-forecasting"
     ],
-    "metrics": "27.7% WAPE vs. 38.5% naive baseline; about 28% lower simulated holding cost"
+    "metrics": "27.7% WAPE vs. 38.5% naive baseline; about 28% lower simulated holding cost",
+    "skills": "Python, LightGBM, Prophet, scikit-learn, forecasting",
+    "text": "Forecasting demand across 250 SKU and warehouse series, with a strict time-based test window. MS capstone, team of four Turned the forecast into a reorder-point policy that cuts simulated holding cost about 28% at comparable service levels."
   },
   {
     "id": "project-aws-cicd-pipeline",
@@ -107,7 +117,9 @@
       "#project-aws-cicd-pipeline",
       "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "Terraform, Docker, GitHub Actions, AWS, CI/CD, ECR",
+    "text": "Multi-tier AWS environment in Terraform, parameterized so one codebase deploys dev or prod. GitHub Actions runs tests on every push to main, builds a Docker image, pushes to ECR, and triggers a Terraform deploy."
   },
   {
     "id": "project-wlan-forensics-toolkit",
@@ -125,7 +137,9 @@
     "evidence": [
       "#project-wlan-forensics-toolkit"
     ],
-    "metrics": "100,000+ WPA2-encrypted packets parsed"
+    "metrics": "100,000+ WPA2-encrypted packets parsed",
+    "skills": "Python, Pyshark, NetworkX, scikit-learn, clustering, anomaly detection",
+    "text": "Rebuilds the network topology as a directed graph and classifies device types with K-Means clustering. Built as a TA for ACO 430 under Prof. Feng Wang A Z-score detector on top caught a live denial-of-service deauthentication attack."
   },
   {
     "id": "project-f1-race-predictor",
@@ -141,7 +155,9 @@
     "evidence": [
       "#project-f1-race-predictor"
     ],
-    "metrics": "80% top-3 accuracy vs. 73% baseline"
+    "metrics": "80% top-3 accuracy vs. 73% baseline",
+    "skills": "Python, scikit-learn, HistGradientBoosting, feature engineering",
+    "text": "Ranks drivers by win probability, with rolling features shifted forward to prevent look-ahead leakage. Backtested on 44 held-out races: 52% top-1 and 80% top-3 accuracy, against a 43% / 73% baseline."
   },
   {
     "id": "project-flask-on-kubernetes",
@@ -156,7 +172,9 @@
     "evidence": [
       "#project-flask-on-kubernetes"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "Docker, docker-compose, Kubernetes, Flask",
+    "text": "Flask API with Postgres and Redis in a multi-stage Dockerfile, run locally through docker-compose and deployed to a local kind cluster."
   },
   {
     "id": "project-java-group-chat",
@@ -171,7 +189,9 @@
     "evidence": [
       "#project-java-group-chat"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "Java, Swing, AWT, TCP sockets",
+    "text": "Multi-client chat in Core Java. A server handles concurrent TCP socket connections and broadcasts messages, with client and server code kept modular."
   },
   {
     "id": "project-gesture-rc-car",
@@ -187,7 +207,9 @@
     "evidence": [
       "#project-gesture-rc-car"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "Arduino C++, ADXL335, RF HT12E/HT12D, L298, Gazebo",
+    "text": "An RC car steered by hand gestures, read by an accelerometer and sent over RF. B.Tech major project, team of three Arduino C++, ADXL335 accelerometer, RF modules with HT12E/HT12D encoder and decoder, L298 motor driver, IR obstacle detection; tested in Gazebo simulation."
   },
   {
     "id": "role-tech-assistant-asu",
@@ -202,7 +224,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "Power BI",
+    "text": "Arizona State University Tempe, AZ Built Surplus AI, a private, offline AI system for ASU Surplus, now in production. Built a Power BI dashboard on asset sorting data showing where items stall. Advise university departments and outside buyers on what equipment fits their needs."
   },
   {
     "id": "role-teaching-assistant-asu",
@@ -217,7 +241,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": "40+ students in office hours"
+    "metrics": "40+ students in office hours",
+    "skills": "",
+    "text": "Arizona State University Network Security & Wireless Networks, Glendale, AZ Designed hands-on labs for two 400-level networking courses covering traffic analysis and packet-level debugging. Held office hours for 40+ students. Built and presented the WLAN forensics toolkit to the class."
   },
   {
     "id": "role-associate-celebal",
@@ -232,7 +258,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": "about 50% less time-to-insight; about 10 million records a day; about 30% less downtime"
+    "metrics": "about 50% less time-to-insight; about 10 million records a day; about 30% less downtime",
+    "skills": "Databricks, Spark, dbt, Delta Lake, Kafka, medallion architecture, Microsoft Purview, Apache Atlas, Unity Catalog, Fabric, Data Factory, Glue, S3, Redshift, Power BI, SQL, feature engineering, data lineage, metadata management",
+    "text": "Celebal Technologies Jaipur, India A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks. Telehealth client in New Zealand, Microsoft Fabric. Clinical and operations teams were waiting days for reports. I designed the Lakehouse architecture and coordinated a five-person team. Time-to-insight dropped about 50%, and the dashboards ended up in their weekly operational meetings. A US materials engineering client, AWS. Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems, and was on call for it. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them. A major fashion e-commerce client, Databricks. Kafka and Spark pipelines on Databricks modeling impressions, clicks, conversions, spend, and attribution, with Power BI dashboards on top. A major US utility, data governance (10 months). Their Microsoft Purview catalog was maintained by hand. I built automation on Databricks that pushed entities and custom classifications into Purview on a schedule, plus Apache Atlas lineage pipelines and a business glossary mapped to their governance policies. Medallion architecture on Databricks. Built bronze, silver, and gold layers plus a serving layer on Azure Databricks and Delta Lake. Wrote the Spark transformations and dbt models. A US medical device manufacturer. Audited their existing Azure Data Factory pipelines before changing anything, and shipped updates with zero disruption to production. A large FMCG client. Data governance engineer, using Unity Catalog alongside Microsoft Purview to manage access, lineage, and classification across the Databricks workspace. Production ML pipeline. Built the Spark and Databricks pipelines feeding a production machine learning model, worked with the data science team on feature engineering, and built the serving layer that delivered model-ready data. A/B testing. Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results. Performance and cost. Tuned Spark jobs and SQL on Databricks for performance and cost. Code review and mentoring. Reviewed teammates' code as senior data engineer on one project, and mentored two interns. Pre-sales. Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team."
   },
   {
     "id": "role-intern-celebal",
@@ -247,7 +275,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": "Celebal Technologies Jaipur, India"
   },
   {
     "id": "education-ms-asu",
@@ -261,7 +291,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": "M.S. in Data Science, Analytics, and Engineering Arizona State University"
   },
   {
     "id": "education-btech-rtu",
@@ -274,7 +306,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": "B.Tech in Computer Science Rajasthan Technical University"
   },
   {
     "id": "certification-databricks-de-professional",
@@ -288,7 +322,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "certification-aws-ai-practitioner",
@@ -303,7 +339,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "certification-azure-data-engineer",
@@ -317,7 +355,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "certification-azure-administrator",
@@ -331,7 +371,9 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-python",
@@ -346,7 +388,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-sql",
@@ -361,7 +405,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-spark",
@@ -375,7 +421,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-pyspark",
@@ -388,7 +436,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-databricks",
@@ -403,7 +453,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-delta-lake",
@@ -417,7 +469,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-unity-catalog",
@@ -431,7 +485,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-databricks-workflows",
@@ -444,7 +500,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-dbt",
@@ -457,7 +515,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-kafka",
@@ -471,7 +531,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-airflow",
@@ -484,7 +546,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-medallion-architecture",
@@ -497,7 +561,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-etl-elt",
@@ -510,7 +576,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-dimensional-modeling",
@@ -523,7 +591,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-data-warehousing",
@@ -536,7 +606,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-data-factory",
@@ -550,7 +622,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-fabric",
@@ -564,7 +638,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-adls",
@@ -578,7 +654,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-synapse",
@@ -592,7 +670,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-glue",
@@ -606,7 +686,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-s3",
@@ -620,7 +702,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-redshift",
@@ -634,7 +718,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-lambda",
@@ -648,7 +734,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-ec2",
@@ -662,7 +750,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-rds",
@@ -676,7 +766,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-iam",
@@ -690,7 +782,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-vpc",
@@ -704,7 +798,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-cloudwatch",
@@ -718,7 +814,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-ecr",
@@ -732,7 +830,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-ecs",
@@ -746,7 +846,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-snowflake",
@@ -759,7 +861,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-anthropic-claude-api",
@@ -774,7 +878,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-rag",
@@ -789,7 +895,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-vector-databases",
@@ -803,7 +911,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-crewai",
@@ -818,7 +928,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-agentic-workflows",
@@ -833,7 +945,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-mlx",
@@ -847,7 +961,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-local-llm-serving",
@@ -861,7 +977,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-lightgbm",
@@ -875,7 +993,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-prophet",
@@ -889,7 +1009,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-scikit-learn",
@@ -903,7 +1025,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-forecasting",
@@ -917,7 +1041,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-clustering",
@@ -931,7 +1057,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-anomaly-detection",
@@ -945,7 +1073,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-feature-engineering",
@@ -959,7 +1089,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-microsoft-purview",
@@ -973,7 +1105,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-apache-atlas",
@@ -987,7 +1121,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-metadata-management",
@@ -1001,7 +1137,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-data-lineage",
@@ -1015,7 +1153,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-terraform",
@@ -1029,7 +1169,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-docker",
@@ -1043,7 +1185,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-kubernetes",
@@ -1057,7 +1201,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-github-actions",
@@ -1071,7 +1217,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-ci-cd",
@@ -1085,7 +1233,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-linux",
@@ -1099,7 +1249,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-bash",
@@ -1113,7 +1265,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-flask",
@@ -1127,7 +1281,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-power-bi",
@@ -1141,7 +1297,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-tableau",
@@ -1155,7 +1313,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-qlik",
@@ -1169,7 +1329,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-apple-vision-ocr",
@@ -1182,7 +1344,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-qwen-14b",
@@ -1196,7 +1360,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-llama-3b",
@@ -1210,7 +1376,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-nextjs",
@@ -1224,7 +1392,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-typescript",
@@ -1239,7 +1409,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-zod",
@@ -1253,7 +1425,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-vitest",
@@ -1267,7 +1441,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-playwright",
@@ -1281,7 +1457,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-aws",
@@ -1295,7 +1473,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-pyshark",
@@ -1309,7 +1489,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-networkx",
@@ -1322,7 +1504,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-histgradientboosting",
@@ -1336,7 +1520,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-docker-compose",
@@ -1350,7 +1536,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-java",
@@ -1364,7 +1552,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-swing",
@@ -1377,7 +1567,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-awt",
@@ -1390,7 +1582,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-tcp-sockets",
@@ -1404,7 +1598,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-arduino-cpp",
@@ -1419,7 +1615,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-adxl335",
@@ -1433,7 +1631,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-rf-ht12e-ht12d",
@@ -1447,7 +1647,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-l298",
@@ -1461,7 +1663,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "skill-gazebo",
@@ -1475,7 +1679,9 @@
     "evidence": [
       "#skills"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-surplus-processing-time",
@@ -1490,7 +1696,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-surplus-pallet-time",
@@ -1504,7 +1712,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-surplus-model-size",
@@ -1519,7 +1729,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-devhacks-place",
@@ -1535,7 +1747,9 @@
       "#project-devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-devhacks-submissions",
@@ -1549,7 +1763,9 @@
     "evidence": [
       "#project-devhacks-cubbie"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-receipts-tests",
@@ -1565,7 +1781,9 @@
       "#project-devhacks-cubbie",
       "https://github.com/SrujanRudrapati/receipts"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-label-lens-quotes",
@@ -1581,7 +1799,9 @@
       "#project-label-lens",
       "https://label-lens-iota.vercel.app"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-label-lens-latency",
@@ -1595,7 +1815,9 @@
     "evidence": [
       "#project-label-lens"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-label-lens-tests",
@@ -1610,7 +1832,9 @@
     "evidence": [
       "#project-label-lens"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-watchtower-agents",
@@ -1625,7 +1849,9 @@
     "evidence": [
       "#project-supply-chain-watchtower"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-capstone-wape",
@@ -1640,7 +1866,9 @@
     "evidence": [
       "#project-demand-forecasting"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-capstone-holding-cost",
@@ -1654,7 +1882,9 @@
     "evidence": [
       "#project-demand-forecasting"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-wlan-packets",
@@ -1669,7 +1899,9 @@
     "evidence": [
       "#project-wlan-forensics-toolkit"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-f1-top3",
@@ -1684,7 +1916,9 @@
     "evidence": [
       "#project-f1-race-predictor"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-time-to-insight",
@@ -1698,7 +1932,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-records-per-day",
@@ -1714,7 +1950,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-downtime",
@@ -1729,7 +1967,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "metric-students",
@@ -1744,7 +1984,9 @@
     "evidence": [
       "#experience"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-higher-ed-surplus",
@@ -1757,7 +1999,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-higher-education",
@@ -1770,7 +2014,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-e-commerce",
@@ -1783,7 +2029,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-healthcare",
@@ -1796,7 +2044,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-energy",
@@ -1809,7 +2059,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-manufacturing",
@@ -1822,7 +2074,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-consumer-goods",
@@ -1835,7 +2089,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-consumer-health",
@@ -1848,7 +2104,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-supply-chain",
@@ -1861,7 +2119,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-network-security",
@@ -1874,7 +2134,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-motorsport",
@@ -1887,7 +2149,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "industry-robotics",
@@ -1900,7 +2164,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-manual-processing-bottleneck",
@@ -1913,7 +2179,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-ungrounded-ai-output",
@@ -1926,7 +2194,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-slow-reporting",
@@ -1939,7 +2209,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-pipeline-downtime",
@@ -1952,7 +2224,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-pipeline-cost",
@@ -1965,7 +2239,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-manual-governance",
@@ -1978,7 +2254,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-inventory-cost",
@@ -1991,7 +2269,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-manual-logistics-planning",
@@ -2004,7 +2284,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-deadline-overload",
@@ -2017,7 +2299,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-network-attack-detection",
@@ -2030,7 +2314,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-backtest-leakage",
@@ -2043,7 +2329,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "problem-manual-deployment",
@@ -2056,7 +2344,9 @@
     "evidence": [
       "#work"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-surplus-pipeline-diagram",
@@ -2070,7 +2360,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-surplus-network-diagram",
@@ -2084,7 +2376,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-surplus-privacy-diagram",
@@ -2098,7 +2392,9 @@
     "evidence": [
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-cooked-repo",
@@ -2112,7 +2408,9 @@
     "evidence": [
       "https://github.com/SrujanRudrapati/cooked"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-receipts-repo",
@@ -2126,7 +2424,9 @@
     "evidence": [
       "https://github.com/SrujanRudrapati/receipts"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-label-lens-live",
@@ -2140,7 +2440,9 @@
     "evidence": [
       "https://label-lens-iota.vercel.app"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-watchtower-flow-diagram",
@@ -2154,7 +2456,9 @@
     "evidence": [
       "#project-supply-chain-watchtower"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-aws-cicd-repo",
@@ -2168,7 +2472,9 @@
     "evidence": [
       "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "artifact-resume",
@@ -2182,7 +2488,9 @@
     "evidence": [
       "/resume.pdf"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "event-devhacks-win",
@@ -2196,7 +2504,9 @@
     "evidence": [
       "#project-devhacks-cubbie"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "event-asu-surplus-start",
@@ -2212,7 +2522,9 @@
       "#experience",
       "#project-surplus-ai"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   },
   {
     "id": "event-graduation",
@@ -2226,6 +2538,8 @@
     "evidence": [
       "#credentials"
     ],
-    "metrics": ""
+    "metrics": "",
+    "skills": "",
+    "text": ""
   }
 ]

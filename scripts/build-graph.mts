@@ -76,18 +76,42 @@ function validate(): string[] {
   return errors;
 }
 
-type SearchDoc = { id: string; type: GraphNode["type"]; label: string; summary: string; tags: string[]; evidence: string[]; metrics: string };
+/** One search document per node. `skills` and `text` give the retriever the stack and body copy, so a question about Spark finds the role and projects that use it, not only the skill node. */
+type SearchDoc = {
+  id: string;
+  type: GraphNode["type"];
+  label: string;
+  summary: string;
+  tags: string[];
+  evidence: string[];
+  metrics: string;
+  skills: string;
+  text: string;
+};
+
+function bodyText(n: GraphNode): string {
+  if (n.type === "project") {
+    const c = n.content;
+    return [c.oneLiner, c.context, c.problem, c.built, ...c.highlights, ...(c.details?.items.map((i) => `${i.name}. ${i.text}`) ?? [])].filter(Boolean).join(" ");
+  }
+  if (n.type === "role") {
+    const c = n.content;
+    return [c.org, c.place, c.summary, ...c.outcomes.map((o) => (o.label ? `${o.label}. ${o.text}` : o.text))].filter(Boolean).join(" ");
+  }
+  if (n.type === "education") return `${n.content.degree} ${n.content.school}`;
+  return "";
+}
 
 function searchIndex(): SearchDoc[] {
   const byId = new Map(graph.nodes.map((n) => [n.id, n]));
+  const linked = (from: string, type: Edge["type"]) => graph.edges.filter((e) => e.type === type && e.from === from).map((e) => byId.get(e.to)).filter((x): x is GraphNode => !!x);
   return graph.nodes.map((n) => {
-    const metrics = graph.edges
-      .filter((e) => e.type === "achieved" && e.from === n.id)
-      .map((e) => byId.get(e.to))
-      .filter((m): m is Extract<GraphNode, { type: "metric" }> => !!m && m.type === "metric")
+    const metrics = linked(n.id, "achieved")
+      .filter((m): m is Extract<GraphNode, { type: "metric" }> => m.type === "metric")
       .map((m) => `${m.value} ${m.valueLabel}`)
       .join("; ");
-    return { id: n.id, type: n.type, label: n.label, summary: n.summary, tags: n.tags, evidence: n.evidence.map((ev) => ev.url), metrics };
+    const skills = linked(n.id, "uses").map((s) => s.label).join(", ");
+    return { id: n.id, type: n.type, label: n.label, summary: n.summary, tags: n.tags, evidence: n.evidence.map((ev) => ev.url), metrics, skills, text: bodyText(n) };
   });
 }
 

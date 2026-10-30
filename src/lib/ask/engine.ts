@@ -1,0 +1,38 @@
+import { withBasePath } from "@/lib/paths";
+import { summaryLine } from "./answer";
+import { parseCitedAnswer, type CitedSentence } from "./citations";
+import { askProxy } from "./proxy";
+import type { AskIndex } from "./retrieve";
+import { isSearchDocs, type Hit } from "./types";
+
+// Loads the index once (search-index.json plus MiniSearch, both on first use)
+// and answers a question: retrieval always, generation only when the proxy is
+// configured and healthy, and only sentences that cite retrieved nodes.
+
+export type AskResult =
+  | { kind: "evidence"; question: string; summary: string; hits: Hit[]; generated: CitedSentence[] }
+  | { kind: "none"; question: string };
+
+let indexPromise: Promise<{ index: AskIndex; retrieve: (typeof import("./retrieve"))["retrieve"] }> | null = null;
+
+export function loadIndex() {
+  indexPromise ??= Promise.all([fetch(withBasePath("/search-index.json")).then((r) => (r.ok ? r.json() : Promise.reject(new Error(`search-index.json returned ${r.status}`)))), import("./retrieve")])
+    .then(([data, mod]: [unknown, typeof import("./retrieve")]) => {
+      if (!isSearchDocs(data)) throw new Error("search-index.json is malformed");
+      return { index: mod.buildIndex(data), retrieve: mod.retrieve };
+    })
+    .catch((error: unknown) => {
+      indexPromise = null;
+      throw error;
+    });
+  return indexPromise;
+}
+
+export async function ask(question: string): Promise<AskResult> {
+  const { index, retrieve } = await loadIndex();
+  const hits = retrieve(index, question);
+  if (hits.length === 0) return { kind: "none", question };
+  const proxied = await askProxy(question, hits);
+  const generated = proxied ? parseCitedAnswer(proxied.answer, new Set(hits.map((h) => h.id))) : [];
+  return { kind: "evidence", question, summary: summaryLine(hits), hits, generated };
+}

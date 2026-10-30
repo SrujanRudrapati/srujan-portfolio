@@ -6,6 +6,7 @@ import { useActiveSection } from "@/hooks/use-active-section";
 import { useMobileMenu } from "@/hooks/use-mobile-menu";
 import { useScrolled } from "@/hooks/use-scrolled";
 import { withBasePath } from "@/lib/paths";
+import { AskButton } from "./ask/AskButton";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
 import { Container } from "./ui";
@@ -55,6 +56,9 @@ export function SiteHeader() {
             Resume
           </Button>
           <span className="hidden md:inline-flex">
+            <AskButton />
+          </span>
+          <span className="hidden md:inline-flex">
             <ThemeToggle />
           </span>
           <button
@@ -91,7 +95,10 @@ export function SiteHeader() {
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex items-center justify-between gap-4 border-t border-line pt-6">
+          <div className="mt-8">
+            <AskButton className="h-11" onOpen={close} />
+          </div>
+          <div className="mt-6 flex items-center justify-between gap-4 border-t border-line pt-6">
             <span className="text-sm font-medium text-ink">Color theme</span>
             <ThemeToggle />
           </div>

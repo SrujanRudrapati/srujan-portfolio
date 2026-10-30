@@ -13,10 +13,13 @@
     "typecheck": "tsc --noEmit",
     "verify": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/verify-phase.mts",
     "content:dump": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/content-dump.mts",
-    "graph": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/build-graph.mts"
+    "graph": "node --disable-warning=ExperimentalWarning --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --experimental-strip-types scripts/build-graph.mts",
+    "test:unit": "vitest run",
+    "worker:check": "npm --prefix worker run typecheck && npm --prefix worker run build"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
+    "minisearch": "^7.2.0",
     "next": "16.3.8",
     "react": "19.2.8",
     "react-dom": "19.2.8"
@@ -32,7 +35,8 @@
     "eslint-config-next": "16.3.8",
     "serve": "^14.2.6",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.7"
   },
   "engines": {
     "node": ">=22.6"

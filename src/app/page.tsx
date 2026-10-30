@@ -6,6 +6,7 @@ import { Hero } from "@/components/Hero";
 import { SiteHeader } from "@/components/SiteNav";
 import { Work } from "@/components/work/Work";
 import { Skills } from "@/components/Skills";
+import { AskPanel } from "@/components/ask/AskPanel";
 
 export default function Home() {
   return (
@@ -27,6 +28,7 @@ export default function Home() {
         <Contact />
       </main>
       <SiteFooter />
+      <AskPanel />
     </>
   );
 }
