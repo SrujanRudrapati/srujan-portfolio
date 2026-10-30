@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test:e2e": "playwright test",
-    "test:e2e:update": "playwright test --update-snapshots"
+    "test:e2e:update": "playwright test --update-snapshots",
+    "typecheck": "tsc --noEmit",
+    "verify": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/verify-phase.mts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",
