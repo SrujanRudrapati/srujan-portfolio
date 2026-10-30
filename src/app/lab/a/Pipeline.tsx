@@ -1,6 +1,9 @@
 "use client";
 
 import { useRef } from "react";
+import { SceneSlot } from "@/components/three/SceneSlot";
+import { StageHost } from "@/components/three/StageHost";
+import { render3DTier } from "@/components/three/capability";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { LabFacts } from "../_lib/facts";
@@ -11,6 +14,8 @@ import s from "./pipeline.module.css";
 // Concept A: the site is a data pipeline and scrolling runs a record through it.
 // One rail runs down the page; a packet rides it, scrubbed to scroll position,
 // and changes state at each stage (bronze raw, silver cleaned, gold modeled, answer).
+// V1.5: the hero is a physics particle stream (same states, same order) and the
+// Surplus AI and Label Lens panels carry live 3D covers through one shared canvas.
 
 const STAGES = [
   { id: "ingest", n: "01", state: "raw" },
@@ -26,6 +31,12 @@ const MEDALLION = [
   { tier: "LLM", sub: "RAG, Claude API, MLX" },
 ];
 
+// Covers for the reel (V1.5). Labels describe the scene; the facts are in the panel text.
+const COVERS: Record<string, { scene: "surplus-line" | "label-lens"; label: string }> = {
+  "surplus-ai": { scene: "surplus-line", label: "Boxes and electronics ride a roller conveyor through four aluminium compute units and settle on a wooden pallet." },
+  "label-lens": { scene: "label-lens", label: "A medicine bottle turns under a scan line; flagged words peel off its label and stack into a warning column." },
+};
+
 function StageLabel({ i }: { i: number }) {
   const st = STAGES[i];
   return (
@@ -38,19 +49,26 @@ function StageLabel({ i }: { i: number }) {
 
 export function Pipeline({ facts }: { facts: LabFacts }) {
   const root = useRef<HTMLElement>(null);
+  const heroProgress = useRef(0);
 
   useLabMotion(root, ({ isDesktop }) => {
     const el = root.current!;
     const q = gsap.utils.selector(el);
+    // The tall sticky hero only makes sense when the live stream will run; otherwise the poster sits in a normal hero.
+    el.dataset.three = render3DTier() === "off" ? "off" : "on";
     const packet = q("[data-packet]")[0] as HTMLElement;
     const packetLabel = q("[data-packet-label]")[0] as HTMLElement;
 
-    // Hero: the name rises out of its mask while the medallion builds left to right. Under 1.2 s.
-    gsap
-      .timeline({ defaults: { ease: "power3.out" } })
-      .from(q("[data-h-line]"), { yPercent: 110, duration: 0.8, stagger: 0.08 })
-      .from(q("[data-m-node]"), { opacity: 0, scale: 0.6, transformOrigin: "50% 50%", duration: 0.45, stagger: 0.16 }, 0.2)
-      .from(q("[data-m-edge]"), { strokeDashoffset: 1, duration: 0.3, stagger: 0.16, ease: "none" }, 0.4);
+    // Hero: the name rises out of its mask; the particle stream's own intro runs in the scene. Under 1.2 s.
+    gsap.timeline({ defaults: { ease: "power3.out" } }).from(q("[data-h-line]"), { yPercent: 110, duration: 0.8, stagger: 0.08 });
+
+    // Scroll drives the stream: raw noise to lanes to glow to the LLM letters while the hero is pinned (sticky).
+    ScrollTrigger.create({
+      trigger: q("[data-hero]")[0],
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => (heroProgress.current = self.progress),
+    });
 
     // The rail fills and the packet rides it, both scrubbed to the whole page's scroll.
     const whole = { trigger: el, start: "top top", end: "bottom bottom", scrub: true };
@@ -109,47 +127,48 @@ export function Pipeline({ facts }: { facts: LabFacts }) {
         </div>
       </div>
 
-      <section className={`${s.section} ${s.hero}`} data-stage="ingest" aria-labelledby="a-name">
-        <StageLabel i={0} />
-        <h1 id="a-name" className={s.name}>
-          {facts.name.split(" ").map((word) => (
-            <span key={word} className={s.mask}>
-              <span data-h-line className={s.line}>
-                {word}
-              </span>
-            </span>
-          ))}
-        </h1>
-        <p className={s.headline}>{facts.headline}</p>
-        <p className={s.now}>{facts.now}</p>
-        <figure className={s.medallion}>
-          <svg viewBox="0 0 880 128" role="img" aria-labelledby="a-med-t a-med-d">
-            <title id="a-med-t">Medallion architecture</title>
-            <desc id="a-med-d">Data moves from bronze (raw) to silver (cleaned) to gold (modeled), then to an LLM layer built on RAG, the Claude API and MLX.</desc>
-            {MEDALLION.slice(0, -1).map((_, i) => (
-              <line key={i} data-m-edge x1={i * 240 + 168} y1={40} x2={i * 240 + 240} y2={40} pathLength={1} strokeDasharray={1} className={s.edge} />
-            ))}
-            {MEDALLION.map((m, i) => (
-              <g key={m.tier} data-m-node className={s[`tier${i}`]}>
-                <rect x={i * 240} y={8} width={168} height={64} className={s.tile} />
-                <text x={i * 240 + 16} y={48} className={s.tierText}>
-                  {m.tier}
-                </text>
-                <text x={i * 240} y={100} className={s.subText}>
-                  {m.sub}
-                </text>
-              </g>
-            ))}
-          </svg>
-        </figure>
-        <p className={s.links}>
-          <a href={withBasePath("/resume.pdf")}>Resume</a>
-          <a href={`mailto:${facts.email}`}>{facts.email}</a>
-        </p>
-        <p className={s.cue} aria-hidden>
-          scroll to run the record through
-        </p>
-      </section>
+      <div className={s.heroPin} data-hero>
+        <section className={`${s.section} ${s.hero}`} data-stage="ingest" aria-labelledby="a-name">
+          <div className={s.heroText}>
+            <StageLabel i={0} />
+            <h1 id="a-name" className={s.name}>
+              {facts.name.split(" ").map((word) => (
+                <span key={word} className={s.mask}>
+                  <span data-h-line className={s.line}>
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </h1>
+            <p className={s.headline}>{facts.headline}</p>
+            <p className={s.now}>{facts.now}</p>
+            <p className={s.links}>
+              <a href={withBasePath("/resume.pdf")}>Resume</a>
+              <a href={`mailto:${facts.email}`}>{facts.email}</a>
+            </p>
+          </div>
+          <figure className={s.stream}>
+            <SceneSlot
+              scene="hero-stream"
+              className={s.streamSlot}
+              progress={heroProgress}
+              priority
+              portrait
+              label="Medallion architecture as a particle stream: raw bronze particles fall and bounce, a field pulls them into silver lanes, and they glow gold and condense into the letters LLM."
+            />
+            <figcaption className={s.tiers}>
+              {MEDALLION.map((m, i) => (
+                <span key={m.tier} className={s[`tierLabel${i}`]}>
+                  <b>{m.tier}</b> {m.sub}
+                </span>
+              ))}
+            </figcaption>
+          </figure>
+          <p className={s.cue} aria-hidden>
+            scroll to run the record through
+          </p>
+        </section>
+      </div>
 
       <section className={s.reel} data-stage="transform" data-reel aria-labelledby="a-work">
         <div className={s.reelHead}>
@@ -158,9 +177,17 @@ export function Pipeline({ facts }: { facts: LabFacts }) {
             What I build
           </h2>
         </div>
-        <ol className={s.reelTrack} data-track>
+        <ol className={s.reelTrack} data-track tabIndex={0} aria-label="Featured projects (scrolls sideways)">
           {facts.featured.map((p, i) => (
             <li key={p.slug} className={s.panel}>
+              {COVERS[p.slug] && <SceneSlot scene={COVERS[p.slug].scene} label={COVERS[p.slug].label} className={s.cover} />}
+              {p.slug === "label-lens" && (
+                <figure className={s.shot}>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- static export; captured by scripts/capture-label-lens.mts */}
+                  <img src={withBasePath("/images/projects/label-lens-app.webp")} width={1280} height={800} loading="lazy" decoding="async" alt="The live Label Lens app: a scan-a-label start page beside a phone showing a scanned snack-bar label flagged for peanuts." />
+                  <figcaption>The live app</figcaption>
+                </figure>
+              )}
               <p className={s.job}>
                 job {String(i + 1).padStart(2, "0")} / {p.status}
               </p>
@@ -213,6 +240,7 @@ export function Pipeline({ facts }: { facts: LabFacts }) {
           <a href={withBasePath("/resume.pdf")}>Resume</a>
         </p>
       </section>
+      <StageHost />
     </main>
   );
 }

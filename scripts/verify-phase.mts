@@ -12,7 +12,7 @@
 // Runs on Node 22 with native type stripping: no enums, no parameter properties.
 
 import { spawn, spawnSync, type ChildProcess } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { chromium, type Browser, type BrowserContext, type Page } from "@playwright/test";
 import axeModule from "@axe-core/playwright";
@@ -54,6 +54,12 @@ const THEMES: Theme[] = ["light", "dark"];
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const SERVER_START_TIMEOUT_MS = 20_000;
 const REVEAL_SETTLE_MS = 800;
+
+// Third-party warnings we cannot fix in this repo. Each needs a reason.
+const KNOWN_WARNINGS = [
+  // @react-three/fiber 9.8.2 still creates a THREE.Clock, deprecated since three r183; harmless, fixed upstream when fiber moves to THREE.Timer.
+  "THREE.Clock: This module has been deprecated",
+];
 
 type Args = { phase: string; build: boolean; paths: string[]; port: number; tablet: boolean };
 
@@ -143,7 +149,7 @@ async function runOne(
   const consoleErrors: string[] = [];
   const failedRequests: string[] = [];
   page.on("console", (message) => {
-    if (message.type() === "error" || message.type() === "warning") consoleErrors.push(`${message.type()}: ${message.text()}`);
+    if ((message.type() === "error" || message.type() === "warning") && !KNOWN_WARNINGS.some((k) => message.text().includes(k))) consoleErrors.push(`${message.type()}: ${message.text()}`);
   });
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
   page.on("requestfailed", (request) => failedRequests.push(`${request.url()} (${request.failure()?.errorText ?? "failed"})`));
@@ -202,6 +208,14 @@ function toMarkdown(phase: string, runs: Run[]): string {
   ].join("\n");
 }
 
+// motion-system: at most about 1.5 MB of 3D assets per page. Checked conservatively
+// as everything under out/three/ (textures, HDRI, transcoder), since a page could load all of it.
+const THREE_BUDGET_BYTES = 1.5 * 1024 * 1024;
+function threeAssetBytes(dir = join(process.cwd(), "out", "three")): number {
+  if (!existsSync(dir)) return 0;
+  return readdirSync(dir, { withFileTypes: true }).reduce((sum, e) => sum + (e.isDirectory() ? threeAssetBytes(join(dir, e.name)) : statSync(join(dir, e.name)).size), 0);
+}
+
 async function main(): Promise<void> {
   const args = parseArgs(process.argv.slice(2));
   const outDir = join(process.cwd(), "docs", "screenshots", `phase-${args.phase}`);
@@ -229,7 +243,9 @@ async function main(): Promise<void> {
     writeFileSync(join(outDir, "verify.md"), markdown);
     console.log(`\n${markdown}`);
     console.log(`Screenshots and reports: ${outDir}`);
-    if (!runs.every((r) => r.passed)) process.exitCode = 1;
+    const threeBytes = threeAssetBytes();
+    console.log(`3D assets under out/three: ${(threeBytes / 1024).toFixed(0)} KB of ${(THREE_BUDGET_BYTES / 1024).toFixed(0)} KB budget`);
+    if (!runs.every((r) => r.passed) || threeBytes > THREE_BUDGET_BYTES) process.exitCode = 1;
   } finally {
     await browser?.close();
     server.kill();

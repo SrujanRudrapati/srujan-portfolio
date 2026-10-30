@@ -1,0 +1,98 @@
+{
+  "phase": "V1.5",
+  "generatedAt": "2026-10-30T22:40:42.665Z",
+  "runs": [
+    {
+      "path": "/lab/a",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-lab-a-mobile-light.png",
+      "foldScreenshot": "home-lab-a-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-lab-a-mobile-dark.png",
+      "foldScreenshot": "home-lab-a-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-lab-a-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/lab/a",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-lab-a-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-mobile-light.png",
+      "foldScreenshot": "home-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-mobile-dark.png",
+      "foldScreenshot": "home-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

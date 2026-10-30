@@ -52,3 +52,4 @@ worker/node_modules/
 worker/dist/
 worker/.wrangler/
 docs/v3/refs/**/*.webm
+assets-src/
