@@ -25,6 +25,12 @@ export function appPath(pathname: string, base = BASE): string {
   return stripped.length > 1 ? stripped.replace(/\/$/, "") : stripped;
 }
 
+/** Whether a route that just arrived is the one we navigated to (path only; search and #hash ignored).
+ *  Kept apart from the transition's timeout: a slow route that outlasts TIMEOUT_MS still lands at the top. */
+export function isPendingArrival(pending: string | null, pathname: string, base = BASE): boolean {
+  return pending !== null && appPath(pending.split(/[?#]/)[0], base) === appPath(pathname, base);
+}
+
 /** The router target for an internal page link, or null for anything we should not intercept. */
 function internalTarget(a: HTMLAnchorElement): string | null {
   if (a.target && a.target !== "_self") return null;
@@ -47,6 +53,9 @@ export function PageTransitions() {
   const router = useRouter();
   const pathname = usePathname();
   const arrived = useRef<(() => void) | null>(null);
+  /** The router target of our navigation in flight. Unlike `arrived`, it survives the transition timeout,
+   *  so a route slower than TIMEOUT_MS still resets scroll and focus when it lands. Back/forward clear it. */
+  const pending = useRef<string | null>(null);
   const firstPath = useRef<string | null>(pathname);
   const overlay = useRef<HTMLDivElement>(null);
   const overlayTl = useRef<gsap.core.Timeline | null>(null);
@@ -55,9 +64,11 @@ export function PageTransitions() {
   useEffect(() => {
     if (firstPath.current === pathname) return;
     firstPath.current = null;
-    const ours = arrived.current;
+    const finish = arrived.current;
     arrived.current = null;
-    ours?.();
+    finish?.();
+    const ours = finish !== null || isPendingArrival(pending.current, pathname);
+    pending.current = null;
     // Our navigations start at the top; an #anchor is scrolled to after the refresh below,
     // once pins and splits have settled the layout.
     if (ours) {
@@ -100,6 +111,7 @@ export function PageTransitions() {
         // Never hang a transition on a slow route; a timed-out navigation no longer counts as ours.
         const timer = setTimeout(done, TIMEOUT_MS);
         arrived.current = done;
+        pending.current = href;
         router.push(href, { scroll: false });
       });
 
@@ -151,8 +163,14 @@ export function PageTransitions() {
       navigate(href);
     };
     document.addEventListener("click", onClick, { capture: true });
+    // Back and forward are the browser's: its scroll restoration applies, not our reset.
+    const onPop = () => {
+      pending.current = null;
+    };
+    window.addEventListener("popstate", onPop);
     return () => {
       document.removeEventListener("click", onClick, { capture: true });
+      window.removeEventListener("popstate", onPop);
       overlayTl.current?.kill();
       if (overlayEl) gsap.set(overlayEl, { display: "none" });
     };

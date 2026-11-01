@@ -1,7 +1,8 @@
 // Renders a static poster of every 3D scene (motion-system: poster first) into
 // public/posters/<id>.webp. Posters are what visitors see before the live view
 // is ready, under reduced motion, on low-power devices, and if WebGL fails.
-// Usage: npm run posters [-- http://localhost:3000]  (needs `npm run dev` running)
+// Usage: npm run posters [-- http://localhost:3000]  (needs `POSTER_STUDIO=1 npm run dev` running: the
+// studio route only exists when that variable adds the .studio.tsx page extension, see next.config.ts)
 import { mkdirSync, writeFileSync } from "node:fs";
 import { chromium } from "@playwright/test";
 
@@ -14,7 +15,7 @@ const page = await browser.newPage({ viewport: { width: 1280, height: 5400 }, de
 await page.addInitScript(() => sessionStorage.setItem("intro", "1")); // no first-visit intro over the capture
 const errors: string[] = [];
 page.on("pageerror", (e) => errors.push(e.message));
-await page.goto(`${base}/lab/posters`, { waitUntil: "networkidle" });
+await page.goto(`${base}/studio/posters`, { waitUntil: "networkidle" });
 await page.addStyleTag({ content: "html, body, main { background: transparent !important; } nextjs-portal, body > header, body > footer { display: none !important; }" });
 const ids = await page.$$eval("[data-poster]", (els) => els.map((e) => e.getAttribute("data-poster")!));
 await page.waitForFunction((n) => document.querySelectorAll("[data-live]").length === n, ids.length, { timeout: 120_000 });

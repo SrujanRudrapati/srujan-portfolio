@@ -6,11 +6,13 @@ import { expect, test, type Page } from "@playwright/test";
 
 test.beforeEach(({}, info) => test.skip(info.project.name !== "desktop-light", "one project is enough for the 3D contract"));
 
-const PAGE = "/lab/a";
+// The home page since V7 removed /lab: the hero stream and the four reel covers.
+const PAGE = "/";
+const SCENES = 5;
 
 async function postersVisible(page: Page) {
   const scenes = page.locator("[data-scene]");
-  await expect(scenes).toHaveCount(3);
+  await expect(scenes).toHaveCount(SCENES);
   for (const img of await page.locator("[data-scene] img").all()) {
     await expect(img).toHaveCSS("opacity", "1");
     expect(await img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true);

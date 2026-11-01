@@ -3,11 +3,11 @@ import { SceneSlot } from "@/components/three/SceneSlot";
 import { StageHost } from "@/components/three/StageHost";
 
 // Poster studio: renders every 3D scene once, settled and deterministic, at a fixed
-// size, for scripts/assets/posters.mts to capture into public/posters/. Not linked;
-// noindex via the lab layout; removed with /lab in V7 once posters move to a script-only route.
+// size, for scripts/assets/posters.mts to capture into public/posters/. A route only in a
+// POSTER_STUDIO=1 dev server (see ../layout.studio.tsx); never in the published site.
 const display = Archivo({ subsets: ["latin"], axes: ["wdth"], variable: "--a-display", display: "swap" });
 
-export const metadata = { title: "Lab: poster studio" };
+export const metadata = { title: "Poster studio" };
 
 const SHOTS = [
   { id: "hero-stream", scene: "hero-stream", w: 1260, h: 900 },

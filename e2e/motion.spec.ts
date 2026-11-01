@@ -1,7 +1,8 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// V2 motion foundation contract (motion-system), on /lab/motion and /lab/motion/next.
-// One project is enough; mobile behaviour of the reel and pins is covered in V7.
+// V2 motion foundation contract (motion-system), on the real pages since V7 removed /lab:
+// the home page (3D hero, pinned reel, count-ups) and a case study (3D cover, scroll-drawn
+// diagrams, rail). One project is enough; phone behaviour is covered in e2e/mobile.spec.ts.
 
 test.beforeEach(({}, info) => test.skip(info.project.name !== "desktop-light", "one project is enough for the motion contract"));
 
@@ -12,11 +13,31 @@ const counters = (page: Page) =>
     return { triggers: m.triggers(), slots: m.slots(), canvases: m.canvases() } satisfies Counters;
   });
 
+const HOME_H1 = "Srujan Rudrapati";
+const CASE_H1 = "Surplus AI";
+
 async function settle(page: Page, h1: string) {
   await expect(page.locator("main h1")).toHaveText(h1);
   await expect(page.locator("main h1")).toBeFocused();
-  await page.waitForTimeout(400);
 }
+
+/** Wait until scrolling has stopped (three equal samples), instead of sleeping a fixed time. */
+async function scrollSettled(page: Page) {
+  let last = -1;
+  let same = 0;
+  await expect
+    .poll(async () => {
+      const y = await page.evaluate(() => Math.round(window.scrollY));
+      same = y === last ? same + 1 : 0;
+      last = y;
+      return same;
+    }, { intervals: [100], timeout: 10_000 })
+    .toBeGreaterThanOrEqual(3);
+}
+
+/** Click a link by href with the DOM (it may sit in a pinned reel, off to the side). */
+const clickHref = (page: Page, href: string) => page.evaluate((h) => (document.querySelector(`main a[href="${h}"]`) as HTMLAnchorElement).click(), href);
+const goHome = (page: Page) => page.getByRole("banner").getByRole("link", { name: HOME_H1 }).click();
 
 test.describe("with motion", () => {
   test.use({ reducedMotion: "no-preference" });
@@ -24,17 +45,17 @@ test.describe("with motion", () => {
   test("navigating back and forth 10 times leaks no ScrollTriggers, slots or canvases", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto("/lab/motion?3d=on&motion-debug", { waitUntil: "networkidle" });
+    await page.goto("/?3d=on&motion-debug", { waitUntil: "networkidle" });
     await page.keyboard.press("Escape"); // skips the intro if it plays
     await page.waitForTimeout(1500);
     const before = await counters(page);
     expect(before.triggers).toBeGreaterThan(0);
 
     for (let i = 0; i < 10; i++) {
-      await page.getByRole("link", { name: "Next page" }).first().click();
-      await settle(page, "Page two");
-      await page.getByRole("link", { name: "Back to the primitives" }).click();
-      await settle(page, "Motion primitives");
+      await clickHref(page, "/work/surplus-ai");
+      await settle(page, CASE_H1);
+      await goHome(page);
+      await settle(page, HOME_H1);
     }
     await page.waitForTimeout(1000);
     const after = await counters(page);
@@ -45,49 +66,63 @@ test.describe("with motion", () => {
   });
 
   test("a client navigation lands at the top with focus on the new h1", async ({ page }) => {
-    await page.goto("/lab/motion", { waitUntil: "networkidle" });
+    await page.goto("/about", { waitUntil: "networkidle" });
     await page.keyboard.press("Escape");
     await page.mouse.wheel(0, 2500);
-    await page.waitForTimeout(800);
-    await page.getByRole("link", { name: "Next page" }).last().click();
-    await settle(page, "Page two");
-    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(5);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+    await scrollSettled(page);
+    await page.getByRole("banner").getByRole("link", { name: /Work/ }).click();
+    await settle(page, "Work");
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
   });
 
-  test("leaving a page while a section is pinned throws nothing", async ({ page }) => {
+  test("a route slower than the transition timeout still lands at the top (DECISIONS 16)", async ({ page }) => {
+    // Hold the RSC payloads for 7 s: longer than PageTransitions' 4 s TIMEOUT_MS. Before V7 a timed-out
+    // navigation stopped counting as ours, router.push ran with scroll: false, and the page landed mid-scroll.
+    await page.route(/\.txt(\?|$)|[?&]_rsc=/, async (route) => {
+      await new Promise((r) => setTimeout(r, 7000));
+      await route.continue();
+    });
+    await page.goto("/about", { waitUntil: "load" });
+    await page.keyboard.press("Escape");
+    await page.mouse.wheel(0, 2500);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
+    await scrollSettled(page);
+    await page.getByRole("banner").getByRole("link", { name: /Work/ }).click();
+    await expect(page.locator("main h1")).toHaveText("Work", { timeout: 20_000 });
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
+    await expect(page.locator("main h1")).toBeFocused();
+  });
+
+  test("leaving the home page while the reel is pinned throws nothing", async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
-    await page.goto("/lab/motion", { waitUntil: "networkidle" });
+    await page.goto("/", { waitUntil: "networkidle" });
     await page.keyboard.press("Escape");
     // Scroll until the reel is pinned (its section gains data-reel="pinned" and sits at the top).
-    for (let i = 0; i < 40 && !(await page.locator('[data-reel="pinned"]').evaluate((el) => Math.abs(el.getBoundingClientRect().top) < 2).catch(() => false)); i++) {
+    for (let i = 0; i < 60 && !(await page.locator('[data-reel="pinned"]').evaluate((el) => Math.abs(el.getBoundingClientRect().top) < 2).catch(() => false)); i++) {
       await page.mouse.wheel(0, 400);
       await page.waitForTimeout(120);
     }
     await page.mouse.wheel(0, 300);
     await page.waitForTimeout(300);
-    await page.evaluate(() => (document.querySelector('a[href$="/lab/motion/next"]') as HTMLAnchorElement).click());
-    await settle(page, "Page two");
+    await clickHref(page, "/work/surplus-ai");
+    await settle(page, CASE_H1);
     expect(errors).toEqual([]);
   });
 
   test("a link with an #anchor to another page lands on the anchor", async ({ page }) => {
-    await page.goto("/lab/motion/next", { waitUntil: "networkidle" });
+    await page.goto("/work/surplus-ai", { waitUntil: "networkidle" });
     await page.keyboard.press("Escape");
     await page.evaluate(() => {
       const a = document.createElement("a");
-      a.href = "/lab/motion#count-h";
-      a.textContent = "to figures";
+      a.href = "/about#experience";
+      a.textContent = "to experience";
       document.querySelector("main")!.prepend(a);
       a.click();
     });
-    await expect(page.locator("#count-h")).toBeFocused();
-    const tops: number[] = [];
-    for (let i = 0; i < 6; i++) {
-      tops.push(await page.locator("#count-h").evaluate((el) => Math.round(el.getBoundingClientRect().top)));
-      await page.waitForTimeout(250);
-    }
-    expect(tops.at(-1)!).toBeLessThan(200);
+    await expect(page.locator("#experience")).toBeFocused();
+    await expect.poll(() => page.locator("#experience").evaluate((el) => Math.round(el.getBoundingClientRect().top))).toBeLessThan(200);
   });
 
   test("the intro plays once per session and any key skips it", async ({ page }) => {
@@ -99,7 +134,7 @@ test.describe("with motion", () => {
         if (document.documentElement.hasAttribute("data-intro")) w.__introSeen = true;
       }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-intro"] });
     });
-    await page.goto("/lab/motion", { waitUntil: "domcontentloaded" });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(await page.evaluate(() => (window as unknown as { __introSeen: boolean }).__introSeen || document.documentElement.hasAttribute("data-intro"))).toBe(true);
     await page.keyboard.press("Space");
     await expect(page.locator("html")).not.toHaveAttribute("data-intro", "", { timeout: 500 });
@@ -108,23 +143,23 @@ test.describe("with motion", () => {
   });
 
   test("keyboard scrolling still works with smooth scroll on", async ({ page }) => {
-    await page.goto("/lab/motion", { waitUntil: "networkidle" });
+    await page.goto("/about", { waitUntil: "networkidle" });
     await page.keyboard.press("Escape");
     await expect(page.locator("html")).toHaveClass(/lenis/);
     await page.locator("body").click({ position: { x: 5, y: 5 } });
     await page.keyboard.press("PageDown");
-    await page.waitForTimeout(800);
-    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
   });
 });
 
 test("reduced motion: no smooth scroll, no pins, no intro, real figures in place", async ({ page, request }) => {
-  const html = await (await request.get("/lab/motion")).text();
+  const html = await (await request.get("/")).text();
   expect(html).toContain("~80%"); // count-ups ship their real value in the HTML
-  await page.goto("/lab/motion?motion-debug", { waitUntil: "networkidle" });
+  await page.goto("/?motion-debug", { waitUntil: "networkidle" });
   await page.waitForTimeout(1000);
   await expect(page.locator("html")).not.toHaveClass(/lenis/);
   await expect(page.locator("html")).not.toHaveAttribute("data-intro", "");
+  await expect(page.locator('[data-reel="pinned"]')).toHaveCount(0);
   const counts = await counters(page);
   expect(counts.triggers).toBe(0);
   expect(counts.canvases).toBe(0);
