@@ -73,11 +73,12 @@ test.describe("Ask", () => {
     }
   });
 
-  test("an evidence link closes the panel and lands on the card", async ({ page }) => {
+  test("an evidence link closes the panel and lands on the case study", async ({ page }) => {
     await askFromHome(page, "What cut response time?");
     await dialog(page).getByRole("list", { name: "Evidence" }).getByRole("link", { name: "Label Lens", exact: true }).click();
     await expect(dialog(page)).toBeHidden();
-    await expect(page.locator("#project-label-lens")).toBeInViewport();
+    await expect(page).toHaveURL(/\/work\/label-lens$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Label Lens" })).toBeInViewport();
   });
 
   test("the open panel has no accessibility violations", async ({ page }) => {

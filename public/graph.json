@@ -123,6 +123,21 @@
           "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
           "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
           "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
+        ],
+        "entries": [
+          {
+            "name": "Cooked",
+            "note": "winner",
+            "text": "Reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes."
+          },
+          {
+            "name": "Receipts",
+            "text": "A Discord bot that catches promises in chat, with 493 automated tests in CI."
+          },
+          {
+            "name": "Bailout",
+            "text": "Roommates' AI agents trade chores through an auction, with human approval at each step."
+          }
         ]
       }
     },

@@ -1,0 +1,479 @@
+/* Case studies (runbook V5, design-direction v3): white/black, one blue accent, Archivo
+   condensed for the title and figures, Martian Mono for stage labels only. The rail and
+   gutters match the home page so the data path sits in the same place on every page. */
+.root {
+  --rail-x: 20px;
+  --pad-l: 48px;
+  --pad-r: 16px;
+  position: relative;
+  overflow-x: clip;
+  padding-top: 64px; /* the fixed nav */
+}
+@media (min-width: 768px) {
+  .root {
+    --rail-x: 40px;
+    --pad-l: 104px;
+    --pad-r: 40px;
+  }
+}
+
+.root a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.root a:hover {
+  color: var(--accent);
+}
+
+/* The rail: hairline track, accent fill scrubbed to scroll (motion only). */
+.rail {
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+.track,
+.fill {
+  position: absolute;
+  inset: 0;
+}
+.track {
+  background: var(--border);
+}
+.fill {
+  background: var(--accent);
+  transform-origin: top;
+  opacity: 0;
+}
+.root[data-motion="on"] .fill {
+  opacity: 1;
+}
+
+.stage {
+  position: relative;
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.node {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--rail-x) - var(--pad-l) - 4px);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--text);
+  background: var(--bg);
+  transform: translateY(-50%);
+  transition:
+    background-color 250ms,
+    border-color 250ms;
+}
+.node[data-lit],
+.root:not([data-motion="on"]) .node {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.head,
+.section,
+.next {
+  position: relative;
+  padding-left: var(--pad-l);
+  padding-right: var(--pad-r);
+  max-width: 1440px;
+}
+.head {
+  padding-top: 72px;
+}
+@media (min-width: 768px) {
+  .head {
+    padding-top: 112px;
+  }
+}
+.section {
+  padding-top: 88px;
+  padding-bottom: 8px;
+}
+
+/* Header: the title is the page's one big moment. */
+.title {
+  margin: 0;
+  max-width: 14ch;
+  font-size: clamp(3.25rem, 11vw, 9.5rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.86;
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+.oneLiner {
+  margin: 28px 0 0;
+  max-width: 30ch;
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  font-stretch: 112%;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 32px;
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 2px solid var(--text);
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+.links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 24px;
+  margin: 0;
+  padding: 0;
+}
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 500;
+}
+
+/* Media: the 3D cover (poster first) or a real screenshot. */
+.media {
+  margin: 48px 0 0;
+  padding-left: var(--pad-l);
+  padding-right: var(--pad-r);
+  max-width: 1440px;
+}
+.cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+}
+/* Desktop: wide and capped, so the results start on the second screen (impact first). */
+@media (min-width: 768px) {
+  .cover {
+    aspect-ratio: 16 / 6;
+    max-height: 44dvh;
+  }
+}
+.shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+}
+@media (max-width: 767px) {
+  .shot {
+    max-width: 360px;
+  }
+}
+.caption {
+  margin-top: 12px;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.h2 {
+  margin: 0 0 40px;
+  font-size: clamp(2.25rem, 5vw, 4.25rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+.h3 {
+  margin: 0 0 16px;
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-stretch: 112%;
+}
+.lead {
+  margin: 0 0 20px;
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.5;
+}
+.prose {
+  max-width: 62ch;
+}
+.small {
+  margin: 12px 0 0;
+  max-width: 52ch;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Results: impact first, large. */
+.figures {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px 48px;
+}
+@media (min-width: 768px) {
+  .figures {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  }
+}
+.figureItem {
+  border-top: 2px solid var(--text);
+  padding-top: 16px;
+}
+.figure {
+  margin: 0;
+  font-size: clamp(3.5rem, 7vw, 6rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.figureLabel {
+  margin: 12px 0 0;
+  max-width: 32ch;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.figureSummary {
+  margin: 8px 0 0;
+  max-width: 40ch;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Problem, stack: text left, a narrow column right. */
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+}
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+    gap: 64px;
+  }
+}
+.tags,
+.chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tags a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--text);
+  text-decoration: none;
+}
+.tags a:hover,
+.tags a:focus-visible {
+  border-color: var(--accent);
+}
+.chips li {
+  border: 1px solid var(--border);
+  padding: 8px 12px;
+  font-size: 0.9375rem;
+  line-height: 1.2;
+}
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Approach. */
+.highlights {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-width: 72ch;
+}
+.highlights li {
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  line-height: 1.5;
+}
+.highlights li:last-child {
+  border-bottom: 1px solid var(--border);
+}
+.entries {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+}
+@media (min-width: 1024px) {
+  .entries {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 48px;
+  }
+}
+.entry {
+  border-top: 2px solid var(--text);
+  padding-top: 16px;
+}
+.entryTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 0;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.95;
+}
+.entryNote {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  font-stretch: 100%;
+  color: var(--accent);
+}
+.entryText {
+  margin: 14px 0 4px;
+  line-height: 1.5;
+}
+.details {
+  margin-top: 56px;
+}
+.detailGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px 48px;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .detailGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1280px) {
+  .detailGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.detailGrid > div {
+  border-top: 1px solid var(--text);
+  padding-top: 14px;
+}
+.detailGrid dt {
+  font-weight: 700;
+}
+.detailGrid dd {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+.diagrams {
+  display: grid;
+  gap: 32px;
+}
+
+/* Next project: one large link; the poster slides in on hover (fine pointers only). */
+.next {
+  margin-top: 120px;
+  padding-top: 32px;
+  padding-bottom: 120px;
+  border-top: 2px solid var(--text);
+}
+.nextLink {
+  position: relative;
+  display: grid;
+  gap: 16px;
+}
+.root .nextLink {
+  text-decoration: none;
+}
+.nextTitle {
+  max-width: 16ch;
+  font-size: clamp(3rem, 9vw, 8rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+.nextLine {
+  max-width: 52ch;
+  font-size: 1.125rem;
+  line-height: 1.45;
+}
+.nextFigure {
+  color: var(--text-muted);
+}
+.nextFigure b {
+  color: var(--accent);
+  font-weight: 800;
+}
+.nextPoster {
+  display: none;
+}
+@media (min-width: 1024px) and (pointer: fine) {
+  .nextLink {
+    padding-right: 42%;
+  }
+  .nextPoster {
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 38%;
+    height: auto;
+    opacity: 0;
+    transform: translate(24px, -50%);
+    pointer-events: none;
+  }
+  .nextLink:hover .nextPoster,
+  .nextLink:focus-visible .nextPoster {
+    opacity: 1;
+    transform: translate(0, -50%);
+  }
+}
+@media (min-width: 1024px) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .nextPoster {
+    transition:
+      opacity 200ms cubic-bezier(0.215, 0.61, 0.355, 1),
+      transform 200ms cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+}
+.allWork {
+  margin: 40px 0 0;
+}
+.allWork a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}

@@ -1,6 +1,8 @@
 "use client";
 
-import { useId, type CSSProperties } from "react";
+import { useId, useRef, type CSSProperties } from "react";
+import { useScrubTimeline } from "@/components/motion/useScrubTimeline";
+import { gsap } from "@/components/motion/gsap";
 import { useInView } from "@/hooks/use-in-view";
 
 // One engine for every project diagram. A diagram is a set of boxes, the
@@ -75,6 +77,9 @@ type Props = {
   /** Seconds for one full loop of a track. */
   loopSeconds?: number;
   className?: string;
+  /** Case studies (runbook V5): scroll draws the diagram instead of a loop. Connectors draw, boxes light as the
+   *  data reaches them, and one dot per track rides with the scroll position. The markup is the finished state. */
+  scrub?: boolean;
 };
 
 type Point = { x: number; y: number };
@@ -83,6 +88,8 @@ type Lit = { arrive: number; period: number };
 type DotPath = { d: string; dots: number; offset: number };
 type NodeMap = Map<string, FlowNode>;
 
+/** Shortest connector draw on the 0 to 1 scrub clock. */
+const MIN_DRAW = 0.02;
 const DEFAULT_TYPE: FlowType = { label: 15, small: 13 };
 const LINE_GAP = 3;
 
@@ -146,6 +153,31 @@ function lighting(layout: FlowLayout, byId: NodeMap, loopSeconds: number): { lit
   return { lit, paths };
 }
 
+/** Scrub timing on a 0 to 1 clock, from the same path lengths the loop uses: when each box is first reached,
+ *  and when each connector starts and how long it takes to draw. */
+function scrubTimings(layout: FlowLayout, byId: NodeMap) {
+  const nodeAt = new Map<string, number>();
+  const edgeAt = new Map<string, { start: number; dur: number }>();
+  for (const track of layout.tracks) {
+    const { arrivals } = trackGeometry(track, byId);
+    arrivals.forEach(({ id, at }, k) => {
+      nodeAt.set(id, Math.min(nodeAt.get(id) ?? 1, at));
+      const prev = arrivals[k - 1];
+      if (!prev) return;
+      const t = { start: prev.at, dur: Math.max(MIN_DRAW, at - prev.at) };
+      for (const key of [`${prev.id}-${id}`, `${id}-${prev.id}`]) if (!edgeAt.has(key)) edgeAt.set(key, t);
+    });
+  }
+  // An edge no track walks draws between the moments its two ends are first reached.
+  for (const e of layout.edges) {
+    const key = `${e.from}-${e.to}`;
+    if (edgeAt.has(key)) continue;
+    const [a, b] = [nodeAt.get(e.from) ?? 0, nodeAt.get(e.to) ?? 0].sort((x, y) => x - y);
+    edgeAt.set(key, { start: a, dur: Math.max(MIN_DRAW, b - a) });
+  }
+  return { nodeAt, edgeAt };
+}
+
 function edgeGeometry(a: FlowNode, b: FlowNode): { d: string; tip: Point; dir: Dir } {
   const xOverlap = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x);
   const yOverlap = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
@@ -180,14 +212,15 @@ function arrowhead({ x, y }: Point, dir: Dir): string {
   }
 }
 
-function Edges({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
+function Edges({ layout, byId, edgeAt }: { layout: FlowLayout; byId: NodeMap; edgeAt?: Map<string, { start: number; dur: number }> }) {
   return (
     <g fill="none" stroke="var(--accent-2)" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
       {layout.edges.map((edge) => {
         const { d, tip, dir } = edgeGeometry(nodeById(byId, edge.from), nodeById(byId, edge.to));
+        const t = edgeAt?.get(`${edge.from}-${edge.to}`) ?? { start: 0, dur: 0.1 };
         return (
-          <g key={`${edge.from}-${edge.to}`} strokeDasharray={edge.dashed ? "4 4" : undefined}>
-            <path d={d} />
+          <g key={`${edge.from}-${edge.to}`} strokeDasharray={edge.dashed ? "4 4" : undefined} data-edge={edgeAt ? (edge.dashed ? "fade" : "draw") : undefined} data-start={edgeAt ? t.start : undefined} data-dur={edgeAt ? t.dur : undefined}>
+            <path d={d} pathLength={edgeAt && !edge.dashed ? 1 : undefined} strokeLinecap={edgeAt && !edge.dashed ? "butt" : undefined} />
             {edge.arrow !== false && <path d={arrowhead(tip, dir)} strokeDasharray="none" />}
           </g>
         );
@@ -257,14 +290,24 @@ function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
   );
 }
 
-function Nodes({ layout, lit, type }: { layout: FlowLayout; lit: Map<string, Lit[]>; type: FlowType }) {
+function ScrubDots({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
+  return (
+    <g aria-hidden="true">
+      {layout.tracks.map((track, i) => (
+        <circle key={i} className="flow-dot" data-scrub-dot="" r="4.5" fill="var(--accent-2)" style={{ offsetPath: `path("${trackGeometry(track, byId).d}")`, offsetRotate: "0deg" }} />
+      ))}
+    </g>
+  );
+}
+
+function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Map<string, Lit[]>; type: FlowType; nodeAt?: Map<string, number> }) {
   return (
     <>
       {layout.nodes.map((node) => {
         const stroke = node.variant === "accent" ? "var(--accent-2)" : node.variant === "ghost" ? "var(--text-muted)" : "var(--text)";
         const box = { x: node.x, y: node.y, width: node.w, height: node.h };
         return (
-          <g key={node.id} className="flow-node">
+          <g key={node.id} className="flow-node" data-at={nodeAt ? (nodeAt.get(node.id) ?? 0) : undefined}>
             <rect {...box} fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"} stroke={stroke} strokeWidth={node.variant === "accent" ? 2 : 1} strokeDasharray={node.variant === "ghost" ? "4 3" : undefined} />
             {(lit.get(node.id) ?? []).map((glow, i) => (
               <rect key={i} className="flow-lit" {...box} fill="var(--flow-lit)" style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties} />
@@ -277,17 +320,18 @@ function Nodes({ layout, lit, type }: { layout: FlowLayout; lit: Map<string, Lit
   );
 }
 
-function Layout({ layout, loopSeconds, ids, title, desc, className }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string }) {
+function Layout({ layout, loopSeconds, ids, title, desc, className, scrub }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string; scrub: boolean }) {
   const byId: NodeMap = new Map(layout.nodes.map((n) => [n.id, n]));
   const { lit, paths } = lighting(layout, byId, loopSeconds);
+  const timing = scrub ? scrubTimings(layout, byId) : undefined;
   const type = layout.type ?? DEFAULT_TYPE;
   return (
     <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`h-auto w-full ${className}`} style={{ "--loop": `${loopSeconds}s` } as CSSProperties}>
       <title id={ids[0]}>{title}</title>
       <desc id={ids[1]}>{desc}</desc>
-      <Edges layout={layout} byId={byId} />
-      <Dots paths={paths} loopSeconds={loopSeconds} />
-      <Nodes layout={layout} lit={lit} type={type} />
+      <Edges layout={layout} byId={byId} edgeAt={timing?.edgeAt} />
+      {scrub ? <ScrubDots layout={layout} byId={byId} /> : <Dots paths={paths} loopSeconds={loopSeconds} />}
+      <Nodes layout={layout} lit={lit} type={type} nodeAt={timing?.nodeAt} />
       {layout.notes?.map((note) => (
         <text key={`${note.x}-${note.y}`} x={note.x} y={note.y} fontSize={type.small} fontWeight={500} fill="var(--text-muted)" className="flow-text">
           {note.text}
@@ -297,14 +341,43 @@ function Layout({ layout, loopSeconds, ids, title, desc, className }: { layout: 
   );
 }
 
-export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 6, className = "" }: Props) {
+const num = (el: Element, key: string) => Number((el as HTMLElement).dataset[key] ?? 0);
+
+/** The scroll-drawn version: one timeline on a 0 to 1 clock, built only under full motion (useScrubTimeline). */
+function buildScrub(tl: gsap.core.Timeline, q: (s: string) => Element[]) {
+  for (const g of q('[data-edge="draw"]')) {
+    const path = g.querySelector("path");
+    if (path) tl.fromTo(path, { strokeDasharray: "1 1", strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: num(g, "dur") }, num(g, "start"));
+    const head = g.querySelectorAll("path")[1];
+    if (head) tl.fromTo(head, { opacity: 0 }, { opacity: 1, duration: 0.01 }, num(g, "start") + num(g, "dur") - 0.01);
+  }
+  for (const g of q('[data-edge="fade"]')) tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: num(g, "dur") }, num(g, "start"));
+  for (const g of q(".flow-node[data-at]")) {
+    const lit = g.querySelectorAll(".flow-lit"); // boxes no track passes through have no overlay
+    if (lit.length) tl.fromTo(lit, { opacity: 0 }, { opacity: 1, duration: 0.04 }, Math.min(0.96, num(g, "at")));
+  }
+  const dots = q("[data-scrub-dot]");
+  if (dots.length && CSS.supports("offset-path", 'path("M0 0 L1 1")')) {
+    gsap.set(dots, { display: "block" });
+    tl.fromTo(dots, { offsetDistance: "0%" }, { offsetDistance: "100%", duration: 1 }, 0);
+  }
+  tl.set({}, {}, 1); // the clock always runs 0 to 1, whatever the tracks hold
+}
+
+export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 6, className = "", scrub = false }: Props) {
   const uid = useId();
-  const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px");
+  const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px", !scrub);
+  const scrubRef = useRef<HTMLElement | null>(null);
+  useScrubTimeline(scrubRef, scrub ? buildScrub : () => {}, { start: "top 85%", end: "bottom 60%", scrub: 0.4 });
+  const setRef = (el: HTMLElement | null) => {
+    ref.current = el;
+    scrubRef.current = scrub ? el : null;
+  };
   return (
-    <figure ref={ref} data-animate={active ? "on" : undefined} className={`flow border-t-[3px] border-ink bg-surface p-4 md:p-8 ${className}`}>
+    <figure ref={setRef} data-animate={!scrub && active ? "on" : undefined} className={`flow border-t-[3px] border-ink bg-surface p-4 md:p-8 ${className}`}>
       {/* One layout per breakpoint. The hidden one is display:none, so it has no animation cost and screen readers skip it. */}
-      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="hidden lg:block" />
-      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="max-w-[400px] lg:hidden" />
+      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="hidden lg:block" scrub={scrub} />
+      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="max-w-[400px] lg:hidden" scrub={scrub} />
       <figcaption className="mt-5 max-w-measure text-sm text-muted">{caption}</figcaption>
     </figure>
   );

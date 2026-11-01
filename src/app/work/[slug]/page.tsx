@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { pageMeta } from "@/lib/meta";
 import { notFound } from "next/navigation";
-import { PageHead } from "@/components/site/PageHead";
-import { FeaturedCard } from "@/components/work/FeaturedCard";
+import { CaseStudy } from "@/components/case/CaseStudy";
+import { caseStudy } from "@/data/case-study";
 import { projects } from "@/data/projects";
+import { pageMeta } from "@/lib/meta";
 
-// One page per project (runbook V3), statically generated from the graph. V5 turns this
-// into the full case-study template; for now it carries everything the v2 card had.
+// One case study per project (runbook V5), statically generated from the graph. The
+// template leaves out any section the graph has no data for, so shorter projects get a
+// compact page from the same component.
 
 export const dynamicParams = false;
 
@@ -22,17 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">): P
 
 export default async function ProjectPage({ params }: PageProps<"/work/[slug]">) {
   const { slug } = await params;
-  const index = projects.findIndex((x) => x.slug === slug);
-  if (index < 0) notFound();
-  const p = projects[index];
-  return (
-    <main id="main">
-      <PageHead stage={`work / ${p.slug}`} title={p.title} />
-      <section aria-label={`${p.title} details`} className="px-gutter pb-section">
-        <div className="mx-auto max-w-page">
-          <FeaturedCard project={p} index={0} onPage />
-        </div>
-      </section>
-    </main>
-  );
+  const data = caseStudy(slug);
+  if (!data) notFound();
+  return <CaseStudy data={data} />;
 }

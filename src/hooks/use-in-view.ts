@@ -6,13 +6,14 @@ import { useEffect, useRef, useState } from "react";
  * tab. Without IntersectionObserver the value stays false, which leaves the
  * diagram in its static, fully lit state.
  */
-export function useInView<T extends HTMLElement>(rootMargin = "0px") {
+/** `enabled: false` skips the observer (the value stays false), for callers that animate by other means. */
+export function useInView<T extends HTMLElement>(rootMargin = "0px", enabled = true) {
   const ref = useRef<T>(null);
   const [active, setActive] = useState(false);
 
   useEffect(() => {
     const element = ref.current;
-    if (!element || !("IntersectionObserver" in window)) return;
+    if (!enabled || !element || !("IntersectionObserver" in window)) return;
 
     let intersecting = false;
     const update = () => setActive(intersecting && !document.hidden);
@@ -30,7 +31,7 @@ export function useInView<T extends HTMLElement>(rootMargin = "0px") {
       observer.disconnect();
       document.removeEventListener("visibilitychange", update);
     };
-  }, [rootMargin]);
+  }, [rootMargin, enabled]);
 
   return { ref, active };
 }

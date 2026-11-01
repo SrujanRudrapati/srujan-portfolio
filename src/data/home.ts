@@ -1,5 +1,6 @@
 import { graph, type GraphNode, type MetricNode, type ProjectNode } from "./graph.ts";
 import { profile } from "../content/profile.ts";
+import { covers } from "./covers.ts";
 
 // Everything the v3 home page says (runbook V4), read from the graph and profile so no
 // figure or sentence is typed into a component. A missing node fails the build.
@@ -13,16 +14,22 @@ function metric(id: string) {
   return { value: m.value, label: m.valueLabel, summary: m.summary };
 }
 
-function project(slug: string, metricId: string, cover: HomeCover, useSummary = false) {
+function project(slug: string, metricId: string, useSummary = false) {
   const n = byId.get(`project-${slug}`);
   if (!n || n.type !== "project") throw new Error(`home: missing project-${slug}`);
   const { content } = n as ProjectNode;
   const m = metric(metricId);
+  const cover = coverFor(slug);
   // useSummary: the metric's own sentence says more precisely what the figure is about.
   return { slug, title: content.title, oneLiner: content.oneLiner, status: content.status, metric: useSummary ? { ...m, label: m.summary } : m, cover };
 }
 
-export type HomeCover = { scene: "surplus-line" | "receipts" | "label-lens" | "watchtower"; label: string };
+/** A featured project's cover, with any "{metric-id}" in its label filled from the graph. */
+export function coverFor(slug: string) {
+  const c = covers[slug];
+  if (!c) throw new Error(`home: no cover for ${slug}`);
+  return { scene: c.scene, label: c.label.replace(/\{([a-z0-9-]+)\}/g, (_, id: string) => metric(id).value) };
+}
 
 export function homeContent() {
   return {
@@ -45,11 +52,11 @@ export function homeContent() {
     ],
     // Featured order (facts): Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower.
     featured: [
-      project("surplus-ai", "surplus-processing-time", { scene: "surplus-line", label: "Boxes and electronics ride a roller conveyor through four aluminium compute units and settle on a wooden pallet." }),
+      project("surplus-ai", "surplus-processing-time"),
       // Cooked won (facts 2.2), not all three entries: the card shows the metric's sentence that says so.
-      project("devhacks-cubbie", "devhacks-place", { scene: "receipts", label: `${metric("receipts-tests").value} paper tiles, one per automated test in Receipts, fall in a domino wave.` }, true),
-      project("label-lens", "label-lens-quotes", { scene: "label-lens", label: "A medicine bottle turns under a scan line; flagged words peel off its label and stack into a warning column." }),
-      project("supply-chain-watchtower", "watchtower-agents", { scene: "watchtower", label: "A watchtower beacon sweeps over a terrain of nodes while pulses travel along the edges between them." }),
+      project("devhacks-cubbie", "devhacks-place", true),
+      project("label-lens", "label-lens-quotes"),
+      project("supply-chain-watchtower", "watchtower-agents"),
     ],
     projectCount: graph.nodes.filter((n) => n.type === "project").length,
     // The strongest single result, shown in the hero (recruiter review, V4).

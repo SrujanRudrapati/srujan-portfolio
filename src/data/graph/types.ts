@@ -58,6 +58,9 @@ export type ProjectContent = {
   problem?: string;
   built?: string;
   details?: { heading: string; items: { name: string; text: string }[] };
+  /** Separate builds inside one project (DevHacks: Cooked, Receipts, Bailout). Text is the matching highlight's, verbatim;
+   *  the case study gives each one a sub-section, and links an artifact whose label starts with the name. */
+  entries?: { name: string; note?: string; text: string }[];
   statusNotes?: StatusNote[];
   statusDetail?: string;
 };
