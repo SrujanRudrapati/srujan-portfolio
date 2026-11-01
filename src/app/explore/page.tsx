@@ -14,7 +14,7 @@ export default function ExplorePage() {
       <PageHead stage="explore / views" title="Explore">
         <p>The same work, read different ways: as a timeline, a skill map, by the problem it solved, or by industry.</p>
       </PageHead>
-      <section aria-label="Lenses" className="px-gutter pb-section">
+      <section id="work" aria-label="Lenses" className="px-gutter pb-section">
         <div className="mx-auto max-w-page">
           <Explore>
             <WorkExplorer projects={projects} />

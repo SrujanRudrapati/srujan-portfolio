@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="border-t-2 border-ink px-gutter print:hidden">
       <div className="mx-auto grid max-w-page grid-cols-1 gap-8 py-12 md:grid-cols-12">
         <div className="md:col-span-7">
-          <p className="font-mono text-[13px] text-muted">stage 04 / query</p>
+          <p className="font-mono text-[13px] text-muted">contact</p>
           <p className="mt-4 font-display text-[clamp(1.25rem,5.2vw,1.875rem)] font-bold [overflow-wrap:anywhere] text-ink">
             <a href={`mailto:${profile.email}`} className="-my-[11px] inline-block py-[11px] underline decoration-accent-2 decoration-2 underline-offset-[6px] hover:text-accent-2">
               {profile.email}

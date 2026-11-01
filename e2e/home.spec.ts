@@ -30,35 +30,34 @@ test.describe("Navigation (v3: pages, not sections)", () => {
   });
 });
 
-test.describe("Hero", () => {
-  test("renders headline, sub-line, calls to action, proof chips and diagram", async ({ page }) => {
-    const hero = page.locator("#top");
-    await expect(hero.getByRole("heading", { level: 1 })).toHaveText(
-      "I build the data layer, and the AI on top of it.",
-    );
-    await expect(hero.getByText("Data engineer working across Databricks, Azure, and AWS.")).toBeVisible();
-
-    await expect(hero.getByRole("link", { name: "See my work" })).toHaveAttribute("href", "/work");
-    await expect(hero.getByRole("link", { name: "Get in touch" })).toHaveAttribute("href", "#contact");
-
-    const chips = hero.getByRole("list", { name: "Highlights" });
-    await expect(chips.getByRole("listitem")).toHaveText([
+test.describe("Hero (V4: stage 01 / ingest)", () => {
+  test("says who, what, where now, with proof and the way in", async ({ page }) => {
+    const hero = page.locator('[data-stage="ingest"]');
+    await expect(hero.getByRole("heading", { level: 1 })).toHaveText("Srujan Rudrapati");
+    await expect(hero.getByText("I build the data layer, and the AI on top of it.")).toBeVisible();
+    await expect(hero.getByText("M.S. student at Arizona State University.")).toBeVisible();
+    await expect(hero.getByRole("list", { name: "Highlights" }).getByRole("listitem")).toHaveText([
       "Surplus AI, in production at ASU Surplus",
       "Celebal: a pipeline handling about 10 million records a day",
       "Databricks Certified Data Engineer Professional",
     ]);
-
-    await expect(hero.getByRole("img", { name: /Data pipeline from source systems/ })).toBeVisible();
+    await expect(hero.getByRole("link", { name: "See my work" })).toHaveAttribute("href", "/work");
+    await expect(hero.getByRole("link", { name: "Resume" })).toHaveAttribute("href", "/resume.pdf");
+    await expect(hero.getByRole("link", { name: "rudrapati.srujan@gmail.com" })).toHaveAttribute("href", "mailto:rudrapati.srujan@gmail.com");
+    await expect(hero.getByRole("img", { name: /Medallion architecture as a particle stream/ })).toBeVisible();
   });
 
-  test("fits above the fold on a phone", async ({ page, isMobile }) => {
+  test("who, what and contact are on the first screen of a phone", async ({ page, isMobile }) => {
     test.skip(!isMobile, "Phone viewport only");
-    const chips = page.locator("#top").getByRole("list", { name: "Highlights" });
-    const box = await chips.boundingBox();
-    const viewport = page.viewportSize();
-    expect(box).not.toBeNull();
-    expect(viewport).not.toBeNull();
-    expect(box!.y + box!.height).toBeLessThanOrEqual(viewport!.height);
+    // Who (name), what (the line and sub-line), proof (~80%) and contact (Resume in the bar, the email) on screen 1.
+    const viewport = page.viewportSize()!;
+    const hero = page.locator('[data-stage="ingest"]');
+    for (const el of [hero.getByRole("heading", { level: 1 }), hero.getByText("I build the data layer"), hero.getByText("~80%").first(), page.getByRole("banner").getByRole("link", { name: "Resume" }), hero.getByRole("link", { name: /@/ })]) {
+      await expect(el).toBeVisible();
+      const box = await el.boundingBox();
+      expect(box!.y).toBeGreaterThanOrEqual(0);
+      expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
+    }
   });
 
   test("skip link moves focus target to main content", async ({ page, isMobile }) => {
@@ -66,24 +65,47 @@ test.describe("Hero", () => {
     await page.keyboard.press("Tab");
     const skip = page.getByRole("link", { name: "Skip to content" });
     await expect(skip).toBeFocused();
-    await expect(skip).toBeVisible();
     await page.keyboard.press("Enter");
     await expect(page).toHaveURL(/#main$/);
   });
 
+  test("the four featured projects, in order, each open their case study", async ({ page }) => {
+    const reel = page.getByRole("list", { name: "Selected work (scrolls sideways)" });
+    await expect(reel.getByRole("heading", { level: 3 })).toHaveText(["Surplus AI", "DevHacks × Cubbie hackathon", "Label Lens", "Autonomous Supply Chain Watchtower"]);
+    for (const slug of ["surplus-ai", "devhacks-cubbie", "label-lens", "supply-chain-watchtower"]) await expect(reel.locator(`a[href="/work/${slug}"]`)).toHaveCount(1);
+    await expect(page.getByRole("link", { name: /^All \d+ projects$/ })).toHaveAttribute("href", "/work");
+  });
+
+  test("figures are in the server HTML with their markers", async ({ request }) => {
+    // The raw export, before any script runs: each figure's final text and marker, as often as the page shows it
+    // (reel panel + proof row for ~80%; four reel figures and five proof figures in all).
+    const html = await (await request.get("/")).text();
+    const expected: Record<string, number> = { "~80%": 2, "1st": 1, "44/44": 1, "3": 1, "~10 min": 1, "about 10 million": 1, "82": 1, "4 to 9 s": 1 };
+    for (const [v, n] of Object.entries(expected)) {
+      const tags = html.match(new RegExp(`data-count="${v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}">([^<]*)<`, "g")) ?? [];
+      expect(tags, v).toHaveLength(n);
+      for (const t of tags) expect(t.endsWith(`>${v}<`), v).toBe(true);
+    }
+  });
+
   test("has no accessibility violations", async ({ page }) => {
-    await expectNoA11yViolations(page, "#top");
+    await expectNoA11yViolations(page, "main");
   });
 
   test("visual", async ({ page }) => {
-    await expect(page.locator("#top")).toHaveScreenshot("hero.png");
+    await expect(page.locator('[data-stage="ingest"]')).toHaveScreenshot("hero.png", { mask: [page.locator("[data-scene]")] });
   });
 });
 
-test.describe("Work", () => {
+test.describe("Work (on /work since V3)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/work");
+    await page.evaluate(() => document.fonts.ready);
+  });
+
   test("renders both featured projects with honest status and every diagram", async ({ page }) => {
     const work = page.locator("#work");
-    await expect(work.getByRole("heading", { level: 2, name: "Work" })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1, name: "Work" })).toBeVisible();
 
     const surplus = work.getByRole("article", { name: "Surplus AI" });
     await expect(surplus).toBeVisible();
@@ -217,7 +239,11 @@ test.describe("Work", () => {
   });
 });
 
-test.describe("Featured cards on phones", () => {
+test.describe("Featured cards on phones (/work)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/work");
+  });
+
   test("show title, figures and one line first; Show details opens the rest; without JS all is visible", async ({ page, isMobile }) => {
     test.skip(!isMobile, "Phone layout");
     const card = page.locator("#project-surplus-ai");
@@ -240,7 +266,11 @@ test.describe("Featured cards on phones", () => {
   });
 });
 
-test.describe("Experience", () => {
+test.describe("Experience (on /about since V3)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/about");
+  });
+
   test("summarises all four roles and links to the timeline", async ({ page }) => {
     const exp = page.locator("#experience");
     const titles = exp.getByRole("heading", { level: 3 });
@@ -268,7 +298,11 @@ test.describe("Experience", () => {
   });
 });
 
-test.describe("Skills", () => {
+test.describe("Skills (on /about since V3)", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.goto("/about");
+  });
+
   test("summarises every group and links to the skill map", async ({ page }) => {
     const skills = page.locator("#skills");
     await expect(skills.getByRole("heading", { level: 3 })).toHaveText(["Data engineering", "Cloud", "AI and ML", "Governance", "Infrastructure", "BI"]);

@@ -31,7 +31,7 @@ export function Nav() {
   }, []);
 
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-bg/95 backdrop-blur-[2px] print:hidden">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-line bg-bg print:hidden">
       <div className="mx-auto flex h-16 max-w-page items-center gap-6 px-gutter">
         <Link href="/" aria-current={pathname === "/" ? "page" : undefined} className="inline-flex h-11 items-center font-display text-[1.375rem] leading-none font-extrabold tracking-[-0.02em] text-ink font-stretch-[62%]">
           {profile.name}
@@ -68,7 +68,7 @@ export function Nav() {
           </span>
           <button
             type="button"
-            onClick={openPalette}
+            onClick={() => openPalette()}
             aria-keyshortcuts="Meta+K Control+K"
             className="inline-flex h-11 items-center gap-2 border border-ink px-3 text-sm font-medium text-ink transition-colors duration-150 hover:bg-ink hover:text-bg"
           >

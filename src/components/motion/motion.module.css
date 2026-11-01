@@ -6,6 +6,9 @@
   position: relative;
   overflow: hidden;
 }
+.reel[data-clip="off"] {
+  overflow: visible;
+}
 .reelTrack {
   list-style: none;
   margin: 0;

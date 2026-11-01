@@ -11,7 +11,7 @@ export default function WorkPage() {
   return (
     <main id="main">
       <PageHead stage="stage 02 / transform" title="Work" />
-      <section aria-label="Projects" className="px-gutter pb-section">
+      <section id="work" aria-label="Projects" className="px-gutter pb-section">
         <div className="mx-auto max-w-page">
           <WorkExplorer projects={projects} />
         </div>

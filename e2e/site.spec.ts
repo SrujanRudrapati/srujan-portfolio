@@ -69,15 +69,15 @@ test.describe("Keyboard", () => {
   test.beforeEach(({ isMobile }) => test.skip(isMobile, "Keyboard shortcuts are a desktop path"));
 
   test("number keys 1 to 4 open the main pages, but not while typing", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "networkidle" }); // after hydration, when the shortcut listener exists
     await page.keyboard.press("3");
     await expect(page).toHaveURL(/\/about$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
     await page.keyboard.press("1");
     await expect(page).toHaveURL(/\/work$/);
     await page.goto("/");
-    await page.locator("#hero-ask").fill("2");
-    await page.locator("#hero-ask").press("4");
+    await page.locator("#home-ask-input").fill("2");
+    await page.locator("#home-ask-input").press("4");
     await expect(page).toHaveURL(/\/$/);
   });
 
@@ -101,7 +101,7 @@ test.describe("Keyboard", () => {
   });
 
   test("the palette is a labelled combobox whose active option is announced", async ({ page }) => {
-    await page.goto("/");
+    await page.goto("/", { waitUntil: "networkidle" });
     await page.keyboard.press("ControlOrMeta+k");
     const box = page.getByRole("dialog", { name: "Command palette" }).getByRole("combobox");
     const first = await box.getAttribute("aria-activedescendant");

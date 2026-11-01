@@ -5,7 +5,15 @@ import { DESKTOP, FULL, gsap } from "./gsap";
 import { lenisStore } from "./lenis-store";
 import s from "./motion.module.css";
 
-type Props = { children: ReactNode; label: string; className?: string };
+type Props = {
+  children: ReactNode;
+  label: string;
+  className?: string;
+  /** false: pinned, the track slides to the viewport edge instead of being clipped by the section.
+   *  Use it when items hold 3D covers: a WebGL view ignores CSS clipping, so clipped text and
+   *  unclipped 3D would part ways. The page must clip horizontally itself (overflow-x: clip). */
+  clip?: boolean;
+};
 
 /**
  * A sideways reel of items (pass <li> children). Desktop with motion: the section pins and
@@ -13,7 +21,7 @@ type Props = { children: ReactNode; label: string; className?: string };
  * horizontal swipe with scroll snap, focusable so keyboard users can scroll it. Pinned, tabbing
  * to an item scrolls the page to it. A layout effect, so the pin is reverted before unmount.
  */
-export function HorizontalReel({ children, label, className }: Props) {
+export function HorizontalReel({ children, label, className, clip = true }: Props) {
   const section = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLOListElement>(null);
   useLayoutEffect(() => {
@@ -55,7 +63,7 @@ export function HorizontalReel({ children, label, className }: Props) {
     return () => mm.revert();
   }, []);
   return (
-    <div ref={section} className={`${s.reel} ${className ?? ""}`}>
+    <div ref={section} className={`${s.reel} ${className ?? ""}`} data-clip={clip ? undefined : "off"}>
       <ol ref={track} className={s.reelTrack} tabIndex={0} aria-label={label}>
         {children}
       </ol>

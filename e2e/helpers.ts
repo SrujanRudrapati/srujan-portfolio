@@ -26,3 +26,19 @@ export async function openHome(page: Page) {
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);
 }
+
+/** The home page's Ask box: it opens the command palette in Ask mode; Enter asks (V4). */
+export async function askFromHome(page: Page, question: string) {
+  const input = page.locator("#home-ask-input");
+  await input.scrollIntoViewIfNeeded();
+  await input.fill(question);
+  await input.press("Enter");
+  const combobox = page.getByRole("dialog", { name: "Command palette" }).getByRole("combobox");
+  await expect(combobox).toBeFocused();
+  await combobox.press("Enter");
+}
+
+export async function openExplore(page: Page, lens?: string) {
+  await page.goto(lens ? `/explore#lens=${lens}` : "/explore");
+  await page.evaluate(() => document.fonts.ready);
+}

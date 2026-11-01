@@ -7,7 +7,9 @@ export const MAIN_PAGES = [
 ] as const;
 
 export const PALETTE_OPEN = "palette:open";
-export const openPalette = () => window.dispatchEvent(new Event(PALETTE_OPEN));
+/** Ask mode (the home page's Ask box): open with the question typed in and "Ask about my work" selected. */
+export type PaletteOpenDetail = { query?: string; ask?: boolean };
+export const openPalette = (detail: PaletteOpenDetail = {}) => window.dispatchEvent(new CustomEvent<PaletteOpenDetail>(PALETTE_OPEN, { detail }));
 
 /** True when a keyboard shortcut should not fire: the user is typing or a modifier is held. */
 export function isTyping(e: KeyboardEvent): boolean {

@@ -1,0 +1,595 @@
+/* The v3 home (design-direction): black and white, one blue accent; Archivo condensed for
+   the name, titles and figures; Martian Mono for stage labels only. The medallion tints
+   are data states: the record on the rail and the hero stream's tier swatches. */
+.root {
+  --rail-x: 20px;
+  --pad-l: 48px;
+  --pad-r: 16px;
+  position: relative;
+  overflow-x: clip;
+  padding-top: 64px; /* the fixed nav */
+}
+@media (min-width: 768px) {
+  .root {
+    --rail-x: 40px;
+    --pad-l: 104px;
+    --pad-r: 40px;
+  }
+}
+
+.root a:not(.primary):not(.secondary) {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 1px;
+}
+.root a:hover {
+  color: var(--accent);
+}
+
+/* The rail: one data path down the page; the record rides it (motion only). */
+.rail {
+  position: absolute;
+  top: 64px;
+  bottom: 0;
+  left: var(--rail-x);
+  width: 1px;
+  pointer-events: none;
+  z-index: 1;
+}
+.track,
+.fill {
+  position: absolute;
+  inset: 0;
+}
+.track {
+  background: var(--border);
+}
+.fill {
+  background: var(--accent);
+  transform-origin: top;
+  opacity: 0;
+}
+.root[data-motion="on"] .fill {
+  opacity: 1;
+}
+.record {
+  position: absolute;
+  top: 0;
+  left: -6px;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  will-change: transform;
+}
+.root[data-motion="on"] .record {
+  display: flex;
+}
+.dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--bronze);
+  box-shadow: 0 0 0 4px var(--bg);
+  transition: background-color 250ms;
+}
+.record[data-state="cleaned"] .dot {
+  background: var(--silver);
+}
+.record[data-state="modeled"] .dot {
+  background: var(--gold);
+}
+.record[data-state="answer"] .dot {
+  background: var(--accent);
+}
+.recordLabel {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--bg);
+  padding: 0 4px;
+}
+/* The state label stays hidden: beside the rail it collided with headings (recruiter review);
+   the record's colour and the tier legend carry the state. */
+
+.section {
+  position: relative;
+  padding: 96px var(--pad-r) 96px var(--pad-l);
+  max-width: 1440px;
+}
+.stage {
+  position: relative;
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.node {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--rail-x) - var(--pad-l) - 4px);
+  width: 9px;
+  height: 9px;
+  border: 1px solid var(--text);
+  background: var(--bg);
+  transform: translateY(-50%);
+  transition: background-color 250ms, border-color 250ms;
+}
+.node[data-lit],
+.root:not([data-motion="on"]) .node {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.h2 {
+  margin: 0;
+  font-size: clamp(2.75rem, 7vw, 6.5rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+}
+
+/* 01 ingest */
+.heroPin {
+  position: relative;
+}
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  gap: 32px;
+  min-height: calc(100dvh - 64px);
+  padding-top: 48px;
+}
+@media (min-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    align-items: center;
+    column-gap: 32px;
+  }
+  .root[data-motion="on"][data-three="on"] .heroPin {
+    height: 180dvh;
+  }
+  .root[data-motion="on"][data-three="on"] .hero {
+    position: sticky;
+    top: 64px;
+    height: calc(100dvh - 64px);
+    min-height: 0;
+  }
+  .cue {
+    grid-column: 1 / -1;
+  }
+}
+.heroText {
+  min-width: 0;
+}
+.name {
+  margin: 0;
+  font-size: clamp(4.25rem, 17vw, 12rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+}
+@media (min-width: 960px) {
+  .name {
+    font-size: clamp(5rem, 10vw, 11.5rem);
+  }
+}
+.subline {
+  margin: 16px 0 0;
+  max-width: 46ch;
+  font-size: 1.125rem;
+  line-height: 1.45;
+}
+.lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  margin: 24px 0 0;
+  max-width: 52ch;
+}
+.leadValue {
+  font-size: clamp(2.75rem, 5vw, 4rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.9;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.leadLabel {
+  flex: 1 1 22ch;
+  line-height: 1.4;
+}
+.headline {
+  margin: 28px 0 0;
+  max-width: 22ch;
+  font-size: clamp(1.375rem, 2.6vw, 2.25rem);
+  font-weight: 600;
+  font-stretch: 112%;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.now {
+  margin: 16px 0 0;
+  max-width: 52ch;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.proofChips {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.proofChips li {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 28px;
+}
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 22px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 150ms, color 150ms;
+}
+.primary {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.primary:hover {
+  background: var(--accent-hover);
+  color: var(--on-accent);
+}
+.secondary {
+  border: 1px solid var(--text);
+  color: var(--text);
+}
+.secondary:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+.textLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+.stream {
+  margin: 0;
+  min-width: 0;
+}
+/* Phones: a short strip, so the work reel starts on the second screen (recruiter review). */
+.streamSlot {
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  max-height: 24dvh;
+}
+@media (min-width: 960px) {
+  .streamSlot {
+    aspect-ratio: 6 / 5;
+    max-height: 66dvh;
+  }
+}
+.tiers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.tiers b {
+  font-weight: 400;
+  color: var(--text);
+}
+.tiers b::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 6px;
+  background: var(--swatch);
+}
+.tier0 {
+  --swatch: var(--bronze);
+}
+.tier1 {
+  --swatch: var(--silver);
+}
+.tier2 {
+  --swatch: var(--gold);
+}
+.tier3 {
+  --swatch: var(--accent);
+}
+.cue {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* 02 transform: statements */
+.statements {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 20px;
+  max-width: 1100px;
+}
+.statement {
+  margin: 0;
+  max-width: 40ch;
+  font-size: clamp(1.25rem, 2.2vw, 1.875rem);
+  font-weight: 700;
+  font-stretch: 112%;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* 02 transform: the reel */
+.reelSection {
+  position: relative;
+  padding: 48px 0 96px var(--pad-l);
+}
+.reelHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding-right: var(--pad-r);
+  margin-bottom: 40px;
+  max-width: 1440px;
+}
+.reel {
+  padding-right: var(--pad-r);
+}
+.panel {
+  position: relative;
+  z-index: 2; /* above the rail: the rail passes behind the cards, not through their text */
+  background: var(--bg);
+  border-top: 2px solid var(--text);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+.cover {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin: 0 0 16px;
+}
+/* Pinned on desktop the panel must fit one screen, or it overflows up into the heading. */
+@media (min-width: 768px) {
+  .cover {
+    aspect-ratio: 16 / 9;
+    max-height: 32dvh;
+  }
+}
+.job {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.panelTitle {
+  margin: 10px 0 0;
+  font-size: clamp(1.5rem, 2.4vw, 2.25rem);
+  font-weight: 700;
+  font-stretch: 112%;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+.figure {
+  margin: 20px 0 0;
+  font-size: clamp(4rem, 9vw, 8.5rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+.figureLabel {
+  margin: 10px 0 0;
+  max-width: 34ch;
+  line-height: 1.4;
+}
+.oneLiner {
+  margin: 14px 0 0;
+  max-width: 44ch;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.open {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* 03 serve */
+.proof {
+  margin: 48px 0 0;
+  max-width: 1100px;
+}
+.proofRow {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  padding: 24px 0;
+  border-top: 1px solid var(--border);
+}
+@media (min-width: 768px) {
+  .proofRow {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    gap: 32px;
+    align-items: baseline;
+  }
+}
+.proofValue {
+  font-size: clamp(2.75rem, 5vw, 4.75rem);
+  font-weight: 800;
+  font-stretch: 62%;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.proofRow dd {
+  margin: 0;
+}
+.proofLabel {
+  display: block;
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+.proofSummary {
+  display: block;
+  margin-top: 6px;
+  max-width: 56ch;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* 04 query */
+.ask {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 680px;
+  min-height: 60px;
+  margin-top: 40px;
+  padding-left: 16px;
+  border: 1px solid var(--text);
+  background: var(--surface-raised);
+}
+.prompt {
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+.askInput {
+  flex: 1;
+  min-width: 0;
+  height: 58px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 1.125rem;
+  outline: none;
+}
+.askInput::placeholder {
+  color: var(--text-muted);
+}
+.ask:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.askButton {
+  align-self: stretch;
+  padding: 0 22px;
+  background: var(--text);
+  color: var(--bg);
+  font-weight: 500;
+}
+.askButton:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+.contact {
+  list-style: none;
+  margin: 32px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 28px;
+}
+.contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  overflow-wrap: anywhere;
+}
+
+/* Phones: no stage label above the name, no scroll cue, no tier legend (recruiter review). */
+@media (max-width: 767px) {
+  .cue,
+  .tiers {
+    display: none;
+  }
+  .hero .stage {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .section {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+  .hero {
+    padding-top: 24px;
+    gap: 20px;
+  }
+}
+.reelHint {
+  margin: -24px 0 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.hintWheel {
+  display: none;
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  .hintTouch {
+    display: none;
+  }
+  .hintWheel {
+    display: inline;
+  }
+}
+.contactNote {
+  margin: 24px 0 0;
+  max-width: 60ch;
+  line-height: 1.5;
+}
+
+.proofSource {
+  font-weight: 700;
+}
+.allWork {
+  margin: 24px 0 0;
+  padding-right: var(--pad-r);
+}

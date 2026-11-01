@@ -117,7 +117,7 @@ export default function HeroStream({ slot, tier }: SceneProps) {
     const along = vertical ? h : w;
     const across = vertical ? w : h;
     const font = getComputedStyle(slot.el).fontFamily || "sans-serif";
-    const glyphWidth = (vertical ? w * 0.86 : w * 0.36);
+    const glyphWidth = vertical ? w * 0.86 : w * 0.3;
     const glyph = glyphPoints("LLM", n, glyphWidth, font, rand);
     const pos = new Float32Array(n * 3);
     const vel = new Float32Array(n * 3);
@@ -139,7 +139,8 @@ export default function HeroStream({ slot, tier }: SceneProps) {
     const toWorld = (u: number, v: number): [number, number] => (vertical ? [v, along / 2 - u] : [u - along / 2, v]);
     const bin = { u0: along * 0.02, u1: along * (vertical ? 0.3 : 0.27), v0: -across * 0.42, v1: across * 0.42 };
     const lanes = { u0: along * (vertical ? 0.34 : 0.31), u1: along * (vertical ? 0.58 : 0.6) };
-    const glyphCentre = vertical ? toWorld(along * 0.8, 0) : toWorld(along * 0.8, 0);
+    // Horizontal: centred in the last third with margin, so the letters never touch the edge.
+    const glyphCentre = vertical ? toWorld(along * 0.8, 0) : toWorld(along * 0.74, 0);
     // Raw particles start scattered through the bin.
     for (let i = 0; i < n; i++) {
       const u = bin.u0 + rand() * (bin.u1 - bin.u0);

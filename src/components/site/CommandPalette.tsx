@@ -6,7 +6,7 @@ import { profile } from "@/content/profile";
 import { openAsk } from "@/lib/ask/events";
 import { withBasePath } from "@/lib/paths";
 import { getTheme, setTheme } from "@/lib/theme";
-import { isTyping, MAIN_PAGES, PALETTE_OPEN } from "./routes";
+import { isTyping, MAIN_PAGES, PALETTE_OPEN, type PaletteOpenDetail } from "./routes";
 
 // The command palette (runbook V3): ⌘K / Ctrl+K, "/" or the nav button. A native modal
 // <dialog> (focus stays inside, Escape closes, focus returns to the opener) holding a
@@ -101,11 +101,12 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
 
   // Open from anywhere: the nav button (event), ⌘K / Ctrl+K, or "/" when not typing.
   useEffect(() => {
-    const open = () => {
+    const open = (e?: Event) => {
       const d = dialog.current;
       if (!d || d.open) return;
-      setQuery("");
-      setActive(0);
+      const detail = (e as CustomEvent<PaletteOpenDetail> | undefined)?.detail ?? {};
+      setQuery(detail.query ?? "");
+      setActive(detail.ask ? Number.MAX_SAFE_INTEGER : 0); // clamped to the last option, "Ask about my work"
       setNote("");
       d.showModal();
       input.current?.focus();
@@ -138,7 +139,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
       const step = e.key === "ArrowDown" ? 1 : -1;
-      setActive((a) => (a + step + visible.length) % visible.length);
+      setActive((a) => (Math.min(a, visible.length - 1) + step + visible.length) % visible.length);
     } else if (e.key === "Home" || e.key === "End") {
       e.preventDefault();
       setActive(e.key === "Home" ? 0 : visible.length - 1);

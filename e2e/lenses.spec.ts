@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
-import { expectNoA11yViolations, openHome } from "./helpers";
+import { expectNoA11yViolations, openExplore } from "./helpers";
 
-test.beforeEach(async ({ page }) => openHome(page));
+test.beforeEach(async ({ page }) => openExplore(page));
 
 // Runbook Phase 7: the Work section's lens switcher.
 test.describe("Lenses", () => {
@@ -33,7 +33,7 @@ test.describe("Lenses", () => {
   });
 
   test("Timeline carries every role outcome and nests projects under their role", async ({ page }) => {
-    await page.goto("/#lens=timeline");
+    await page.goto("/explore#lens=timeline");
     const work = page.locator("#work");
     await expect(work.getByRole("heading", { level: 4 }).first()).toHaveText("Tech Assistant, Surplus Operations");
     const celebal = work.locator("li").filter({ has: page.getByRole("heading", { level: 4, name: "Associate, Data Engineering" }) });
@@ -47,7 +47,7 @@ test.describe("Lenses", () => {
   });
 
   test("Skill map counts usage and filters the list beneath", async ({ page }) => {
-    await page.goto("/#lens=skills");
+    await page.goto("/explore#lens=skills");
     const work = page.locator("#work");
     await expect(work.getByRole("heading", { name: "All projects" })).toBeVisible();
     const python = work.getByRole("button", { name: /^Python/ });
@@ -60,14 +60,14 @@ test.describe("Lenses", () => {
   });
 
   test("By problem and By industry key cards on graph nodes", async ({ page }) => {
-    await page.goto("/#lens=problems");
+    await page.goto("/explore#lens=problems");
     await expect(page.getByRole("list", { name: "Work by problem solved" }).getByRole("heading", { level: 4, name: "Ungrounded AI output" })).toBeVisible();
-    await page.goto("/#lens=industries");
+    await page.goto("/explore#lens=industries");
     await expect(page.getByRole("list", { name: "Work by industry" }).getByRole("heading", { level: 4, name: "E-commerce" })).toBeVisible();
   });
 
   test("a project link from a lens opens the project's page (V3)", async ({ page }) => {
-    await page.goto("/#lens=recruiter");
+    await page.goto("/explore#lens=recruiter");
     await page.locator("#recruiter-sheet").getByRole("link", { name: "Label Lens" }).click();
     await expect(page).toHaveURL(/\/work\/label-lens$/);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Label Lens");
@@ -75,7 +75,7 @@ test.describe("Lenses", () => {
 
   test("Recruiter mode prints on one page", async ({ page, isMobile }) => {
     test.skip(isMobile, "PDF output is the same at any viewport");
-    await page.goto("/#lens=recruiter");
+    await page.goto("/explore#lens=recruiter");
     await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
     for (const format of ["Letter", "A4"] as const) {
       const pdf = await page.pdf({ format, printBackground: true });
@@ -84,6 +84,7 @@ test.describe("Lenses", () => {
   });
 
   test("summary links open the right lens on /explore (V3)", async ({ page }) => {
+    await page.goto("/about");
     await page.locator("#experience").getByRole("link", { name: /on the timeline/ }).click();
     await expect(page).toHaveURL(/\/explore#lens=timeline$/);
     await expect(switcher(page).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
@@ -104,7 +105,7 @@ test.describe("Lenses", () => {
 
     test("Recruiter mode prints dark text on white", async ({ page, isMobile }) => {
       test.skip(isMobile, "Desktop only");
-      await page.goto("/#lens=recruiter");
+      await page.goto("/explore#lens=recruiter");
       await expect(page.locator("#recruiter-sheet")).toBeVisible();
       await page.emulateMedia({ media: "print", colorScheme: "dark" });
       // The theme colour fade transitions the switch, so poll until it settles.
@@ -114,13 +115,12 @@ test.describe("Lenses", () => {
     });
   });
 
-  test("one h1 and one h2 per section in every lens", async ({ page }) => {
+  test("one h1 in every lens, and no accessibility violations", async ({ page }) => {
     for (const lens of ["highlights", "timeline", "skills", "problems", "industries", "recruiter"]) {
-      await page.goto(lens === "highlights" ? "/" : `/#lens=${lens}`);
+      await page.goto(lens === "highlights" ? "/explore" : `/explore#lens=${lens}`);
       await expect(page.locator("#work [data-lens-panel]:not([hidden])").first()).toBeVisible();
       await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-      const h2 = await page.getByRole("heading", { level: 2 }).allTextContents();
-      expect(h2, lens).toEqual(["About", "Work", "Experience", "Skills", "Certifications and education", "Contact"]);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Explore");
       await expectNoA11yViolations(page, "#work");
     }
   });

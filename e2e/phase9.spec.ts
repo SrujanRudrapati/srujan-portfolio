@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { askFromHome } from "./helpers";
 
 // Runbook Phase 9: mobile widths and targets, touch flows, motion gating, metadata.
 
@@ -30,9 +31,10 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
     });
   }
 
-  test("390px: hero diagram text renders at 12px or more", async ({ page }) => {
+  test("390px: medallion diagram text renders at 12px or more", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    const smallest = await page.locator("#top .medallion").evaluate((svg) => {
+    await page.goto("/about");
+    const smallest = await page.locator("main .medallion").evaluate((svg) => {
       const scale = svg.getBoundingClientRect().width / (svg as SVGSVGElement).viewBox.baseVal.width;
       return Math.min(...Array.from(svg.querySelectorAll("text")).filter((t) => getComputedStyle(t).display !== "none").map((t) => parseFloat(getComputedStyle(t).fontSize) * scale));
     });
@@ -42,11 +44,10 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
   for (const where of ["ask", "skills"] as const) {
     test(`controls in the ${where === "ask" ? "open Ask panel" : "Skill map"} are at least 44px tall`, async ({ page }) => {
       if (where === "ask") {
-        await page.locator("#hero-ask").fill("What have you done with Spark?");
-        await page.keyboard.press("Enter");
+        await askFromHome(page, "What have you done with Spark?");
         await expect(page.getByRole("dialog").getByRole("list", { name: "Evidence" })).toBeVisible();
       } else {
-        await page.goto("/#lens=skills");
+        await page.goto("/explore#lens=skills");
         await expect(page.getByRole("heading", { name: "All projects" })).toBeVisible();
       }
       const scope = where === "ask" ? "dialog[open]" : "#work";
@@ -76,15 +77,17 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
     await page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" }).tap();
     await expect(page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
     await page.goto("/");
-    await page.locator("#hero-ask").scrollIntoViewIfNeeded();
-    await page.locator("#hero-ask").tap();
-    await page.locator("#hero-ask").fill("What runs in production?");
+    await page.locator("#home-ask-input").scrollIntoViewIfNeeded();
+    await page.locator("#home-ask-input").tap();
+    await page.locator("#home-ask-input").fill("What runs in production?");
     await page.getByRole("search", { name: "Ask about my work" }).getByRole("button", { name: "Ask" }).tap();
+    await page.getByRole("dialog", { name: "Command palette" }).getByRole("option", { selected: true }).tap();
     await expect(page.getByRole("dialog", { name: "Ask about my work" }).getByRole("list", { name: "Evidence" })).toBeVisible();
   });
 
-  test("reduced motion: the hero diagram is lit and still", async ({ page }) => {
-    const state = await page.locator("#top .medallion").evaluate((svg) => ({
+  test("reduced motion: the medallion diagram is lit and still", async ({ page }) => {
+    await page.goto("/about"); // the v2 medallion diagram moved here in V4
+    const state = await page.locator("main .medallion").evaluate((svg) => ({
       dot: getComputedStyle(svg.querySelector(".medallion-dot")!).display,
       lit: getComputedStyle(svg.querySelector(".medallion-lit")!).opacity,
       animation: getComputedStyle(svg.querySelector(".medallion-lit")!).animationName,
@@ -95,17 +98,21 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
   test.describe("with motion allowed", () => {
     test.use({ reducedMotion: "no-preference" });
 
-    test("the hero diagram loops only while on screen, and only with opacity and offset", async ({ page }) => {
-      const wrap = page.locator("#top .medallion").locator("..");
+    test("the medallion diagram loops only while on screen, and only with opacity and offset", async ({ page }) => {
+      await page.goto("/about"); // the v2 medallion diagram moved here in V4
+      const wrap = page.locator("main .medallion").locator("..");
+      await page.locator("main .medallion").scrollIntoViewIfNeeded();
       await expect(wrap).toHaveAttribute("data-animate", "on");
-      const lit = await page.locator("#top .medallion .medallion-lit").first().evaluate((el) => getComputedStyle(el).animationName);
+      const lit = await page.locator("main .medallion .medallion-lit").first().evaluate((el) => getComputedStyle(el).animationName);
       expect(lit).toMatch(/^stage-/);
       await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
       await expect(wrap).not.toHaveAttribute("data-animate", "on");
     });
 
-    test("the hero diagram pauses while the tab is hidden", async ({ page }) => {
-      const wrap = page.locator("#top .medallion").locator("..");
+    test("the medallion diagram pauses while the tab is hidden", async ({ page }) => {
+      await page.goto("/about"); // the v2 medallion diagram moved here in V4
+      const wrap = page.locator("main .medallion").locator("..");
+      await page.locator("main .medallion").scrollIntoViewIfNeeded();
       await expect(wrap).toHaveAttribute("data-animate", "on");
       await page.evaluate(() => {
         Object.defineProperty(document, "hidden", { configurable: true, get: () => true });

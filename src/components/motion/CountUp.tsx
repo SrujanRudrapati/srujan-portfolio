@@ -4,7 +4,15 @@ import { useEffect, useRef } from "react";
 import { parseCount, formatCount } from "./count";
 import { EASE, FULL, gsap } from "./gsap";
 
-type Props = { value: string; className?: string };
+type Props = {
+  value: string;
+  className?: string;
+  /** In a sideways reel: count when the figure itself is half on screen (IntersectionObserver
+   *  sees transforms), not when the reel's row reaches the viewport, or every panel fires at once. */
+  sideways?: boolean;
+};
+
+const SIDEWAYS_THRESHOLD = 0.5;
 
 /**
  * A figure that counts up to its value as it arrives. The real value is in the HTML from
@@ -12,7 +20,7 @@ type Props = { value: string; className?: string };
  * truth: a remount never re-reads an interim number. Approximate values keep "~"/"about".
  * Width is reserved with tabular figures by the caller's class. Reduced motion: static.
  */
-export function CountUp({ value, className }: Props) {
+export function CountUp({ value, className, sideways = false }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -34,16 +42,29 @@ export function CountUp({ value, className }: Props) {
         onComplete: () => {
           el.textContent = value;
         },
-        scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        ...(sideways ? { paused: true } : { scrollTrigger: { trigger: el, start: "top 88%", once: true } }),
       });
+      let io: IntersectionObserver | undefined;
+      if (sideways) {
+        io = new IntersectionObserver(
+          ([entry]) => {
+            if (!entry?.isIntersecting) return;
+            tween.play();
+            io?.disconnect();
+          },
+          { threshold: SIDEWAYS_THRESHOLD },
+        );
+        io.observe(el);
+      }
       return () => {
+        io?.disconnect();
         tween.scrollTrigger?.kill();
         tween.kill();
         el.textContent = el.dataset.count ?? el.textContent; // data-count is always the current value
       };
     });
     return () => mm.revert();
-  }, [value]);
+  }, [value, sideways]);
 
   return (
     <span ref={ref} className={className} data-count={value}>

@@ -1,0 +1,7 @@
+{
+  "frames": 846,
+  "meanFps": 59.6,
+  "p95FrameMs": 16.8,
+  "over33ms": 2,
+  "gpu": "ANGLE (Apple, ANGLE Metal Renderer: Apple M2, Unspecified Version)"
+}
