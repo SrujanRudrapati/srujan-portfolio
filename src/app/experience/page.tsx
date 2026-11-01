@@ -1,13 +1,14 @@
 import type { Metadata } from "next";
-import { Experience } from "@/components/Experience";
+import { Timeline } from "@/components/experience/Timeline";
 import { BackPill } from "@/components/shell/BackPill";
+import { dateToYear, defaultItemId, timeline } from "@/data/experience";
 import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = pageMeta("/experience", "Experience | Srujan Rudrapati", "Every role, from Celebal Technologies to ASU Surplus.");
+export const metadata: Metadata = pageMeta("/experience", "Experience | Srujan Rudrapati", "Every role on one timeline, from Celebal Technologies to ASU Surplus.");
 
-// Interim (W2): the v3 Experience list in the v4 page frame, so the home tile has a page.
-// Phase W5 replaces it with the timeline chart.
+// Runbook v4 W5: the Experience timeline. The roles and the milestone come from the graph.
 export default function ExperiencePage() {
+  const items = timeline();
   return (
     <main id="main" className="page">
       <div className="wrap">
@@ -15,7 +16,8 @@ export default function ExperiencePage() {
         <h1 tabIndex={-1} className="page-title">
           Experience
         </h1>
-        <Experience />
+        <p className="page-intro">Every role on one timeline. Select a bar to read what happened there.</p>
+        <Timeline items={items} defaultId={defaultItemId(items)} builtAt={dateToYear(new Date())} />
       </div>
     </main>
   );

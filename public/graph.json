@@ -122,7 +122,7 @@
         "highlights": [
           "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
           "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
-          "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
+          "Bailout: roommates’ AI agents trade chores through an auction, with human approval at each step."
         ],
         "entries": [
           {
@@ -136,7 +136,7 @@
           },
           {
             "name": "Bailout",
-            "text": "Roommates' AI agents trade chores through an auction, with human approval at each step."
+            "text": "Roommates’ AI agents trade chores through an auction, with human approval at each step."
           }
         ]
       }
@@ -608,7 +608,7 @@
           },
           {
             "label": "Code review and mentoring",
-            "text": "Reviewed teammates' code as senior data engineer on one project, and mentored two interns."
+            "text": "Reviewed teammates’ code as senior data engineer on one project, and mentored two interns."
           },
           {
             "label": "Pre-sales",
@@ -699,7 +699,7 @@
       "id": "certification-databricks-de-professional",
       "type": "certification",
       "label": "Databricks Certified Data Engineer Professional",
-      "summary": "Databricks' professional-level data engineering certification.",
+      "summary": "Databricks’ professional-level data engineering certification.",
       "evidence": [
         {
           "label": "Certifications",

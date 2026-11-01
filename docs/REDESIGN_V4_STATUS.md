@@ -9,11 +9,27 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W2 — Home | done | `redesign: phase W2 — home hub` | Headline (three masked lines), lede, now line, Ask link, four spotlight tiles, 2D dot field with five shapes; fits one screen at 1280×720 to 1920×1080; interim `/experience` and `/contact` routes so the tiles have pages. Checklist below. |
 | W3 — Work (G5) | done; G5 approved (DECISIONS 21) | `redesign: phase W3 — work catalogue and list` | Segmented Catalogue/List; looping catalogue of the four featured (drag, trackpad, keys, pills, arrows); list of all eleven with metal figures; view-transition morph with per-project names and 60 ms stagger. Comparisons in `docs/v4/compare/`. Checklist below. |
 | W4 — Project pages | done | `redesign: phase W4 — project pages` | Eleven pages from one template: art band (featured) or compact title, intro with status and links, up to three metal result tiles, What it does / The entries, The problem, How it’s built (diagrams restyled, draw once on entry, no GSAP), Stack, Next project looping inside its group. v3 case-study template removed. Checklist below. |
-| W5 — Experience | not started | | |
+| W5 — Experience | done | `redesign: phase W5 — experience timeline` | Year axis 2023 to 2027, one lane per graph role (Celebal intern, Celebal associate, ASU teaching, ASU Surplus) plus Milestones (DevHacks diamond), Today line; bars are buttons; detail panel with every outcome, figures and projects, opening on the current role. Checklist below. |
 | W6 — About and Contact | not started | | |
 | W7 — Integrate and clean up | not started | | |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W5 checklist
+
+- [x] W5.1 Back pill, "Experience" title, one-line intro "Every role on one timeline. Select a bar to read what happened there." (the reference's "Four years on one axis" has no source; fact-checker).
+- [x] W5.2 Chart in a rounded 28px panel (`experience/Timeline.tsx`, data `src/data/experience.ts`): axis labelled 2023 to 2027 (from mid-2022 so the internship shows), lanes Celebal intern, Celebal associate, ASU teaching, ASU Surplus and Milestones (DevHacks win as a rotated diamond), a "Today" line labelled under the axis. Bars are bronze outlines with a 16% fill, solid bronze when hovered or selected; buttons with `aria-expanded` and `aria-controls`. Narrow bars carry their label outside: right of the intern bar, left of ASU Surplus and the milestone (tested: none truncated).
+- [x] W5.3 Detail panel (live region): dates, role title in Bodoni, organisation in bronze with the place, the summary, the role’s figures in metal (Celebal: about 50%, about 10 million, about 30%; TA: 40+), every outcome (Celebal’s twelve, with their labels), and the projects built in the role (Surplus AI, WLAN toolkit) or the milestone’s page. Opens on the current role; the server HTML carries it.
+- [x] W5.4 The graph has real dates for the Graduate Teaching Assistant role (August 2025 to May 2026), so it has a lane. Education is not on the chart: the M.S. has no start date in the graph and the B.Tech (2019 to 2023) falls mostly before the axis; both are on About. The expected graduation (December 2026) is not drawn: its label would collide with the DevHacks diamond, and About carries it.
+- [x] W5.5 Phones: the chart keeps a 700px minimum and scrolls sideways inside its panel; the detail stacks (tested: the page itself does not overflow).
+- [x] "Today" uses the build date in the server HTML and the visitor’s date after hydration (`useSyncExternalStore`), so the current role’s bar always ends today.
+- [x] Tests: `src/data/experience.test.ts` (9: month maths, labels, axis clamp, lanes and order, graph dates, figures and outcomes kept, intern summary, default selection); `e2e/v4-experience.spec.ts` (bars, axis and Today; default role in the server HTML; selecting a bar; keyboard and the milestone; outside labels untruncated; phone scroll; axe): 12 passed, 2 skipped. All v4 specs 102 passed; unit suite 115 passed.
+- [x] lint, typecheck, build clean; `npm run verify -- --phase W5 --path /experience`: all pass; screenshots in `docs/screenshots/phase-W5/`, inspected at 1440 (beside the reference shot) and 390.
+- [x] fact-checker: 64 claims, 63 supported, 1 unsupported ("Four years on one axis", replaced). Apostrophe conversions confirmed wording-identical.
+
+### Rulings made in Phase W5
+
+- The v3 `Experience` list component stays until W7 (it is no longer routed); `/explore`’s Timeline lens also shows the roles.
 
 ## Phase W4 checklist
 
