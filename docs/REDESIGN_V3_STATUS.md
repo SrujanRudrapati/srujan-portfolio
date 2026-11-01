@@ -13,7 +13,15 @@ Ledger for `docs/REDESIGN_V3_RUNBOOK.md` (same format as `docs/REDESIGN_STATUS.m
 | V5 — Case study pages | done | fe86b9b `redesign: phase V5 — case study pages` | `/work/[slug]` template from the graph: results, problem, approach (DevHacks: three entries), scroll-drawn architecture, stack, next project; compact when data is thin. Checklist below. |
 | V6 — Secondary pages | done | 2f86a24 `redesign: phase V6 — secondary pages in the concept` | One rail frame for every page; `/work` index with 3D covers; Flip lens switches; `/about`, `/cv` restyled; 404 game (also in the palette); Ask panel restyled. Checklist below. |
 | V7 — Polish, mobile, perf, a11y | done | 755f14d `redesign: phase V7 — polish, mobile, performance, accessibility` | Mobile and short-iPhone first screen; WebKit suite green (Firefox cannot launch here); Lighthouse mobile 92 / desktop 100 / a11y 100; axe clean everywhere; slow-route bug fixed; `/lab` removed. Home JS 207 kB vs 180 (DECISIONS 19). Checklist below. |
-| V8 — Ship (G1) | in progress | | Started 2026-10-31. |
+| V8 — Ship (G1) | blocked: awaiting `merge` (G1, DECISIONS 20) | | Release checks pass (CI-parity build, 16 routes smoke-tested under `/srujan-portfolio`, `release:check`); `v2-before-v3` tagged on `main` (local). Checklist below. |
+
+## Phase V8 checklist
+
+- [x] Lint and typecheck clean; production build with `NEXT_PUBLIC_BASE_PATH=/srujan-portfolio` (the CI value).
+- [x] Served at `http://localhost:4000/srujan-portfolio/` and smoke-tested: 16 routes (home, work, 11 case studies, explore, about, cv) answer 200 with no console errors, no failed requests (only the prefetches a closing page aborts), every root-relative link, image, stylesheet and script prefixed; 17 distinct internal links resolve; the timeline lens loads `graph.json`; Ask answers from `search-index.json` (first evidence: Surplus AI); `out/404.html` is the "Row not found" page (GitHub Pages serves it for missing paths; the local `serve` uses its own).
+- [x] `npm run release:check` ok (9 required files, 23 links; no tooling routes in `out/`).
+- [x] Rollback point: `v2-before-v3` tagged on `main` at ecfa9fc (local; pushed with `main` on merge).
+- [ ] **G1: waiting for Srujan's `merge`** (DECISIONS 20). Then: merge `--no-ff`, push `main` and the tag, deploy with the existing workflow, verify every route and asset live, record live Lighthouse in NOTES.
 
 ## Phase V7 checklist
 
