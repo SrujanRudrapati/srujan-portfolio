@@ -1,63 +1,54 @@
 ---
 name: motion-system
-description: The motion and 3D rules for the v3 portfolio (Pipeline concept): smooth scroll, GSAP scroll primitives, page transitions, the shared WebGL canvas, physics, posters and fallbacks, reduced motion, and performance budgets. Load whenever adding or changing any animation, scroll effect, transition, interaction, WebGL scene, physics simulation, or 3D asset.
+description: The motion rules for the v4 portfolio (Midnight & Bronze): one easing, durations, page transitions via the View Transitions API, the home dot field (2D canvas spring physics and its performance contract), custom cursor, magnetic buttons, Lenis smooth scroll, the catalogue and list morph, and reduced motion. Load whenever adding or changing any animation, transition, hover, scroll effect, canvas, or interaction.
 ---
 
-# Motion system (v3)
+# Motion system (v4)
 
-Written at Phase V1.5 (pulled forward from runbook V2 item 1 because all 3D work loads it); V2 extends it with the primitives' APIs. Concept and colours: `design-direction`. 3D API detail: the `threejs-*` skills.
+Rewritten at Phase W0 from runbook v4 §10 and the reference (`docs/v4/reference/srujan-premium-concept.html`). v3's GSAP scroll primitives, WebGL stage, posters and physics scenes are retired in W7; nothing new may use them. Colours and layout: `design-direction`.
 
-## Signature
+## Rules
 
-One record travels the pipeline. Scrolling moves it down a thin rail through `ingest`, `transform`, `serve`, `query`; at each stage it changes state (bronze `raw`, silver `cleaned`, gold `modeled`, accent `answer`) and that stage lights. The hero is the same idea in 3D: a particle stream that falls as bronze noise, is pulled into silver lanes, glows gold and condenses into the headline. Everything else is quieter than this.
+- **One easing:** `cubic-bezier(.16,1,.3,1)` (`--ease`). No other curve, except `ease` on the 260 ms fade-out.
+- **Durations:** entrances 800 ms; hovers 300 to 600 ms; toggles and morphs 800 ms; fades 260 ms. The home headline lines rise over 1.2 s with a 90 ms stagger (reference).
+- **Only `transform` and `opacity` animate**, plus `width` on the progress pills and the segmented-control highlight (and colour/border/background on hover, which do not trigger layout).
+- **The dot field is the only ambient motion.** Everything else answers a person's action. The live dot's pulse is the one exception (a 2.4 s box-shadow pulse on an 8px element).
+- **Nothing in JS animates layout.** Positions are written as `transform`; pointer-driven values go through CSS variables.
+- **Banned:** animated full-screen overlays, `mix-blend-mode` on large layers, `backdrop-filter` outside the header, `filter` transitions on large elements, `shadowBlur` in canvas loops, `background-attachment: fixed`, GSAP, WebGL, any animation runtime.
 
-## GSAP and scroll rules
+## Page transitions
 
-- Lenis (lerp about 0.1, touch smoothing off) on GSAP's ticker, synced with ScrollTrigger. Anchors and keyboard scrolling keep working. Off under reduced motion.
-- Animate only `transform`, `opacity`, `clip-path` and SVG stroke in the DOM.
-- One easing family: `power3.out` for entrances, `none` for scrubs. Entrances 500 to 900 ms; hovers 150 to 250 ms.
-- Nothing loops forever except the concept's ambient element (the hero stream); it pauses off screen and when the tab is hidden.
-- Pins only at 768 px and wider unless tested on touch. Horizontal reels become native swipe with snap on mobile.
-- Kill every ScrollTrigger on route change; a Playwright test navigates back and forth 10 times and counts triggers, live WebGL views and physics worlds.
-- Count-ups: the real figure is in the HTML and in `data-count` from the start; `~` stays.
-- Page transitions at most 600 ms (the data line sweeps across); focus moves to the new `h1`; under reduced motion a fade of at most 150 ms.
+- On an internal route change: the old page fades out over 260 ms; the new page enters over 800 ms from 14px below with `--ease`. Use `document.startViewTransition` where supported (root old: opacity to 0 in 260 ms; root new: from `opacity 0, translateY(14px)` in 800 ms, delayed so it starts as the old one ends); otherwise a CSS class fallback on `main` with the same numbers.
+- After the swap: scroll resets to the top (Lenis `immediate`), focus moves to the new page's `h1` (`tabindex="-1"`, no visible outline), the cursor label resets.
+- The Work Catalogue ⇄ List toggle is a separate view transition: `html.vt-toggle` turns off the root cross-fade; each project has three names (`wi-N` row/card, `wa-N` art, `wn-N` name), groups animate 800 ms with a 60 ms stagger per item. No View Transitions API: instant switch.
+- Reduced motion: every transition is instant.
 
-## 3D rules
+## Dot field (home)
 
-- **One canvas.** A single fixed `<Canvas>` (R3F) behind the page renders every scene through drei `View` slots tied to DOM elements. Never mount a second WebGL context. The canvas is created after first paint (dynamic import plus idle callback), never in the server HTML.
-- **Only on screen.** A scene renders and simulates only while its slot intersects the viewport (IntersectionObserver plus a margin). Off-screen physics worlds stop stepping; settled bodies sleep (`allowSleep`, sleep thresholds tuned so a settled pallet costs nothing). The frame loop drops to `demand` when nothing is visible or moving.
-- **Poster first.** Every scene has a static poster (`public/posters/<scene>.webp`, transparent, same framing as the live scene; `<scene>-portrait.webp` where phones need a different layout) rendered ahead of the build by `npm run posters` and committed. The poster is the slot's background from the first paint; the live view fades in over it (150 ms) once its first frame is ready. The poster is all a visitor sees under `prefers-reduced-motion: reduce`, on low-power devices (`navigator.hardwareConcurrency <= 4` or `deviceMemory <= 4` or Save-Data), and when WebGL is missing or the context is lost.
-- **Physics.** cannon-es (decision and sizes in V3 STATUS, Phase V1.5): fixed step 1/60 with at most 3 substeps, real gravity (-9.82), contact materials with friction and restitution per material pair, SAP broadphase, sleep on. Keep each scene's simulation in a three-free module (`scenes/*-sim.ts`) with a Vitest test. Known quirks: `applyForce`/`applyImpulse` take a body-relative point; small non-zero friction misbehaves (use 0 plus an explicit force); avoid `linearDamping` on flat boxes that must stack; keep bodies that need a driving force awake. Motion comes from forces, impulses and constraints, not keyframes; scroll may drive a force or a kinematic body, never a body's position directly.
-- **Particles.** The hero stream integrates forces itself (gravity, a lane field, drag, cursor repulsion) on the CPU into an `InstancedMesh` or `Points` buffer; no per-frame allocation. Mobile uses about a third of the desktop count.
-- **Look.** AgX tone mapping, sRGB output, one CC0 studio HDRI for image-based light (loaded once, PMREM'd once, shared), at most one shadow-casting light, contact shadows for floors (they stand in for AO), no post-processing pass on the shared canvas (per-View render targets cost too much), a halo sprite instead of bloom on gold/LLM elements only. DPR clamped to [1, 1.5] desktop and [1, 1.25] mobile.
-- **Assets.** CC0 only (Poly Haven, ambientCG) or built in code; recorded in `docs/v3/ASSETS.md`. Textures KTX2 (ETC1S colour, UASTC normal), at most 1k; models meshopt or Draco; decoders self-hosted under `public/three/`. Budget about 1.5 MB of 3D assets per page, counted by `npm run verify`. No brand logos, liveries or trademarks.
-- **Interaction.** Click or tap flicks a body with an impulse; the cursor is a gentle force on desktop (`pointer: fine`) only. 3D is decorative for assistive tech: the slot has `role="img"` and an `aria-label` describing the scene; the content it illustrates is always in the DOM text.
-- **Performance target.** 60 fps on a mid-range laptop with the hero and one physics cover on screen; initial page JS budget unchanged (the 3D chunk loads after first paint).
+A 2D canvas client component. Shapes ported from the reference: `idle` (three streams converging into a ring with a short output line), `work` (three overlapping plates), `experience` (timeline bars, an axis and a milestone diamond), `about` (head and shoulders), `contact` (envelope). Hovering or focusing a tile switches the target shape; leaving the tile row returns to idle.
 
-## Reduced motion
+- **Physics:** per-dot spring toward the target, k between 0.018 and 0.048; velocity damping 0.86; a sine wobble of 0.004 units; cursor repulsion within 60px.
+- **Colour:** steel-white `rgba(214,224,236,.6)` and about 18% bronze `rgba(226,197,158,1)` with a wider glow.
+- **Performance contract (required):** one pre-rendered glow sprite per colour drawn with `drawImage` (never `shadowBlur`, never per-dot gradients); 1100 dots, 700 under 700px wide; device pixel ratio capped at 2; target shapes computed once per shape and cached; no per-frame allocation. Full-rate frames only while the field has energy; when total squared velocity is about 0, drop to about 12 fps for the wobble; wake on tile hover/focus or the cursor coming within 60px. Stop entirely when off screen (IntersectionObserver), on hidden tabs (`visibilitychange`) and when the home route unmounts.
+- **Reduced motion:** draw the target shape once, no loop; redraw once on tile hover/focus.
 
-A full alternate mode: Lenis off, nothing pinned or scrubbed, entrances skipped, no WebGL started (posters only), page transitions are fades of at most 150 ms. Every page must read completely in this mode.
+## Cursor and magnetic
+
+- Only with `(hover: hover) and (pointer: fine)` and not under reduced motion. A 34px bronze ring (lerp 0.18 toward the pointer) and a 5px bronze dot (exact). The ring grows to 58px over links and buttons; over the catalogue's front card it becomes an 84px solid bronze disc labelled "Open", over the rest of the stage "Drag". The native cursor stays (text fields keep their I-beam). The label resets on route change. Both are `aria-hidden` and `pointer-events: none`.
+- Magnetic: arrow buttons, back pills and main buttons move up to 25% of the pointer offset toward the pointer (transform only) and spring back on leave over 600 ms with `--ease`.
+
+## Smooth scroll
+
+Lenis with `lerp: 0.09`, its own rAF loop, off under reduced motion and on touch. Native scroll underneath so keyboard, anchors and find-in-page keep working. The header's frosted state and the 1px metal progress line (scaleX of scroll position) read the native scroll position with a passive listener and write one transform per frame.
+
+## Hero headline
+
+Three lines, each in an `overflow: hidden` mask with `padding-bottom: .16em; margin-bottom: -.1em` so descenders are never clipped; the inner span rises from `translateY(105%)` over 1.2 s, 90 ms stagger, on first load only. Lines do not wrap on desktop (`white-space: nowrap` above 560px). Under reduced motion the lines are simply there.
+
+## Reduced motion (full alternate mode)
+
+Instant page transitions and toggles, static dots, no cursor, no magnetic, no headline reveal, no Lenis, no pulse. Every page must read completely in this mode.
 
 ## Not allowed
 
-Autoplay sound, scroll-jacking that fights the wheel, preloaders that block content, animation of layout properties, WebGL on the server, third-party CDN requests for decoders, HDRIs or fonts.
-
-## Primitives (V2, `src/components/motion/`)
-
-Use these instead of ad-hoc GSAP. Every one is a client component or hook, SSR-safe for static export, builds only under `gsap.matchMedia(FULL)` (reduced motion gets the finished markup), and reverts itself on unmount, so route changes leak nothing (checked by `e2e/motion.spec.ts`: 10 round trips, equal ScrollTrigger, slot and canvas counts).
-
-| Primitive | Use | Notes |
-|---|---|---|
-| `MotionRoot` | Once per document, in a layout | Smooth scroll, page transitions, cursor, first-visit intro, the shared 3D `StageHost` (so the canvas persists across pages), and `window.__motion` counters for tests |
-| `SmoothScroll` | (inside MotionRoot) | Lenis lerp 0.1 on GSAP's ticker, `syncTouch` off, `anchors` on; native scroll underneath so keyboard, find-in-page and scrollbars work |
-| `<SplitReveal as by>` | Headings and short lines | SplitText with masks, `aria: "auto"` (unsplit text for screen readers), `autoSplit` re-splits on resize and font load; plain-string children only |
-| `useScrubTimeline(ref, build, opts)` | Scroll-scrubbed sequences (rail fills, diagrams drawing) | Timeline with `ease: "none"`; markup must already show the finished state |
-| `<Pin heights>` | Hold a section for N viewport heights | 768 px and wider only |
-| `<HorizontalReel label>` | Project reels (pass `<li>` children) | Desktop: pinned sideways scrub. Phones and reduced motion: native swipe with snap, focusable |
-| `<CountUp value>` | Impact figures | Real value in the HTML and in `data-count`; counts once on entry; keeps `~` and `about` |
-| `<Magnetic>` | The primary button or two per page | Fine pointers only; at most 10 px |
-| `Cursor` | (inside MotionRoot) | Accent ring beside the native cursor (never hides it); grows on links; shows `data-cursor="open"` labels |
-| `PageTransitions` | (inside MotionRoot) | Internal links only (not files, not new tabs, not same-page anchors). View Transitions API: the new page wipes in under a sweeping accent line (520 ms); otherwise a GSAP panel led by the line; reduced motion: 150 ms crossfade. Then scroll to top (our navigations only), `ScrollTrigger.refresh()`, focus on `main h1` |
-| `Intro` | (inside MotionRoot) | First visit per session, about 1.1 s, any key/click/wheel/touch skips; shown only when the pre-paint script sets `html[data-intro]`, and a CSS timeout hides it even if JS fails |
-
-React here is 19.2, which has no `<ViewTransition>` component; the transition calls `document.startViewTransition` directly. Revisit when React 19.3 lands.
+Autoplay sound, scroll-jacking, preloaders that block content, intro screens, animation of layout properties, third-party CDN requests.
