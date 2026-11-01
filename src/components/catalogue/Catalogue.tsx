@@ -86,15 +86,13 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
       const card = (e.target as Element | null)?.closest?.<HTMLElement>("[data-card-index]");
       if (!card || !stage.current?.contains(card)) return;
       const i = Number(card.dataset.cardIndex);
-      if (moved.current > CLICK_SLOP_PX) e.preventDefault();
-      else if (i !== index) {
-        e.preventDefault();
-        onIndex(i);
-      }
+      // The click that ends a drag opens nothing. (Side cards are inert and outside the stage's clip, so
+      // only the front card can be clicked; the index check is a guard.)
+      if (moved.current > CLICK_SLOP_PX || i !== index) e.preventDefault();
     };
     addEventListener("click", onClick, { capture: true });
     return () => removeEventListener("click", onClick, { capture: true });
-  }, [index, onIndex]);
+  }, [index]);
 
   return (
     <>
@@ -111,11 +109,14 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
           drag.current = { x: e.clientX, moved: 0 };
         }}
         onKeyDown={(e) => {
-          if (e.target !== e.currentTarget) return;
+          // The stage itself or its front card (the only focusable card) takes the arrow keys.
+          if (e.target !== e.currentTarget && !(e.target as HTMLElement).hasAttribute?.("data-front")) return;
           if (e.key === "ArrowRight") go(index + 1);
           else if (e.key === "ArrowLeft") go(index - 1);
           else return;
           e.preventDefault();
+          // The focused card is about to become inert; keep focus on the stage instead of losing it.
+          if (e.target !== e.currentTarget) e.currentTarget.focus();
         }}
         onDragStart={(e) => e.preventDefault()}
       >

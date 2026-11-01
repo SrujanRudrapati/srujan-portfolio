@@ -41,7 +41,7 @@
   cursor: pointer;
   position: relative;
   z-index: 1;
-  transition: color 0.4s;
+  transition: color 0.4s var(--ease);
 }
 .seg button[aria-pressed="true"] {
   color: var(--bg);
@@ -72,7 +72,7 @@
   inset: 0;
   border-radius: 32px;
   overflow: hidden;
-  color: #f0f2f5;
+  color: var(--on-art);
   text-decoration: none;
   transition:
     transform 0.9s var(--ease),
@@ -96,10 +96,12 @@
 .card[data-front]:hover .art {
   transform: scale(1.03);
 }
+/* Darkens the top (kicker and figure) and the bottom (name and description) of the art, so text on
+   the light plates stays readable; the middle of the plate is left alone. */
 .shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(6, 9, 13, 0) 30%, rgba(6, 9, 13, 0.78));
+  background: linear-gradient(180deg, rgba(6, 9, 13, 0.82) 0%, rgba(6, 9, 13, 0.5) 24%, rgba(6, 9, 13, 0.08) 38%, rgba(6, 9, 13, 0.62) 50%, rgba(6, 9, 13, 0.78) 62%, rgba(6, 9, 13, 0.9) 100%);
 }
 .top {
   position: absolute;
@@ -113,7 +115,7 @@
 }
 .kick {
   font-size: 15px;
-  color: rgba(240, 242, 245, 0.82);
+  color: var(--on-art);
 }
 .big {
   font-family: var(--serif);
@@ -125,7 +127,7 @@
   display: block;
   font-family: var(--sans);
   font-size: 14px;
-  color: rgba(240, 242, 245, 0.75);
+  color: var(--on-art);
   margin-top: 10px;
   max-width: 24ch;
   margin-left: auto;
@@ -150,7 +152,7 @@
 .ds {
   display: block;
   font-size: 17px;
-  color: rgba(240, 242, 245, 0.86);
+  color: var(--on-art);
   margin: 0 0 14px;
   max-width: 40ch;
 }
@@ -183,12 +185,9 @@
   color: var(--muted);
   min-width: 64px;
 }
-.pips {
-  display: flex;
-  gap: 8px;
-}
 /* 8px dots drawn inside 24px buttons (axe target size); the active one stretches to 28px. */
 .pips {
+  display: flex;
   gap: 0;
 }
 .pips button {
@@ -210,7 +209,7 @@
   background: rgba(232, 234, 237, 0.22);
   transition:
     width 0.6s var(--ease),
-    background-color 0.4s;
+    background-color 0.4s var(--ease);
 }
 .pips button[aria-current="true"] {
   width: 44px;
@@ -263,8 +262,8 @@
   text-decoration: none;
   color: var(--text);
   transition:
-    background-color 0.4s,
-    border-color 0.4s,
+    background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease),
     transform 0.6s var(--ease);
 }
 .row:hover {
@@ -344,6 +343,10 @@
   }
   .top {
     top: 22px;
+  }
+  /* Phone cards are short, so text covers most of the plate: shade it more evenly. */
+  .shade {
+    background: linear-gradient(180deg, rgba(6, 9, 13, 0.82) 0%, rgba(6, 9, 13, 0.62) 35%, rgba(6, 9, 13, 0.7) 60%, rgba(6, 9, 13, 0.9) 100%);
   }
   .bot {
     bottom: 24px;

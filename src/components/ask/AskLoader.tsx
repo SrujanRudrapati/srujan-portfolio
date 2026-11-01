@@ -35,7 +35,7 @@ export function AskLoader() {
   const onReady = useCallback(() => setReady(true), []);
   if (!first) return null;
   return (
-    <ChunkBoundary message="Ask could not load. Check your connection and reload the page to try again." className="fixed inset-x-4 bottom-4 z-[90] border-t-2 border-ink bg-surface p-4 text-ink md:left-auto md:w-[420px]">
+    <ChunkBoundary message="Ask could not load. Check your connection and reload the page to try again." className="fixed inset-x-4 bottom-4 z-[90] rounded-3xl border border-[var(--tile-border)] bg-surface p-4 text-ink md:left-auto md:w-[420px]">
       <AskPanel first={first} onReady={onReady} />
     </ChunkBoundary>
   );

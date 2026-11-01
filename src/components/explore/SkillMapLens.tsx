@@ -11,7 +11,7 @@ import { LensItemList } from "./LensItemList";
 
 function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; onToggle: () => void }) {
   if (chip.count === 0) {
-    return <li className="inline-flex min-h-11 items-center border border-line px-2.5 text-xs font-medium text-muted">{chip.label}</li>;
+    return <li className="inline-flex min-h-11 items-center rounded-full border border-line px-3.5 text-xs text-muted">{chip.label}</li>;
   }
   return (
     <li>
@@ -19,8 +19,8 @@ function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; 
         type="button"
         aria-pressed={pressed}
         onClick={onToggle}
-        className={`inline-flex min-h-11 items-center gap-1.5 border px-2.5 text-xs font-medium transition-colors duration-150 ${
-          pressed ? "border-ink bg-ink text-bg" : "border-ink text-ink hover:bg-surface"
+        className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 text-xs transition-colors duration-300 ${
+          pressed ? "border-ink bg-ink text-bg" : "border-line text-ink hover:border-accent"
         }`}
       >
         {chip.label}

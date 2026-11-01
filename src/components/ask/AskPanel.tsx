@@ -161,7 +161,7 @@ export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onR
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex-1 overflow-y-auto px-5 py-5" data-lenis-prevent>
           <form onSubmit={onSubmit} role="search" className="flex gap-2">
             <label htmlFor="ask-input" className="sr-only">
               Your question

@@ -7,7 +7,7 @@
   z-index: 20;
   padding-top: env(safe-area-inset-top, 0px);
   border-bottom: 1px solid transparent;
-  transition: background-color 0.5s, border-color 0.5s;
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease);
   view-transition-name: shell-header;
 }
 /* The only backdrop-filter on the site (runbook v4 §2). */
@@ -89,7 +89,7 @@
   width: 0;
   height: 0;
   opacity: 0;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s var(--ease);
   view-transition-name: shell-cursor;
 }
 .cursor[data-on] {
@@ -105,8 +105,8 @@
   border: 1px solid rgba(196, 154, 108, 0.7);
   transition:
     transform 0.45s var(--ease),
-    background-color 0.35s,
-    border-color 0.35s;
+    background-color 0.35s var(--ease),
+    border-color 0.35s var(--ease);
 }
 .cursor[data-state="hover"] .ring {
   transform: scale(1.706); /* 58px */
@@ -127,7 +127,7 @@
   color: var(--bg);
   white-space: nowrap;
   opacity: 0;
-  transition: opacity 0.25s;
+  transition: opacity 0.25s var(--ease);
 }
 .cursor[data-state="label"] .cursorLabel {
   opacity: 1;

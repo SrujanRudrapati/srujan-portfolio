@@ -12,8 +12,68 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W5 — Experience | done | `redesign: phase W5 — experience timeline` | Year axis 2023 to 2027, one lane per graph role (Celebal intern, Celebal associate, ASU teaching, ASU Surplus) plus Milestones (DevHacks diamond), Today line; bars are buttons; detail panel with every outcome, figures and projects, opening on the current role. Checklist below. |
 | W6 — About and Contact | done | `redesign: phase W6 — about and contact` | About: portrait frame (outline until a photo exists, DECISIONS 22), statement, two paragraphs, the medallion diagram, facts grid with education, all certifications and every skill group. Contact: large Bodoni email, composer (mailto with the fixed subject), GitHub, LinkedIn, resume, Ask entry. Checklist below. |
 | W7 — Integrate and clean up | done | `redesign: phase W7 — integrate and clean up` | /cv, 404 and game, palette, Ask panel and /explore in v4 tokens; v3 3D, posters, GSAP, rail and unused v3 components removed after the IA mapping (`docs/v4/IA.md`); three, @react-three/*, cannon-es, gsap and gainmap uninstalled; old specs rewritten for v4. Checklist below. |
-| W8 — QA | not started | | |
+| W8 — QA | done | `redesign: phase W8 — qa` | 48 reference comparisons; fit on 13 routes at 8 sizes (measured with the overflow clip lifted); Lighthouse mobile 92 to 95, desktop 100, accessibility 100; 60 fps hovering; JS 151 to 157 kB (v3: 207); axe clean everywhere; Chrome and WebKit suites green; fe-reviewer, fact-checker and recruiter-eyes run and fixed. Checklist below. |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W8 checklist
+
+- [x] **Visual comparison.** `scripts/v4-shots.mts` re-shot all 12 views at 390×844, 1280×720, 1440×900 and 1920×1080 (`docs/v4/site-shots/`). `scripts/v4-compare.mts` composed 48 side-by-side images (`docs/v4/compare/<viewport>/<view>.jpg`). The remaining differences are intentional:
+  - Real data replaces placeholders (DECISIONS 21).
+  - The project intro line (one-liner, status, dates, links) sits between the band and the results.
+  - The phone band is shorter.
+  - Experience has a lane for the teaching role, and its intro has no "four years" claim.
+  - The About paragraphs are written from the facts, and About has the medallion diagram and the full facts grid.
+  - The Contact intro carries the status line, and the composer's buttons are not on an inner strip.
+- [x] **Fit.** `e2e/v4-fit.spec.ts` checks that `scrollWidth === innerWidth` on 13 routes (measured with the html and body `overflow-x: clip` lifted, so real overflow cannot hide; fe-reviewer) at 360, 390, 768, 1024×768, 1280×720, 1366×768, 1440×900 and 1920×1080. The home tiles end inside the viewport at the four desktop sizes (`v4-home.spec.ts`). The catalogue stage and its controls are on screen at 1280×720 and up (`v4-work.spec.ts`, rechecked after the toggle grew to 44px).
+- [x] **Performance.** Lighthouse, median of 3:
+
+  | Route | Mobile | Desktop | Accessibility | CLS | TBT (mobile) |
+  |---|---|---|---|---|---|
+  | `/` | 95 | 100 | 100 | 0 | 10 ms |
+  | `/work` | 92 | 100 | 100 | 0 | 12 ms |
+  | `/work/surplus-ai` | 95 | 100 | 100 | 0 | 11 ms |
+  | `/experience` | 95 | 100 | 100 | 0 | 10 ms |
+  | `/about` | 95 | 100 | 100 | 0 | 22 ms |
+  | `/contact` | 95 | 100 | 100 | 0 | 11 ms |
+
+  Targets met: mobile 90 or more, desktop 98 or more, accessibility 100, CLS under 0.02. Simulated mobile LCP is about 2.9 to 3.2 s, the headline text under Lighthouse's throttling. `scripts/lighthouse.mts` gained a desktop preset.
+- [x] **Frame rate.** `scripts/v4-frames.mts` records 5 s of tile hovering and dot-field repulsion on the home page with motion on, at 1440×900. Result: 316 frames at a mean of 60 fps, p95 16.8 ms, worst 16.8 ms, no dropped frames, no clusters, no long tasks. A blank page measures 60.5 fps on this machine, so the browser was not capped.
+- [x] **Bundle, before and after.** Module JS on `/`, gzip: v3 206.7 kB (V7, with GSAP; DECISIONS 19) against v4 154.1 kB. Every v4 route is 151 to 157 kB, under the 160 kB budget. React DOM is about 70 kB and the Next router about 60 kB of that; the shell is 12 kB.
+- [x] **Accessibility.**
+  - axe reports no violations on every route at desktop and phone size (`v4-fit.spec.ts`), and inside the palette, Ask and game dialogs (`a11y`, `ask`, `v6`).
+  - The keyboard pass is in the specs: home Tab stops all show a ring, catalogue arrows and pills, the Catalogue/List toggle, timeline bars by Enter, the composer, ⌘K, and Escape returning focus.
+  - Reduced motion: Playwright defaults to `reducedMotion: "reduce"`, so every route and spec above ran under it. The motion variants (transitions, the toggle morph, the diagram draw, the lens fade) are tested separately with motion on.
+  - Tap targets are 44px or more on 11 routes at 390 and 360 (`mobile.spec`).
+- [x] **Browsers.** Final run, Chrome desktop and Pixel 7: 263 passed, 41 skipped. WebKit desktop and iPhone 14 (`npm run test:e2e:cross`): 256 passed, 47 skipped, plus the cursor test, which raced hydration and now waits for it (passes 3 of 3). Firefox cannot launch on this machine (the Playwright Firefox process fails to start, as in v3 V7); without the View Transitions API the catalogue/list switch is instant by design.
+- [x] `npm run verify -- --phase W8` over 13 routes: all pass. Screenshots are in `docs/screenshots/phase-W8/`.
+- [x] **fact-checker** (whole site, about 230 claims, nothing contradicted). Four unsupported claims, all fixed:
+  - The Cooked figure "1st of 82" read as first of all 82; it is now "1st" with "Track 1, public student vote" (2.2), which also stops it overflowing the phone card.
+  - The home lede said "LLM systems that run offline" (plural); it now says "an offline LLM system in production" (2.1).
+  - "in one run" was removed from the Watchtower problem summary.
+  - "certification" became "certifications" on the About tile.
+  - The unused `profile.about` string has a typographic apostrophe.
+  - LinkedIn returns 999 to bots, so check it in a browser; the URL is unchanged since v2.
+- [x] **fe-reviewer** (no Critical). Fixed:
+  - High: the mouse wheel in the Ask panel scrolled the page behind it. Lenis now skips open dialogs and `[data-lenis-prevent]`; tested with motion on in `v4-motion.spec`.
+  - High: the catalogue card text sat on bright art. The card shade now darkens the top and bottom, with a stronger shade on phones. Pixel-sampled on all four plates at 1440 and 390: every text block is at least 6.3:1.
+  - High: the fit test could not fail (see Fit above).
+  - Medium: timeline bars use `aria-pressed` instead of `aria-expanded`.
+  - Medium: the `/explore` lens chips and cards are pills and 24px tiles, and the `text-xs` step is now 13px site-wide.
+  - Medium: dead code removed: the palette-open event, `StatusNoteChip`, `primaryLink` and the catalogue's side-card branch.
+  - Medium: Ask now links roles to `/experience` and education to `/about#credentials`.
+  - Medium: new `e2e/v4-motion.spec.ts` covers the Ask wheel, the dot field stopping on a hidden tab and after unmount, and magnetic springback.
+  - Low: the sitemap is generated at build with all 18 URLs, and a `--on-art` token replaces the hard-coded text colour on art.
+  - Low: every transition uses `--ease`, except the allowed 260 ms fade-out.
+  - Low: the duplicate `.pips` rule is merged and the `/explore` cursor label reads "Open".
+  - Low: the catalogue arrows work with the front card focused, and focus stays on the stage.
+  - Low: a failed email copy is announced, and the 404 list is built from `MAIN_PAGES`.
+  - Low: the images README and the stale globals comment are updated.
+- [x] **recruiter-eyes**: 6/10 on the 30-second scan. Fixed directly: the phone timeline opened at 2022 with the current role off screen; it now opens at Today (tested). Its suggestions that would change the G5-approved design are DECISIONS 24, with defaults applied: keep the approved design.
+
+### Rulings made in Phase W8
+
+- **Experience axis end.** The axis ends at early 2027 (`timeline-axis.ts`), so after about February 2027 the "Today" line sits at the right edge. That matches "available early 2027"; the axis should be extended at the next content update.
+- **The reference HTML keeps its own copy** ("1st of 82", "LLM systems"). The site follows the facts, as the runbook rules say.
 
 ## Phase W7 checklist
 

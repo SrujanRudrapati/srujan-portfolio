@@ -2,8 +2,7 @@
 
 /* v4 "Midnight & Bronze" (design-direction; runbook v4 §1). Dark only.
    Colour tokens are plain custom properties on :root; @theme inline maps them to the
-   Tailwind utility names the older components still use (ink, muted, line, surface,
-   accent...), so pages not yet rebuilt pick up the new palette without edits. */
+   Tailwind utility names the components use (ink, muted, line, surface, accent). */
 :root {
   color-scheme: dark;
   --bg: #0b0f14;
@@ -20,6 +19,7 @@
   --tile-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
   --metal-light: #e2c59e; /* the metal gradient's light stop (game: the gold band) */
   --backdrop: rgba(6, 9, 13, 0.6); /* behind dialogs: palette, Ask, game */
+  --on-art: #f0f2f5; /* text set on the art plates (catalogue cards, project band) */
   --serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
   --sans: var(--font-hanken), system-ui, -apple-system, "Segoe UI", sans-serif;
 
@@ -41,7 +41,7 @@
 }
 
 @theme {
-  --text-xs: 0.75rem;
+  --text-xs: 0.8125rem; /* 13px: the v4 label floor (design-direction) */
   --text-xs--line-height: 1.45;
   --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
@@ -185,7 +185,7 @@
     padding: 0 16px 0 12px;
     border-radius: 999px;
     background: rgba(232, 234, 237, 0.06);
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
   }
   .back:hover {
     background: rgba(232, 234, 237, 0.12);
@@ -208,7 +208,7 @@
     background: none;
     color: var(--text);
     cursor: pointer;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
   }
   .btn:hover {
     border-color: var(--accent);
@@ -248,7 +248,7 @@
   }
   /* Magnetic elements move by transform only; the spring back is a transition. */
   [data-magnetic] {
-    transition: transform 0.6s var(--ease), background-color 0.3s, color 0.3s, border-color 0.3s;
+    transition: transform 0.6s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
   }
 }
 

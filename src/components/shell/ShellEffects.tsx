@@ -50,7 +50,16 @@ export function ShellEffects() {
   // Lenis, its own rAF loop.
   useEffect(() => {
     if (matchMedia(REDUCED).matches || !matchMedia(FINE).matches) return;
-    const lenis = new Lenis({ lerp: LENIS_LERP, smoothWheel: true, syncTouch: false, anchors: true, autoRaf: false });
+    // Wheel inside an open dialog (palette, Ask, game) or a marked scroller scrolls that element natively;
+    // Lenis would otherwise scroll the page behind the modal.
+    const lenis = new Lenis({
+      lerp: LENIS_LERP,
+      smoothWheel: true,
+      syncTouch: false,
+      anchors: true,
+      autoRaf: false,
+      prevent: (node) => node.closest("dialog[open], [data-lenis-prevent]") !== null,
+    });
     let raf = requestAnimationFrame(function loop(t) {
       lenis.raf(t);
       raf = requestAnimationFrame(loop);

@@ -29,7 +29,7 @@ function tiles(): HubTile[] {
     { key: "work", href: "/work", name: "Work", hint: `${featured} featured, ${projects.length - featured} more`, description: "A catalogue of what I’ve built and what it changed" },
     // Celebal from Jul 2022 (facts 2.4) to ASU Surplus now (2.1).
     { key: "experience", href: "/experience", name: "Experience", hint: "Celebal, ASU Surplus", description: "2022 to now, on one timeline" },
-    { key: "about", href: "/about", name: "About", hint: "M.S., Arizona State", description: "Education, certification and how I work" },
+    { key: "about", href: "/about", name: "About", hint: "M.S., Arizona State", description: "Education, certifications and how I work" },
     // profile.status: available early 2027.
     { key: "contact", href: "/contact", name: "Contact", hint: "Open to roles in 2027", description: "Write a note, it opens in your email" },
   ];
@@ -43,8 +43,8 @@ export function homeContent() {
     headlineText: profile.headline,
     lede: {
       lead: "Data and AI engineer, finishing an M.S. at Arizona State University.",
-      // Facts 2.4 (on call, about 10 million records a day) and 2.1 (Surplus AI runs offline, in production).
-      rest: `I’ve been on call for a pipeline moving ${records.value} ${records.valueLabel}, and I now ship LLM systems that run offline, in production.`,
+      // Facts 2.4 (on call, about 10 million records a day) and 2.1 (Surplus AI, one offline LLM system, in production).
+      rest: `I’ve been on call for a pipeline moving ${records.value} ${records.valueLabel}, and I now run an offline LLM system in production.`,
     },
     now: "Now running Surplus AI in production at ASU Surplus",
     tiles: tiles(),

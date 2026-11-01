@@ -43,7 +43,7 @@ test.describe("Ask", () => {
     await expect(opener).toBeFocused();
   });
 
-  test("an evidence link opens its page and lens", async ({ page }) => {
+  test("a role's evidence link opens the Experience timeline", async ({ page }) => {
     await page.goto("/about");
     await page.keyboard.press("ControlOrMeta+k");
     await page.getByRole("dialog", { name: "Command palette" }).getByRole("combobox").fill("What did you do at Celebal?");
@@ -52,8 +52,8 @@ test.describe("Ask", () => {
     const evidence = dialog(page).getByRole("list", { name: "Evidence" });
     await evidence.getByRole("link", { name: /Celebal/ }).first().click();
     await expect(dialog(page)).toBeHidden();
-    await expect(page).toHaveURL(/\/explore#lens=timeline$/);
-    await expect(page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
+    await expect(page).toHaveURL(/\/experience\/?$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Experience");
   });
 
   test("a question typed into the palette is asked as is", async ({ page }) => {

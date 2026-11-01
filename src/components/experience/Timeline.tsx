@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useSyncExternalStore, type CSSProperties } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import type { TimelineItem } from "@/data/experience";
 import { AXIS, axisPercent, dateToYear } from "@/data/timeline-axis";
 import s from "./timeline.module.css";
@@ -22,8 +22,7 @@ function Bar({ item, now, selected, onSelect }: { item: TimelineItem; now: numbe
         type="button"
         className={item.kind === "milestone" ? s.diamond : s.bar}
         style={style}
-        aria-expanded={selected}
-        aria-controls={DETAIL_ID}
+        aria-pressed={selected}
         aria-label={`${item.title}, ${item.when}`}
         data-item={item.id}
         onClick={onSelect}
@@ -98,11 +97,18 @@ export function Timeline({ items, lanes, defaultId, builtAt }: { items: Timeline
   const [selectedId, setSelectedId] = useState(defaultId);
   const now = useSyncExternalStore(noSubscription, todayAsYear, () => builtAt);
   const selected = items.find((i) => i.id === selectedId) ?? items[0];
+  // Phones scroll the chart sideways (W5.5). Start at the right end, where "Today", the current role
+  // (open in the panel below) and the latest milestone are, rather than at 2022.
+  const panel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = panel.current;
+    if (el && el.scrollWidth > el.clientWidth) el.scrollLeft = el.scrollWidth;
+  }, []);
   const today = `${axisPercent(now)}%`;
 
   return (
     <>
-      <div className={s.panel} role="region" aria-label="Timeline">
+      <div ref={panel} className={s.panel} role="region" aria-label="Timeline">
         <div className={s.chart}>
           <div className={s.axis} aria-hidden="true">
             <span />

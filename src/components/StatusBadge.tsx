@@ -13,13 +13,3 @@ export function StatusBadge({ status }: { status: ProjectStatus }) {
     </span>
   );
 }
-
-export function StatusNoteChip({ state, children }: { state: "running" | "pending" | "neutral"; children: string }) {
-  return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-sm text-ink">
-      {state === "running" && <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />}
-      {state === "pending" && <span aria-hidden="true" className="h-2 w-2 rounded-full border-2 border-accent" />}
-      {children}
-    </span>
-  );
-}

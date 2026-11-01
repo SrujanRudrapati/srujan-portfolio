@@ -44,8 +44,9 @@ const FEATURED: Record<string, FeaturedCopy> = {
   "devhacks-cubbie": {
     name: "Cooked",
     kicker: "First place, DevHacks × Cubbie",
-    num: "1st of 82",
-    numSub: "by public student vote",
+    // 2.2: 1st place in Track 1, by public student vote among 82 submissions (not first of all 82 overall).
+    num: "1st",
+    numSub: "Track 1, public student vote",
     description: "Scores a student’s week from Canvas deadlines and books study blocks on Google Calendar once they say yes.",
     tags: ["Hackathon winner", "Canvas", "Google Calendar"],
   },

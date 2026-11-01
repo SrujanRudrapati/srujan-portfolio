@@ -3053,7 +3053,7 @@
       "id": "problem-manual-logistics-planning",
       "type": "problem",
       "label": "Manual logistics planning",
-      "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run.",
+      "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it.",
       "evidence": [
         {
           "label": "Work",

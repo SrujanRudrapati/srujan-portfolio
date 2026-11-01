@@ -44,7 +44,7 @@ export const problemNodes: ProblemNode[] = [
   problem("pipeline-cost", "Pipeline cost", "Spark jobs and SQL on Databricks tuned for performance and cost."),
   problem("manual-governance", "Governance by hand", "A Microsoft Purview catalog maintained by hand. Scheduled automation on Databricks pushed entities and classifications into Purview, with Apache Atlas lineage and a business glossary."),
   problem("inventory-cost", "Inventory cost", "Forecast error and holding cost across 250 SKU and warehouse series. A reorder-point policy on the forecast cut simulated holding cost about 28% at comparable service levels."),
-  problem("manual-logistics-planning", "Manual logistics planning", "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run."),
+  problem("manual-logistics-planning", "Manual logistics planning", "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it."),
   problem("deadline-overload", "Deadline overload", "Students juggling Canvas deadlines and grade weights. Cooked scores the week 0 to 100 and books study blocks after the student says yes."),
   problem("network-attack-detection", "Network attack detection", "Finding a live attack inside 100,000+ WPA2-encrypted packets. A Z-score detector caught a denial-of-service deauthentication attack."),
   problem("backtest-leakage", "Backtest leakage", "Rolling features shifted forward so predictions never see the future. 80% top-3 accuracy on 44 held-out races against a 73% baseline."),

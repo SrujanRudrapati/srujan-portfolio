@@ -61,11 +61,15 @@ test.describe("v4 shell with motion", () => {
 
   test("cursor follows a fine pointer and grows over links", async ({ page, isMobile }) => {
     test.skip(isMobile, "fine pointers only");
-    await page.goto("/about");
-    await page.mouse.move(600, 400);
-    await page.mouse.move(610, 410);
+    await page.goto("/about", { waitUntil: "networkidle" });
     const ring = page.locator("[class*='cursor'][data-on]");
-    await expect(ring).toHaveCount(1);
+    // The cursor listener attaches after hydration (WebKit hydrates later); keep moving until it shows.
+    let x = 600;
+    await expect(async () => {
+      x += 10;
+      await page.mouse.move(x, 400);
+      await expect(ring).toHaveCount(1, { timeout: 500 });
+    }).toPass({ timeout: 8000 });
     const mark = page.locator("body > header").getByRole("link", { name: "Srujan Rudrapati" });
     const box = await mark.boundingBox();
     if (!box) throw new Error("no header link");

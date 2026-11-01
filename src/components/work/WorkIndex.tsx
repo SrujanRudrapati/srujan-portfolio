@@ -52,7 +52,7 @@ function Featured({ p, n, art }: { p: Project; n: number; art?: string }) {
           {p.date && <span>{p.date}</span>}
         </p>
         <h2 id={`${p.slug}-title`} className={s.featureTitle}>
-          <Link href={`/work/${p.slug}`} data-cursor="open" className={s.stretch}>
+          <Link href={`/work/${p.slug}`} data-cursor="Open" className={s.stretch}>
             {p.title}
           </Link>
         </h2>
@@ -77,7 +77,7 @@ function Row({ p }: { p: Project }) {
   return (
     <li id={`project-${p.slug}`} data-lens-item={`project-${p.slug}`} className={s.row}>
       <h3 className={s.rowTitle}>
-        <Link href={`/work/${p.slug}`} data-cursor="open" className={s.stretch}>
+        <Link href={`/work/${p.slug}`} data-cursor="Open" className={s.stretch}>
           {p.title}
         </Link>
       </h3>

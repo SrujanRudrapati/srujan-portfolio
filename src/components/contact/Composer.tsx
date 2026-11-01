@@ -42,7 +42,7 @@ export function Composer({ email }: { email: string }) {
         </a>
       </div>
       <p className={s.status} role="status">
-        {copied === "done" ? "Email address copied." : ""}
+        {copied === "done" ? "Email address copied." : copied === "failed" ? "Copying failed. Select the address above to copy it." : ""}
       </p>
     </div>
   );

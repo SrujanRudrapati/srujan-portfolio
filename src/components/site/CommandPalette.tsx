@@ -6,9 +6,9 @@ import { profile } from "@/content/profile";
 import { openAsk, preloadAsk } from "@/lib/ask/events";
 import { openGame } from "@/components/game/events";
 import { withBasePath } from "@/lib/paths";
-import { isTyping, MAIN_PAGES, PALETTE_OPEN, type PaletteOpenDetail } from "./routes";
+import { isTyping, MAIN_PAGES } from "./routes";
 
-// The command palette (runbook V3): ⌘K / Ctrl+K, "/" or the nav button. A native modal
+// The command palette (runbook V3; v4 has no nav button): ⌘K / Ctrl+K or "/". A native modal
 // <dialog> (focus stays inside, Escape closes, focus returns to the opener) holding a
 // combobox: type to filter pages, projects and actions; arrows move, Enter runs. Anything
 // typed can be asked as a question ("Ask about my work"), which opens the Ask panel with
@@ -104,16 +104,15 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
     return [...matched, ask];
   }, [items, q, query]);
 
-  // Open from anywhere: the nav button (event), ⌘K / Ctrl+K, or "/" when not typing.
+  // Open from anywhere: ⌘K / Ctrl+K, or "/" when not typing. Focus returns to whatever had it.
   useEffect(() => {
-    const open = (e?: Event) => {
+    const open = () => {
       const d = dialog.current;
       if (!d || d.open) return;
-      const detail = (e as CustomEvent<PaletteOpenDetail> | undefined)?.detail ?? {};
       const active = document.activeElement;
-      opener.current = detail.opener ?? (active instanceof HTMLElement && active !== document.body ? active : null);
-      setQuery(detail.query ?? "");
-      setActive(detail.ask ? Number.MAX_SAFE_INTEGER : 0); // clamped to the last option, "Ask about my work"
+      opener.current = active instanceof HTMLElement && active !== document.body ? active : null;
+      setQuery("");
+      setActive(0);
       setNote("");
       d.showModal();
       input.current?.focus();
@@ -129,10 +128,8 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
         open();
       }
     };
-    addEventListener(PALETTE_OPEN, open);
     addEventListener("keydown", onKey);
     return () => {
-      removeEventListener(PALETTE_OPEN, open);
       removeEventListener("keydown", onKey);
     };
   }, [close]);

@@ -53,8 +53,9 @@ export function anchorFor(hit: Pick<Hit, "id" | "type" | "evidence">): string {
     case "project":
       return `/work/${hit.id.replace(/^project-/, "")}`;
     case "role":
+      return "/experience"; // v4: the Experience timeline
     case "education":
-      return "/explore#lens=timeline";
+      return "/about#credentials";
     case "skill":
       return "/explore#lens=skills";
     case "problem":

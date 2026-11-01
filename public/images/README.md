@@ -1,14 +1,8 @@
-# Photo slots (runbook V1.5, DECISIONS 12)
+# Photo slot (v4, DECISIONS 22)
 
-Drop Srujan's own photos here with exactly these names. Until a file exists the
-page shows the 3D scene or its poster instead, so nothing breaks. JPEG or PNG, at
-least 1600 px on the long side.
-
-| File | Where it appears | Default alt text (edit in DECISIONS 12) |
-|---|---|---|
-| `portrait.jpg` | About, CV header | Srujan Rudrapati |
-| `hackathon.jpg` | DevHacks × Cubbie case study | Srujan at the DevHacks × Cubbie hackathon |
-| `surplus-station.jpg` | Surplus AI case study | The Surplus Station setup at ASU Surplus |
+Drop Srujan's own portrait here as `portrait.jpg` (portrait orientation, about 800×1000 or larger;
+4:5 crops best). The build detects it and the About page shows it with the alt text
+"Srujan Rudrapati". Until then the About page shows a decorative outline.
 
 `projects/` holds real screenshots of live projects, captured by scripts
 (`scripts/capture-label-lens.mts`); do not edit them by hand.

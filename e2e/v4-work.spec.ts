@@ -41,6 +41,11 @@ test.describe("v4 work catalogue", () => {
     await page.keyboard.press("ArrowLeft");
     await expect(count(page)).toHaveText("4 of 4");
     await expect(page.locator("[data-stage] a:not([inert])")).toHaveCount(1);
+    // With the front card focused, the arrows still move it, and focus stays on the stage.
+    await front(page).focus();
+    await page.keyboard.press("ArrowRight");
+    await expect(count(page)).toHaveText("1 of 4");
+    await expect(stage).toBeFocused();
   });
 
   test("pills jump to a project and mark the current one", async ({ page, isMobile }) => {

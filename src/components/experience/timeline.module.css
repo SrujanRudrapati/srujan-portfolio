@@ -107,17 +107,17 @@
   transform: rotate(45deg);
 }
 .bar:hover,
-.bar[aria-expanded="true"] {
+.bar[aria-pressed="true"] {
   color: var(--bg);
 }
 .bar:hover::before,
-.bar[aria-expanded="true"]::before,
+.bar[aria-pressed="true"]::before,
 .diamond:hover::before,
-.diamond[aria-expanded="true"]::before {
+.diamond[aria-pressed="true"]::before {
   background: var(--accent);
 }
 .diamond:hover::before,
-.diamond[aria-expanded="true"]::before {
+.diamond[aria-pressed="true"]::before {
   transform: rotate(45deg) scale(1.1);
 }
 

@@ -2,21 +2,14 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { PipelineGame } from "@/components/game/PipelineGame";
 import { BackPill } from "@/components/shell/BackPill";
+import { MAIN_PAGES } from "@/components/site/routes";
 
 export const metadata: Metadata = { title: "Page not found | Srujan Rudrapati" };
 
 // 404 (runbook v4 W7.2): the query ran, no row came back. The pages that do exist, then the
 // "Clean the pipeline" game (also in the command palette), restyled in the v4 tokens.
 
-const PAGES = [
-  { href: "/", label: "Home" },
-  { href: "/work", label: "Work" },
-  { href: "/experience", label: "Experience" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
-  { href: "/explore", label: "Explore" },
-  { href: "/cv", label: "CV" },
-];
+const PAGES = [{ href: "/", label: "Home" }, ...MAIN_PAGES];
 
 export default function NotFound() {
   return (

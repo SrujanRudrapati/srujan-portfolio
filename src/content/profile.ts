@@ -33,7 +33,7 @@ export const profile = {
 
 // Written for the site from the facts in .claude/skills/portfolio-facts.
 export const about = [
-  "I'm a data engineer finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University.",
+  "I’m a data engineer finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University.",
   "Before that I spent two years at Celebal Technologies building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing, and e-commerce.",
   "Lately I build LLM systems that run on real data, like a private, offline AI system for ASU Surplus.",
 ];
