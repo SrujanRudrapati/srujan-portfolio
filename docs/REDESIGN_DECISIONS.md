@@ -98,3 +98,18 @@ Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
   - e. On `/about`, put Education and Certifications above the medallion diagram.
   - f. Put "Graduating December 2026" in the header availability pill as well.
   Already fixed in W8 without a question: on phones the Experience chart opened scrolled to 2022, hiding the current role and the DevHacks win; it now opens at Today. Default if no reply: keep the approved design for a to f.
+- **25. Gate G1: Ready to merge `redesign/v4`. Reply `merge`.** (Phase W9, 2026-11-01.) This replaces question 20: `redesign/v4` contains all of v3, so v3 and v4 ship together and v3 is not merged on its own.
+  - **Checks:** lint and typecheck are clean. The CI-parity build (`NEXT_PUBLIC_BASE_PATH=/srujan-portfolio`) passes `npm run release:check`. Served at `http://localhost:4000/srujan-portfolio/`, all 18 routes load with status 200, no console errors, no failed requests, every link prefixed and all 49 internal links resolving.
+  - **Tests:** the full Playwright suite passes in Chrome (desktop and phone) and WebKit (desktop and iPhone). Firefox cannot launch on this machine.
+  - **Quality:** Lighthouse mobile 92 to 95, desktop 100, accessibility 100, CLS 0. Initial JS is 151 to 157 kB on every route.
+  - **Rollback:** `main` is tagged `v2-before-v4` (local).
+  - **On `merge`**, Claude Code will:
+    1. run `git checkout main && git merge --no-ff redesign/v4`;
+    2. push `main` and the tags;
+    3. let the existing Pages workflow deploy (unchanged);
+    4. check every route and asset live and record live Lighthouse in NOTES.
+  - **Open, with defaults applied, none blocking:**
+    - 22: portrait (outline until a photo is added).
+    - 23: `/explore` kept.
+    - 24: the recruiter suggestions a to f; the approved design is kept until you pick any.
+  - Default if no reply: none; this gate waits for `merge`.

@@ -13,7 +13,19 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W6 — About and Contact | done | `redesign: phase W6 — about and contact` | About: portrait frame (outline until a photo exists, DECISIONS 22), statement, two paragraphs, the medallion diagram, facts grid with education, all certifications and every skill group. Contact: large Bodoni email, composer (mailto with the fixed subject), GitHub, LinkedIn, resume, Ask entry. Checklist below. |
 | W7 — Integrate and clean up | done | `redesign: phase W7 — integrate and clean up` | /cv, 404 and game, palette, Ask panel and /explore in v4 tokens; v3 3D, posters, GSAP, rail and unused v3 components removed after the IA mapping (`docs/v4/IA.md`); three, @react-three/*, cannon-es, gsap and gainmap uninstalled; old specs rewritten for v4. Checklist below. |
 | W8 — QA | done | `redesign: phase W8 — qa` | 48 reference comparisons; fit on 13 routes at 8 sizes (measured with the overflow clip lifted); Lighthouse mobile 92 to 95, desktop 100, accessibility 100; 60 fps hovering; JS 151 to 157 kB (v3: 207); axe clean everywhere; Chrome and WebKit suites green; fe-reviewer, fact-checker and recruiter-eyes run and fixed. Checklist below. |
-| W9 — Ship (G1) | not started | | |
+| W9 — Ship (G1) | done; **stopped at G1** (DECISIONS 25) | `redesign: phase W9 — release checks; G1 awaiting merge` | Lint, typecheck, CI-parity build with `/srujan-portfolio`, `release:check`, click-through of all 18 routes under the prefix; rollback tag `v2-before-v4` on `main` (local). Waiting for `merge`. |
+
+## Phase W9 checklist
+
+- [x] `npm run lint` and `npm run typecheck`: clean.
+- [x] `npm run release:check`, which runs the CI-parity build with `NEXT_PUBLIC_BASE_PATH=/srujan-portfolio`: 9 required files present (`.nojekyll`, `index.html`, `404.html`, `resume.pdf`, `graph.json`, `search-index.json`, `og.png`, `sitemap.xml`, `robots.txt`), and root-relative links resolve.
+- [x] The prefixed export was served at `http://localhost:4000/srujan-portfolio/` and every route clicked through: home, Work, the 11 project pages, Experience, About, Contact, Explore and CV.
+  - All 18 routes returned 200, with no console errors and no failed requests.
+  - No unprefixed `href` or `src` anywhere. All 49 internal links and assets resolve.
+  - The Timeline lens loads `graph.json`, and Ask answers from `search-index.json`.
+  - The 404 page answers 404.
+- [x] Rollback point: `main` (ecfa9fc) tagged `v2-before-v4` (annotated, local, not pushed). v3 was never merged into `main`, so this branch carries v3 and v4 together.
+- [x] **STOP at G1** (DECISIONS 25): "Ready to merge `redesign/v4`. Reply `merge`."
 
 ## Phase W8 checklist
 
