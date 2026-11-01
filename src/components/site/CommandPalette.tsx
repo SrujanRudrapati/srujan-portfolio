@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { appPath } from "@/components/motion/PageTransitions";
 import { profile } from "@/content/profile";
 import { openAsk } from "@/lib/ask/events";
@@ -49,7 +49,19 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
   const [note, setNote] = useState("");
   const listId = useId();
 
-  const close = () => dialog.current?.close();
+  // Focus goes back to whatever opened the palette. Done here, synchronously, rather than left to the native
+  // <dialog> restore: Safari never focused the clicked button, and an action that opens the next dialog (Ask,
+  // the game) runs right after close(), so the opener must hold focus by then for that dialog to return to it.
+  const opener = useRef<HTMLElement | null>(null);
+  const restoreFocus = useCallback(() => {
+    const target = opener.current;
+    opener.current = null;
+    if (target?.isConnected) target.focus({ preventScroll: true });
+  }, []);
+  const close = useCallback(() => {
+    dialog.current?.close();
+    restoreFocus();
+  }, [restoreFocus]);
 
   const items = useMemo<Item[]>(() => {
     const pages: Item[] = [{ href: "/", label: "Home", key: "" }, ...MAIN_PAGES].map((p) => ({
@@ -107,6 +119,8 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
       const d = dialog.current;
       if (!d || d.open) return;
       const detail = (e as CustomEvent<PaletteOpenDetail> | undefined)?.detail ?? {};
+      const active = document.activeElement;
+      opener.current = detail.opener ?? (active instanceof HTMLElement && active !== document.body ? active : null);
       setQuery(detail.query ?? "");
       setActive(detail.ask ? Number.MAX_SAFE_INTEGER : 0); // clamped to the last option, "Ask about my work"
       setNote("");
@@ -129,7 +143,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
       removeEventListener(PALETTE_OPEN, open);
       removeEventListener("keydown", onKey);
     };
-  }, []);
+  }, [close]);
 
   const runItem = (item: Item) => {
     if (item.id === "email") return item.run(); // stays open to show the confirmation
@@ -163,6 +177,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
     <dialog
       ref={dialog}
       aria-label="Command palette"
+      onClose={restoreFocus} // Escape and backdrop closes; a no-op after close() already restored
       // Close on a backdrop click only when the press also started there (not a drag-select out of the input).
       onPointerDown={(e) => {
         pressedOnBackdrop.current = e.target === dialog.current;

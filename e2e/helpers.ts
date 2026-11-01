@@ -16,8 +16,12 @@ export async function expectNoA11yViolations(page: Page, selector?: string) {
   expect(summary, JSON.stringify(summary, null, 2)).toEqual([]);
 }
 
+/** The home page, hydrated: shortcuts such as ⌘K are listened for only after hydration, and a key pressed
+ *  before it does nothing (the cause of a flaky Ask test under load, V7). HomeStory sets `data-three` on
+ *  main in an effect of the same commit that attaches the palette's listener. */
 export async function openHome(page: Page) {
   await page.goto("/");
+  await expect(page.locator("main[data-three]")).toHaveCount(1);
   await page.evaluate(() => document.fonts.ready);
 }
 
@@ -32,7 +36,10 @@ export async function askFromHome(page: Page, question: string) {
   await combobox.press("Enter");
 }
 
-export async function openExplore(page: Page, lens?: string) {
+/** /explore, hydrated: Explore sets html[data-lens] in an effect, so a lens click after this is handled
+ *  (WebKit hydrates later than Chrome, and a click before hydration does nothing; V7). */
+export async function openExplore(page: Page, lens?: string, javaScriptEnabled = true) {
   await page.goto(lens ? `/explore#lens=${lens}` : "/explore");
+  if (javaScriptEnabled) await expect(page.locator("html[data-lens]")).toHaveCount(1);
   await page.evaluate(() => document.fonts.ready);
 }

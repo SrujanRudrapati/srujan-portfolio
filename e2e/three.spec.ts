@@ -4,7 +4,8 @@ import { expect, test, type Page } from "@playwright/test";
 // one shared canvas, posters only under reduced motion, with ?3d=off, and after a
 // lost WebGL context. Runs once (desktop-light) against the static export.
 
-test.beforeEach(({}, info) => test.skip(info.project.name !== "desktop-light", "one project is enough for the 3D contract"));
+const DESKTOPS = ["desktop-light", "webkit-desktop", "firefox-desktop"]; // Chrome, plus Safari and Firefox when CROSS_BROWSER=1
+test.beforeEach(({}, info) => test.skip(!DESKTOPS.includes(info.project.name), "one desktop per engine is enough for the 3D contract"));
 
 // The home page since V7 removed /lab: the hero stream and the four reel covers.
 const PAGE = "/";

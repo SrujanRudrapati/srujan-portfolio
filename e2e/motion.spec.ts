@@ -4,7 +4,8 @@ import { expect, test, type Page } from "@playwright/test";
 // the home page (3D hero, pinned reel, count-ups) and a case study (3D cover, scroll-drawn
 // diagrams, rail). One project is enough; phone behaviour is covered in e2e/mobile.spec.ts.
 
-test.beforeEach(({}, info) => test.skip(info.project.name !== "desktop-light", "one project is enough for the motion contract"));
+const DESKTOPS = ["desktop-light", "webkit-desktop", "firefox-desktop"]; // Chrome, plus Safari and Firefox when CROSS_BROWSER=1
+test.beforeEach(({}, info) => test.skip(!DESKTOPS.includes(info.project.name), "one desktop per engine is enough for the motion contract"));
 
 type Counters = { triggers: number; slots: number; canvases: number };
 const counters = (page: Page) =>

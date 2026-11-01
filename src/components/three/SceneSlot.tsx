@@ -42,10 +42,26 @@ export function SceneSlot({ scene, label, className, style, progress, poster = f
       if (slot.active) stageWake.notify();
     }, { rootMargin: "15% 0px" });
     io.observe(el);
-    const remove = stageStore.add(slot);
+    // On the stage only while the slot has a size: a slot inside a hidden panel (display: none, e.g. the
+    // Highlights index behind another lens on /explore) would otherwise keep a zero-size View, which WebKit
+    // reports as an incomplete framebuffer on every frame (V7). ResizeObserver sees the switch to and from 0x0.
+    let remove: (() => void) | null = null;
+    const sync = () => {
+      const shown = el.offsetWidth > 0 && el.offsetHeight > 0;
+      if (shown && !remove) remove = stageStore.add(slot);
+      else if (!shown && remove) {
+        remove();
+        remove = null;
+        setLive(false);
+      }
+    };
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    sync();
     return () => {
       io.disconnect();
-      remove();
+      ro.disconnect();
+      remove?.();
       setLive(false);
     };
   }, [id, scene, poster, progress]);

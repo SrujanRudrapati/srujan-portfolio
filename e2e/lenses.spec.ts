@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { expectNoA11yViolations, openExplore } from "./helpers";
 
-test.beforeEach(async ({ page }) => openExplore(page));
+test.beforeEach(async ({ page, javaScriptEnabled }) => openExplore(page, undefined, javaScriptEnabled));
 
 // Runbook Phase 7: the Work section's lens switcher.
 test.describe("Lenses", () => {
@@ -21,6 +21,9 @@ test.describe("Lenses", () => {
     await expect(timeline).toHaveAttribute("aria-pressed", "true");
     await expect(page.locator("#project-surplus-ai")).toBeHidden();
 
+    // Keyboard users arrive by Tab, so focus is on the button. (Safari on macOS does not focus a button on
+    // mouse click, by platform design, so the click above alone would leave focus elsewhere there.)
+    await timeline.focus();
     await page.keyboard.press("ArrowRight");
     const skills = switcher(page).getByRole("button", { name: "Skill map" });
     await expect(skills).toBeFocused();
@@ -73,8 +76,9 @@ test.describe("Lenses", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Label Lens");
   });
 
-  test("Recruiter mode prints on one page", async ({ page, isMobile }) => {
+  test("Recruiter mode prints on one page", async ({ page, isMobile, browserName }) => {
     test.skip(isMobile, "PDF output is the same at any viewport");
+    test.skip(browserName !== "chromium", "page.pdf() is Chromium-only in Playwright");
     await page.goto("/explore#lens=recruiter");
     await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
     for (const format of ["Letter", "A4"] as const) {
@@ -90,8 +94,9 @@ test.describe("Lenses", () => {
     await expect(switcher(page).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
   });
 
-  test("/cv prints the one-pager on one page", async ({ page, isMobile }) => {
+  test("/cv prints the one-pager on one page", async ({ page, isMobile, browserName }) => {
     test.skip(isMobile, "PDF output is the same at any viewport");
+    test.skip(browserName !== "chromium", "page.pdf() is Chromium-only in Playwright");
     await page.goto("/cv");
     await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
     for (const format of ["Letter", "A4"] as const) {

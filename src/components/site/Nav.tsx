@@ -68,7 +68,7 @@ export function Nav() {
           </span>
           <button
             type="button"
-            onClick={() => openPalette()}
+            onClick={(e) => openPalette({ opener: e.currentTarget })}
             aria-keyshortcuts="Meta+K Control+K"
             className="inline-flex h-11 items-center gap-2 border border-ink px-3 text-sm font-medium text-ink transition-colors duration-150 hover:bg-ink hover:text-bg"
           >

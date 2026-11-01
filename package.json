@@ -8,6 +8,8 @@
     "build": "next build",
     "lint": "eslint",
     "test:e2e": "playwright test",
+    "test:e2e:cross": "CROSS_BROWSER=1 playwright test --project webkit-desktop --project webkit-mobile",
+    "test:e2e:firefox": "CROSS_BROWSER=1 playwright test --project firefox-desktop",
     "test:e2e:update": "playwright test --update-snapshots",
     "typecheck": "tsc --noEmit",
     "verify": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/verify-phase.mts",

@@ -593,3 +593,28 @@
   margin: 24px 0 0;
   padding-right: var(--pad-r);
 }
+
+/* Short phone screens (a real iPhone 14 leaves 664 px under Safari's bars): the same hero, tighter, so
+   the name, line, proof figure, buttons and email all sit on the first screen (DECISIONS 15, V7). */
+@media (max-width: 767px) and (max-height: 760px) {
+  .hero {
+    padding-top: 32px; /* keeps the stage label clear of the fixed nav */
+    gap: 24px;
+  }
+  .name {
+    font-size: clamp(3.25rem, 13vw, 4.5rem);
+  }
+  .headline {
+    margin-top: 16px;
+  }
+  .subline,
+  .now {
+    margin-top: 10px;
+  }
+  .lead {
+    margin-top: 16px;
+  }
+  .actions {
+    margin-top: 16px;
+  }
+}

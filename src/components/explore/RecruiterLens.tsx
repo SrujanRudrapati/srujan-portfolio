@@ -20,23 +20,23 @@ export function RecruiterLens({ sheet, level = 3 }: { sheet: RecruiterSheet; lev
           <p className="font-display text-[clamp(2.75rem,7vw,4.5rem)] leading-[0.88] font-extrabold tracking-[-0.03em] text-ink font-stretch-[62%] print:text-5xl">{profile.name}</p>
           <p className="mt-2 text-lg text-ink">{profile.subline}</p>
           <div className="mt-4">
-            <ul aria-label="Contact" className="flex flex-col gap-2 text-sm">
+            <ul aria-label="Contact" className="flex flex-col text-sm">
               <li>
-                <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-2 font-semibold text-ink underline decoration-1 underline-offset-4">
+                <a href={`mailto:${profile.email}`} className="inline-flex min-h-11 print:min-h-0 items-center gap-2 font-semibold text-ink underline decoration-1 underline-offset-4">
                   <EnvelopeSimpleIcon aria-hidden="true" size={16} />
                   {profile.email}
                 </a>
               </li>
-              <li className="flex flex-wrap gap-x-5 gap-y-2">
-                <a href={profile.linkedin} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+              <li className="flex flex-wrap gap-x-5">
+                <a href={profile.linkedin} className="inline-flex min-h-11 print:min-h-0 items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
                   <LinkedinLogoIcon aria-hidden="true" size={16} />
                   {profile.linkedinLabel}
                 </a>
-                <a href={profile.github} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+                <a href={profile.github} className="inline-flex min-h-11 print:min-h-0 items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
                   <GithubLogoIcon aria-hidden="true" size={16} />
                   {profile.githubLabel}
                 </a>
-                <a href={withBasePath(profile.resume)} className="inline-flex items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
+                <a href={withBasePath(profile.resume)} className="inline-flex min-h-11 print:min-h-0 items-center gap-1.5 text-accent-2 underline decoration-1 underline-offset-4">
                   <FilePdfIcon aria-hidden="true" size={16} />
                   Resume (PDF)
                 </a>

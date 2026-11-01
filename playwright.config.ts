@@ -14,16 +14,24 @@ export default defineConfig({
   },
   use: {
     baseURL: `http://localhost:${PORT}`,
-    // Uses the locally installed Google Chrome instead of a downloaded browser.
-    channel: "chrome",
     // Diagrams render in their finished state, so screenshots are stable.
     reducedMotion: "reduce",
     trace: "on-first-retry",
   },
   projects: [
+    // The Chrome projects use the locally installed Google Chrome (channel "chrome") instead of a downloaded browser.
     { name: "desktop-dark", use: { ...devices["Desktop Chrome"], channel: "chrome", viewport: { width: 1440, height: 900 }, colorScheme: "dark" } },
     { name: "desktop-light", use: { ...devices["Desktop Chrome"], channel: "chrome", viewport: { width: 1440, height: 900 }, colorScheme: "light" } },
     { name: "mobile-dark", use: { ...devices["Pixel 7"], channel: "chrome", viewport: { width: 390, height: 844 }, colorScheme: "dark" } },
+    // Runbook V7: Safari and Firefox. Opt in with CROSS_BROWSER=1 (npm run test:e2e:cross); pixel baselines
+    // are Chrome's, so these engines skip the visual snapshots and run everything else.
+    ...(process.env.CROSS_BROWSER
+      ? [
+          { name: "webkit-desktop", grepInvert: /visual/, use: { ...devices["Desktop Safari"], viewport: { width: 1440, height: 900 }, colorScheme: "light" as const } },
+          { name: "firefox-desktop", grepInvert: /visual/, use: { ...devices["Desktop Firefox"], viewport: { width: 1440, height: 900 }, colorScheme: "light" as const } },
+          { name: "webkit-mobile", grepInvert: /visual/, use: { ...devices["iPhone 14"], colorScheme: "dark" as const } },
+        ]
+      : []),
   ],
   // Tests run against the real static export, exactly what gets deployed.
   webServer: {

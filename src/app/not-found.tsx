@@ -28,7 +28,7 @@ export default function NotFound() {
         <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
           {PAGES.map((l) => (
             <li key={l.href}>
-              <Link href={l.href} className="inline-flex min-h-11 items-center font-medium">
+              <Link href={l.href} className="inline-flex min-h-11 min-w-11 items-center justify-center font-medium">
                 {l.label}
               </Link>
             </li>
