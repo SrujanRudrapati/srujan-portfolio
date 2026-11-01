@@ -352,14 +352,11 @@ main.route-enter {
 /* Hero diagram: default (reduced motion, or no offset-path support) is fully
    lit and still. Fonts are set here so the SVG follows the site family. */
 .medallion {
-  --stage-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+  --stage-lit: color-mix(in srgb, var(--accent) 14%, var(--surface));
 }
-.medallion-label {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  font-stretch: 112.5%;
-}
+.medallion-label,
 .medallion-text {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--sans);
 }
 /* Phones: the diagram is scaled to about 0.8, so the small sub-labels would
    render under 12px. Hide them (the SVG title and desc carry the full text)
@@ -656,25 +653,61 @@ main.route-enter {
   }
 }
 
-/* Print. /cv (and the Recruiter lens) prints alone on one page, in light colours,
-   whatever theme is on screen. Other pages print as they are. */
+/* /cv on screen (runbook v4 W7.1): the recruiter sheet on a rounded tile, the name in Bodoni. */
+.cv-sheet {
+  margin-top: clamp(28px, 5vh, 48px);
+  padding: clamp(22px, 4vw, 48px);
+  border-radius: 28px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.cv-name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+/* Print. /cv (and the Recruiter lens) prints alone on one page, black on white, whatever is on
+   screen (the site is dark only). Other pages print as they are. */
 @media print {
   [data-reveal] {
     opacity: 1 !important;
     transform: none !important;
   }
-  :root,
-  :root[data-theme="dark"],
-  :root:not([data-theme="light"]) {
+  :root {
     color-scheme: light;
     --bg: #ffffff;
     --surface: #ffffff;
     --surface-raised: #ffffff;
     --border: #d9d9d9;
+    --line: #d9d9d9;
     --text: #000000;
-    --text-muted: #5c5c5c;
-    --accent: #1d4ed8;
-    --accent-2: #1d4ed8;
+    --text-muted: #4a4a4a;
+    --muted: #4a4a4a;
+    --accent: #000000;
+    --accent-2: #000000;
+    --metal: linear-gradient(#000000, #000000);
+  }
+  body {
+    background: #ffffff;
+  }
+  body::after {
+    display: none;
+  }
+  .cv-sheet {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  main[data-print="cv"] {
+    min-height: 0;
+    padding: 0;
   }
   /* /cv (V3): only the one-pager prints. */
   body:has(main[data-print="cv"]) > *:not(main) {

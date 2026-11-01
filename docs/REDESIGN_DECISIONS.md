@@ -86,3 +86,4 @@ Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
   - `/experience` and `/contact` are interim pages (the v3 components in the v4 frame) until W5 and W6.
   Default if no reply: none; this gate waits for `approve` or a list of changes.
   **Answer (2026-11-01): `approve`. All the differences above are accepted. Continue with W4 onward; stop only at G1.**
+- **22. Portrait for the About page (optional).** (Phase W6.) The About page has a rounded 4:5 portrait frame, sticky on desktop. Until a photo exists it shows the reference's outline figure, marked decorative (no "your portrait goes here" text for visitors). To use a photo, add `public/images/portrait.jpg` (portrait orientation, about 800×1000 or larger, 4:5 crops best); the build detects it and shows it with the alt text "Srujan Rudrapati". Default if no reply: keep the outline.

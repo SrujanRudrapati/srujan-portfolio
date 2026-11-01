@@ -63,6 +63,6 @@ const event = (id: string, label: string, summary: string, dates: EventNode["dat
 
 export const eventNodes: EventNode[] = [
   event("devhacks-win", "1st place, DevHacks × Cubbie hackathon", "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.", { start: "2026-10", end: "2026-10" }, [{ label: "DevHacks × Cubbie page", url: "/work/devhacks-cubbie" }], ["hackathon"]),
-  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "/about#experience" }, { label: "Surplus AI page", url: "/work/surplus-ai" }], ["role", "production"]),
+  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "/experience" }, { label: "Surplus AI page", url: "/work/surplus-ai" }], ["role", "production"]),
   event("graduation", "M.S. graduation (expected)", "Expected December 2026 from Arizona State University. Available early 2027.", { start: "2026-12", end: "2026-12" }, [{ label: "Education", url: "/about#credentials" }], ["education"]),
 ];

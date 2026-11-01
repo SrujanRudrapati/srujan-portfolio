@@ -28,11 +28,11 @@ const sentences = (text: string) => text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'])/).fi
 // Evidence URLs (V3): a page on the site, a file in public/, or an http(s) URL. Bare
 // "#fragment" anchors from the one-page v2 site are rejected, and every route must exist.
 const LENS_IDS: string[] = LENSES.map((l) => l.id); // from the lens switcher itself
-const ABOUT_ANCHORS = ["about", "experience", "skills", "credentials"]; // the section ids on /about; e2e/site.spec.ts checks each exists
+const ABOUT_ANCHORS = ["skills", "credentials"]; // the section ids on /about (v4 W6); e2e/v4-about-contact.spec.ts checks both land
 function checkUrl(url: string | undefined): string | null {
   if (!url) return "is empty";
   if (/^https?:\/\//.test(url)) return null;
-  if (url.startsWith("#")) return "is a bare fragment; point at a page (for example /work/<slug> or /about#experience)";
+  if (url.startsWith("#")) return "is a bare fragment; point at a page (for example /work/<slug> or /experience)";
   if (!url.startsWith("/")) return "is not a root path or http(s) URL";
   const [path, hash = ""] = url.split("#");
   if (/\.[a-z0-9]+$/i.test(path)) return existsSync(join("public", path)) ? null : "names a file that is not in public/";
@@ -41,7 +41,7 @@ function checkUrl(url: string | undefined): string | null {
   if (work) return slugs.has(work[1]) ? null : `names no project ("${work[1]}")`;
   if (path === "/explore") return !hash || (hash.startsWith("lens=") && LENS_IDS.includes(hash.slice(5))) ? null : `has an unknown lens "#${hash}"`;
   if (path === "/about") return !hash || ABOUT_ANCHORS.includes(hash) ? null : `has an unknown anchor "#${hash}"`;
-  if (["/", "/work", "/cv"].includes(path)) return null;
+  if (["/", "/work", "/experience", "/contact", "/cv"].includes(path)) return null;
   return "is not a page on the site";
 }
 

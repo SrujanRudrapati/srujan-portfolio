@@ -10,10 +10,22 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W3 — Work (G5) | done; G5 approved (DECISIONS 21) | `redesign: phase W3 — work catalogue and list` | Segmented Catalogue/List; looping catalogue of the four featured (drag, trackpad, keys, pills, arrows); list of all eleven with metal figures; view-transition morph with per-project names and 60 ms stagger. Comparisons in `docs/v4/compare/`. Checklist below. |
 | W4 — Project pages | done | `redesign: phase W4 — project pages` | Eleven pages from one template: art band (featured) or compact title, intro with status and links, up to three metal result tiles, What it does / The entries, The problem, How it’s built (diagrams restyled, draw once on entry, no GSAP), Stack, Next project looping inside its group. v3 case-study template removed. Checklist below. |
 | W5 — Experience | done | `redesign: phase W5 — experience timeline` | Year axis 2023 to 2027, one lane per graph role (Celebal intern, Celebal associate, ASU teaching, ASU Surplus) plus Milestones (DevHacks diamond), Today line; bars are buttons; detail panel with every outcome, figures and projects, opening on the current role. Checklist below. |
-| W6 — About and Contact | not started | | |
+| W6 — About and Contact | done | `redesign: phase W6 — about and contact` | About: portrait frame (outline until a photo exists, DECISIONS 22), statement, two paragraphs, the medallion diagram, facts grid with education, all certifications and every skill group. Contact: large Bodoni email, composer (mailto with the fixed subject), GitHub, LinkedIn, resume, Ask entry. Checklist below. |
 | W7 — Integrate and clean up | not started | | |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W6 checklist
+
+- [x] About: back pill, title, a rounded 4:5 portrait frame, sticky on desktop. It uses `public/images/portrait.jpg` when the build finds it. Until then it shows the reference's outline, marked decorative and without the reference's "Your portrait goes here" text; on phones the empty frame is hidden. The slot is DECISIONS 22.
+- [x] Statement in Bodoni, from the reference and fact-checked against 2.1 (merge rules never overwrite good data) and 2.3 (warnings quote the label). Two paragraphs written from 2.4, 2.7, 2.1 and `profile.status` (`src/data/about.ts`).
+- [x] Facts grid from data (`facts()`): Education (both degrees, dates and GPA), Certifications (all four), and every skill group with its Cloud subgroups. The runbook's "Data" and "AI and apps" cells are the graph's own groups, so nothing from the v3 Skills or Credentials sections is dropped. The anchors `#credentials` and `#skills` still land; the graph and the Ask panel link to them.
+- [x] The medallion diagram from the v3 About page (and the v2 hero before it) stays on About. It is restyled with bronze connectors, rounded steel boxes and Hanken labels, has a visible caption, and is static, because the dot field is the only ambient motion. The v3 Skills section's link to the skill map stays.
+- [x] Contact: back pill, title, intro "Hiring for data or AI engineering? {profile.status}." (the reference's "I reply to every message" is a promise, not a fact). The email is in large Bodoni with a bronze underline that draws on hover (`scaleX`), and on phones it wraps after the @ only. The composer has "Write a note", "Copy email" (reports "Email copied" in a status region, with a fallback message) and "Open in my email app", which builds `mailto:` with the subject "Role for a data or AI engineer" and the note as the body (`contact/mailto.ts`). GitHub, LinkedIn and Resume (PDF) come from `profile`, and the resume link uses `withBasePath`. The Ask entry sits under the links.
+- [x] Graph: role and event evidence links point to `/experience`, not the gone `/about#experience`. `scripts/build-graph.mts` now knows `/experience` and `/contact` and only the About anchors that exist.
+- [x] Tests: `contact/mailto.test.ts` (3); `e2e/v4-about-contact.spec.ts` (About content from data, anchors, diagram and skill-map link, portrait outline, axe; Contact links from profile, the composer mailto subject and body, Copy email, Ask, the email fitting at phone width, axe): 19 passed, 3 skipped. Unit suite 118 passed.
+- [x] lint, typecheck, build clean; `npm run verify -- --phase W6 --path /about --path /contact`: all pass. Screenshots in `docs/screenshots/phase-W6/`, inspected at 1280 and 390.
+- [x] fact-checker: 42 claims, 42 supported. Its three notes were fixed: the old anchors, the medallion diagram kept, the skill-map link kept.
 
 ## Phase W5 checklist
 

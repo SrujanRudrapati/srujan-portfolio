@@ -43,11 +43,11 @@ export function MedallionDiagram() {
         modeled data. Gold feeds a serving layer, and LLMs and agents run on top of it.
       </desc>
 
-      <text x="20" y="254" fontSize="11" fontWeight={500} fill="var(--text-muted)" className="medallion-text">
+      <text x="20" y="254" fontSize="11" fontWeight={500} fill="var(--muted)" className="medallion-text">
         Medallion architecture
       </text>
 
-      <g fill="none" stroke="var(--accent-2)" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
+      <g fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
         {connectors.map(([d, x, y, dir]) => (
           <g key={d}>
             <path d={d} />
@@ -58,30 +58,31 @@ export function MedallionDiagram() {
 
       {/* Dots are drawn before the stages so they pass beneath each box. */}
       <g aria-hidden="true">
-        <circle className="medallion-dot" r="4.5" fill="var(--accent-2)" />
-        <circle className="medallion-dot medallion-dot-2" r="4.5" fill="var(--accent-2)" />
+        <circle className="medallion-dot" r="4.5" fill="var(--accent)" />
+        <circle className="medallion-dot medallion-dot-2" r="4.5" fill="var(--accent)" />
       </g>
 
       {stages.map((s) => (
         <g key={s.id} className="medallion-stage" data-stage={s.id} data-sub={s.sub ? "" : undefined}>
-          <rect className="medallion-base" x={s.x} y={s.y} width={s.w} height={s.h} />
+          <rect className="medallion-base" x={s.x} y={s.y} width={s.w} height={s.h} rx={10} />
           {/* Lit overlay: opacity is the only animated property; fully on when nothing animates. */}
-          <rect className="medallion-lit" x={s.x} y={s.y} width={s.w} height={s.h} />
+          <rect className="medallion-lit" x={s.x} y={s.y} width={s.w} height={s.h} rx={10} />
           <rect
             x={s.x}
             y={s.y}
             width={s.w}
             height={s.h}
+            rx={10}
             fill="none"
-            stroke={s.accent ? "var(--accent-2)" : "var(--text)"}
-            strokeWidth={s.accent ? 2 : 1}
+            stroke={s.accent ? "var(--accent)" : "rgba(232, 234, 237, 0.4)"}
+            strokeWidth={s.accent ? 1.5 : 1}
           />
           <text
             x={s.x + s.w / 2}
             y={s.y + (s.sub ? s.h / 2 - 3 : s.h / 2 + 5)}
             textAnchor="middle"
             fontSize={s.accent ? 17 : 14}
-            fontWeight={700}
+            fontWeight={500}
             fill="var(--text)"
             className="medallion-label"
           >
@@ -93,7 +94,7 @@ export function MedallionDiagram() {
               y={s.y + s.h / 2 + 15}
               textAnchor="middle"
               fontSize="11"
-              fill="var(--text-muted)"
+              fill="var(--muted)"
               className="medallion-text"
             >
               {s.sub}

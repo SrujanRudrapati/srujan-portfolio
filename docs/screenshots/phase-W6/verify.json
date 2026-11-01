@@ -1,0 +1,98 @@
+{
+  "phase": "W6",
+  "generatedAt": "2026-11-01T18:47:54.587Z",
+  "runs": [
+    {
+      "path": "/about",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-about-mobile-light.png",
+      "foldScreenshot": "home-about-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/about",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-about-mobile-dark.png",
+      "foldScreenshot": "home-about-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/about",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-about-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/about",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-about-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-contact-mobile-light.png",
+      "foldScreenshot": "home-contact-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-contact-mobile-dark.png",
+      "foldScreenshot": "home-contact-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-contact-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-contact-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

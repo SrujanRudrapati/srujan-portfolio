@@ -222,7 +222,7 @@
       "current"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "Power BI",
@@ -239,7 +239,7 @@
       "teaching"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "40+ students in office hours",
     "skills": "",
@@ -256,7 +256,7 @@
       "data-engineering"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "about 50% less time-to-insight; about 10 million records a day; about 30% less downtime",
     "skills": "Databricks, Spark, dbt, Delta Lake, Kafka, medallion architecture, Microsoft Purview, Apache Atlas, Unity Catalog, Fabric, Data Factory, Glue, S3, Redshift, Power BI, SQL, feature engineering, data lineage, metadata management",
@@ -273,7 +273,7 @@
       "internship"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1930,7 +1930,7 @@
       "celebal"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1948,7 +1948,7 @@
       "headline"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1965,7 +1965,7 @@
       "aws"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1982,7 +1982,7 @@
       "teaching"
     ],
     "evidence": [
-      "/about#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -2519,7 +2519,7 @@
       "production"
     ],
     "evidence": [
-      "/about#experience",
+      "/experience",
       "/work/surplus-ai"
     ],
     "metrics": "",

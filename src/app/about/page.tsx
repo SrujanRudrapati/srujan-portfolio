@@ -1,31 +1,14 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import type { Metadata } from "next";
-import { About } from "@/components/About";
-import { AnimateInView } from "@/components/AnimateInView";
-import { Credentials } from "@/components/Credentials";
-import { Experience } from "@/components/Experience";
-import { MedallionDiagram } from "@/components/MedallionDiagram";
-import { RailBlock, RailHead, RailPage } from "@/components/site/Rail";
-import { Skills } from "@/components/Skills";
+import { AboutView, PORTRAIT } from "@/components/about/AboutView";
+import { facts, paragraphs, statement } from "@/data/about";
 import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = pageMeta("/about", "About | Srujan Rudrapati", "Bio, experience, skills, certifications and education.");
+export const metadata: Metadata = pageMeta("/about", "About | Srujan Rudrapati", "How I work, education, certifications and skills.");
 
-// The source of everything else (V6, on the rail): bio, the medallion diagram from the v2 hero,
-// Experience, Skills, Certifications and education (docs/v3/IA.md).
+// Runbook v4 W6: About. The portrait is used once public/images/portrait.jpg exists (checked at build).
 export default function AboutPage() {
-  return (
-    <RailPage>
-      <RailHead stage="about / source" title="About" />
-      <About />
-      {/* The v2 hero's diagram (source systems through bronze, silver and gold to serving and LLMs). */}
-      <RailBlock>
-        <AnimateInView className="w-full max-w-[520px]">
-          <MedallionDiagram />
-        </AnimateInView>
-      </RailBlock>
-      <Experience />
-      <Skills />
-      <Credentials />
-    </RailPage>
-  );
+  const hasPhoto = existsSync(join(process.cwd(), "public", PORTRAIT));
+  return <AboutView statement={statement} paragraphs={paragraphs} facts={facts()} hasPhoto={hasPhoto} />;
 }
