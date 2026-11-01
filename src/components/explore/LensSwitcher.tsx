@@ -30,7 +30,7 @@ export function LensSwitcher({ lens, onChange }: { lens: LensId; onChange: (lens
   };
 
   return (
-    <div role="group" aria-label="View work as" onKeyDown={onKeyDown} className="grid grid-cols-3 border-2 border-ink md:flex md:w-fit">
+    <div role="group" aria-label="View work as" onKeyDown={onKeyDown} className="flex flex-wrap gap-2">
       {LENSES.map((l, i) => {
         const pressed = l.id === lens;
         return (
@@ -42,8 +42,8 @@ export function LensSwitcher({ lens, onChange }: { lens: LensId; onChange: (lens
             type="button"
             aria-pressed={pressed}
             onClick={() => onChange(l.id)}
-            className={`inline-flex min-h-11 items-center justify-center px-3 text-sm font-medium whitespace-nowrap transition-colors duration-150 md:px-5 [&:not(:nth-child(3n+1))]:border-l-2 [&:nth-child(n+4)]:border-t-2 md:[&:nth-child(n+4)]:border-t-0 md:[&:not(:first-child)]:border-l-2 border-ink ${
-              pressed ? "bg-ink text-bg" : "text-ink hover:bg-surface"
+            className={`inline-flex min-h-11 items-center justify-center rounded-full border px-5 text-sm whitespace-nowrap transition-colors duration-300 ${
+              pressed ? "border-ink bg-ink text-bg" : "border-line text-ink hover:border-accent"
             }`}
           >
             {l.label}

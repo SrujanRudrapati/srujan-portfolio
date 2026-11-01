@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import "lenis/dist/lenis.css";
-import { lenisStore } from "@/components/motion/lenis-store";
+import { lenisStore } from "./lenis-store";
 import { CURSOR_LERP, cursorStateFor, lerp, magneticOffset } from "./pointer";
 import s from "./shell.module.css";
 

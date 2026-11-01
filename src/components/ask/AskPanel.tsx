@@ -21,7 +21,7 @@ function Suggestions({ onPick, label }: { onPick: (q: string) => void; label: st
     <ul aria-label={label} className="flex flex-wrap gap-2">
       {SUGGESTIONS.map((s) => (
         <li key={s}>
-          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center border border-line px-3 text-left text-sm text-ink transition-colors duration-150 hover:border-ink">
+          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-left text-sm text-ink transition-colors duration-300 hover:border-accent">
             {s}
           </button>
         </li>
@@ -33,7 +33,7 @@ function Suggestions({ onPick, label }: { onPick: (q: string) => void; label: st
 function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evidence" }>; labels: Map<string, string> }) {
   if (result.generated.length === 0) return null;
   return (
-    <div aria-label="Answer" role="group" className="border-l-2 border-accent-2 pl-4">
+    <div aria-label="Answer" role="group" className="border-l-2 border-accent pl-4">
       <p className="text-ink">
         {result.generated.map((s, i) => (
           <span key={i}>
@@ -47,7 +47,7 @@ function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evi
                   card?.scrollIntoView({ block: "nearest" });
                   card?.focus();
                 }}
-                className="mr-1 text-xs font-medium text-accent-2 underline decoration-1 underline-offset-2"
+                className="mr-1 text-xs font-medium text-accent underline decoration-1 underline-offset-2"
               >
                 {labels.get(id) ?? id}
               </button>
@@ -147,17 +147,16 @@ export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onR
       onClick={(e) => {
         if (e.target === dialogRef.current && pressedOnBackdrop.current) close();
       }}
-      className="m-0 h-dvh max-h-dvh w-full max-w-none bg-raised p-0 text-ink backdrop:bg-ink/50 md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:border-t-[3px] md:border-ink"
+      className="m-0 h-dvh max-h-dvh w-full max-w-none bg-surface p-0 text-ink backdrop:bg-[var(--backdrop)] md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:overflow-hidden md:rounded-[28px] md:border md:border-[var(--tile-border)]"
     >
       <div className="flex h-full max-h-[inherit] flex-col">
         <header className="flex items-end justify-between gap-4 border-b border-line px-5 py-4">
           <div>
-            <p className="font-mono text-xs text-muted">stage 04 / query</p>
-            <h2 id="ask-title" className="mt-2 font-display text-[clamp(1.75rem,5vw,2.5rem)] leading-[0.92] font-extrabold text-ink font-stretch-[62%]">
+            <h2 id="ask-title" className="[font-family:var(--serif)] font-normal tracking-[-0.02em] text-[clamp(1.75rem,5vw,2.5rem)] leading-[0.95] text-ink">
               Ask about my work
             </h2>
           </div>
-          <button type="button" onClick={close} aria-label="Close" className="inline-flex h-11 w-11 shrink-0 items-center justify-center border-2 border-ink text-ink transition-colors duration-150 hover:bg-ink hover:text-bg">
+          <button type="button" onClick={close} aria-label="Close" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-accent">
             <XIcon aria-hidden="true" size={18} weight="bold" />
           </button>
         </header>
@@ -176,9 +175,9 @@ export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onR
               maxLength={MAX_QUESTION}
               autoComplete="off"
               placeholder="What did you build with Spark?"
-              className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-bg px-3 text-base text-ink placeholder:text-muted focus-visible:border-accent-2"
+              className="min-h-11 min-w-0 flex-1 rounded-full border border-line bg-bg px-4 text-base text-ink placeholder:text-muted focus-visible:border-accent"
             />
-            <button type="submit" className="inline-flex min-h-11 shrink-0 items-center bg-ink px-4 text-sm font-medium text-bg hover:bg-accent-2">
+            <button type="submit" className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-ink px-5 text-sm text-bg transition-colors duration-300 hover:bg-accent">
               Ask
             </button>
           </form>
@@ -190,7 +189,7 @@ export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onR
               : result?.kind === "evidence"
                 ? result.summary
                 : result?.kind === "none"
-                  ? "I don't have anything on that."
+                  ? "I don’t have anything on that."
                   : status.state === "error"
                     ? "The search could not load."
                     : ""}
@@ -201,7 +200,7 @@ export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onR
             {status.state === "error" && <p className="text-ink">The search could not load. Check your connection and try again.</p>}
             {result?.kind === "none" && (
               <>
-                <p className="text-lg text-ink">I don&apos;t have anything on that. Try one of these:</p>
+                <p className="text-lg text-ink">I don’t have anything on that. Try one of these:</p>
                 <Suggestions onPick={(q) => void submit(q)} label="Try one of these" />
               </>
             )}

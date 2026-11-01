@@ -1,9 +1,6 @@
-// Hero visual. Source systems feed bronze, silver and gold layers; gold feeds a
-// serving layer; LLMs and agents sit on top. Two dots travel the connectors on
-// a loop and each stage lights briefly as a dot arrives. All motion is CSS
-// (offset-path on the dots, keyframed opacity on lit overlays over the stages; see .medallion-* in
-// globals.css). Under prefers-reduced-motion, or where offset-path is not
-// supported, the dots are hidden and every stage renders lit and still.
+// The medallion architecture: source systems feed bronze, silver and gold layers; gold feeds a
+// serving layer; LLMs and agents sit on top. Static (v4: the home dot field is the only ambient
+// motion), every stage drawn lit. Styles: .medallion-* in globals.css. On /about since V4.
 
 type Stage = { id: string; x: number; y: number; w: number; h: number; label: string; sub?: string; accent?: boolean };
 
@@ -56,16 +53,9 @@ export function MedallionDiagram() {
         ))}
       </g>
 
-      {/* Dots are drawn before the stages so they pass beneath each box. */}
-      <g aria-hidden="true">
-        <circle className="medallion-dot" r="4.5" fill="var(--accent)" />
-        <circle className="medallion-dot medallion-dot-2" r="4.5" fill="var(--accent)" />
-      </g>
-
       {stages.map((s) => (
         <g key={s.id} className="medallion-stage" data-stage={s.id} data-sub={s.sub ? "" : undefined}>
           <rect className="medallion-base" x={s.x} y={s.y} width={s.w} height={s.h} rx={10} />
-          {/* Lit overlay: opacity is the only animated property; fully on when nothing animates. */}
           <rect className="medallion-lit" x={s.x} y={s.y} width={s.w} height={s.h} rx={10} />
           <rect
             x={s.x}

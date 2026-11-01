@@ -87,11 +87,11 @@ test.describe("Lenses", () => {
     }
   });
 
-  test("summary links open the right lens on /explore (V3)", async ({ page }) => {
+  test("summary links open the right lens on /explore (v4: the About skill map link)", async ({ page }) => {
     await page.goto("/about");
-    await page.locator("#experience").getByRole("link", { name: /on the timeline/ }).click();
-    await expect(page).toHaveURL(/\/explore#lens=timeline$/);
-    await expect(switcher(page).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
+    await page.getByRole("link", { name: /on the skill map/ }).click();
+    await expect(page).toHaveURL(/\/explore#lens=skills$/);
+    await expect(switcher(page).getByRole("button", { name: "Skill map" })).toHaveAttribute("aria-pressed", "true");
   });
 
   test("/cv prints the one-pager on one page", async ({ page, isMobile, browserName }) => {

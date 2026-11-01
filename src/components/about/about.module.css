@@ -119,3 +119,9 @@
 .more a:hover {
   color: var(--accent);
 }
+@media (max-width: 900px) {
+  /* A tighter panel keeps the diagram's smallest label at 12px or more at 360 to 390px. */
+  .diagram {
+    padding: 14px;
+  }
+}

@@ -1,43 +1,51 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { PipelineGame } from "@/components/game/PipelineGame";
-import { RailBlock, RailHead, RailPage, RailSection } from "@/components/site/Rail";
+import { BackPill } from "@/components/shell/BackPill";
 
 export const metadata: Metadata = { title: "Page not found | Srujan Rudrapati" };
 
-// 404 in the Pipeline's language (V3): the query ran, no row came back. V6 puts it on the
-// rail and adds the "Clean the pipeline" game (also in the command palette).
+// 404 (runbook v4 W7.2): the query ran, no row came back. The pages that do exist, then the
+// "Clean the pipeline" game (also in the command palette), restyled in the v4 tokens.
 
 const PAGES = [
   { href: "/", label: "Home" },
   { href: "/work", label: "Work" },
-  { href: "/explore", label: "Explore" },
+  { href: "/experience", label: "Experience" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/explore", label: "Explore" },
   { href: "/cv", label: "CV" },
 ];
 
 export default function NotFound() {
   return (
-    <RailPage>
-      <RailHead stage="stage 04 / query" title="Row not found" />
-      <RailBlock>
-        <pre className="max-w-full overflow-x-auto border-l-2 border-accent-2 bg-surface p-5 font-mono text-sm text-ink">
+    <main id="main" className="page">
+      <div className="wrap">
+        <BackPill />
+        <h1 tabIndex={-1} className="page-title">
+          Row not found
+        </h1>
+        <pre className="nf-query">
           <code>{`select * from pages\nwhere path = current_path;\n\n0 rows returned.`}</code>
         </pre>
-        <p className="mt-8 max-w-measure text-lg text-ink">This page does not exist. These do:</p>
-        <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+        <p className="page-intro">This page does not exist. These do:</p>
+        <ul className="nf-pages">
           {PAGES.map((l) => (
             <li key={l.href}>
-              <Link href={l.href} className="inline-flex min-h-11 min-w-11 items-center justify-center font-medium">
+              <Link href={l.href} className="pill">
                 {l.label}
               </Link>
             </li>
           ))}
         </ul>
-      </RailBlock>
-      <RailSection id="game" stage="query / game" title="Clean the pipeline">
-        <PipelineGame />
-      </RailSection>
-    </RailPage>
+        <section aria-labelledby="game-heading" className="nf-game">
+          <h2 id="game-heading" className="nf-game-title">
+            Clean the pipeline
+          </h2>
+          <PipelineGame />
+        </section>
+      </div>
+    </main>
   );
 }

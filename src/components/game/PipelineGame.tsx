@@ -44,30 +44,34 @@ function subscribeBest(onChange: () => void) {
 }
 
 type Band = { y0: number; y1: number; color: string; label: string; gold: boolean };
-/** Colours plus everything draw() would otherwise rebuild each frame (bands, fonts). Rebuilt on theme change only. */
-type Palette = { bg: string; ink: string; muted: string; accent: string; bronze: string; silver: string; gold: string; bands: Band[]; bandFont: string; recordFont: string };
+/** Colours plus everything draw() would otherwise rebuild each frame (bands, fonts). Built once per mount (the site is dark only). */
+type Palette = { bg: string; ink: string; muted: string; accent: string; silver: string; gold: string; bands: Band[]; bandFont: string; recordFont: string };
 function readPalette(): Palette {
+  // v4 (runbook W7.2): bronze paddle, steel records on the midnight board; the stage bands keep
+  // their faint bronze, silver and gold tints. Read from the tokens so the board matches the page.
   const cs = getComputedStyle(document.documentElement);
   const v = (name: string, fallback: string) => cs.getPropertyValue(name).trim() || fallback;
-  const bronze = v("--bronze", "#9a5f35");
-  const silver = v("--silver", "#7c838b");
-  const gold = v("--gold", "#9c7a1c");
-  const mono = `${v("--font-mono", "ui-monospace")}, ui-monospace, monospace`;
+  const accent = v("--accent", "#c49a6c");
+  const steel = v("--muted", "#8d98a5");
+  const gold = v("--metal-light", "#e2c59e");
+  const sans = `${v("--sans", "system-ui")}, system-ui, sans-serif`;
   return {
-    bg: v("--bg", "#fff"),
-    ink: v("--text", "#000"),
-    muted: v("--text-muted", "#5c5c5c"),
-    accent: v("--accent", "#1d4ed8"),
-    bronze,
-    silver,
+    bg: v("--surface", "#141b23"),
+    ink: v("--text", "#e8eaed"),
+    muted: steel,
+    accent,
+    silver: steel,
     gold,
     bands: [
-      { y0: 0, y1: SILVER_Y, color: bronze, label: "bronze / raw", gold: false },
-      { y0: SILVER_Y, y1: PADDLE_Y, color: silver, label: "silver / cleaned", gold: false },
+      { y0: 0, y1: SILVER_Y, color: accent, label: "bronze / raw", gold: false },
+      { y0: SILVER_Y, y1: PADDLE_Y, color: steel, label: "silver / cleaned", gold: false },
       { y0: PADDLE_Y, y1: WORLD_H, color: gold, label: "gold / modeled", gold: true },
     ],
-    bandFont: `11px ${mono}`,
-    recordFont: `10px ${mono}`,
+    // World units; the board is drawn at about 0.87 to 1.33 of them. Band labels stay at 12px or more;
+    // record labels must fit a 28-unit square, so 13 (about 11px on a 360px phone; the board's
+    // description carries the same information for screen readers).
+    bandFont: `14px ${sans}`,
+    recordFont: `13px ${sans}`,
   };
 }
 
@@ -91,11 +95,10 @@ function draw(ctx: CanvasRenderingContext2D, w: World, c: Palette, flash: number
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   for (const r of w.recs) {
-    const band = r.y < SILVER_Y ? c.bronze : r.y < PADDLE_Y ? c.silver : c.gold;
     ctx.fillStyle = c.bg;
     ctx.fillRect(r.x - r.r, r.y - r.r, r.r * 2, r.r * 2);
-    ctx.strokeStyle = band;
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = c.silver; // steel records
+    ctx.lineWidth = 1.5;
     ctx.strokeRect(r.x - r.r, r.y - r.r, r.r * 2, r.r * 2);
     ctx.fillStyle = c.ink;
     ctx.fillText(LABEL[r.kind], r.x, r.y + 0.5);
@@ -139,7 +142,7 @@ export function PipelineGame({ autoFocus = false }: { autoFocus?: boolean }) {
     draw(ctx, world.current, palette.current, flash.current);
   }, []);
 
-  // Size the backing store to the element (crisp at any DPR), and repaint on resize and theme change.
+  // Size the backing store to the element (crisp at any DPR), and repaint on resize.
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -152,19 +155,9 @@ export function PipelineGame({ autoFocus = false }: { autoFocus?: boolean }) {
     };
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
-    const themeChanged = () => {
-      palette.current = null;
-      paint();
-    };
-    const mo = new MutationObserver(themeChanged);
-    mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
-    const mq = window.matchMedia("(prefers-color-scheme: dark)");
-    mq.addEventListener("change", themeChanged);
     if (autoFocus) rootRef.current?.querySelector("button")?.focus();
     return () => {
       ro.disconnect();
-      mo.disconnect();
-      mq.removeEventListener("change", themeChanged);
     };
   }, [paint, autoFocus]);
 
@@ -283,7 +276,7 @@ export function PipelineGame({ autoFocus = false }: { autoFocus?: boolean }) {
         tabIndex={0}
         role="application"
         aria-roledescription="game"
-        aria-label="Game board: bad records fall through the bronze and silver bands; the blue filter at the top of gold catches them."
+        aria-label="Game board: bad records fall through the bronze and silver bands; the bronze filter at the top of gold catches them."
         aria-describedby={helpId}
         onBlur={releaseKeys}
         onKeyDown={(e) => onKey(e, true)}

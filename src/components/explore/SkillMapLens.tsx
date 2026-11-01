@@ -25,7 +25,7 @@ function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; 
       >
         {chip.label}
         <span className="sr-only">, used in </span>
-        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent-2"}`}>{chip.count}</span>
+        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent"}`}>{chip.count}</span>
       </button>
     </li>
   );
@@ -70,7 +70,7 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
             {selected ? `Where ${selected.label} is used` : "All projects"}
           </h3>
           {selected && (
-            <button type="button" onClick={() => setSelected(null)} className="min-h-11 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+            <button type="button" onClick={() => setSelected(null)} className="min-h-11 text-sm font-medium text-accent underline decoration-1 underline-offset-4 hover:text-accent">
               Show all projects
             </button>
           )}

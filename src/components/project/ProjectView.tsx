@@ -208,7 +208,7 @@ function Built({ data }: { data: ProjectPage }) {
     <Section id={`${p.slug}-built`} title="How it’s built" wide>
       <div className={s.diagrams}>
         {diagrams.map((d) => (
-          <ProjectDiagram key={d} name={d} draw />
+          <ProjectDiagram key={d} name={d} />
         ))}
       </div>
     </Section>

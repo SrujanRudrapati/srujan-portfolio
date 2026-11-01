@@ -50,7 +50,8 @@ test.describe("keyboard", () => {
       seen.add(stop.id);
       expect(stop.ring, stop.id).toBe(true);
     }
-    expect(seen.size).toBeGreaterThan(10);
+    // v4 home: skip link, name, Ask, four tiles (and the palette is one key away).
+    expect(seen.size).toBeGreaterThanOrEqual(6);
   });
 });
 
@@ -65,16 +66,15 @@ test.describe("home headline with motion", () => {
 });
 
 test.describe("dialogs", () => {
-  test("the game dialog and the Ask panel have no violations", async ({ page, isMobile }) => {
+  test("the game dialog and the Ask panel have no violations", async ({ page }) => {
     await openHome(page);
-    const opener = page.getByRole("banner").getByRole("button", { name: isMobile ? /Menu/ : /Search/ });
-    await opener.click();
+    await page.keyboard.press("ControlOrMeta+k");
     await page.keyboard.type("game");
     await page.keyboard.press("Enter");
     await expect(page.getByRole("dialog", { name: "Clean the pipeline" })).toBeVisible();
     await expectNoA11yViolations(page, "dialog[open]");
     await page.keyboard.press("Escape");
-    await opener.click();
+    await page.keyboard.press("ControlOrMeta+k");
     await page.keyboard.type("what runs in production");
     await page.getByRole("dialog", { name: "Command palette" }).getByRole("option").last().click();
     await expect(page.getByRole("dialog", { name: "Ask about my work" }).getByRole("list", { name: "Evidence" })).toBeVisible();

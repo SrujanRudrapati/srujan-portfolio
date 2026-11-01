@@ -33,7 +33,7 @@
   background: none;
   border: none;
   border-radius: 999px;
-  min-height: 36px;
+  min-height: 44px; /* touch target (the reference is 36px) */
   padding: 8px 18px;
   font: inherit;
   font-size: 14px;

@@ -150,6 +150,14 @@
   opacity: 1;
 }
 
+/* No fine pointer (touch): no custom cursor at all, not just a transparent one. */
+@media not ((hover: hover) and (pointer: fine)) {
+  .cursor,
+  .cursorDot {
+    display: none;
+  }
+}
+
 @media print {
   .header,
   .footer,

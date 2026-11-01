@@ -1,30 +1,34 @@
 import type { Metadata } from "next";
+import { artFor } from "@/components/catalogue/art";
 import { Explore } from "@/components/explore/Explore";
-import { RailBlock, RailHead, RailPage } from "@/components/site/Rail";
+import { BackPill } from "@/components/shell/BackPill";
 import { WorkIndex } from "@/components/work/WorkIndex";
-import { cover } from "@/data/case-study";
 import { projects } from "@/data/projects";
+import { workItems } from "@/data/work";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata: Metadata = pageMeta("/explore", "Explore | Srujan Rudrapati", "The same work seen as a timeline, a skill map, by problem and by industry.");
 
-// The v2 lenses (Highlights, Timeline, Skill map, By problem, By industry, Recruiter), unchanged
-// in logic; switching between them is a Flip transition (V6). Highlights is the work index.
+// The v2 lenses (Highlights, Timeline, Skill map, By problem, By industry, Recruiter), unchanged in
+// logic, in the v4 page frame (runbook W7, DECISIONS 23). Highlights is the work index with filters;
+// the featured projects show their catalogue art plate instead of the v3 3D cover.
 export default function ExplorePage() {
-  const covers = Object.fromEntries(projects.map((p) => [p.slug, cover(p.slug)]));
+  const arts = Object.fromEntries(workItems().filter((w) => w.featured).map((w) => [w.slug, artFor(w.art)]));
   return (
-    <RailPage>
-      <RailHead stage="explore / views" title="Explore">
-        <p>The same work, read different ways: as a timeline, a skill map, by the problem it solved, or by industry.</p>
-      </RailHead>
-      {/* #work is a direct child of main: the Recruiter lens's print rule keeps only it. */}
-      <RailBlock id="work">
-        <section aria-label="Lenses">
+    <main id="main" className="page">
+      <div className="wrap">
+        <BackPill />
+        <h1 tabIndex={-1} className="page-title">
+          Explore
+        </h1>
+        <p className="page-intro">The same work, read different ways: as a timeline, a skill map, by the problem it solved, or by industry.</p>
+        {/* #work is a direct child of .wrap: the Recruiter lens’s print rule keeps only it. */}
+        <section id="work" aria-label="Lenses">
           <Explore>
-            <WorkIndex projects={projects} covers={covers} />
+            <WorkIndex projects={projects} arts={arts} />
           </Explore>
         </section>
-      </RailBlock>
-    </RailPage>
+      </div>
+    </main>
   );
 }

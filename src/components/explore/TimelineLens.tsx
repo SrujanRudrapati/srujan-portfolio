@@ -8,13 +8,13 @@ import { withBasePath } from "@/lib/paths";
 
 function NestedProject({ project: p }: { project: TimelineProject }) {
   return (
-    <li data-flip-id={`project-${p.slug}`} className="border-t border-line pt-3">
+    <li data-lens-item={`project-${p.slug}`} className="border-t border-line pt-3">
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted tabular-nums">
         <StatusBadge status={p.status} />
         {p.date && <time dateTime={p.dateTime}>{p.date}</time>}
       </p>
-      <h4 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
-        <a href={withBasePath(`/work/${p.slug}`)} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+      <h4 className="mt-1 [font-family:var(--serif)] text-lg font-normal text-ink">
+        <a href={withBasePath(`/work/${p.slug}`)} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent">
           {p.title}
         </a>
       </h4>
@@ -53,13 +53,13 @@ function Outcomes({ outcomes }: { outcomes: TimelineEntry["outcomes"] }) {
 }
 
 function Entry({ entry: e }: { entry: TimelineEntry }) {
-  const marker = e.current ? "bg-accent-2" : e.kind === "undated" ? "border-2 border-dashed border-accent-2 bg-bg" : "border-2 border-accent-2 bg-bg";
+  const marker = e.current ? "bg-accent" : e.kind === "undated" ? "border-2 border-dashed border-accent bg-bg" : "border-2 border-accent bg-bg";
   return (
-    <li data-flip-id={e.id} className="relative grid grid-cols-1 gap-x-8 gap-y-2 pb-12 pl-8 md:grid-cols-12 md:pl-0">
+    <li data-lens-item={e.id} className="relative grid grid-cols-1 gap-x-8 gap-y-2 pb-12 pl-8 md:grid-cols-12 md:pl-0">
       <span aria-hidden="true" className={`absolute top-1.5 left-[-5px] h-3 w-3 rounded-full md:left-[calc(25%-5px)] ${marker}`} />
       <p className="text-xs font-medium text-muted tabular-nums md:col-span-3 md:pr-8 md:pt-1 md:text-right">
         {e.datesText && <time dateTime={e.dateTime}>{e.datesText}</time>}
-        {e.current && <span className="mt-1 block text-accent-2">Current</span>}
+        {e.current && <span className="mt-1 block text-accent">Current</span>}
       </p>
       <div className="md:col-span-9 md:pl-8">
         <h3 className="text-lg leading-snug text-ink">{e.title}</h3>
@@ -86,7 +86,7 @@ function Entry({ entry: e }: { entry: TimelineEntry }) {
 
 export function TimelineLens({ entries }: { entries: TimelineEntry[] }) {
   return (
-    <ol className="relative before:absolute before:top-2 before:bottom-12 before:left-0 before:w-0.5 before:bg-accent-2 md:before:left-1/4">
+    <ol className="relative before:absolute before:top-2 before:bottom-12 before:left-0 before:w-0.5 before:bg-accent md:before:left-1/4">
       {entries.map((e) => (
         <Entry key={e.id} entry={e} />
       ))}

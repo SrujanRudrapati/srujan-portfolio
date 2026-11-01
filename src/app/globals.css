@@ -18,35 +18,20 @@
   --tile-bg: rgba(232, 234, 237, 0.035);
   --tile-border: rgba(232, 234, 237, 0.09);
   --tile-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --metal-light: #e2c59e; /* the metal gradient's light stop (game: the gold band) */
+  --backdrop: rgba(6, 9, 13, 0.6); /* behind dialogs: palette, Ask, game */
   --serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
   --sans: var(--font-hanken), system-ui, -apple-system, "Segoe UI", sans-serif;
 
-  /* Older names, kept as aliases until W7 retires the components that read them. */
-  --surface-raised: var(--surface);
-  --border: var(--line);
-  --text-muted: var(--muted);
-  --accent-hover: #d8b48a;
-  --accent-2: var(--accent);
-  --accent-2-hover: #d8b48a;
-  --on-accent: var(--bg);
-  /* Data states: the medallion diagram tiers only. */
-  --bronze: #d08b57;
-  --silver: #b5bcc3;
-  --gold: #e0b84a;
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-raised: var(--surface);
   --color-line: var(--line);
   --color-ink: var(--text);
   --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-2: var(--accent);
-  --color-accent-2-hover: var(--accent-hover);
-  --color-on-accent: var(--bg);
 
   --font-sans: var(--sans);
   --font-display: var(--serif);
@@ -379,9 +364,6 @@ main.route-enter {
 .medallion-lit {
   fill: var(--stage-lit);
 }
-.medallion-dot {
-  display: none;
-}
 
 /* Project diagrams: default (no JavaScript, offscreen, reduced motion, or no
    offset-path support) is every box lit and still. */
@@ -434,45 +416,8 @@ main.route-enter {
 /* Motion. Only defined when the user has not asked for reduced motion, so the
    reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
-  /* Hero entrance: five blocks, 70ms apart, 400ms each, done by 680ms. */
-  .enter {
-    animation: enter 400ms var(--ease-out-quart) both;
-    animation-delay: calc(var(--i, 0) * 70ms);
-  }
-
-  /* Reveal primitive. The attribute is only ever set by JavaScript, so without
-     it (no JS, reduced motion, already on screen) children are simply visible. */
-  [data-reveal="pending"] {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  [data-reveal="in"] {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity 600ms var(--ease-out-quart),
-      transform 600ms var(--ease-out-quart);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-
   [data-switched] > [data-lens-panel]:not([hidden]) {
-    animation: lens-in 200ms var(--ease-out-quart);
-  }
-
-  /* Project diagrams (FlowDiagram). Dots ride each track; a box's lit overlay
-     fades in the moment a dot reaches it. Runs only while the figure is on
-     screen (data-animate set by useInView). Overlays animate opacity only. */
-  @supports (offset-path: path("M0 0 L1 1")) {
-    .flow[data-animate="on"] .flow-dot {
-      display: block;
-      offset-rotate: 0deg;
-      animation: flow-travel var(--loop) linear infinite;
-    }
-    .flow[data-animate="on"] .flow-lit {
-      opacity: 0;
-      animation: flow-flash var(--period) linear infinite;
-      animation-delay: calc((var(--arrive) - 1) * var(--period));
-    }
+    animation: lens-in 200ms var(--ease);
   }
 
   /* Project-page diagrams draw once on entry (FlowDiagram draw). "ready" hides the drawing just
@@ -507,55 +452,6 @@ main.route-enter {
     }
   }
 
-  /* Medallion diagram. Two dots share one 5s loop, 2.5s apart, so every stage
-     sees an arrival every 2.5s; the stage keyframes run on that 2.5s period.
-     Arrival points were measured along the offset path (906 units long). */
-  @supports (offset-path: path("M0 0 L1 1")) {
-    [data-animate="on"] > .medallion .medallion-dot {
-      display: block;
-      offset-path: path("M220 402 H76 V296 H364 V190 H220 V72");
-      offset-rotate: 0deg;
-      animation: medallion-travel 5s linear infinite;
-    }
-    [data-animate="on"] > .medallion .medallion-dot-2 {
-      animation-delay: -2.5s;
-    }
-    [data-animate="on"] > .medallion .medallion-lit {
-      opacity: 0;
-      animation-duration: 2.5s;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-    [data-animate="on"] > .medallion [data-stage="source"] .medallion-lit {
-      animation-name: stage-source;
-    }
-    [data-animate="on"] > .medallion [data-stage="bronze"] .medallion-lit {
-      animation-name: stage-bronze;
-    }
-    [data-animate="on"] > .medallion [data-stage="silver"] .medallion-lit {
-      animation-name: stage-silver;
-    }
-    [data-animate="on"] > .medallion [data-stage="gold"] .medallion-lit {
-      animation-name: stage-gold;
-    }
-    [data-animate="on"] > .medallion [data-stage="serving"] .medallion-lit {
-      animation-name: stage-serving;
-    }
-    [data-animate="on"] > .medallion [data-stage="llm"] .medallion-lit {
-      animation-name: stage-llm;
-    }
-  }
-}
-
-@keyframes enter {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 
 /* Lens switch: the incoming panel fades in over 200ms (motion allowed only). */
@@ -565,15 +461,6 @@ main.route-enter {
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes flow-travel {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
   }
 }
 
@@ -592,65 +479,49 @@ main.route-enter {
   }
 }
 
-/* A box lights when a dot arrives (0%), holds, then fades over 14% of its period. */
-@keyframes flow-flash {
-  0%, 8% { opacity: 1; }
-  22%, 100% { opacity: 0; }
-}
-
-@keyframes medallion-travel {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
-  }
-}
-
-/* Each stage: snap to lit when a dot arrives, hold 8%, fade back over 14%. */
-@keyframes stage-source {
-  0%, 6% { opacity: 1; }
-  20%, 100% { opacity: 0; }
-}
-@keyframes stage-bronze {
-  0%, 48% { opacity: 0; }
-  49%, 57% { opacity: 1; }
-  71%, 100% { opacity: 0; }
-}
-@keyframes stage-silver {
-  0%, 73.6% { opacity: 0; }
-  74.6%, 82.6% { opacity: 1; }
-  96.6%, 100% { opacity: 0; }
-}
-@keyframes stage-gold {
-  0%, 5.4% { opacity: 0; }
-  6.4%, 14.4% { opacity: 1; }
-  28.4%, 100% { opacity: 0; }
-}
-@keyframes stage-serving {
-  0%, 36.4% { opacity: 0; }
-  37.4%, 45.4% { opacity: 1; }
-  59.4%, 100% { opacity: 0; }
-}
-@keyframes stage-llm {
-  0% { opacity: 1; }
-  14%, 91% { opacity: 0; }
-  92%, 100% { opacity: 1; }
-}
 
 
-/* Featured cards on phones: title, figures and one line first; the rest opens
-   with "Show details". Only when scripted (data-js), so no-JS shows all. */
-.featured-toggle {
-  display: none;
+
+/* 404 (runbook v4 W7.2). */
+.nf-query {
+  max-width: 100%;
+  margin: clamp(24px, 4vh, 40px) 0 0;
+  padding: 20px 24px;
+  overflow-x: auto;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
 }
-@media (max-width: 47.99rem) {
-  html[data-js] .featured-toggle {
-    display: inline-flex;
-  }
-  html[data-js] .featured-more:not([data-open]) {
-    display: none;
-  }
+.nf-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.nf-pages .pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 18px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.3s var(--ease);
+}
+.nf-pages .pill:hover {
+  border-color: var(--accent);
+}
+.nf-game {
+  margin-top: 72px;
+}
+.nf-game-title {
+  margin: 0 0 20px;
+  font-size: 32px;
 }
 
 /* /cv on screen (runbook v4 W7.1): the recruiter sheet on a rounded tile, the name in Bodoni. */
@@ -673,22 +544,14 @@ main.route-enter {
 /* Print. /cv (and the Recruiter lens) prints alone on one page, black on white, whatever is on
    screen (the site is dark only). Other pages print as they are. */
 @media print {
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
   :root {
     color-scheme: light;
     --bg: #ffffff;
     --surface: #ffffff;
-    --surface-raised: #ffffff;
-    --border: #d9d9d9;
     --line: #d9d9d9;
     --text: #000000;
-    --text-muted: #4a4a4a;
     --muted: #4a4a4a;
     --accent: #000000;
-    --accent-2: #000000;
     --metal: linear-gradient(#000000, #000000);
   }
   body {
@@ -714,13 +577,17 @@ main.route-enter {
     display: none !important;
   }
   html[data-lens="recruiter"] body > *:not(main),
-  html[data-lens="recruiter"] main > *:not(#work),
+  html[data-lens="recruiter"] main > .wrap > *:not(#work),
   html[data-lens="recruiter"] #work-heading,
   html[data-lens="recruiter"] #work [data-lens-panel][hidden] {
     display: none !important;
   }
   html[data-lens="recruiter"] #work {
     border: 0;
+  }
+  html[data-lens="recruiter"] main {
+    min-height: 0;
+    padding: 0;
   }
   html[data-lens="recruiter"] #work > div {
     padding: 0;

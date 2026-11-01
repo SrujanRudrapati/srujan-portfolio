@@ -2,7 +2,6 @@
 
 import { useId, useRef, type CSSProperties } from "react";
 import { useDrawOnEnter } from "@/hooks/use-draw-on-enter";
-import { useInView } from "@/hooks/use-in-view";
 
 // One engine for every project diagram. A diagram is a set of boxes, the
 // connectors drawn between them, and "tracks": ordered lists of boxes a dot
@@ -10,16 +9,11 @@ import { useInView } from "@/hooks/use-in-view";
 // arrival, phased from the path length, so stages light in order and the data
 // drives the timing; nothing is hand-measured.
 //
-// Motion rules (design-direction skill): dots and lighting run only while the
-// figure is on screen and the tab is visible (useInView), only under
-// prefers-reduced-motion: no-preference, and only where offset-path is
-// supported. The default, with no JavaScript or reduced motion, is every box
-// lit and still, which reads fully on its own. Styles: .flow-* in globals.css.
-//
-// Project pages (runbook v4 W4) use `draw` instead of the loop: when the figure
-// scrolls into view, connectors draw in bronze, boxes light as the data reaches
-// them and one dot per track rides through once. Plain CSS transitions keyed on
-// data-draw; timings come from the same path lengths as the loop.
+// Motion (runbook v4 W4, motion-system): the figure draws once when it scrolls into view.
+// Connectors draw in bronze, each box lights when the data first reaches it, and one dot
+// per track rides through once. CSS transitions keyed on data-draw (globals.css); timings
+// come from the tracks' path lengths. The server markup is the finished drawing, which is
+// also what reduced motion and no JavaScript show.
 //
 // Sizing: SVG text scales with the container, so each diagram ships a wide
 // layout (1024px and up) and a narrow one sized to the ~280px slot a phone
@@ -52,7 +46,7 @@ export type FlowEdge = { from: string; to: string; dashed?: boolean; arrow?: boo
 
 export type FlowTrack = {
   nodes: string[];
-  /** Dots sharing this path, spread evenly over the loop. */
+  /** Kept for the layouts' data; the drawing uses one dot per track. */
   dots?: number;
   /** Delay in seconds (negative = already under way), so parallel tracks alternate. */
   offset?: number;
@@ -78,18 +72,11 @@ type Props = {
   caption: string;
   wide: FlowLayout;
   narrow: FlowLayout;
-  /** Seconds for one full loop of a track. */
-  loopSeconds?: number;
   className?: string;
-  /** Project pages: the diagram draws once when it scrolls into view, instead of looping. The markup is the
-   *  finished state; motion only ever hides it just before it is drawn. */
-  draw?: boolean;
 };
 
 type Point = { x: number; y: number };
 type Dir = "up" | "down" | "left" | "right";
-type Lit = { arrive: number; period: number };
-type DotPath = { d: string; dots: number; offset: number };
 type NodeMap = Map<string, FlowNode>;
 
 /** Shortest connector draw on the 0 to 1 scrub clock. */
@@ -137,24 +124,9 @@ function trackGeometry(track: FlowTrack, byId: NodeMap): { d: string; arrivals: 
   return { d, arrivals: distances.map(({ id, at }) => ({ id, at: length === 0 ? 0 : at / length })) };
 }
 
-/** One lit overlay per (track, arrival). A node on two tracks, or visited twice, lights every time a dot reaches it. */
-function lighting(layout: FlowLayout, byId: NodeMap, loopSeconds: number): { lit: Map<string, Lit[]>; paths: DotPath[] } {
-  const lit = new Map<string, Lit[]>();
-  const paths: DotPath[] = [];
-  for (const track of layout.tracks) {
-    const dots = Math.max(1, track.dots ?? 1);
-    const offset = track.offset ?? 0;
-    const { d, arrivals } = trackGeometry(track, byId);
-    paths.push({ d, dots, offset });
-    // A node sees `dots` arrivals per loop, so its flash period is loop/dots.
-    // The dot's delay shifts every arrival by the same amount.
-    const period = loopSeconds / dots;
-    for (const { id, at } of arrivals) {
-      const phase = at * dots + offset / period;
-      lit.set(id, [...(lit.get(id) ?? []), { arrive: ((phase % 1) + 1) % 1, period }]);
-    }
-  }
-  return { lit, paths };
+/** Boxes some track passes through: each gets a lit overlay, shown once the data reaches it. */
+function litNodes(layout: FlowLayout): Set<string> {
+  return new Set(layout.tracks.flatMap((t) => t.nodes));
 }
 
 /** Draw timing on a 0 to 1 clock, from the same path lengths the loop uses: when each box is first reached,
@@ -238,25 +210,6 @@ function Edges({ layout, byId, edgeAt }: { layout: FlowLayout; byId: NodeMap; ed
   );
 }
 
-function Dots({ paths, loopSeconds }: { paths: DotPath[]; loopSeconds: number }) {
-  // Drawn before the boxes so dots pass beneath each one.
-  return (
-    <g aria-hidden="true">
-      {paths.map((path, i) =>
-        Array.from({ length: path.dots }, (_, k) => (
-          <circle
-            key={`${i}-${k}`}
-            className="flow-dot"
-            r="4.5"
-            fill="var(--accent)"
-            style={{ offsetPath: `path("${path.d}")`, animationDelay: `${path.offset - (k * loopSeconds) / path.dots}s` }}
-          />
-        )),
-      )}
-    </g>
-  );
-}
-
 function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
   const muted = "var(--muted)";
   const ink = node.variant === "ghost" ? muted : "var(--text)";
@@ -309,18 +262,16 @@ function DrawDots({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
   );
 }
 
-function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Map<string, Lit[]>; type: FlowType; nodeAt?: Map<string, number> }) {
+function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Set<string>; type: FlowType; nodeAt: Map<string, number> }) {
   return (
     <>
       {layout.nodes.map((node) => {
         const stroke = node.variant === "accent" ? "var(--accent)" : node.variant === "ghost" ? "var(--muted)" : "var(--flow-box)";
         const box = { x: node.x, y: node.y, width: node.w, height: node.h };
         return (
-          <g key={node.id} className="flow-node" data-at={nodeAt ? (nodeAt.get(node.id) ?? 0) : undefined} style={nodeAt ? ({ "--at": nodeAt.get(node.id) ?? 0 } as CSSProperties) : undefined}>
+          <g key={node.id} className="flow-node" data-at={nodeAt.get(node.id) ?? 0} style={{ "--at": nodeAt.get(node.id) ?? 0 } as CSSProperties}>
             <rect {...box} rx={10} fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"} stroke={stroke} strokeWidth={node.variant === "accent" ? 1.5 : 1} strokeDasharray={node.variant === "ghost" ? "4 3" : undefined} />
-            {(lit.get(node.id) ?? []).map((glow, i) => (
-              <rect key={i} className="flow-lit" {...box} rx={10} fill="var(--flow-lit)" style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties} />
-            ))}
+            {lit.has(node.id) && <rect className="flow-lit" {...box} rx={10} fill="var(--flow-lit)" />}
             <NodeText node={node} type={type} />
           </g>
         );
@@ -329,18 +280,18 @@ function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Map<str
   );
 }
 
-function Layout({ layout, loopSeconds, ids, title, desc, className, draw }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string; draw: boolean }) {
+function Layout({ layout, ids, title, desc, className }: { layout: FlowLayout; ids: [string, string]; title: string; desc: string; className: string }) {
   const byId: NodeMap = new Map(layout.nodes.map((n) => [n.id, n]));
-  const { lit, paths } = lighting(layout, byId, loopSeconds);
-  const timing = draw ? drawTimings(layout, byId) : undefined;
+  const lit = litNodes(layout);
+  const timing = drawTimings(layout, byId);
   const type = layout.type ?? DEFAULT_TYPE;
   return (
-    <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`flow-svg ${className}`} style={{ "--loop": `${loopSeconds}s` } as CSSProperties}>
+    <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`flow-svg ${className}`}>
       <title id={ids[0]}>{title}</title>
       <desc id={ids[1]}>{desc}</desc>
-      <Edges layout={layout} byId={byId} edgeAt={timing?.edgeAt} />
-      {draw ? <DrawDots layout={layout} byId={byId} /> : <Dots paths={paths} loopSeconds={loopSeconds} />}
-      <Nodes layout={layout} lit={lit} type={type} nodeAt={timing?.nodeAt} />
+      <Edges layout={layout} byId={byId} edgeAt={timing.edgeAt} />
+      <DrawDots layout={layout} byId={byId} />
+      <Nodes layout={layout} lit={lit} type={type} nodeAt={timing.nodeAt} />
       {layout.notes?.map((note) => (
         <text key={`${note.x}-${note.y}`} x={note.x} y={note.y} fontSize={type.small} fontWeight={400} fill="var(--muted)" className="flow-text">
           {note.text}
@@ -350,20 +301,15 @@ function Layout({ layout, loopSeconds, ids, title, desc, className, draw }: { la
   );
 }
 
-export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 6, className = "", draw = false }: Props) {
+export function FlowDiagram({ title, desc, caption, wide, narrow, className = "" }: Props) {
   const uid = useId();
-  const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px", !draw);
-  const drawRef = useRef<HTMLElement | null>(null);
-  useDrawOnEnter(drawRef, draw);
-  const setRef = (el: HTMLElement | null) => {
-    ref.current = el;
-    drawRef.current = el;
-  };
+  const ref = useRef<HTMLElement>(null);
+  useDrawOnEnter(ref, true);
   return (
-    <figure ref={setRef} data-animate={!draw && active ? "on" : undefined} className={`flow flow-panel ${className}`}>
+    <figure ref={ref} className={`flow flow-panel ${className}`}>
       {/* One layout per breakpoint. The hidden one is display:none, so it has no animation cost and screen readers skip it. */}
-      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="flow-wide" draw={draw} />
-      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="flow-narrow" draw={draw} />
+      <Layout layout={wide} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="flow-wide" />
+      <Layout layout={narrow} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="flow-narrow" />
       <figcaption className="flow-caption">{caption}</figcaption>
     </figure>
   );

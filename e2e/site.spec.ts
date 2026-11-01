@@ -1,33 +1,39 @@
 import { expect, test } from "@playwright/test";
 import { expectNoA11yViolations } from "./helpers";
 
-// Runbook V3: routes, the nav, number keys, the command palette, and that every v2
-// section still exists somewhere (docs/v3/IA.md).
+// Routes, the shell on every page, the command palette, and that older anchors still land
+// (docs/v4/IA.md). Updated for v4 in W7: the header is the name, the footer the Arizona clock.
 
 const PAGES = [
   { path: "/work", h1: "Work" },
-  { path: "/explore", h1: "Explore" },
+  { path: "/experience", h1: "Experience" },
   { path: "/about", h1: "About" },
+  { path: "/contact", h1: "Contact" },
+  { path: "/explore", h1: "Explore" },
   { path: "/cv", h1: "CV" },
   { path: "/work/label-lens", h1: "Label Lens" },
 ];
 
 test.describe("Routes", () => {
   for (const p of PAGES) {
-    test(`${p.path} has one h1, the nav, the footer, and no accessibility violations`, async ({ page }) => {
+    test(`${p.path} has one h1, the header, the back pill, the footer, and no accessibility violations`, async ({ page }) => {
       await page.goto(p.path);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(p.h1);
-      await expect(page.getByRole("banner").getByRole("link", { name: "Resume" })).toBeVisible();
-      await expect(page.getByRole("contentinfo").getByRole("link", { name: "rudrapati.srujan@gmail.com" })).toBeVisible();
+      await expect(page.getByRole("banner").getByRole("link", { name: "Srujan Rudrapati" })).toBeVisible();
+      await expect(page.locator("main a.back")).toHaveCount(1);
+      await expect(page.getByRole("contentinfo")).toContainText("Arizona");
       await expectNoA11yViolations(page, "main");
     });
   }
 
   test("every project has its own page, all listed on /work", async ({ page }) => {
     await page.goto("/work");
-    // Since V6: four featured articles and seven compact rows, each with its project id.
-    await expect(page.locator('main [id^="project-"]')).toHaveCount(11);
-    const hrefs = await page.locator('main a[href^="/work/"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
+    // v4: the List layout shows all eleven.
+    await expect(async () => {
+      await page.getByRole("button", { name: "List" }).click();
+      await expect(page.locator("[data-work-list] a")).toHaveCount(11, { timeout: 1000 });
+    }).toPass({ timeout: 10000 });
+    const hrefs = await page.locator("[data-work-list] a").evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
     expect(hrefs).toHaveLength(11);
     for (const href of hrefs) {
       const res = await page.request.get(href!);
@@ -35,10 +41,11 @@ test.describe("Routes", () => {
     }
   });
 
-  test("the v2 sections live on /about and /cv", async ({ page }) => {
+  test("older anchors land on /about, the roles are on /experience, the one-pager on /cv", async ({ page }) => {
     await page.goto("/about");
-    for (const id of ["about", "experience", "skills", "credentials"]) await expect(page.locator(`#${id}`)).toBeVisible();
-    await expect(page.locator("#experience").getByRole("heading", { level: 3 })).toHaveCount(4);
+    for (const id of ["skills", "credentials"]) await expect(page.locator(`#${id}`)).toBeVisible();
+    await page.goto("/experience");
+    await expect(page.locator("[data-item^='role-']")).toHaveCount(4);
     await page.goto("/cv");
     await expect(page.locator("#recruiter-sheet")).toContainText("rudrapati.srujan@gmail.com");
   });
@@ -47,45 +54,19 @@ test.describe("Routes", () => {
     const res = await page.goto("/no-such-page");
     expect(res?.status()).toBe(404);
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Row not found");
-    for (const name of ["Home", "Work", "Explore", "About", "CV"]) await expect(page.locator("main").getByRole("link", { name, exact: true })).toBeVisible();
+    const pages = page.locator("main ul").first();
+    for (const name of ["Home", "Work", "Experience", "About", "Contact", "Explore", "CV"]) await expect(pages.getByRole("link", { name, exact: true })).toBeVisible();
   });
-});
-
-test("the palette is the phone menu: opens from the bar, Escape closes and returns focus, no axe violations", async ({ page }) => {
-  await page.goto("/about");
-  const opener = page.getByRole("banner").getByRole("button", { name: /Menu|Search/ });
-  await opener.click();
-  const palette = page.getByRole("dialog", { name: "Command palette" });
-  await expect(palette.getByRole("combobox")).toBeFocused();
-  await expectNoA11yViolations(page, "dialog[open]");
-  await palette.getByRole("option", { name: "Work 1", exact: true }).click(); // the label and its number key
-  await expect(page).toHaveURL(/\/work$/);
-  await opener.click();
-  await page.keyboard.press("Escape");
-  await expect(palette).toBeHidden();
-  await expect(opener).toBeFocused();
 });
 
 test.describe("Keyboard", () => {
   test.beforeEach(({ isMobile }) => test.skip(isMobile, "Keyboard shortcuts are a desktop path"));
 
-  test("number keys 1 to 4 open the main pages, but not while typing", async ({ page }) => {
-    await page.goto("/", { waitUntil: "networkidle" }); // after hydration, when the shortcut listener exists
-    await page.keyboard.press("3");
-    await expect(page).toHaveURL(/\/about$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("About");
-    await page.keyboard.press("1");
-    await expect(page).toHaveURL(/\/work$/);
-    await page.goto("/");
-    await page.locator("#home-ask-input").fill("2");
-    await page.locator("#home-ask-input").press("4");
-    await expect(page).toHaveURL(/\/$/);
-  });
-
   test("⌘K opens the palette; typing filters; Enter opens a project; Escape returns focus", async ({ page }) => {
-    await page.goto("/about");
-    const opener = page.getByRole("banner").getByRole("button", { name: /Search/ });
-    await opener.click();
+    await page.goto("/about", { waitUntil: "networkidle" });
+    const opener = page.locator("main a.back");
+    await opener.focus();
+    await page.keyboard.press("ControlOrMeta+k");
     const palette = page.getByRole("dialog", { name: "Command palette" });
     await expect(palette).toBeVisible();
     await page.keyboard.press("Escape");

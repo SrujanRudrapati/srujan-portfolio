@@ -1,8 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
-import { Flip } from "gsap/Flip";
-import { EASE, FULL, gsap } from "@/components/motion/gsap";
+import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
 import { SHOW_ALL_PROJECTS } from "@/components/work/events";
 import type { Graph } from "@/data/graph/types";
 import { useGraph } from "@/hooks/use-graph";
@@ -21,26 +19,12 @@ import { LensSwitcher } from "./LensSwitcher";
 
 const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "start" });
 
-gsap.registerPlugin(Flip);
-
-/** Lens switches (V6): items that appear in both lenses (same data-flip-id, the graph node id) move from
- *  where they were to where they are; new ones fade up. Full motion only; reduced motion swaps instantly. */
-const FLIP_S = 0.6;
-const ENTER_S = 0.4;
-const FLIP_WAIT_MS = 2500; // a graph lens may still be loading; give up on the transition after this
-const visibleItems = (root: HTMLElement | null) => (root ? Array.from(root.querySelectorAll<HTMLElement>("[data-lens-panel]:not([hidden]) [data-flip-id]")) : []);
+// Lens switches fade the incoming panel in over 200 ms ([data-switched], globals.css; full motion only).
+// v4 (runbook W7.4) dropped the GSAP Flip that moved shared items between lenses.
 
 export function Explore({ children }: { children: ReactNode }) {
   const [lens, setLens] = useState<LensId>(DEFAULT_LENS);
   const [switched, setSwitched] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const flipFrom = useRef<{ state: Flip.FlipState; at: number } | null>(null);
-  /** Record where the current lens's items are, before React swaps the lens. */
-  const recordFlip = useCallback(() => {
-    if (!window.matchMedia(FULL).matches) return;
-    const items = visibleItems(rootRef.current);
-    flipFrom.current = items.length ? { state: Flip.getState(items), at: performance.now() } : null;
-  }, []);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusAfterSwitch = useRef(false);
   const { state: graphState, retry } = useGraph(lens !== DEFAULT_LENS);
@@ -67,21 +51,19 @@ export function Explore({ children }: { children: ReactNode }) {
   const label = LENSES.find((l) => l.id === lens)?.label ?? "";
 
   const choose = useCallback((next: LensId) => {
-    recordFlip();
     setLens(next);
     setSwitched(true);
     const url = next === DEFAULT_LENS ? `${window.location.pathname}${window.location.search}` : `#lens=${next}`;
     window.history.replaceState(null, "", url);
-  }, [recordFlip]);
+  }, []);
 
   /** A switch caused by a link (not the switcher): show the section and move focus to the lens heading. */
   const followLink = useCallback((next: LensId) => {
-    recordFlip();
     setLens(next);
     setSwitched(true);
     focusAfterSwitch.current = true;
     requestAnimationFrame(() => scrollToSection("work"));
-  }, [recordFlip]);
+  }, []);
 
   // Hash: on load, on back/forward and typed URLs.
   useEffect(() => {
@@ -130,28 +112,6 @@ export function Explore({ children }: { children: ReactNode }) {
     return () => document.removeEventListener("click", onClick);
   }, [followLink]);
 
-  // Play the recorded Flip once the new lens's items are in the DOM (a graph lens renders after graph.json loads).
-  useLayoutEffect(() => {
-    const from = flipFrom.current;
-    if (!from) return;
-    if (performance.now() - from.at > FLIP_WAIT_MS) {
-      flipFrom.current = null;
-      return;
-    }
-    const targets = visibleItems(rootRef.current);
-    if (!targets.length) return; // still loading: try again on the next render
-    flipFrom.current = null;
-    const tl = Flip.from(from.state, {
-      targets,
-      duration: FLIP_S,
-      ease: EASE,
-      onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: ENTER_S, ease: EASE, stagger: 0.02 }),
-    });
-    return () => {
-      tl.progress(1).kill();
-    };
-  }, [lens, graphState.status, LensView]);
-
   // Print styles key off this attribute so Recruiter mode prints alone.
   useEffect(() => {
     document.documentElement.dataset.lens = lens;
@@ -172,11 +132,11 @@ export function Explore({ children }: { children: ReactNode }) {
   const errorMessage = () => (
     <p className="max-w-measure text-lg text-ink">
       This view could not load. Check your connection, then{" "}
-      <button type="button" onClick={tryAgain} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
+      <button type="button" onClick={tryAgain} className="min-h-11 font-medium text-accent underline decoration-1 underline-offset-4">
         try again
       </button>{" "}
       or{" "}
-      <button type="button" onClick={() => choose(DEFAULT_LENS)} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
+      <button type="button" onClick={() => choose(DEFAULT_LENS)} className="min-h-11 font-medium text-accent underline decoration-1 underline-offset-4">
         show highlights
       </button>
       .
@@ -185,7 +145,7 @@ export function Explore({ children }: { children: ReactNode }) {
   const loading = <p className="text-muted">Loading {label.toLowerCase()}…</p>;
 
   return (
-    <div ref={rootRef} data-switched={switched ? "" : undefined}>
+    <div data-switched={switched ? "" : undefined}>
       <div className="mb-10 md:mb-14 print:hidden">
         <LensSwitcher lens={lens} onChange={choose} />
         <p className="mt-3 text-sm text-muted">Six views of the same projects and roles. Recruiter is a one-page summary you can print.</p>

@@ -7,8 +7,8 @@ import { statusLabel } from "@/data/project-helpers";
 export function StatusBadge({ status }: { status: ProjectStatus }) {
   const running = status === "production" || status === "live";
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent-2">
-      {running && <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent-2" />}
+    <span className="inline-flex items-center gap-1.5 text-xs font-medium text-accent">
+      {running && <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />}
       {statusLabel[status]}
     </span>
   );
@@ -16,9 +16,9 @@ export function StatusBadge({ status }: { status: ProjectStatus }) {
 
 export function StatusNoteChip({ state, children }: { state: "running" | "pending" | "neutral"; children: string }) {
   return (
-    <span className="inline-flex items-center gap-2 border border-ink px-2.5 py-1 text-sm font-medium text-ink">
-      {state === "running" && <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent-2" />}
-      {state === "pending" && <span aria-hidden="true" className="h-2 w-2 rounded-full border-2 border-accent-2" />}
+    <span className="inline-flex items-center gap-2 rounded-full border border-line px-3 py-1 text-sm text-ink">
+      {state === "running" && <span aria-hidden="true" className="h-2 w-2 rounded-full bg-accent" />}
+      {state === "pending" && <span aria-hidden="true" className="h-2 w-2 rounded-full border-2 border-accent" />}
       {children}
     </span>
   );

@@ -1,4 +1,4 @@
-import { rng } from "../three/rng.ts";
+import { rng } from "./rng.ts";
 
 // "Clean the pipeline" (runbook V1.5, built in V6): the physics, with no DOM and no drawing,
 // so it is unit tested (pipeline-sim.test.ts). Bad records fall under gravity through the

@@ -19,24 +19,15 @@
     "worker:check": "npm --prefix worker run typecheck && npm --prefix worker run build",
     "lighthouse": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/lighthouse.mts",
     "axe": "axe http://localhost:4321/ --tags wcag2a,wcag2aa,wcag21a,wcag21aa,wcag22aa --exit",
-    "release:check": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/release-check.mts",
-    "assets:fetch": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/assets/fetch.mts",
-    "assets:build": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/assets/build.mts",
-    "posters": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/assets/posters.mts"
+    "release:check": "node --disable-warning=ExperimentalWarning --experimental-strip-types scripts/release-check.mts"
   },
   "dependencies": {
-    "@monogrid/gainmap-js": "3.4.0",
     "@phosphor-icons/react": "^2.1.10",
-    "@react-three/drei": "10.7.9",
-    "@react-three/fiber": "9.8.2",
-    "cannon-es": "0.20.0",
-    "gsap": "3.15.0",
     "lenis": "1.3.27",
     "minisearch": "^7.2.0",
     "next": "^16.4.3",
     "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "three": "0.186.1"
+    "react-dom": "19.2.8"
   },
   "devDependencies": {
     "@axe-core/cli": "^4.14.0",
@@ -46,10 +37,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/three": "0.186.0",
     "eslint": "^9",
     "eslint-config-next": "^16.4.3",
-    "ktx2-encoder": "0.6.0",
     "lighthouse": "^12.8.2",
     "serve": "^14.2.6",
     "tailwindcss": "^4",

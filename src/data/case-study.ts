@@ -1,6 +1,6 @@
 import { graph, type ArtifactNode, type GraphNode, type MetricNode, type ProblemNode, type Project } from "./graph.ts";
 import { out } from "./graph/selectors.ts";
-import { covers, screenshots } from "./covers.ts";
+import { screenshots } from "./screenshots.ts";
 import { projects } from "./projects.ts";
 
 // What one /work/[slug] case study shows (runbook V5), read from the graph: no figure or
@@ -11,7 +11,6 @@ export type Figure = { value: string; label: string; summary: string };
 export type NamedLink = { label: string; url: string };
 export type Problem = { label: string; summary?: string };
 export type Entry = { name: string; note?: string; text: string; links: NamedLink[] };
-export type NextProject = { slug: string; title: string; oneLiner: string; figure?: Figure; poster?: string };
 
 export type CaseStudy = {
   project: Project;
@@ -22,9 +21,7 @@ export type CaseStudy = {
   problems: Problem[];
   links: NamedLink[];
   entries: Entry[];
-  cover?: { scene: string; label: string };
   screenshot?: (typeof screenshots)[string];
-  next: NextProject;
 };
 
 const byId = new Map<string, GraphNode>(graph.nodes.map((n) => [n.id, n]));
@@ -61,20 +58,6 @@ function problems(projectId: string): Problem[] {
   });
 }
 
-/** The 3D cover's label, with any "{metric-id}" filled from the graph. */
-export function cover(slug: string): CaseStudy["cover"] {
-  const c = covers[slug];
-  if (!c) return undefined;
-  return { scene: c.scene, label: c.label.replace(/\{([a-z0-9-]+)\}/g, (_, id: string) => get(`metric-${id}`, "metric").value) };
-}
-
-function next(i: number): NextProject {
-  const p = projects[(i + 1) % projects.length];
-  const scene = covers[p.slug]?.scene;
-  const lead = figures(`project-${p.slug}`)[0];
-  return { slug: p.slug, title: p.title, oneLiner: p.oneLiner, ...(lead ? { figure: lead } : {}), ...(scene ? { poster: `/posters/${scene}.webp` } : {}) };
-}
-
 /** Each entry's text must be the end of one of the project's highlights ("Cooked (winner): reads ..."), so the two
  *  never drift apart; checked for every project when this module loads, which fails the build. */
 for (const p of projects) {
@@ -100,7 +83,6 @@ export function caseStudy(slug: string): CaseStudy | undefined {
     problems: problems(id),
     links: all,
     entries,
-    ...(shot ? { screenshot: shot } : { cover: cover(slug) }),
-    next: next(i),
+    ...(shot ? { screenshot: shot } : {}),
   };
 }

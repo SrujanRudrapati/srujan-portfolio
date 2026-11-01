@@ -8,7 +8,6 @@ import { FlowDiagram, type FlowLayout } from "./FlowDiagram";
 // drawn on a 300-unit canvas for the ~280px slot a 390px phone gives it, so
 // text stays at or above 12px rendered. See FlowDiagram for the engine.
 
-type DiagramProps = { draw?: boolean };
 
 const flowEdges = (pairs: [string, string][]): FlowLayout["edges"] => pairs.map(([from, to]) => ({ from, to }));
 
@@ -56,10 +55,9 @@ const surplusPipelineNarrow: FlowLayout = {
   tracks: pipelineTracks,
 };
 
-export function SurplusPipelineDiagram({ draw = false }: DiagramProps) {
+export function SurplusPipelineDiagram() {
   return (
     <FlowDiagram
-      draw={draw}
       title="Surplus AI pipeline: from spec collection to AI-written listings"
       desc="Two spec sources, a USB collector for working Macs and a camera scanner for Macs that will not boot, feed a lookup table, then one master inventory keyed on serial number, then an LLM with a strict prompt that never invents specs, which writes the listings."
       caption="How a Mac goes from the shelf to a listing. Working Macs report their own specs; Macs that won’t boot get their label scanned. Both land in one inventory keyed on serial number."
@@ -106,10 +104,9 @@ const surplusNetworkNarrow: FlowLayout = {
   notes: [{ x: 62, y: 62, text: "No uplink" }],
 };
 
-export function SurplusNetworkDiagram({ draw = false }: DiagramProps) {
+export function SurplusNetworkDiagram() {
   return (
     <FlowDiagram
-      draw={draw}
       title="Cluster network: five Mac minis on a switch with no internet uplink"
       desc="A gigabit switch with no uplink to the internet connects five Mac mini nodes with fixed IPs 10.0.0.1 to 10.0.0.5. Node 1 is the head node and reaches the others over SSH. Qwen 14B runs across nodes 1 to 4 and Llama 3B on node 5."
       caption="Five M1 Mac minis on an isolated gigabit switch with fixed IPs and passwordless SSH from the head node. Qwen 14B runs across four nodes and Llama 3B on one, all through MLX."
@@ -162,16 +159,14 @@ const surplusPrivacyNarrow = privacyLayout(300, 10, [40, 40, 74, 56], [
   ["Model server only", "answers on localhost"],
 ]);
 
-export function SurplusPrivacyDiagram({ draw = false }: DiagramProps) {
+export function SurplusPrivacyDiagram() {
   return (
     <FlowDiagram
-      draw={draw}
       title="Privacy layers between Surplus AI and the internet"
       desc={`Surplus AI sits inside four layers, innermost first: ${[...privacyLayers].reverse().join("; ")}. The internet is outside all of them and is never reached.`}
       caption="Four layers sit between the model and the internet. The app checks Wi-Fi and internet status live."
       wide={surplusPrivacyWide}
       narrow={surplusPrivacyNarrow}
-      loopSeconds={5}
     />
   );
 }
@@ -219,16 +214,14 @@ const watchtowerNarrow: FlowLayout = {
   tracks: watchtowerTracks,
 };
 
-export function WatchtowerFlowDiagram({ draw = false }: DiagramProps) {
+export function WatchtowerFlowDiagram() {
   return (
     <FlowDiagram
-      draw={draw}
       title="Watchtower agent flow: sales history to logistics plan through three agents"
       desc="Sales history goes to Agent 1, the Inventory Forecaster, then Agent 2, the Risk Analyst, which calls a RAG tool over ChromaDB shipping-disruption data, then Agent 3, the Logistics Coordinator, which produces the logistics plan."
       caption="Three agents run in sequence, each consuming the previous agent’s output. Only the Risk Analyst has a tool: retrieval over real shipping-disruption data in ChromaDB."
       wide={watchtowerWide}
       narrow={watchtowerNarrow}
-      loopSeconds={7}
     />
   );
 }
@@ -244,8 +237,8 @@ const registry = {
 
 export type DiagramKey = keyof typeof registry;
 
-export function ProjectDiagram({ name, draw = false }: { name: string } & DiagramProps) {
+export function ProjectDiagram({ name }: { name: string }) {
   const Diagram = registry[name as DiagramKey];
   if (!Diagram) throw new Error(`ProjectDiagram: no diagram registered as "${name}"`);
-  return <Diagram draw={draw} />;
+  return <Diagram />;
 }

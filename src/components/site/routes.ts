@@ -1,9 +1,11 @@
-// The site's pages (runbook V3). Number keys 1 to 4 jump to the main pages in this order.
+// The site's pages after Home (runbook v4): the four hub tiles, then Explore and the CV.
 export const MAIN_PAGES = [
-  { href: "/work", label: "Work", key: "1", stage: "transform" },
-  { href: "/explore", label: "Explore", key: "2", stage: "views" },
-  { href: "/about", label: "About", key: "3", stage: "source" },
-  { href: "/cv", label: "CV", key: "4", stage: "one page" },
+  { href: "/work", label: "Work" },
+  { href: "/experience", label: "Experience" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+  { href: "/explore", label: "Explore" },
+  { href: "/cv", label: "CV" },
 ] as const;
 
 export const PALETTE_OPEN = "palette:open";

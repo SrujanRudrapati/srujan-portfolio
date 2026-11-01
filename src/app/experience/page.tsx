@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Timeline } from "@/components/experience/Timeline";
 import { BackPill } from "@/components/shell/BackPill";
-import { dateToYear, defaultItemId, timeline } from "@/data/experience";
+import { dateToYear, defaultItemId, LANE_ORDER, timeline } from "@/data/experience";
 import { pageMeta } from "@/lib/meta";
 
 export const metadata: Metadata = pageMeta("/experience", "Experience | Srujan Rudrapati", "Every role on one timeline, from Celebal Technologies to ASU Surplus.");
@@ -17,7 +17,7 @@ export default function ExperiencePage() {
           Experience
         </h1>
         <p className="page-intro">Every role on one timeline. Select a bar to read what happened there.</p>
-        <Timeline items={items} defaultId={defaultItemId(items)} builtAt={dateToYear(new Date())} />
+        <Timeline items={items} lanes={LANE_ORDER} defaultId={defaultItemId(items)} builtAt={dateToYear(new Date())} />
       </div>
     </main>
   );

@@ -11,9 +11,42 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W4 — Project pages | done | `redesign: phase W4 — project pages` | Eleven pages from one template: art band (featured) or compact title, intro with status and links, up to three metal result tiles, What it does / The entries, The problem, How it’s built (diagrams restyled, draw once on entry, no GSAP), Stack, Next project looping inside its group. v3 case-study template removed. Checklist below. |
 | W5 — Experience | done | `redesign: phase W5 — experience timeline` | Year axis 2023 to 2027, one lane per graph role (Celebal intern, Celebal associate, ASU teaching, ASU Surplus) plus Milestones (DevHacks diamond), Today line; bars are buttons; detail panel with every outcome, figures and projects, opening on the current role. Checklist below. |
 | W6 — About and Contact | done | `redesign: phase W6 — about and contact` | About: portrait frame (outline until a photo exists, DECISIONS 22), statement, two paragraphs, the medallion diagram, facts grid with education, all certifications and every skill group. Contact: large Bodoni email, composer (mailto with the fixed subject), GitHub, LinkedIn, resume, Ask entry. Checklist below. |
-| W7 — Integrate and clean up | not started | | |
+| W7 — Integrate and clean up | done | `redesign: phase W7 — integrate and clean up` | /cv, 404 and game, palette, Ask panel and /explore in v4 tokens; v3 3D, posters, GSAP, rail and unused v3 components removed after the IA mapping (`docs/v4/IA.md`); three, @react-three/*, cannon-es, gsap and gainmap uninstalled; old specs rewritten for v4. Checklist below. |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W7 checklist
+
+- [x] W7.1 `/cv`: same content (`RecruiterLens`), v4 page frame with back pill and title (screen only), sheet on a rounded tile, name in Bodoni, figures in metal Bodoni, chips and print button as pills. Print: v4 tokens remapped to black on white, glow and grain off, padding removed; `lenses.spec` checks one page in Letter and A4 for `/cv` and the Recruiter lens.
+- [x] W7.2 404: back pill, "Row not found", the query panel, pill links to every page (Experience, Contact and Explore added), and the "Clean the pipeline" game restyled: midnight board on `--surface`, bronze paddle, steel records, faint bronze/steel/gold bands, Hanken labels, pill buttons, rounded 24px board, 28px dialog from the palette.
+- [x] W7.3 Palette and Ask panel: rounded 28px solid panels on `--surface` with a dark backdrop (the site header stays the only frosted element), pill inputs and buttons, bronze-tinted active option, Bodoni titles; mono labels gone. The palette lists every v4 page (Work, Experience, About, Contact, Explore, CV); the unused number-key hints were dropped. Ask's "I don’t have anything on that" now uses a typographic apostrophe.
+- [x] W7.4 Removed after the IA mapping (`docs/v4/IA.md`: every v3 visual and every v3 home item mapped to a v4 route): `src/components/three` (scenes, stage, physics), `public/three` (1.0 MB), `public/posters`, the `/studio/posters` route and `scripts/assets`, the GSAP primitives in `components/motion` (`lenis-store` moved to `shell/`), `site/Rail`, `PageHead`, `ui.tsx`, the v3 `About`/`Contact`/`Experience`/`Credentials`/`Skills`/`AnimateInView`/`Button`/`Card`/`Reveal`, the v3 work index components no longer routed, `covers.ts` (now `screenshots.ts`), the `v3-*` capture scripts. Dependencies uninstalled: `three`, `@react-three/drei`, `@react-three/fiber`, `cannon-es`, `gsap`, `@monogrid/gainmap-js`, `@types/three` (resolves v3 DECISIONS 19). `/explore` kept in the v4 frame with art plates instead of 3D covers and a fade instead of the Flip (DECISIONS 23). The medallion diagram stays on About (W6). The game's seeded random moved to `game/rng.ts`.
+- [x] W7.5 Tests: removed `home.spec` (v3 home and its pixel snapshots), `motion.spec` (GSAP/WebGL leak counters) and `three.spec`; rewrote `a11y`, `ask`, `lenses`, `mobile`, `phase9`, `site` and `v6` for v4 (Ask from the home button, ⌘K instead of the v3 header buttons, the 404 links, older anchors, tap targets on every v4 route, static medallion); the `desktop-light` project is gone (dark only). New views were covered in W3 to W6 (catalogue loop, keyboard, toggle, timeline selection, composer mailto, reduced motion). Full suite: 224 passed, 30 skipped (device-specific) on desktop and phone; unit suite 112 passed (the 3D and count-up tests went with their code).
+- [x] Found by the rewritten checks and fixed: the Work Catalogue/List buttons were 38px tall (now 44px), timeline bars and the milestone were 28px and 24px (now 44px buttons with the visible pill drawn inside; the two-month internship bar is 44px wide), the Contact email was 33px tall at phone width (padded to 44px), the About diagram's smallest label was 11.9px at 390 (panel padding tightened), the custom cursor elements were only transparent on touch (now `display: none` without a fine pointer), and the Recruiter lens printed on two pages (v4 page padding; reset in print).
+- [x] Bundle: initial JS per page (gzip, module scripts only; the `noModule` polyfill chunk is not loaded by modern browsers) is 151 to 157 kB on every route, under the 160 kB budget. `/experience` was 164 kB because the client chart imported the graph through `data/experience.ts`; the axis helpers now live in graph-free `data/timeline-axis.ts`.
+- [x] `scripts/verify-phase.mts`: dark theme only, the 3D asset budget removed with the assets, and a deliberate `/no-such…` probe may answer 404. `npm run verify -- --phase W7 --path /cv --path /explore --path "/explore#lens=timeline" --path /no-such-page --path /experience --path /about`: all pass.
+- [x] lint, typecheck, build clean.
+- [x] fe-reviewer (no Critical). Fixed:
+  - High: the palette's active option had only a 15% bronze fill, about 1.3:1; it now also has a 1.5px bronze ring.
+  - Medium: the "Intern" label sat on its widened pill; it now starts after the 44px pill.
+  - Medium: the game board's description said "blue filter"; it now says bronze.
+  - Medium: game canvas text was 10 to 11 world units. Band labels are now 14, so 12px or more on a 360px phone. Record labels are 13, so they fit their 28-unit squares.
+  - Medium: FlowDiagram's loop mode, `useInView` and its CSS were dead; draw-once is now the only mode.
+  - Medium: dead CSS removed: the medallion loop, `[data-reveal]`, `.enter`, the featured-card toggles, the loop keyframes, and the unused alias tokens (their remaining readers now use the v4 names). The `data-js` head script is removed.
+  - Medium: the game's theme observers and its unused palette field are removed.
+  - Low: the `ktx2-encoder` dev dependency is removed and the release-check wording updated.
+  - Low: `data-flip-id` is renamed `data-lens-item`; the stale Flip test is replaced by fade and no-fade checks.
+  - Low: comments are updated.
+  - Low: work index figures now use the metal gradient; its focus ring is 1.5px and its labels 13px.
+  - Low: the dialog backdrop and the gold band colour are tokens (`--backdrop`, `--metal-light`).
+  - Low: the duplicate "Recruiter one-pager" label and the undefined classes are removed.
+  - Also: the medallion's hidden dots are removed from the markup.
+
+### Rulings made in Phase W7
+
+- **"Frosted header only" (W7.3)** is read as the banned-list rule: the site header is the only element with `backdrop-filter`. The palette and Ask panels are solid `--surface` with a dark backdrop, which also keeps their text contrast fixed.
+- **Hanken weights.** Only 400 and 500 are loaded, so the few `font-semibold` labels left in the `/explore` lenses render synthesised. Left for W8's visual pass.
+- **No palette button on phones.** v4 has no header navigation, so phones reach every page from the hub tiles and back pills, Ask from the home and Contact pages, and the game from the 404. The palette stays a keyboard (⌘K, /) convenience.
 
 ## Phase W6 checklist
 

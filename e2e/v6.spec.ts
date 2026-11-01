@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { expectNoA11yViolations } from "./helpers";
 
-// Runbook V6: the 404 game, the game from the palette, and the Flip on lens switches.
+// Runbook V6: the 404 game and the game from the palette (v4 W7: restyled; the Flip on lens switches was removed).
 
 const board = (page: Page) => page.getByRole("application", { name: /Game board/ });
 
@@ -9,7 +9,9 @@ test.describe("Clean the pipeline (404)", () => {
   test("the 404 says no row came back, links every page, and hosts the game", async ({ page }) => {
     await page.goto("/no-such-page");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Row not found");
-    for (const name of ["Home", "Work", "Explore", "About", "CV"]) await expect(page.locator("main").getByRole("link", { name, exact: true })).toBeVisible();
+    const pages = page.locator("main ul").first();
+    for (const name of ["Home", "Work", "Experience", "About", "Contact", "Explore", "CV"]) await expect(pages.getByRole("link", { name, exact: true })).toBeVisible();
+    await expect(page.locator("main").getByRole("link", { name: "Home" }).first()).toHaveClass(/back/); // the back pill
     await expect(page.getByRole("heading", { level: 2, name: "Clean the pipeline" })).toBeVisible();
     await expectNoA11yViolations(page, "main");
   });
@@ -50,8 +52,9 @@ test.describe("Clean the pipeline (command palette)", () => {
   test("opens from the palette in a dialog; Escape closes it and returns focus", async ({ page, isMobile }) => {
     test.skip(isMobile, "Keyboard flow");
     await page.goto("/");
-    const opener = page.getByRole("banner").getByRole("button", { name: /Search/ });
-    await opener.click();
+    const opener = page.getByRole("button", { name: "Ask about my work" });
+    await opener.focus();
+    await page.keyboard.press("ControlOrMeta+k");
     await page.keyboard.type("game");
     await page.keyboard.press("Enter");
     const dialog = page.getByRole("dialog", { name: "Clean the pipeline" });
@@ -65,31 +68,22 @@ test.describe("Clean the pipeline (command palette)", () => {
 });
 
 test.describe("Explore: lens switches", () => {
-  const panelItems = (page: Page) => page.locator("#work [data-lens-panel]:not([hidden]) [data-flip-id]");
+  const panel = (page: Page) => page.locator("#work [data-lens-panel]:not([hidden])").last();
+
+  test("under reduced motion the switch is instant: the incoming panel does not fade", async ({ page }) => {
+    await page.goto("/explore");
+    await page.getByRole("button", { name: "Timeline" }).click();
+    await expect.poll(() => panel(page).locator("[data-lens-item]").count()).toBeGreaterThan(0);
+    expect(await panel(page).evaluate((el) => getComputedStyle(el).animationName)).toBe("none");
+  });
 
   test.describe("with motion", () => {
     test.use({ reducedMotion: "no-preference" });
-    test("a switch animates the shared items (Flip) and ends with everything settled", async ({ page, isMobile }) => {
-      test.skip(isMobile, "Checked on desktop");
+    test("the incoming panel fades in over 200 ms (v4: no Flip)", async ({ page }) => {
       await page.goto("/explore");
-      // Warm up: the first switch loads graph.json and the lens code, and a switch that waits longer than
-      // FLIP_WAIT_MS is shown without a transition by design. Load it once, come back, then switch again.
       await page.getByRole("button", { name: "Timeline" }).click();
-      await expect.poll(() => panelItems(page).count()).toBeGreaterThan(0);
-      await page.getByRole("button", { name: "Highlights" }).click();
-      await expect.poll(() => panelItems(page).evaluateAll((els) => els.length > 0 && els.every((el) => getComputedStyle(el).opacity === "1"))).toBe(true);
-      await page.getByRole("button", { name: "Timeline" }).click();
-      // Mid-transition some item carries GSAP's inline transform or opacity…
-      await expect.poll(() => panelItems(page).evaluateAll((els) => els.some((el) => /transform|opacity/.test(el.getAttribute("style") ?? "")))).toBe(true);
-      // …and once it is done every item is fully visible.
-      await expect.poll(() => panelItems(page).evaluateAll((els) => els.every((el) => getComputedStyle(el).opacity === "1")), { timeout: 3000 }).toBe(true);
+      await expect.poll(() => panel(page).locator("[data-lens-item]").count()).toBeGreaterThan(0);
+      expect(await panel(page).evaluate((el) => [getComputedStyle(el).animationName, getComputedStyle(el).animationDuration])).toEqual(["lens-in", "0.2s"]);
     });
-  });
-
-  test("under reduced motion the switch is instant: no inline animation styles", async ({ page }) => {
-    await page.goto("/explore");
-    await page.getByRole("button", { name: "Timeline" }).click();
-    await expect.poll(() => panelItems(page).count()).toBeGreaterThan(0);
-    expect(await panelItems(page).evaluateAll((els) => els.filter((el) => /transform|opacity/.test(el.getAttribute("style") ?? "")).length)).toBe(0);
   });
 });

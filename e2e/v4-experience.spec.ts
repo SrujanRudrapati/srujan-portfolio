@@ -63,7 +63,7 @@ test.describe("v4 experience timeline", () => {
     }
     // Labels inside bars are not cut off either.
     for (const id of ["role-associate-celebal", "role-teaching-assistant-asu"]) {
-      expect(await page.locator(`[data-item="${id}"]`).evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
+      expect(await page.locator(`[data-item="${id}"] span`).evaluate((el) => el.scrollWidth <= el.clientWidth + 1)).toBe(true);
     }
   });
 

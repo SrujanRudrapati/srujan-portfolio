@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { lenisStore } from "@/components/motion/lenis-store";
+import { lenisStore } from "./lenis-store";
 import { internalTarget, isPendingArrival } from "./route-paths";
 
 // Route changes (runbook v4 W1.6, motion-system): the old page fades out over 260 ms and the

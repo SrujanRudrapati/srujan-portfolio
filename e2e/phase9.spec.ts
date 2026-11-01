@@ -66,64 +66,40 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
     });
   }
 
-  test("touch: palette (theme), lens switcher and Ask work by tap", async ({ page, isMobile }) => {
+  test("touch: lens switcher and Ask work by tap", async ({ page, isMobile }) => {
     test.skip(!isMobile, "Touch device project");
-    // V3: the phone menu is the command palette.
-    await page.getByRole("banner").getByRole("button", { name: /Menu/ }).tap();
-    const before = await page.locator("html").getAttribute("data-theme");
-    await page.getByRole("dialog", { name: "Command palette" }).getByRole("option", { name: "Toggle light and dark" }).tap();
-    await expect(page.locator("html")).not.toHaveAttribute("data-theme", before ?? "");
     await page.goto("/explore");
     await page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" }).tap();
     await expect(page.getByRole("group", { name: "View work as" }).getByRole("button", { name: "Timeline" })).toHaveAttribute("aria-pressed", "true");
-    await page.goto("/");
-    await page.locator("#home-ask-input").scrollIntoViewIfNeeded();
-    await page.locator("#home-ask-input").tap();
-    await page.locator("#home-ask-input").fill("What runs in production?");
-    await page.getByRole("search", { name: "Ask about my work" }).getByRole("button", { name: "Ask" }).tap();
-    await page.getByRole("dialog", { name: "Command palette" }).getByRole("option", { selected: true }).tap();
+    await page.goto("/", { waitUntil: "networkidle" });
+    await page.getByRole("button", { name: "Ask about my work" }).tap();
+    const ask = page.getByRole("dialog", { name: "Ask about my work" });
+    await ask.locator("#ask-input").fill("What runs in production?");
+    await ask.getByRole("button", { name: "Ask" }).tap();
     await expect(page.getByRole("dialog", { name: "Ask about my work" }).getByRole("list", { name: "Evidence" })).toBeVisible();
   });
 
   test("reduced motion: the medallion diagram is lit and still", async ({ page }) => {
-    await page.goto("/about"); // the v2 medallion diagram moved here in V4
+    await page.goto("/about"); // the v2 medallion diagram, on About since V4
     const state = await page.locator("main .medallion").evaluate((svg) => ({
-      dot: getComputedStyle(svg.querySelector(".medallion-dot")!).display,
+      dots: svg.querySelectorAll(".medallion-dot").length,
       lit: getComputedStyle(svg.querySelector(".medallion-lit")!).opacity,
       animation: getComputedStyle(svg.querySelector(".medallion-lit")!).animationName,
     }));
-    expect(state).toEqual({ dot: "none", lit: "1", animation: "none" });
+    expect(state).toEqual({ dots: 0, lit: "1", animation: "none" });
   });
 
   test.describe("with motion allowed", () => {
     test.use({ reducedMotion: "no-preference" });
 
-    test("the medallion diagram loops only while on screen, and only with opacity and offset", async ({ page }) => {
-      await page.goto("/about"); // the v2 medallion diagram moved here in V4
-      const wrap = page.locator("main .medallion").locator("..");
+    test("the medallion diagram stays still: the dot field is the only ambient motion (v4)", async ({ page }) => {
+      await page.goto("/about");
       await page.locator("main .medallion").scrollIntoViewIfNeeded();
-      await expect(wrap).toHaveAttribute("data-animate", "on");
-      const lit = await page.locator("main .medallion .medallion-lit").first().evaluate((el) => getComputedStyle(el).animationName);
-      expect(lit).toMatch(/^stage-/);
-      await page.evaluate(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" }));
-      await expect(wrap).not.toHaveAttribute("data-animate", "on");
-    });
-
-    test("the medallion diagram pauses while the tab is hidden", async ({ page }) => {
-      await page.goto("/about"); // the v2 medallion diagram moved here in V4
-      const wrap = page.locator("main .medallion").locator("..");
-      await page.locator("main .medallion").scrollIntoViewIfNeeded();
-      await expect(wrap).toHaveAttribute("data-animate", "on");
-      await page.evaluate(() => {
-        Object.defineProperty(document, "hidden", { configurable: true, get: () => true });
-        document.dispatchEvent(new Event("visibilitychange"));
-      });
-      await expect(wrap).not.toHaveAttribute("data-animate", "on");
-      await page.evaluate(() => {
-        Object.defineProperty(document, "hidden", { configurable: true, get: () => false });
-        document.dispatchEvent(new Event("visibilitychange"));
-      });
-      await expect(wrap).toHaveAttribute("data-animate", "on");
+      const state = await page.locator("main .medallion").evaluate((svg) => ({
+        dots: svg.querySelectorAll(".medallion-dot").length,
+        animation: getComputedStyle(svg.querySelector(".medallion-lit")!).animationName,
+      }));
+      expect(state).toEqual({ dots: 0, animation: "none" });
     });
   });
 });

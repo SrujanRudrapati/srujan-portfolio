@@ -131,6 +131,11 @@
 }
 
 @media (max-width: 560px) {
+  /* At 22px the address alone is about 33px tall; the extra top padding makes it a 44px target. */
+  .mail {
+    padding-top: 12px;
+    margin-top: 28px;
+  }
   .compose {
     padding: 24px 20px;
   }

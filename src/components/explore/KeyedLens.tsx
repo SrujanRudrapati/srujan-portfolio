@@ -13,7 +13,7 @@ export function KeyedLens({ cards, noun }: { cards: KeyedCard[]; noun: string })
           <ul aria-label={`Linked to ${c.label}`} className="mt-auto space-y-2 border-t border-line pt-4 [&:not(:first-child)]:mt-5">
             {c.items.map((item) => (
               <li key={item.id} className="text-sm">
-                <a href={withBasePath(item.href)} className="font-medium text-ink underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
+                <a href={withBasePath(item.href)} className="font-medium text-ink underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent">
                   {item.title}
                 </a>
                 <span className="ml-2 text-xs text-muted">{item.kind === "role" ? item.line : "Project"}</span>

@@ -1,12 +1,12 @@
 import { graph, type GraphNode, type MetricNode } from "./graph.ts";
 import { out } from "./graph/selectors.ts";
+import { AXIS, axisPercent, dateToYear } from "./timeline-axis.ts";
+
+export { AXIS, axisPercent, dateToYear };
 
 // The Experience timeline (runbook v4 W5), read from the graph: one lane per role with real dates, plus a
 // Milestones lane for the DevHacks win. Lane names, bar labels and label sides are presentation; every date,
 // title, organisation, outcome and figure comes from the role and event nodes.
-
-/** The axis runs from mid-2022 (the internship) to early 2027, labelled 2023 to 2027 (reference). */
-export const AXIS = { from: 2022.4, to: 2027.1, years: [2023, 2024, 2025, 2026, 2027] } as const;
 
 export type TimelineLink = { label: string; href: string };
 
@@ -60,12 +60,6 @@ export function monthLabel(ym: string): string {
   const [y, m] = ym.split("-");
   return `${MONTHS[Number(m) - 1]} ${y}`;
 }
-
-/** A date as a decimal year, for the "Today" line and the current role's end. */
-export const dateToYear = (d: Date): number => d.getFullYear() + (d.getMonth() + (d.getDate() - 1) / 31) / 12;
-
-/** Horizontal position on the axis, in percent, clamped to the axis. */
-export const axisPercent = (year: number): number => (Math.min(AXIS.to, Math.max(AXIS.from, year)) - AXIS.from) / (AXIS.to - AXIS.from) * 100;
 
 const byId = new Map<string, GraphNode>(graph.nodes.map((n) => [n.id, n]));
 

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bodoni_Moda, Hanken_Grotesk } from "next/font/google";
 import { AskLoader } from "@/components/ask/AskLoader";
-import { MotionRoot } from "@/components/motion/MotionRoot";
 import { CommandPalette } from "@/components/site/CommandPalette";
 import { GameDialog } from "@/components/game/GameDialog";
 import { Footer } from "@/components/shell/Footer";
@@ -21,9 +20,6 @@ const bodoni = Bodoni_Moda({
   display: "swap",
 });
 const hanken = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-hanken", display: "swap" });
-
-// Runs before first paint: marks the page as scripted (phone-only collapses key off it).
-const jsScript = `document.documentElement.setAttribute("data-js","")`;
 
 const SITE_URL = "https://srujanrudrapati.github.io/srujan-portfolio/";
 const TITLE = "Srujan Rudrapati | Data Engineer";
@@ -55,19 +51,14 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${bodoni.variable} ${hanken.variable}`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: jsScript }} />
-      </head>
+    <html lang="en" className={`${bodoni.variable} ${hanken.variable}`}>
       <body>
-        <a href="#main" className="sr-only z-[80] rounded-full bg-accent px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
+        <a href="#main" className="sr-only z-[80] rounded-full bg-accent px-4 py-2 font-medium text-bg focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
           Skip to content
         </a>
         <Header />
         {children}
         <Footer />
-        {/* Until W7: the v3 3D stage and its debug counters for pages not yet rebuilt. */}
-        <MotionRoot />
         <PageTransitions />
         <ShellEffects />
         <CommandPalette projects={projects.map((p) => ({ slug: p.slug, title: p.title, oneLiner: p.oneLiner }))} />

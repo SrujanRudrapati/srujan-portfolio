@@ -25,15 +25,13 @@ export async function openHome(page: Page) {
   await page.evaluate(() => document.fonts.ready);
 }
 
-/** The home page's Ask box: it opens the command palette in Ask mode; Enter asks (V4). */
+/** The home page's "Ask about my work" (v4 W2.4): it opens the Ask panel; the question goes in its input. */
 export async function askFromHome(page: Page, question: string) {
-  const input = page.locator("#home-ask-input");
-  await input.scrollIntoViewIfNeeded();
+  await page.getByRole("button", { name: "Ask about my work" }).click();
+  const input = page.getByRole("dialog", { name: "Ask about my work" }).locator("#ask-input");
+  await expect(input).toBeFocused();
   await input.fill(question);
   await input.press("Enter");
-  const combobox = page.getByRole("dialog", { name: "Command palette" }).getByRole("combobox");
-  await expect(combobox).toBeFocused();
-  await combobox.press("Enter");
 }
 
 /** /explore, hydrated: Explore sets html[data-lens] in an effect, so a lens click after this is handled

@@ -63,11 +63,10 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
   }, [restoreFocus]);
 
   const items = useMemo<Item[]>(() => {
-    const pages: Item[] = [{ href: "/", label: "Home", key: "" }, ...MAIN_PAGES].map((p) => ({
+    const pages: Item[] = [{ href: "/", label: "Home" }, ...MAIN_PAGES].map((p) => ({
       id: `page${p.href}`,
       group: "Pages",
       label: p.label,
-      hint: p.key ? `${p.key}` : undefined,
       keywords: `${p.label} ${p.href}`,
       run: () => follow(p.href),
     }));
@@ -178,10 +177,10 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
       onClick={(e) => {
         if (e.target === dialog.current && pressedOnBackdrop.current) close();
       }}
-      className="m-auto mt-[12vh] w-[min(640px,calc(100vw-32px))] border-t-[3px] border-ink bg-raised p-0 text-ink backdrop:bg-black/40"
+      className="m-auto mt-[12vh] w-[min(640px,calc(100vw-32px))] overflow-hidden rounded-[28px] border border-[var(--tile-border)] bg-surface p-0 text-ink backdrop:bg-[var(--backdrop)]"
     >
       <div className="flex items-center gap-3 border-b border-line px-4">
-        <span aria-hidden="true" className="font-mono text-sm text-accent-2">
+        <span aria-hidden="true" className="text-sm text-accent">
           &gt;
         </span>
         <input
@@ -203,7 +202,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
           onKeyDown={onKeyDown}
           className="h-14 flex-1 bg-transparent text-base text-ink outline-none placeholder:text-muted"
         />
-        <kbd className="font-mono text-[11px] text-muted">esc</kbd>
+        <kbd className="rounded-full border border-line px-2 py-0.5 text-[13px] text-muted">esc</kbd>
       </div>
       <ul id={listId} role="listbox" aria-label="Results" className="max-h-[50vh] overflow-y-auto py-2" data-lenis-prevent>
         {visible.map((item, i) => {
@@ -213,8 +212,8 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
           return (
             <li key={item.id} role="presentation">
               {header && (
-                <p role="presentation" className="px-4 pt-3 pb-1 font-mono text-[11px] text-muted">
-                  {header.toLowerCase()}
+                <p role="presentation" className="px-4 pt-3 pb-1 text-xs text-muted">
+                  {header}
                 </p>
               )}
               <div
@@ -223,16 +222,16 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
                 aria-selected={selected}
                 onMouseMove={() => setActive(i)}
                 onClick={() => runItem(item)}
-                className={`flex min-h-11 cursor-pointer items-baseline gap-3 px-4 py-2 ${selected ? "bg-ink text-bg" : "text-ink"}`}
+                className={`mx-2 flex min-h-11 cursor-pointer items-baseline gap-3 rounded-2xl px-3 py-2 text-ink ${selected ? "bg-accent/15 shadow-[inset_0_0_0_1.5px_var(--accent)]" : ""}`}
               >
                 <span className="font-medium">{item.label}</span>
-                {item.hint && <span className={`truncate text-sm ${selected ? "text-bg/70" : "text-muted"}`}>{item.hint}</span>}
+                {item.hint && <span className="truncate text-sm text-muted">{item.hint}</span>}
               </div>
             </li>
           );
         })}
       </ul>
-      <p aria-live="polite" className="border-t border-line px-4 py-2 font-mono text-[11px] text-muted">
+      <p aria-live="polite" className="border-t border-line px-4 py-2 text-xs text-muted">
         {note || `${visible.length - 1} ${visible.length - 1 === 1 ? "match" : "matches"}, or ask`}
       </p>
     </dialog>

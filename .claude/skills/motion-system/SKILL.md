@@ -5,7 +5,7 @@ description: The motion rules for the v4 portfolio (Midnight & Bronze): one easi
 
 # Motion system (v4)
 
-Rewritten at Phase W0 from runbook v4 §10 and the reference (`docs/v4/reference/srujan-premium-concept.html`). v3's GSAP scroll primitives, WebGL stage, posters and physics scenes are retired in W7; nothing new may use them. Colours and layout: `design-direction`.
+Rewritten at Phase W0 from runbook v4 §10 and the reference (`docs/v4/reference/srujan-premium-concept.html`). v3's GSAP scroll primitives, WebGL stage, posters and physics scenes were removed in W7 (with `three`, `@react-three/*`, `cannon-es` and `gsap`); nothing new may bring them back. Colours and layout: `design-direction`.
 
 ## Rules
 
@@ -36,7 +36,7 @@ A 2D canvas client component. Shapes ported from the reference: `idle` (three st
 
 - The architecture diagrams on `/work/[slug]` draw once when they scroll into view (`FlowDiagram draw`, `src/hooks/use-draw-on-enter.ts`): connectors draw in bronze over 1.8 s (`stroke-dashoffset`, the one property beyond transform and opacity allowed here, as the runbook's "draws on scroll" needs it), boxes light as the data reaches them, one dot rides each track once and fades out. CSS transitions keyed on `data-draw="ready"`/`"on"`; no GSAP.
 - The server HTML is the finished drawing. A figure already above 80% of the viewport at load, reduced motion and no IntersectionObserver keep it; the observer fires at the same 80% line, so nothing visible is ever hidden.
-- `/explore` keeps the looping version (dots on a loop while in view) until W7.
+- No diagram loops any more: the medallion diagram on `/about` is static, and `/explore`'s lens switch is a 200 ms fade (the GSAP Flip went in W7).
 
 ## Cursor and magnetic
 

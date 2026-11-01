@@ -36,7 +36,7 @@ export function GameDialog() {
   return (
     <dialog ref={dialog} aria-labelledby="game-title" className={s.dialog} onClose={onClose}>
       <div className={s.dialogHead}>
-        <p className={s.dialogStage}>stage 04 / query</p>
+        <p className={s.dialogStage}>A game from the 404 page</p>
         <h2 id="game-title" className={s.dialogTitle}>
           Clean the pipeline
         </h2>

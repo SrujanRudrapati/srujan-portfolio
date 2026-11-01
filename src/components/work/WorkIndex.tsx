@@ -3,19 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SHOW_ALL_PROJECTS } from "./events";
-import { SceneSlot } from "@/components/three/SceneSlot";
-import type { SceneName } from "@/components/three/scenes/names";
 import type { Project } from "@/data/graph/types";
 import { statusLabel } from "@/data/project-helpers";
 import s from "./work.module.css";
 
-// The work index (runbook V6): the four featured projects large, each with its 3D cover
-// through the shared canvas, then every other project as a compact row. Each item is one
+// The work index (runbook V6, /explore Highlights): the four featured projects large, each with its
+// catalogue art plate (v4 W7 replaced the 3D covers), then every other project as a compact row. Each item is one
 // link to its case study, where the detail lives (V5). Filtering is client state only; the
 // "All" view is the static HTML, so the index is complete without JavaScript. Projects and
-// covers arrive as props from the server, so the browser bundle never carries the graph.
+// art plates arrive as props from the server, so the browser bundle never carries the graph.
 
-export type Covers = Record<string, { scene: string; label: string } | undefined>;
+/** Art plate (a CSS background) per featured slug. */
+export type Arts = Record<string, string | undefined>;
 
 const filters = [
   { id: "all", label: "All" },
@@ -42,10 +41,10 @@ function matches(p: Project, filter: FilterId): boolean {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-function Featured({ p, n, cover }: { p: Project; n: number; cover?: { scene: string; label: string } }) {
+function Featured({ p, n, art }: { p: Project; n: number; art?: string }) {
   const lead = p.impact[0];
   return (
-    <article id={`project-${p.slug}`} data-flip-id={`project-${p.slug}`} aria-labelledby={`${p.slug}-title`} className={s.feature}>
+    <article id={`project-${p.slug}`} data-lens-item={`project-${p.slug}`} aria-labelledby={`${p.slug}-title`} className={s.feature}>
       <div className={s.featureText}>
         <p className={s.meta}>
           <span className={s.num}>{pad(n)}</span>
@@ -68,7 +67,7 @@ function Featured({ p, n, cover }: { p: Project; n: number; cover?: { scene: str
           Open case study
         </p>
       </div>
-      {cover && <SceneSlot scene={cover.scene as SceneName} label={cover.label} className={s.cover} />}
+      {art && <span className={s.cover} style={{ background: art }} aria-hidden="true" />}
     </article>
   );
 }
@@ -76,7 +75,7 @@ function Featured({ p, n, cover }: { p: Project; n: number; cover?: { scene: str
 function Row({ p }: { p: Project }) {
   const lead = p.impact[0];
   return (
-    <li id={`project-${p.slug}`} data-flip-id={`project-${p.slug}`} className={s.row}>
+    <li id={`project-${p.slug}`} data-lens-item={`project-${p.slug}`} className={s.row}>
       <h3 className={s.rowTitle}>
         <Link href={`/work/${p.slug}`} data-cursor="open" className={s.stretch}>
           {p.title}
@@ -98,7 +97,7 @@ function Row({ p }: { p: Project }) {
   );
 }
 
-export function WorkIndex({ projects, covers }: { projects: Project[]; covers: Covers }) {
+export function WorkIndex({ projects, arts }: { projects: Project[]; arts: Arts }) {
   const [filter, setFilter] = useState<FilterId>("all");
   useEffect(() => {
     const showAll = () => setFilter("all");
@@ -138,7 +137,7 @@ export function WorkIndex({ projects, covers }: { projects: Project[]; covers: C
       {featured.length > 0 && (
         <div className={s.featured}>
           {featured.map((p) => (
-            <Featured key={p.slug} p={p} n={projects.indexOf(p) + 1} cover={covers[p.slug]} />
+            <Featured key={p.slug} p={p} n={projects.indexOf(p) + 1} art={arts[p.slug]} />
           ))}
         </div>
       )}
