@@ -137,7 +137,9 @@ export function HomeStory({ content }: { content: HomeContent }) {
             </h1>
             <p className={s.headline}>{profile.headline}</p>
             <p className={s.subline}>{profile.subline}</p>
-            <p className={s.now}>{profile.now}</p>
+            <p className={s.now}>
+              <span className={s.role}>{profile.role}</span> {profile.now}
+            </p>
             <p className={s.lead}>
               <span className={s.leadValue}>{lead.value}</span>
               <span className={s.leadLabel}>

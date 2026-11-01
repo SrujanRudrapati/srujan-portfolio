@@ -51,6 +51,13 @@ export function RecruiterLens({ sheet, level = 3 }: { sheet: RecruiterSheet; lev
               <span className="block text-muted tabular-nums">{sheet.currentRole.dates}</span>
             </p>
           )}
+          {sheet.earlierRoles.map((r) => (
+            <p key={`${r.org}-${r.title}`} className="text-ink">
+              <span className="font-semibold">{r.title}</span>, {r.org}
+              <span className="block text-muted tabular-nums">{r.dates}</span>
+            </p>
+          ))}
+          {sheet.certification && <p className="text-ink">{sheet.certification}</p>}
           <p className="text-ink">{profile.now}</p>
         </div>
       </header>

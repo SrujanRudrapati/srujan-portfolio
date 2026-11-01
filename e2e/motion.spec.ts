@@ -80,7 +80,11 @@ test.describe("with motion", () => {
   test("a route slower than the transition timeout still lands at the top (DECISIONS 16)", async ({ page }) => {
     // Hold the RSC payloads for 7 s: longer than PageTransitions' 4 s TIMEOUT_MS. Before V7 a timed-out
     // navigation stopped counting as ours, router.push ran with scroll: false, and the page landed mid-scroll.
+    // Prefetches before the click are aborted, so the click itself must fetch; from the click on, every
+    // payload is held 7 s. The arrival is then asserted to come after TIMEOUT_MS, so the slow path really ran.
+    let armed = false;
     await page.route(/\.txt(\?|$)|[?&]_rsc=/, async (route) => {
+      if (!armed) return route.abort();
       await new Promise((r) => setTimeout(r, 7000));
       await route.continue();
     });
@@ -89,8 +93,11 @@ test.describe("with motion", () => {
     await page.mouse.wheel(0, 2500);
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(500);
     await scrollSettled(page);
+    armed = true;
+    const clicked = Date.now();
     await page.getByRole("banner").getByRole("link", { name: /Work/ }).click();
     await expect(page.locator("main h1")).toHaveText("Work", { timeout: 20_000 });
+    expect(Date.now() - clicked).toBeGreaterThan(4000); // TIMEOUT_MS in PageTransitions: the slow path ran
     await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(5);
     await expect(page.locator("main h1")).toBeFocused();
   });

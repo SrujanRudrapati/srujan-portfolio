@@ -165,6 +165,10 @@ export const selectByIndustry = (g: Graph): KeyedCard[] => keyedCards(g, "indust
 export type RecruiterSheet = {
   metrics: { value: string; label: string; source: string }[];
   currentRole?: { title: string; org: string; dates: string };
+  /** Ended roles, newest first, internships left out (recruiter review, V7: the CV showed no past employer). */
+  earlierRoles: { title: string; org: string; dates: string }[];
+  /** The first certification in the graph (the one the hero also names). */
+  certification?: string;
   topSkills: string[];
   featured: { title: string; line: string; href: string }[];
 };
@@ -191,6 +195,11 @@ export function selectRecruiter(g: Graph): RecruiterSheet {
     .slice(0, HEADLINE_ORDER.length)
     .map((m) => ({ value: m.value, label: m.valueLabel, source: sourceOf(m.id) }));
   const current = g.nodes.find((n) => n.type === "role" && n.dates && !n.dates.end);
+  const earlierRoles = g.nodes
+    .filter((n): n is Extract<GraphNode, { type: "role" }> => n.type === "role" && !!n.dates?.end && !/^intern\b/i.test(n.content.title))
+    .sort((a, b) => (b.dates?.end ?? "").localeCompare(a.dates?.end ?? ""))
+    .map((r) => ({ title: r.content.title, org: r.content.org, dates: r.content.dates }));
+  const certification = g.nodes.find((n) => n.type === "certification")?.label;
   const used = new Set(g.edges.filter((e) => e.type === "uses").map((e) => e.to));
   const topSkills = g.nodes
     .filter((n): n is SkillNode => n.type === "skill" && n.tags.includes("core") && used.has(n.id))
@@ -201,6 +210,8 @@ export function selectRecruiter(g: Graph): RecruiterSheet {
   return {
     metrics,
     ...(current && current.type === "role" ? { currentRole: { title: current.content.title, org: current.content.org, dates: current.content.dates } } : {}),
+    earlierRoles,
+    ...(certification ? { certification } : {}),
     topSkills,
     featured,
   };

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { appPath } from "@/components/motion/PageTransitions";
 import { profile } from "@/content/profile";
-import { openAsk } from "@/lib/ask/events";
+import { openAsk, preloadAsk } from "@/lib/ask/events";
 import { openGame } from "@/components/game/events";
 import { withBasePath } from "@/lib/paths";
 import { getTheme, setTheme } from "@/lib/theme";
@@ -126,6 +126,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
       setNote("");
       d.showModal();
       input.current?.focus();
+      preloadAsk(); // the palette's last option is always Ask: fetch its panel and index while the visitor types
     };
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {

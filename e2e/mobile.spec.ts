@@ -25,6 +25,19 @@ const smallTargets = (page: Page) =>
     return out;
   });
 
+test.describe("a short phone (390 x 664, an iPhone 14 under Safari's bars)", () => {
+  test.use({ viewport: { width: 390, height: 664 } });
+  test("name, line, current role, proof figure, buttons and email are all on the first screen", async ({ page }) => {
+    await page.goto("/", { waitUntil: "networkidle" });
+    const hero = page.locator('[data-stage="ingest"]');
+    for (const el of [hero.getByRole("heading", { level: 1 }), hero.getByText("I build the data layer"), hero.getByText(/^Tech Assistant/), hero.getByText("~80%"), hero.getByRole("link", { name: "See my work" }), hero.getByRole("link", { name: /@/ })]) {
+      await expect(el).toBeVisible();
+      const box = (await el.boundingBox())!;
+      expect(box.y + box.height).toBeLessThanOrEqual(664);
+    }
+  });
+});
+
 for (const width of WIDTHS) {
   test.describe(`at ${width} px`, () => {
     test.use({ viewport: { width, height: 800 } });
@@ -55,13 +68,16 @@ for (const width of WIDTHS) {
         const y = await page.evaluate(() => window.scrollY);
         await page.evaluate(() => window.scrollBy(0, 1200));
         await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(y + 600);
-        await expect(page.locator('[data-reel="pinned"]')).toHaveCount(0);
+        // With motion on and the reel scrolled past, nothing is pinned on a phone (the every-route check runs reduced).
+        await expect(page.locator('[data-reel="pinned"], .pin-spacer')).toHaveCount(0);
       });
 
       test("no custom cursor on touch", async ({ page }) => {
         await page.goto("/", { waitUntil: "networkidle" });
         await page.touchscreen.tap(200, 400);
-        for (const ring of await page.locator('[class*="_cursor"]').all()) await expect(ring).toBeHidden();
+        const rings = page.locator('[class*="_cursor"]');
+        expect(await rings.count()).toBeGreaterThan(0); // the ring is in the DOM everywhere; on touch it must stay hidden
+        for (const ring of await rings.all()) await expect(ring).toBeHidden();
       });
     });
 

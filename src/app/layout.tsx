@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Martian_Mono } from "next/font/google";
-import { AskPanel } from "@/components/ask/AskPanel";
+import { AskLoader } from "@/components/ask/AskLoader";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { CommandPalette } from "@/components/site/CommandPalette";
 import { GameDialog } from "@/components/game/GameDialog";
@@ -70,7 +70,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         {children}
         <Footer />
         <CommandPalette projects={projects.map((p) => ({ slug: p.slug, title: p.title, oneLiner: p.oneLiner }))} />
-        <AskPanel />
+        <AskLoader />
         <GameDialog />
       </body>
     </html>

@@ -1,4 +1,3 @@
-import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { skills, type SkillGroup } from "@/content/portfolio";
 import { Section, TagList } from "./ui";
 import { withBasePath } from "@/lib/paths";
@@ -76,7 +75,6 @@ export function Skills() {
       <div className="mt-10 flex flex-col gap-2">
         <a href={withBasePath("/explore#lens=skills")} className="inline-flex min-h-11 w-fit items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
           See every skill and where it was used on the skill map
-          <ArrowRightIcon aria-hidden="true" size={16} weight="bold" />
         </a>
         <details className="group">
           <summary className="inline-flex min-h-11 cursor-pointer list-none items-center text-sm font-medium text-ink underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2 [&::-webkit-details-marker]:hidden">

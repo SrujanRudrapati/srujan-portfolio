@@ -21,6 +21,10 @@ type Props = {
   portrait?: boolean;
 };
 
+/** Poster files' own pixel sizes (scripts/assets/posters.mts renders them at these), for explicit img sizes. */
+const POSTER_SIZE: Record<string, { width: number; height: number }> = { "hero-stream": { width: 1260, height: 900 }, "hero-stream-portrait": { width: 800, height: 1000 } };
+const DEFAULT_POSTER = { width: 1280, height: 800 };
+
 /**
  * A 3D cover slot. The poster image is in the server HTML and is all a visitor
  * gets under reduced motion, on low-power devices, without WebGL, or if the
@@ -71,9 +75,10 @@ export function SceneSlot({ scene, label, className, style, progress, poster = f
     <div ref={ref} role="img" aria-label={label} className={className} data-scene={scene} data-live={showLive || undefined} style={{ position: "relative", ...style }}>
       {!poster && (
         <picture>
-          {portrait && <source media="(max-width: 899px)" srcSet={withBasePath(`/posters/${scene}-portrait.webp`)} />}
+          {portrait && <source media="(max-width: 899px)" srcSet={withBasePath(`/posters/${scene}-portrait.webp`)} {...(POSTER_SIZE[`${scene}-portrait`] ?? DEFAULT_POSTER)} />}
           <img
             src={withBasePath(`/posters/${scene}.webp`)}
+            {...(POSTER_SIZE[scene] ?? DEFAULT_POSTER)}
             alt=""
             aria-hidden
             loading={priority ? "eager" : "lazy"}

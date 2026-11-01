@@ -1,4 +1,3 @@
-import { ArrowRightIcon } from "@phosphor-icons/react/dist/ssr";
 import { experience, roleFigures } from "@/content/portfolio";
 import { Section } from "./ui";
 import { withBasePath } from "@/lib/paths";
@@ -55,7 +54,6 @@ export function Experience() {
       <p className="mt-8">
         <a href={withBasePath("/explore#lens=timeline")} className="inline-flex min-h-11 items-center gap-2 font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
           See every outcome and project on the timeline
-          <ArrowRightIcon aria-hidden="true" size={16} weight="bold" />
         </a>
       </p>
     </Section>

@@ -59,7 +59,10 @@ function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evi
   );
 }
 
-export function AskPanel() {
+/** The event that made AskLoader fetch this panel (it arrived before the panel existed). */
+export type FirstAskEvent = { kind: "open"; question?: string; opener: HTMLElement | null } | { kind: "preload" };
+
+export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onReady?: () => void } = {}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [question, setQuestion] = useState("");
@@ -89,30 +92,43 @@ export function AskPanel() {
   }, []);
 
   useEffect(() => {
-    const onOpen = (event: Event) => {
-      const { question: q } = (event as CustomEvent<AskOpenDetail>).detail ?? {};
+    const open = (q: string | undefined, from: HTMLElement | null) => {
       if (!dialogRef.current?.open) {
-        opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        opener.current = from;
         dialogRef.current?.showModal();
       }
       inputRef.current?.focus();
       if (q) void submit(q);
     };
+    const onOpen = (event: Event) => {
+      const { question: q } = (event as CustomEvent<AskOpenDetail>).detail ?? {};
+      open(q, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    };
     const onPreload = () => void loadIndex().catch(() => undefined);
     window.addEventListener(ASK_OPEN, onOpen);
     window.addEventListener(ASK_PRELOAD, onPreload);
+    // Replay what the loader caught before this chunk arrived, then take over listening from it.
+    if (first?.kind === "open") open(first.question, first.opener);
+    else if (first?.kind === "preload") onPreload();
+    onReady?.();
     return () => {
       window.removeEventListener(ASK_OPEN, onOpen);
       window.removeEventListener(ASK_PRELOAD, onPreload);
     };
+    // `first` is fixed once this panel mounts (the loader stops updating it when onReady fires).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submit]);
 
   const close = () => dialogRef.current?.close();
   // If the opener is gone (the phone menu closed behind the dialog), give focus to the menu button instead of <body>.
+  // Focus goes back to the opener; if it is gone or hidden, to the bar's Search/Menu button (never <body>).
   const onClose = () => {
     const target = opener.current;
-    if (target && target.offsetParent === null) document.querySelector<HTMLElement>('[aria-controls="mobile-menu"]')?.focus();
+    opener.current = null;
+    if (target?.isConnected && target.getClientRects().length > 0) target.focus(); // offsetParent is null in the fixed bar
+    else document.querySelector<HTMLElement>("header button[aria-keyshortcuts]")?.focus();
   };
+
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     void submit(question);

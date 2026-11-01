@@ -52,9 +52,11 @@
   padding-right: var(--pad-r);
   max-width: 1440px;
 }
+/* Phones: a shorter cover, so the first result is closer to the first screen (recruiter review, V7). */
 .cover {
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
+  max-height: 36svh;
 }
 /* Desktop: wide and capped, so the results start on the second screen (impact first). */
 @media (min-width: 768px) {

@@ -31,6 +31,14 @@ export function coverFor(slug: string) {
   return { scene: c.scene, label: c.label.replace(/\{([a-z0-9-]+)\}/g, (_, id: string) => metric(id).value) };
 }
 
+/** The current role (the graph's role with no end date) as one sentence for the hero: recruiter review, V7. */
+function currentRoleLine(): string {
+  const role = graph.nodes.find((n) => n.type === "role" && n.dates && !n.dates.end);
+  if (!role || role.type !== "role") throw new Error("home: no current role in the graph");
+  const since = role.content.dates.replace(/ to present$/, "");
+  return `${role.content.title} at ${role.content.org} since ${since}.`;
+}
+
 export function homeContent() {
   return {
     profile: {
@@ -38,6 +46,7 @@ export function homeContent() {
       headline: profile.headline,
       subline: profile.subline,
       now: profile.now,
+      role: currentRoleLine(),
       proof: profile.proof,
       email: profile.email,
       github: profile.github,

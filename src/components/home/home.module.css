@@ -219,6 +219,10 @@
   color: var(--text-muted);
   line-height: 1.5;
 }
+.role {
+  color: var(--text);
+  font-weight: 500;
+}
 .proofChips {
   list-style: none;
   margin: 24px 0 0;
@@ -616,5 +620,16 @@
   }
   .actions {
     margin-top: 16px;
+  }
+  .subline {
+    font-size: 1rem;
+  }
+  .now,
+  .leadLabel {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+  .leadValue {
+    font-size: 2.5rem;
   }
 }

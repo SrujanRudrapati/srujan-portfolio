@@ -166,6 +166,9 @@ export function PageTransitions() {
     // Back and forward are the browser's: its scroll restoration applies, not our reset.
     const onPop = () => {
       pending.current = null;
+      const finish = arrived.current;
+      arrived.current = null;
+      finish?.(); // ends the view transition; the arrival then keeps the browser's scroll restoration
     };
     window.addEventListener("popstate", onPop);
     return () => {

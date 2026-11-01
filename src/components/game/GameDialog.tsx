@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { ChunkBoundary } from "@/components/site/ChunkBoundary";
 import { GAME_OPEN } from "./events";
 import s from "./game.module.css";
 
@@ -29,7 +30,7 @@ export function GameDialog() {
   const onClose = () => {
     setOpen(false);
     const target = opener.current;
-    if (target?.isConnected && target.offsetParent !== null) target.focus();
+    if (target?.isConnected && target.getClientRects().length > 0) target.focus(); // offsetParent is null in the fixed bar
   };
 
   return (
@@ -43,7 +44,11 @@ export function GameDialog() {
           Close
         </button>
       </div>
-      {open && <PipelineGame autoFocus />}
+      {open && (
+        <ChunkBoundary message="The game could not load. Check your connection and reload the page to try again." className={s.help}>
+          <PipelineGame autoFocus />
+        </ChunkBoundary>
+      )}
     </dialog>
   );
 }

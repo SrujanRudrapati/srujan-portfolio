@@ -33,7 +33,7 @@ function watchReducedMotion() {
   });
 }
 
-/** "off" means posters only: reduced motion, low-power hardware, Save-Data, or no WebGL 2. */
+/** "off" means posters only: reduced motion, low-power hardware, Save-Data, no WebGL 2, or a phone or tablet. */
 export function render3DTier(): Tier {
   watchReducedMotion();
   if (cached) return cached;
@@ -42,8 +42,14 @@ export function render3DTier(): Tier {
   const lowPower = (nav.hardwareConcurrency ?? 8) <= 4 || (nav.deviceMemory ?? 8) <= 4 || nav.connection?.saveData === true;
   const forced = new URLSearchParams(location.search).get("3d");
   // ?3d=on overrides only the low-power heuristic (for testing on small machines), never reduced motion or missing WebGL.
-  if (forced === "off" || reduced || !hasWebGL2()) cached = "off";
+  // Phones and tablets get the posters (DECISIONS 18, V7): starting three.js costs about 1.9 s of main-thread
+  // work on a throttled phone CPU, with a 600 ms task, against the V7 targets (mobile Performance >= 85, no
+  // task over 200 ms after load). Decided before the WebGL probe, so phones never create a context at all.
+  // ?3d=on still runs the lighter "mobile" tier there, for testing.
+  const desktop = matchMedia("(pointer: fine) and (min-width: 768px)").matches;
+  if (forced === "off" || reduced || (!desktop && forced !== "on")) cached = "off";
   else if (lowPower && forced !== "on") cached = "off";
-  else cached = matchMedia("(pointer: fine) and (min-width: 768px)").matches ? "desktop" : "mobile";
+  else if (!hasWebGL2()) cached = "off";
+  else cached = desktop ? "desktop" : "mobile";
   return cached;
 }
