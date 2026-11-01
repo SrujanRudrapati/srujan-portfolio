@@ -6,14 +6,33 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 |---|---|---|---|
 | W0 — Setup | done | `redesign: phase W0 — setup` | Branch from `redesign/v3`; reference shots (11 views × 4 viewports) in `docs/v4/reference-shots/` via `scripts/v4-shots.mts`; `design-direction` and `motion-system` rewritten for v4. Checklist below. |
 | W1 — Shell | done | `redesign: phase W1 — shell` | Dark-only tokens, Bodoni Moda + Hanken Grotesk, grain and glow; header (name + availability, frosted after 30px), footer with Arizona time, back pill, progress line, page transitions (View Transitions + fallback), cursor, magnetic, Lenis 0.09. GSAP removed from the shell. Checklist below. |
-| W2 — Home | in progress | | |
-| W3 — Work (G5) | not started | | |
+| W2 — Home | done | `redesign: phase W2 — home hub` | Headline (three masked lines), lede, now line, Ask link, four spotlight tiles, 2D dot field with five shapes; fits one screen at 1280×720 to 1920×1080; interim `/experience` and `/contact` routes so the tiles have pages. Checklist below. |
+| W3 — Work (G5) | in progress | | |
 | W4 — Project pages | not started | | |
 | W5 — Experience | not started | | |
 | W6 — About and Contact | not started | | |
 | W7 — Integrate and clean up | not started | | |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W2 checklist
+
+- [x] Headline "I build the / data layer, and the / AI on top of it." in Bodoni, three masks rising over 1.2 s with a 90 ms stagger (CSS only, reduced motion: static). `nowrap` above 560px; each mask has `.16em` bottom padding so descenders are not clipped. Screen readers get the sentence once (sr-only text; the lines are `aria-hidden`).
+- [x] Lede from the reference, facts-checked: "Data and AI engineer, finishing an M.S. at Arizona State University." (facts 2.7 education, kept) + "I’ve been on call for a pipeline moving about 10 million records a day, and I now ship LLM systems that run offline, in production." The figure comes from the graph metric `records-per-day` with its marker ("about"; the reference had dropped it). Offline in production: facts 2.1.
+- [x] Now line: pulsing green dot (`#7CC4A4`, 2.4 s, off under reduced motion) + "Now running Surplus AI in production at ASU Surplus" (2.1).
+- [x] Ask entry: "Ask about my work" under the now line opens the existing Ask panel (preloads on hover/focus); ⌘K / Ctrl+K unchanged.
+- [x] Four tiles from `src/data/home.ts`: Work "4 featured, 7 more" (counted from the graph), Experience "Celebal, ASU Surplus", About "M.S., Arizona State", Contact "Open to roles in 2027" (`profile.status`), with the reference's descriptions. Spotlight radial follows the pointer via `--mx`/`--my`; 4px lift and 40% bronze border on hover and on keyboard focus; arrow circle turns 45°. Phones: 2×2, arrows hidden.
+- [x] Dot field (`home/DotField.tsx`, physics in `dot-sim.ts`, shapes ported in `dot-shapes.ts`): idle pipeline, work plates, experience bars + diamond, about head and shoulders, contact envelope; hover or focus a tile to reshape, leave the row to return. Spring k 0.018 to 0.048, damping 0.86, sine wobble, 60px cursor repulsion; steel `rgba(214,224,236,.6)` and ~18% bronze. Performance contract: one sprite per colour via `drawImage` (no `shadowBlur`), 1100 dots (700 under 700px), DPR ≤ 2, typed arrays mutated in place, targets cached per shape, full rate only while moving then ~12 fps, woken by a shape change or the cursor within 60px, stopped off screen (IntersectionObserver), on hidden tabs and on unmount. Reduced motion: the shape drawn once, redrawn on hover/focus.
+- [x] Fit: `e2e/v4-home.spec.ts` asserts that at 1280×720, 1366×768, 1440×900 and 1920×1080 every headline line, paragraph, the dot field and all four tiles end inside the viewport, each headline line stays on one line, and nothing overflows sideways. Phones: 2×2 tiles, dots above the headline.
+- [x] Tests: `src/components/home/dot-field.test.ts` (7: shapes in bounds and deterministic, springs settle on target, damping 0.86, repulsion only within 60px, retarget without allocation, ~18% bronze); `e2e/v4-home.spec.ts` (content from data, Ask opens, hover/focus reshape and return to idle, overflow + axe, the four desktop fits, phone layout): 13 passed, 6 skipped (desktop-only and phone-only cases). The v3 home tests in `e2e/home.spec.ts` and the `motion`/`three` specs that used the old home are retired in W7 (runbook W7.5); the a11y "split statements" test became "the headline is read once", and `openHome` now waits for the dot field's hydration mark.
+- [x] lint, typecheck, build clean. `npm run verify -- --phase W2 --path / --path /experience --path /contact`: all pass (axe 0, console 0, failed requests 0, overflow 0); dark screenshots in `docs/screenshots/phase-W2/`. Inspected the phone fold and 1280/1440 hover states next to the reference.
+- [x] W1 review findings fixed: the fallback transition can no longer leave `main` at opacity 0 (timeout, Back or unmount clear it) or push twice; a second link during a transition navigates instead of being dropped; the header, progress line and cursor have their own view-transition names so they hold still; skipped transitions no longer log an unhandled rejection; a malformed `#hash` no longer throws. Noted, not changed: Back pressed while a push is in flight can still land on the pushed page (Next gives no way to cancel a push; same as v3); reduced motion and pointer type are read once per page load; header and hover colour transitions are colour, not layout.
+
+### Rulings made in Phase W2
+
+- **Interim `/experience` and `/contact`.** The tiles link to them, and a dead link would fail `verify`. Each is the v3 component in the v4 page frame (back pill, Bodoni title) until W5 and W6. This also keeps the email, GitHub, LinkedIn and resume links on the site after the old footer was removed in W1.
+- **Tile name capped at 38px** (reference 42px): in the reference "Experience" runs into the arrow circle at 1440×900; at 38px it clears. Phones use `clamp(22px, 6.4vw, 30px)` for the same reason at 390.
+- **Content that left the home** (v3 statements, featured reel, proof strip, contact block): every item already lives on the case pages, `/about` and now `/contact`; W7 records the mapping in `docs/v4/IA.md` before any component is deleted.
 
 ## Phase W1 checklist
 

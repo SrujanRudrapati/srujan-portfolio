@@ -15,10 +15,19 @@ const FADE_MS = 260;
 const ENTER_MS = 800;
 const TIMEOUT_MS = 4000;
 
-type DocWithVT = Document & { startViewTransition?: (cb: () => Promise<void>) => { finished: Promise<void> } };
+type DocWithVT = Document & { startViewTransition?: (cb: () => Promise<void>) => { finished: Promise<void>; ready: Promise<void> } };
+
+function hashId(): string {
+  const raw = location.hash.slice(1);
+  try {
+    return decodeURIComponent(raw);
+  } catch {
+    return raw; // a malformed escape: use it as written
+  }
+}
 
 function focusTarget(): HTMLElement | null {
-  const id = decodeURIComponent(location.hash.slice(1));
+  const id = hashId();
   return (id && document.getElementById(id)) || document.querySelector<HTMLElement>("main h1");
 }
 
@@ -76,15 +85,25 @@ export function PageTransitions() {
   }, [pathname]);
 
   useEffect(() => {
+    let leaveTimer = 0;
+    /** Undo a fallback fade that will not be followed by an arrival (timeout, Back, unmount). */
+    const clearLeave = () => {
+      clearTimeout(leaveTimer);
+      leaveTimer = 0;
+      fallbackEnter.current = false;
+      document.querySelector("main")?.classList.remove("route-leave");
+    };
+
     const go = (href: string) =>
       new Promise<void>((resolve) => {
-        const done = () => {
+        const done = (timedOut = false) => {
           clearTimeout(timer);
           if (arrived.current === done) arrived.current = null;
+          if (timedOut) clearLeave();
           resolve();
         };
         // Never hang a transition on a slow route; a timed-out navigation no longer counts as ours.
-        const timer = setTimeout(done, TIMEOUT_MS);
+        const timer = setTimeout(() => done(true), TIMEOUT_MS);
         arrived.current = done;
         pending.current = href;
         router.push(href, { scroll: false });
@@ -94,14 +113,20 @@ export function PageTransitions() {
       const doc = document as DocWithVT;
       if (matchMedia(REDUCED).matches) return void go(href);
       if (doc.startViewTransition) {
-        doc.startViewTransition(() => go(href));
+        const t = doc.startViewTransition(() => go(href));
+        t.ready.catch(() => {}); // skipped transitions (hidden tab) reject; the navigation still happens
         return;
       }
       const main = document.querySelector("main");
       if (!main) return void go(href);
       main.classList.add("route-leave");
       fallbackEnter.current = true;
-      setTimeout(() => void go(href), FADE_MS);
+      // Busy from the first frame of the fade, so a second click or Back can find and cancel it.
+      arrived.current = clearLeave;
+      leaveTimer = window.setTimeout(() => {
+        leaveTimer = 0;
+        void go(href);
+      }, FADE_MS);
     };
 
     const onClick = (e: MouseEvent) => {
@@ -112,12 +137,19 @@ export function PageTransitions() {
       if (!href) return;
       // Capture phase. preventDefault only: next/link then skips its own navigation.
       e.preventDefault();
-      if (arrived.current) return; // one transition at a time
+      if (arrived.current) {
+        // A second link during a transition: drop the first fade and go straight there, untransitioned.
+        if (leaveTimer) clearLeave();
+        pending.current = href;
+        router.push(href, { scroll: false });
+        return;
+      }
       navigate(href);
     };
     document.addEventListener("click", onClick, { capture: true });
     const onPop = () => {
       pending.current = null;
+      clearLeave();
       const finish = arrived.current;
       arrived.current = null;
       finish?.();
@@ -126,6 +158,7 @@ export function PageTransitions() {
     return () => {
       document.removeEventListener("click", onClick, { capture: true });
       window.removeEventListener("popstate", onPop);
+      clearLeave();
     };
   }, [router]);
 

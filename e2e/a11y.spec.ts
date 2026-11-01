@@ -54,18 +54,13 @@ test.describe("keyboard", () => {
   });
 });
 
-test.describe("split text with motion", () => {
+test.describe("home headline with motion", () => {
   test.use({ reducedMotion: "no-preference" });
-  test("screen readers hear each statement once, as a plain sentence", async ({ page }) => {
+  test("screen readers hear the headline once, as one plain sentence", async ({ page }) => {
     await openHome(page);
-    const list = page.locator('[data-stage="transform"] ul').first();
-    await list.scrollIntoViewIfNeeded();
-    // Wait until SplitText has split the visible copies into lines, so the check covers the split state.
-    await expect.poll(() => list.locator('[aria-hidden="true"] div').count()).toBeGreaterThan(0);
-    const snapshot = await list.ariaSnapshot();
-    for (const st of homeContent().statements) {
-      expect(snapshot.split(st.text).length - 1, st.text).toBe(1);
-    }
+    await expect(page.locator("main h1")).toHaveAccessibleName(homeContent().headlineText);
+    const snapshot = await page.locator("main h1").ariaSnapshot();
+    expect(snapshot.split("I build the").length - 1).toBe(1);
   });
 });
 

@@ -17,11 +17,11 @@ export async function expectNoA11yViolations(page: Page, selector?: string) {
 }
 
 /** The home page, hydrated: shortcuts such as ⌘K are listened for only after hydration, and a key pressed
- *  before it does nothing (the cause of a flaky Ask test under load, V7). HomeStory sets `data-three` on
- *  main in an effect of the same commit that attaches the palette's listener. */
+ *  before it does nothing (the cause of a flaky Ask test under load, V7). The dot field sets `data-ready` in an
+ *  effect, after hydration. */
 export async function openHome(page: Page) {
   await page.goto("/");
-  await expect(page.locator("main[data-three]")).toHaveCount(1);
+  await expect(page.locator("canvas[data-dot-field][data-ready]")).toHaveCount(1);
   await page.evaluate(() => document.fonts.ready);
 }
 

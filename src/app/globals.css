@@ -291,6 +291,15 @@
   animation-duration: 0.8s;
   animation-timing-function: var(--ease);
 }
+/* The shell (header, progress line, cursor) has its own names, so it holds still. */
+::view-transition-group(shell-header),
+::view-transition-group(shell-progress),
+::view-transition-group(shell-cursor),
+::view-transition-group(shell-cursor-dot),
+::view-transition-old(shell-header),
+::view-transition-new(shell-header) {
+  animation: none;
+}
 html.vt-toggle::view-transition-old(root),
 html.vt-toggle::view-transition-new(root) {
   animation: none;

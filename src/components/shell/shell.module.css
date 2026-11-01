@@ -8,6 +8,7 @@
   padding-top: env(safe-area-inset-top, 0px);
   border-bottom: 1px solid transparent;
   transition: background-color 0.5s, border-color 0.5s;
+  view-transition-name: shell-header;
 }
 /* The only backdrop-filter on the site (runbook v4 §2). */
 .header[data-solid] {
@@ -74,6 +75,7 @@
   background: var(--metal);
   z-index: 40;
   pointer-events: none;
+  view-transition-name: shell-progress;
 }
 
 /* The cursor grows by scale (motion-system: transform and opacity only). The positioner
@@ -88,6 +90,7 @@
   height: 0;
   opacity: 0;
   transition: opacity 0.3s;
+  view-transition-name: shell-cursor;
 }
 .cursor[data-on] {
   opacity: 1;
@@ -141,6 +144,7 @@
   border-radius: 50%;
   background: var(--accent);
   opacity: 0;
+  view-transition-name: shell-cursor-dot;
 }
 .cursor[data-on] + .cursorDot {
   opacity: 1;

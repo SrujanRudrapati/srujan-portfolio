@@ -1,84 +1,53 @@
-import { graph, type GraphNode, type MetricNode, type ProjectNode } from "./graph.ts";
+import { graph, type GraphNode, type MetricNode } from "./graph.ts";
 import { profile } from "../content/profile.ts";
-import { covers } from "./covers.ts";
 
-// Everything the v3 home page says (runbook V4), read from the graph and profile so no
-// figure or sentence is typed into a component. A missing node fails the build.
+// Everything the v4 home (the hub) says, read from the graph and profile so no figure is typed
+// into a component. A missing node fails the build. Copy is the approved reference's
+// (docs/v4/reference/srujan-premium-concept.html), checked against portfolio-facts.
 
 const byId = new Map<string, GraphNode>(graph.nodes.map((n) => [n.id, n]));
 
-function metric(id: string) {
+function metric(id: string): MetricNode {
   const n = byId.get(`metric-${id}`);
   if (!n || n.type !== "metric") throw new Error(`home: missing metric-${id}`);
-  const m = n as MetricNode;
-  return { value: m.value, label: m.valueLabel, summary: m.summary };
+  return n;
 }
 
-function project(slug: string, metricId: string, useSummary = false) {
-  const n = byId.get(`project-${slug}`);
-  if (!n || n.type !== "project") throw new Error(`home: missing project-${slug}`);
-  const { content } = n as ProjectNode;
-  const m = metric(metricId);
-  const cover = coverFor(slug);
-  // useSummary: the metric's own sentence says more precisely what the figure is about.
-  return { slug, title: content.title, oneLiner: content.oneLiner, status: content.status, metric: useSummary ? { ...m, label: m.summary } : m, cover };
+function hasRoleAt(org: RegExp): boolean {
+  return graph.nodes.some((n) => n.type === "role" && org.test(n.content.org));
 }
 
-/** A featured project's cover, with any "{metric-id}" in its label filled from the graph. */
-export function coverFor(slug: string) {
-  const c = covers[slug];
-  if (!c) throw new Error(`home: no cover for ${slug}`);
-  return { scene: c.scene, label: c.label.replace(/\{([a-z0-9-]+)\}/g, (_, id: string) => metric(id).value) };
-}
+export type TileKey = "work" | "experience" | "about" | "contact";
+export type HubTile = { key: TileKey; href: string; name: string; hint: string; description: string };
 
-/** The current role (the graph's role with no end date) as one sentence for the hero: recruiter review, V7. */
-function currentRoleLine(): string {
-  const role = graph.nodes.find((n) => n.type === "role" && n.dates && !n.dates.end);
-  if (!role || role.type !== "role") throw new Error("home: no current role in the graph");
-  const since = role.content.dates.replace(/ to present$/, "");
-  return `${role.content.title} at ${role.content.org} since ${since}.`;
+function tiles(): HubTile[] {
+  const projects = graph.nodes.filter((n) => n.type === "project");
+  const featured = projects.filter((n) => n.type === "project" && n.content.featured).length;
+  if (!hasRoleAt(/Celebal/) || !hasRoleAt(/Arizona State/)) throw new Error("home: Experience hint names a role that is not in the graph");
+  return [
+    // Counts from the graph: 4 featured and 7 more (W0 ruling: eleven projects, not the reference's ten).
+    { key: "work", href: "/work", name: "Work", hint: `${featured} featured, ${projects.length - featured} more`, description: "A catalogue of what I’ve built and what it changed" },
+    // Celebal from Jul 2022 (facts 2.4) to ASU Surplus now (2.1).
+    { key: "experience", href: "/experience", name: "Experience", hint: "Celebal, ASU Surplus", description: "2022 to now, on one timeline" },
+    { key: "about", href: "/about", name: "About", hint: "M.S., Arizona State", description: "Education, certification and how I work" },
+    // profile.status: available early 2027.
+    { key: "contact", href: "/contact", name: "Contact", hint: "Open to roles in 2027", description: "Write a note, it opens in your email" },
+  ];
 }
 
 export function homeContent() {
+  const records = metric("records-per-day"); // "about 10 million" "records a day" (facts 2.4)
   return {
-    profile: {
-      name: profile.name,
-      headline: profile.headline,
-      subline: profile.subline,
-      now: profile.now,
-      role: currentRoleLine(),
-      proof: profile.proof,
-      email: profile.email,
-      github: profile.github,
-      linkedin: profile.linkedin,
-      resume: profile.resume,
+    // Three lines, each its own mask (motion-system: hero headline). Same sentence as profile.headline.
+    headline: ["I build the", "data layer, and the", "AI on top of it."],
+    headlineText: profile.headline,
+    lede: {
+      lead: "Data and AI engineer, finishing an M.S. at Arizona State University.",
+      // Facts 2.4 (on call, about 10 million records a day) and 2.1 (Surplus AI runs offline, in production).
+      rest: `I’ve been on call for a pipeline moving ${records.value} ${records.valueLabel}, and I now ship LLM systems that run offline, in production.`,
     },
-    // Screen 2: what he does, each line tied to a fact already on the site (portfolio-facts 2.1, 2.3, 2.4).
-    statements: [
-      { text: `Pipelines on Databricks, Azure and AWS, one of them handling ${metric("records-per-day").value} ${metric("records-per-day").label}.`, href: "/about#experience", proofFor: "experience at Celebal" },
-      { text: "Private, offline AI in production at ASU Surplus, on a cluster of Mac minis.", href: "/work/surplus-ai", proofFor: "Surplus AI" },
-      { text: "LLM tools that show their evidence: every Label Lens warning quotes the label word for word.", href: "/work/label-lens", proofFor: "Label Lens" },
-    ],
-    // Featured order (facts): Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower.
-    featured: [
-      project("surplus-ai", "surplus-processing-time"),
-      // Cooked won (facts 2.2), not all three entries: the card shows the metric's sentence that says so.
-      project("devhacks-cubbie", "devhacks-place", true),
-      project("label-lens", "label-lens-quotes"),
-      project("supply-chain-watchtower", "watchtower-agents"),
-    ],
-    projectCount: graph.nodes.filter((n) => n.type === "project").length,
-    // The strongest single result, shown in the hero (recruiter review, V4).
-    lead: { ...metric("surplus-processing-time"), where: "Surplus AI at ASU Surplus" },
-    // Each figure carries the project or employer it came from (names already on the site).
-    // ~80% is in the hero and on the Surplus AI panel, so the strip leaves it out (DECISIONS 13).
-    proof: [
-      { ...metric("surplus-pallet-time"), source: "Surplus AI" },
-      { ...metric("records-per-day"), source: "Celebal" },
-      { ...metric("devhacks-submissions"), source: "DevHacks × Cubbie" },
-      { ...metric("label-lens-latency"), source: "Label Lens" },
-      { ...metric("capstone-holding-cost"), source: "Demand forecasting capstone" },
-    ],
+    now: "Now running Surplus AI in production at ASU Surplus",
+    tiles: tiles(),
   };
 }
 

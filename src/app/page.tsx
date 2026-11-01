@@ -1,8 +1,7 @@
-import { HomeStory } from "@/components/home/HomeStory";
+import { Home } from "@/components/home/Home";
 import { homeContent } from "@/data/home";
 
-// V4: the home page is the short pipeline story (about five screens). Every v2 section
-// it used to hold lives on its own route now (docs/v3/IA.md); this page is the teaser.
-export default function Home() {
-  return <HomeStory content={homeContent()} />;
+// v4: the home is a hub (runbook W2). Everything the v3 story held lives on its own route.
+export default function Page() {
+  return <Home content={homeContent()} />;
 }
