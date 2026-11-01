@@ -10,7 +10,7 @@ Ledger for `docs/REDESIGN_V3_RUNBOOK.md` (same format as `docs/REDESIGN_STATUS.m
 | V2 — Motion foundation | done | `redesign: phase V2 — motion foundation` | `/lab/b`, `/lab/c` removed; primitives in `src/components/motion/` with `MotionRoot`; demo at `/lab/motion` and `/lab/motion/next`; leak test (10 round trips) and transition, intro, keyboard, reduced-motion tests in `e2e/motion.spec.ts`. Checklist below. |
 | V3 — IA and routing | done | `redesign: phase V3 — information architecture and routing` | Routes `/work`, `/work/[slug]` (11), `/explore`, `/about`, `/cv`, 404; global nav with number keys, command palette (pages, projects, Ask, theme, copy email, resume), footer; v3 tokens live; graph and Ask links point at pages; mapping in `docs/v3/IA.md`. Checklist below. |
 | V4 — Home page story | done | b840ecf `redesign: phase V4 — the home page story` | `/` is the pipeline story: 01 ingest (name, line, now, proof chips, way in, physics stream), 02 transform (three fact-backed statements, the featured reel with four 3D covers), 03 serve (five figures counting up), 04 query (Ask into the palette, contact). Checklist below. |
-| V5 — Case study pages | in progress | | Started 2026-10-31. |
+| V5 — Case study pages | done | fe86b9b `redesign: phase V5 — case study pages` | `/work/[slug]` template from the graph: results, problem, approach (DevHacks: three entries), scroll-drawn architecture, stack, next project; compact when data is thin. Checklist below. |
 | V6 — Secondary pages | todo | | |
 | V7 — Polish, mobile, perf, a11y | todo | | |
 | V8 — Ship (G1) | todo | | |
