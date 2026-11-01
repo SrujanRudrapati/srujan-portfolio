@@ -12,8 +12,8 @@ Ledger for `docs/REDESIGN_V3_RUNBOOK.md` (same format as `docs/REDESIGN_STATUS.m
 | V4 — Home page story | done | b840ecf `redesign: phase V4 — the home page story` | `/` is the pipeline story: 01 ingest (name, line, now, proof chips, way in, physics stream), 02 transform (three fact-backed statements, the featured reel with four 3D covers), 03 serve (five figures counting up), 04 query (Ask into the palette, contact). Checklist below. |
 | V5 — Case study pages | done | fe86b9b `redesign: phase V5 — case study pages` | `/work/[slug]` template from the graph: results, problem, approach (DevHacks: three entries), scroll-drawn architecture, stack, next project; compact when data is thin. Checklist below. |
 | V6 — Secondary pages | done | 2f86a24 `redesign: phase V6 — secondary pages in the concept` | One rail frame for every page; `/work` index with 3D covers; Flip lens switches; `/about`, `/cv` restyled; 404 game (also in the palette); Ask panel restyled. Checklist below. |
-| V7 — Polish, mobile, perf, a11y | in progress | | Started 2026-10-31. |
-| V8 — Ship (G1) | todo | | |
+| V7 — Polish, mobile, perf, a11y | done | 755f14d `redesign: phase V7 — polish, mobile, performance, accessibility` | Mobile and short-iPhone first screen; WebKit suite green (Firefox cannot launch here); Lighthouse mobile 92 / desktop 100 / a11y 100; axe clean everywhere; slow-route bug fixed; `/lab` removed. Home JS 207 kB vs 180 (DECISIONS 19). Checklist below. |
+| V8 — Ship (G1) | in progress | | Started 2026-10-31. |
 
 ## Phase V7 checklist
 
