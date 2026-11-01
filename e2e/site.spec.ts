@@ -25,7 +25,8 @@ test.describe("Routes", () => {
 
   test("every project has its own page, all listed on /work", async ({ page }) => {
     await page.goto("/work");
-    await expect(page.locator("main").getByRole("article")).toHaveCount(11);
+    // Since V6: four featured articles and seven compact rows, each with its project id.
+    await expect(page.locator('main [id^="project-"]')).toHaveCount(11);
     const hrefs = await page.locator('main a[href^="/work/"]').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
     expect(hrefs).toHaveLength(11);
     for (const href of hrefs) {

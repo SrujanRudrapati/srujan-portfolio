@@ -1,4 +1,6 @@
 import type { ReactNode } from "react";
+import { Stage } from "@/components/site/Rail";
+import r from "@/components/site/rail.module.css";
 
 // Layout primitives. Card, Button, Stat, Reveal and ThemeToggle live in their own files.
 // Shape rule: square corners everywhere; the focus ring is the only rounded thing.
@@ -7,25 +9,27 @@ export function Container({ children, className = "" }: { children: ReactNode; c
   return <div className={`mx-auto w-full max-w-page px-gutter ${className}`}>{children}</div>;
 }
 
+/** A page section on the v3 rail (V6): a stage label with its node, a condensed h2, then the content.
+ *  Used inside RailPage, whose gutters it shares. */
 export function Section({
   id,
+  stage,
   title,
   children,
 }: {
   id: string;
+  /** Mono stage label, lowercase ("source / experience"). */
+  stage: string;
   title: ReactNode;
   children: ReactNode;
 }) {
   return (
-    <section id={id} aria-labelledby={`${id}-heading`} className="border-t-2 border-ink">
-      <Container className="py-section">
-        <header className="mb-10 max-w-measure md:mb-14">
-          <h2 id={`${id}-heading`} className="text-3xl text-ink">
-            {title}
-          </h2>
-        </header>
-        {children}
-      </Container>
+    <section id={id} aria-labelledby={`${id}-heading`} className={r.section}>
+      <Stage>{stage}</Stage>
+      <h2 id={`${id}-heading`} className={r.h2}>
+        {title}
+      </h2>
+      {children}
     </section>
   );
 }

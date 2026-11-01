@@ -134,10 +134,13 @@ export function AskPanel() {
       className="m-0 h-dvh max-h-dvh w-full max-w-none bg-raised p-0 text-ink backdrop:bg-ink/50 md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:border-t-[3px] md:border-ink"
     >
       <div className="flex h-full max-h-[inherit] flex-col">
-        <header className="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
-          <h2 id="ask-title" className="text-xl text-ink">
-            Ask about my work
-          </h2>
+        <header className="flex items-end justify-between gap-4 border-b border-line px-5 py-4">
+          <div>
+            <p className="font-mono text-xs text-muted">stage 04 / query</p>
+            <h2 id="ask-title" className="mt-2 font-display text-[clamp(1.75rem,5vw,2.5rem)] leading-[0.92] font-extrabold text-ink font-stretch-[62%]">
+              Ask about my work
+            </h2>
+          </div>
           <button type="button" onClick={close} aria-label="Close" className="inline-flex h-11 w-11 shrink-0 items-center justify-center border-2 border-ink text-ink transition-colors duration-150 hover:bg-ink hover:text-bg">
             <XIcon aria-hidden="true" size={18} weight="bold" />
           </button>
@@ -157,7 +160,7 @@ export function AskPanel() {
               maxLength={MAX_QUESTION}
               autoComplete="off"
               placeholder="What did you build with Spark?"
-              className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-bg px-3 text-base text-ink placeholder:text-muted"
+              className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-bg px-3 text-base text-ink placeholder:text-muted focus-visible:border-accent-2"
             />
             <button type="submit" className="inline-flex min-h-11 shrink-0 items-center bg-ink px-4 text-sm font-medium text-bg hover:bg-accent-2">
               Ask
@@ -189,8 +192,8 @@ export function AskPanel() {
             {result?.kind === "evidence" && (
               <>
                 <Generated result={result} labels={labels} />
-                <p className="font-medium text-ink">{result.summary}</p>
-                <ul aria-label="Evidence" className="space-y-3">
+                <p className="text-sm text-muted">{result.summary}</p>
+                <ul aria-label="Evidence" className="border-b border-line">
                   {result.hits.map((h) => (
                     <EvidenceCard key={h.id} hit={h} onNavigate={close} />
                   ))}

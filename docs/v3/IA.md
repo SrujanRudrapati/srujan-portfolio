@@ -7,8 +7,8 @@ The fix for "too much on one page": the v2 single page is split into routes. Not
 | Route | Purpose | Built from |
 |---|---|---|
 | `/` | Short scroll story (V4). Until then: the v2 sections, unchanged | `src/app/page.tsx` |
-| `/work` | Every project, featured large then compact, filterable (All, Production, AI/LLM, Data engineering, Hackathon) | `WorkExplorer` |
-| `/work/[slug]` | One page per project, 11 statically generated from the graph (`generateStaticParams`, `dynamicParams = false`). V5 makes this the case-study template | `FeaturedCard` (all fields, no self-link) |
+| `/work` | Every project, featured large then compact, filterable (All, Production, AI/LLM, Data engineering, Hackathon) | `WorkIndex` (V6; was `WorkExplorer`) |
+| `/work/[slug]` | One page per project, 11 statically generated from the graph (`generateStaticParams`, `dynamicParams = false`) | `CaseStudy` (V5; every field the v2 card had) |
 | `/explore` | The v2 lenses: Highlights, Timeline, Skill map, By problem, By industry, Recruiter (logic unchanged; `#lens=<id>` still selects) | `Explore` + `WorkExplorer` |
 | `/about` | Bio, experience, skills, certifications and education | `About`, `Experience`, `Skills`, `Credentials` |
 | `/cv` | Recruiter mode one-pager with the resume download; prints to one page | `RecruiterLens` (print rule `body:has(main[data-print="cv"])`) |
@@ -25,7 +25,7 @@ Global, in the root layout on every page: the skip link, the nav (name, Work 1, 
 | Hero: headline, sub-line, status, three calls to action, proof chips, medallion diagram, Ask box | `/` (V4 rebuilds it); "See my work" now goes to `/work`, "One-page summary" to `/cv`, "Get in touch" to `#contact` on `/` | [x] |
 | About | `/about`, and `/` until V4 | [x] |
 | Work: lens switcher, filters, four featured cards with figures, diagrams, details, seven compact cards | `/work` (featured, compact, filters), `/explore` (lens switcher, Highlights = the same cards), `/work/[slug]` (each card's full content) | [x] |
-| Featured card details ("How it works", secondary diagrams, status notes, stack, links) | `/work/[slug]` and the cards on `/work` | [x] |
+| Featured card details ("How it works", secondary diagrams, status notes, stack, links) | `/work/[slug]` (since V6 only there: the `/work` index shows title, status, date, lead figure, one-liner and cover, and links each project to its page) | [x] |
 | Compact card's primary external link (live app, repo or write-up) | The card now opens `/work/[slug]`; the external links are on that page | [x] |
 | Experience (four roles, link to the timeline) | `/about#experience`; the link goes to `/explore#lens=timeline` | [x] |
 | Skills (groups, link to the skill map) | `/about#skills`; the link goes to `/explore#lens=skills` | [x] |

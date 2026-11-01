@@ -16,12 +16,6 @@ export async function expectNoA11yViolations(page: Page, selector?: string) {
   expect(summary, JSON.stringify(summary, null, 2)).toEqual([]);
 }
 
-/** Phones collapse featured card details behind "Show details"; open them where a test needs the inside of a card. */
-export async function expandFeatured(page: Page, slug: string) {
-  const toggle = page.locator(`#project-${slug} button[aria-controls="${slug}-more"]`);
-  if (await toggle.isVisible()) await toggle.click();
-}
-
 export async function openHome(page: Page) {
   await page.goto("/");
   await page.evaluate(() => document.fonts.ready);

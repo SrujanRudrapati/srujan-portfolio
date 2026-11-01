@@ -24,9 +24,9 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
   const figures = hit.metrics ? hit.metrics.split("; ") : [];
   const links = externalEvidence(hit);
   return (
-    <li id={`evidence-${hit.id}`} tabIndex={-1} className="scroll-mt-4 border-t-[3px] border-ink bg-surface p-4">
-      <p className="text-xs font-medium text-muted">{TYPE_LABEL[hit.type] ?? hit.type}</p>
-      <h3 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
+    <li id={`evidence-${hit.id}`} tabIndex={-1} className="scroll-mt-4 border-t border-line py-4">
+      <p className="font-mono text-xs text-muted lowercase">{TYPE_LABEL[hit.type] ?? hit.type}</p>
+      <h3 className="mt-1 font-display text-2xl leading-tight font-extrabold text-ink font-stretch-[62%]">
         <a
           href={withBasePath(anchorFor(hit))}
           // A page on the site: the Ask panel closes and the route transition takes over
@@ -41,7 +41,7 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
       {figures.length > 0 && (
         <ul aria-label={`${hit.label} figures`} className="mt-2 space-y-0.5">
           {figures.map((f) => (
-            <li key={f} className="text-sm font-semibold text-ink tabular-nums">
+            <li key={f} className="text-sm font-semibold text-accent-2 tabular-nums">
               {f}
             </li>
           ))}

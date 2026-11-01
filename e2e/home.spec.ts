@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { expandFeatured, expectNoA11yViolations } from "./helpers";
+import { expectNoA11yViolations } from "./helpers";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -111,172 +111,84 @@ test.describe("Hero (V4: stage 01 / ingest)", () => {
   });
 });
 
-test.describe("Work (on /work since V3)", () => {
+test.describe("Work index (/work, V6)", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/work");
     await page.evaluate(() => document.fonts.ready);
   });
 
-  test("renders both featured projects with honest status and every diagram", async ({ page }) => {
-    const work = page.locator("#work");
+  test("keeps every project: four featured in facts order, seven compact rows, each opening its case study", async ({ page }) => {
+    const main = page.locator("main");
     await expect(page.getByRole("heading", { level: 1, name: "Work" })).toBeVisible();
-
-    const surplus = work.getByRole("article", { name: "Surplus AI" });
-    await expect(surplus).toBeVisible();
-    await expandFeatured(page, "surplus-ai");
-    await expandFeatured(page, "supply-chain-watchtower");
-    await expect(surplus.getByText("Production", { exact: true })).toBeVisible();
-    await expect(surplus.getByRole("img", { name: /Surplus AI pipeline/ })).toBeVisible();
-    await expect(surplus.getByText("Qwen 14B on four Mac minis")).toBeVisible();
-    // Facts 2.1: in production, no "in progress" or "copying" wording anywhere.
-    await expect(work).not.toContainText(/in progress|copying/i);
-
-    // The long "How it works" block and the two secondary diagrams sit behind a disclosure.
-    const details = surplus.locator("details");
-    await expect(details).not.toHaveAttribute("open", "");
-    await details.locator("summary").click();
-    await expect(surplus.getByRole("img", { name: /Cluster network/ })).toBeVisible();
-    await expect(surplus.getByRole("img", { name: /Privacy layers/ })).toBeVisible();
-    await expect(surplus.getByRole("term")).toHaveCount(6);
-
-    const watchtower = work.getByRole("article", { name: "Autonomous Supply Chain Watchtower" });
-    await expect(watchtower.getByRole("img", { name: /Watchtower agent flow/ })).toBeVisible();
-    await expect(watchtower.getByText("Personal", { exact: true })).toBeVisible();
-    // Brief rule: Watchtower is never described as shipped, deployed, in production, or having users.
-    await expect(watchtower).not.toContainText(/shipped|deployed|production|users/i);
+    // Facts: featured order Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower.
+    await expect(main.getByRole("article").getByRole("heading", { level: 2 })).toHaveText(["Surplus AI", "DevHacks × Cubbie hackathon", "Label Lens", "Autonomous Supply Chain Watchtower"]);
+    const rows = main.locator("#projects").getByRole("listitem");
+    await expect(rows).toHaveCount(7);
+    await expect(rows.last().getByRole("heading", { level: 3 })).toHaveText("Hand Gesture Controlled RC Car");
+    for (const slug of ["surplus-ai", "label-lens", "f1-race-predictor"]) await expect(main.locator(`#project-${slug} a`)).toHaveAttribute("href", `/work/${slug}`);
+    // A featured item leads with its figure and carries its 3D cover.
+    const surplus = main.getByRole("article", { name: "Surplus AI" });
+    await expect(surplus.getByText("~80%", { exact: true })).toBeVisible();
+    await expect(surplus.locator("[data-scene]")).toHaveCount(1);
   });
 
-  test("keeps every project: four featured in order, seven in the grid, impact figures loudest", async ({ page }) => {
-    const work = page.locator("#work");
-    await expect(work.getByRole("article")).toHaveCount(11);
-    await expect(work.locator("#projects").getByRole("article")).toHaveCount(7);
-    // Facts: featured order Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchtower; RC Car under other projects.
-    await expect(work.getByRole("heading", { level: 3 })).toHaveText([
-      "Surplus AI",
-      "DevHacks × Cubbie hackathon",
-      "Label Lens",
-      "Autonomous Supply Chain Watchtower",
-      "Other projects",
-    ]);
-    await expect(work.locator("#projects").getByRole("heading", { level: 4 }).last()).toHaveText("Hand Gesture Controlled RC Car");
-    // The Stat figure is the largest text on a featured card.
-    const stat = work.getByRole("article", { name: "Surplus AI" }).getByRole("list", { name: "Surplus AI results" }).locator("span").first();
-    const title = work.getByRole("heading", { level: 3, name: "Surplus AI" });
-    const [statSize, titleSize] = await Promise.all([
-      stat.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
-      title.evaluate((el) => parseFloat(getComputedStyle(el).fontSize)),
-    ]);
-    expect(statSize).toBeGreaterThan(titleSize);
+  test("statuses are honest; Watchtower is never called shipped or in production", async ({ page }) => {
+    const main = page.locator("main");
+    await expect(main.getByRole("article", { name: "Surplus AI" })).toContainText("production");
+    await expect(main).not.toContainText(/in progress|copying/i);
+    await expect(main.getByRole("article", { name: "Autonomous Supply Chain Watchtower" })).not.toContainText(/shipped|deployed|production|users/i);
   });
 
   test("filter chips are real buttons with aria-pressed and never change the URL", async ({ page }) => {
-    const work = page.locator("#work");
+    const main = page.locator("main");
     const url = page.url();
-    const all = work.getByRole("button", { name: "All" });
-    const production = work.getByRole("button", { name: "Production" });
+    const all = main.getByRole("button", { name: "All" });
+    const production = main.getByRole("button", { name: "Production" });
+    const items = main.locator("[data-flip-id]");
     await expect(all).toHaveAttribute("aria-pressed", "true");
-    await expect(production).toHaveAttribute("aria-pressed", "false");
-
     await production.click();
     await expect(production).toHaveAttribute("aria-pressed", "true");
     await expect(all).toHaveAttribute("aria-pressed", "false");
-    await expect(work.getByRole("article")).toHaveCount(1);
-    await expect(work.getByText("1 of 11 projects")).toBeVisible();
+    await expect(items).toHaveCount(1);
+    await expect(main.getByText("1 of 11 projects")).toBeVisible();
     expect(page.url()).toBe(url);
-
-    await work.getByRole("button", { name: "Hackathon" }).click();
-    await expect(work.getByRole("article", { name: "DevHacks × Cubbie hackathon" })).toBeVisible();
-    await expect(work.getByRole("article")).toHaveCount(1);
+    await main.getByRole("button", { name: "Hackathon" }).click();
+    await expect(main.getByRole("article", { name: "DevHacks × Cubbie hackathon" })).toBeVisible();
+    await expect(items).toHaveCount(1);
     await all.click();
-    await expect(work.getByRole("article")).toHaveCount(11);
+    await expect(items).toHaveCount(11);
   });
 
-  test("a grid card is one tab stop whose anchor is the title and opens the project page", async ({ page, isMobile }) => {
+  test("each item is one tab stop: the title link covers it", async ({ page, isMobile }) => {
     test.skip(isMobile, "Keyboard-only check");
-    const card = page.locator("#project-aws-cicd-pipeline");
-    const link = card.getByRole("link", { name: "End-to-End CI/CD Deployment Pipeline" });
-    await expect(link).toHaveAttribute("href", "/work/aws-cicd-pipeline");
-    await expect(card.getByRole("link")).toHaveCount(1);
+    for (const id of ["project-aws-cicd-pipeline", "project-java-group-chat", "project-surplus-ai"]) await expect(page.locator(`#${id}`).getByRole("link")).toHaveCount(1);
+    const link = page.locator("#project-aws-cicd-pipeline").getByRole("link", { name: "End-to-End CI/CD Deployment Pipeline" });
     await link.focus();
     await expect(link).toBeFocused();
-    // Every project has a page now (V3), so every card is one link.
-    await expect(page.locator("#project-java-group-chat").getByRole("link")).toHaveCount(1);
-  });
-
-  test("diagrams are static and fully lit under reduced motion", async ({ page }) => {
-    // The suite runs with reducedMotion: "reduce", so dots must be hidden and overlays opaque.
-    await expandFeatured(page, "surplus-ai");
-    const figure = page.locator(".flow").first();
-    await figure.scrollIntoViewIfNeeded();
-    // useInView flips data-animate on the next IntersectionObserver tick.
-    await expect(figure).toHaveAttribute("data-animate", "on");
-    const state = await figure.evaluate((el) => {
-      const svg = Array.from(el.querySelectorAll("svg")).find((s) => getComputedStyle(s).display !== "none")!;
-      const dot = svg.querySelector(".flow-dot")!;
-      const lit = svg.querySelector(".flow-lit")!;
-      return { dot: getComputedStyle(dot).display, lit: getComputedStyle(lit).opacity, animate: el.getAttribute("data-animate") };
-    });
-    expect(state.dot).toBe("none");
-    expect(state.lit).toBe("1");
-    expect(state.animate).toBe("on");
-  });
-
-  test.describe("with motion allowed", () => {
-    test.use({ reducedMotion: "no-preference" });
-
-    test("diagrams animate only while on screen", async ({ page }) => {
-      await expandFeatured(page, "surplus-ai");
-      // On phones the toggle sits right above the diagram; start from the top so it is offscreen.
-      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-      const figure = page.locator(".flow").first();
-      await expect(figure).not.toHaveAttribute("data-animate", "on");
-      await figure.scrollIntoViewIfNeeded();
-      await expect(figure).toHaveAttribute("data-animate", "on");
-      const running = await figure.evaluate((el) => {
-        const svg = Array.from(el.querySelectorAll("svg")).find((s) => getComputedStyle(s).display !== "none")!;
-        const dot = getComputedStyle(svg.querySelector(".flow-dot")!);
-        const lit = getComputedStyle(svg.querySelector(".flow-lit")!);
-        return { dot: dot.display, dotAnimation: dot.animationName, litAnimation: lit.animationName };
-      });
-      expect(running).toEqual({ dot: "block", dotAnimation: "flow-travel", litAnimation: "flow-flash" });
-      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-      await expect(figure).not.toHaveAttribute("data-animate", "on");
-    });
+    await page.keyboard.press("Enter");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("End-to-End CI/CD Deployment Pipeline");
   });
 
   test("has no accessibility violations", async ({ page }) => {
-    await expectNoA11yViolations(page, "#work");
+    await expectNoA11yViolations(page, "main");
   });
 
   test("visual", async ({ page }) => {
-    await expect(page.locator("#work")).toHaveScreenshot("work.png");
+    await expect(page.locator("main")).toHaveScreenshot("work-index.png", { mask: [page.locator("[data-scene]")] });
   });
 });
 
-test.describe("Featured cards on phones (/work)", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/work");
-  });
-
-  test("show title, figures and one line first; Show details opens the rest; without JS all is visible", async ({ page, isMobile }) => {
-    test.skip(!isMobile, "Phone layout");
-    const card = page.locator("#project-surplus-ai");
-    await expect(card.getByRole("list", { name: "Surplus AI results" })).toBeVisible();
-    await expect(card.getByText("Problem", { exact: true })).toBeHidden();
-    const toggle = card.getByRole("button", { name: /Show details/ });
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    await toggle.click();
-    await expect(card.getByText("Problem", { exact: true })).toBeVisible();
-    await expect(card.getByRole("button", { name: /Hide details/ })).toHaveAttribute("aria-expanded", "true");
-  });
-
-  test.describe("without JavaScript", () => {
-    test.use({ javaScriptEnabled: false });
-    test("everything shows and there is no toggle", async ({ page, isMobile }) => {
-      test.skip(!isMobile, "Phone layout");
-      await expect(page.locator("#project-surplus-ai").getByText("Problem", { exact: true })).toBeVisible();
-      await expect(page.locator("#project-surplus-ai").getByRole("button", { name: /Show details/ })).toBeHidden();
-    });
+test.describe("The detail moved to the case study (V5/V6)", () => {
+  test("Surplus AI's diagrams, How it works and status live on its page", async ({ page }) => {
+    await page.goto("/work/surplus-ai");
+    const main = page.locator("main");
+    await expect(main.getByRole("img", { name: /Surplus AI pipeline/ })).toBeVisible();
+    await expect(main.getByRole("img", { name: /Cluster network/ })).toBeVisible();
+    await expect(main.getByRole("img", { name: /Privacy layers/ })).toBeVisible();
+    await expect(main.getByRole("term")).toHaveCount(6);
+    await expect(main.getByText("Qwen 14B on four Mac minis")).toBeVisible();
+    await page.goto("/work/supply-chain-watchtower");
+    await expect(page.locator("main").getByRole("img", { name: /Watchtower agent flow/ })).toBeVisible();
   });
 });
 

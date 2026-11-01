@@ -8,16 +8,16 @@ import { withBasePath } from "@/lib/paths";
 
 function NestedProject({ project: p }: { project: TimelineProject }) {
   return (
-    <li className="border-t border-line pt-3">
+    <li data-flip-id={`project-${p.slug}`} className="border-t border-line pt-3">
       <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted tabular-nums">
         <StatusBadge status={p.status} />
         {p.date && <time dateTime={p.dateTime}>{p.date}</time>}
       </p>
-      <h5 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
+      <h4 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
         <a href={withBasePath(`/work/${p.slug}`)} className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2">
           {p.title}
         </a>
-      </h5>
+      </h4>
       <p className="mt-1 text-sm text-ink">{p.oneLiner}</p>
       {p.impact[0] && (
         <p className="mt-1 text-sm font-semibold text-ink tabular-nums">
@@ -55,14 +55,14 @@ function Outcomes({ outcomes }: { outcomes: TimelineEntry["outcomes"] }) {
 function Entry({ entry: e }: { entry: TimelineEntry }) {
   const marker = e.current ? "bg-accent-2" : e.kind === "undated" ? "border-2 border-dashed border-accent-2 bg-bg" : "border-2 border-accent-2 bg-bg";
   return (
-    <li className="relative grid grid-cols-1 gap-x-8 gap-y-2 pb-12 pl-8 md:grid-cols-12 md:pl-0">
+    <li data-flip-id={e.id} className="relative grid grid-cols-1 gap-x-8 gap-y-2 pb-12 pl-8 md:grid-cols-12 md:pl-0">
       <span aria-hidden="true" className={`absolute top-1.5 left-[-5px] h-3 w-3 rounded-full md:left-[calc(25%-5px)] ${marker}`} />
       <p className="text-xs font-medium text-muted tabular-nums md:col-span-3 md:pr-8 md:pt-1 md:text-right">
         {e.datesText && <time dateTime={e.dateTime}>{e.datesText}</time>}
         {e.current && <span className="mt-1 block text-accent-2">Current</span>}
       </p>
       <div className="md:col-span-9 md:pl-8">
-        <h4 className="text-lg leading-snug text-ink">{e.title}</h4>
+        <h3 className="text-lg leading-snug text-ink">{e.title}</h3>
         {e.org && (
           <p className="mt-0.5 font-medium text-ink">
             {e.org}

@@ -8,7 +8,7 @@ export function KeyedLens({ cards, noun }: { cards: KeyedCard[]; noun: string })
     <ul aria-label={`Work by ${noun}`} className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {cards.map((c) => (
         <li key={c.id} className="flex flex-col border-t-[3px] border-ink bg-surface p-5 md:p-6">
-          <h4 className="text-lg leading-snug text-ink">{c.label}</h4>
+          <h3 className="text-lg leading-snug text-ink">{c.label}</h3>
           <p className="mt-2 text-ink">{c.summary}</p>
           <ul aria-label={`Linked to ${c.label}`} className="mt-auto space-y-2 border-t border-line pt-4 [&:not(:first-child)]:mt-5">
             {c.items.map((item) => (

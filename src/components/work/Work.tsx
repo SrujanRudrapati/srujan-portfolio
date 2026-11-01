@@ -8,7 +8,7 @@ import { WorkExplorer } from "./WorkExplorer";
 // so the default view is static HTML.
 export function Work() {
   return (
-    <Section id="work" title="Work">
+    <Section id="work" stage="stage 02 / transform" title="Work">
       <Explore>
         <WorkExplorer projects={projects} />
       </Explore>

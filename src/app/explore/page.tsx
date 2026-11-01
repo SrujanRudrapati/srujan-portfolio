@@ -1,26 +1,30 @@
 import type { Metadata } from "next";
-import { pageMeta } from "@/lib/meta";
 import { Explore } from "@/components/explore/Explore";
-import { WorkExplorer } from "@/components/work/WorkExplorer";
-import { PageHead } from "@/components/site/PageHead";
+import { RailBlock, RailHead, RailPage } from "@/components/site/Rail";
+import { WorkIndex } from "@/components/work/WorkIndex";
+import { cover } from "@/data/case-study";
 import { projects } from "@/data/projects";
+import { pageMeta } from "@/lib/meta";
 
 export const metadata: Metadata = pageMeta("/explore", "Explore | Srujan Rudrapati", "The same work seen as a timeline, a skill map, by problem and by industry.");
 
-// The v2 lenses (Highlights, Timeline, Skill map, By problem, By industry, Recruiter), unchanged in logic.
+// The v2 lenses (Highlights, Timeline, Skill map, By problem, By industry, Recruiter), unchanged
+// in logic; switching between them is a Flip transition (V6). Highlights is the work index.
 export default function ExplorePage() {
+  const covers = Object.fromEntries(projects.map((p) => [p.slug, cover(p.slug)]));
   return (
-    <main id="main">
-      <PageHead stage="explore / views" title="Explore">
+    <RailPage>
+      <RailHead stage="explore / views" title="Explore">
         <p>The same work, read different ways: as a timeline, a skill map, by the problem it solved, or by industry.</p>
-      </PageHead>
-      <section id="work" aria-label="Lenses" className="px-gutter pb-section">
-        <div className="mx-auto max-w-page">
+      </RailHead>
+      {/* #work is a direct child of main: the Recruiter lens's print rule keeps only it. */}
+      <RailBlock id="work">
+        <section aria-label="Lenses">
           <Explore>
-            <WorkExplorer projects={projects} />
+            <WorkIndex projects={projects} covers={covers} />
           </Explore>
-        </div>
-      </section>
-    </main>
+        </section>
+      </RailBlock>
+    </RailPage>
   );
 }

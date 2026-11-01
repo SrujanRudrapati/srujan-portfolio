@@ -4,6 +4,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { appPath } from "@/components/motion/PageTransitions";
 import { profile } from "@/content/profile";
 import { openAsk } from "@/lib/ask/events";
+import { openGame } from "@/components/game/events";
 import { withBasePath } from "@/lib/paths";
 import { getTheme, setTheme } from "@/lib/theme";
 import { isTyping, MAIN_PAGES, PALETTE_OPEN, type PaletteOpenDetail } from "./routes";
@@ -82,6 +83,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
         },
       },
       { id: "resume", group: "Actions", label: "Open resume (PDF)", keywords: "resume cv pdf download", run: () => window.open(withBasePath(profile.resume), "_blank", "noopener") },
+      { id: "game", group: "Actions", label: "Play Clean the pipeline", hint: "a small game", keywords: "game play clean pipeline fun", run: openGame },
     ];
     return [...pages, ...work, ...actions];
   }, [projects]);

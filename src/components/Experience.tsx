@@ -10,7 +10,7 @@ import { withBasePath } from "@/lib/paths";
 // without showing at full length twice.
 export function Experience() {
   return (
-    <Section id="experience" title="Experience">
+    <Section id="experience" stage="source / experience" title="Experience">
       <ol className="divide-y divide-line border-y border-line">
         {experience.map((role) => (
           <li key={`${role.org}-${role.title}`} className="grid grid-cols-1 gap-x-8 gap-y-1 py-5 md:grid-cols-12">

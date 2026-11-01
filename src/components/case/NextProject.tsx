@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { NextProject as Data } from "@/data/case-study";
 import { withBasePath } from "@/lib/paths";
+import { Stage } from "@/components/site/Rail";
 import s from "./case.module.css";
 
 // The bottom of every case study: one large link to the following project, so visitors keep
@@ -12,10 +13,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 export function NextProject({ next, position, total }: { next: Data; position: number; total: number }) {
   return (
     <nav className={s.next} aria-labelledby="next-project">
-      <p className={s.stage}>
-        <span className={s.node} data-node aria-hidden />
+      <Stage>
         next / {pad(position)} of {pad(total)}
-      </p>
+      </Stage>
       <h2 id="next-project" className="sr-only">
         Next project
       </h2>

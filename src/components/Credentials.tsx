@@ -4,7 +4,7 @@ import { Section } from "./ui";
 
 export function Credentials() {
   return (
-    <Section id="credentials" title="Certifications and education">
+    <Section id="credentials" stage="source / credentials" title="Certifications and education">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-10">
         <section aria-labelledby="certs-heading" className="lg:col-span-6">
           <h3 id="certs-heading" className="mb-6 text-lg text-ink">

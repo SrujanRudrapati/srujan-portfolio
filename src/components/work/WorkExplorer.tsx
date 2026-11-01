@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SHOW_ALL_PROJECTS } from "@/components/explore/Explore";
+import { SHOW_ALL_PROJECTS } from "./events";
 import type { Project } from "@/data/graph/types";
 import { FeaturedCard } from "./FeaturedCard";
 import { ProjectCard } from "./ProjectCard";

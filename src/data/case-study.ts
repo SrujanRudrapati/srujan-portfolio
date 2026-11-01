@@ -62,7 +62,7 @@ function problems(projectId: string): Problem[] {
 }
 
 /** The 3D cover's label, with any "{metric-id}" filled from the graph. */
-function cover(slug: string): CaseStudy["cover"] {
+export function cover(slug: string): CaseStudy["cover"] {
   const c = covers[slug];
   if (!c) return undefined;
   return { scene: c.scene, label: c.label.replace(/\{([a-z0-9-]+)\}/g, (_, id: string) => get(`metric-${id}`, "metric").value) };

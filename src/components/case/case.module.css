@@ -1,118 +1,7 @@
 /* Case studies (runbook V5, design-direction v3): white/black, one blue accent, Archivo
    condensed for the title and figures, Martian Mono for stage labels only. The rail and
    gutters match the home page so the data path sits in the same place on every page. */
-.root {
-  --rail-x: 20px;
-  --pad-l: 48px;
-  --pad-r: 16px;
-  position: relative;
-  overflow-x: clip;
-  padding-top: 64px; /* the fixed nav */
-}
-@media (min-width: 768px) {
-  .root {
-    --rail-x: 40px;
-    --pad-l: 104px;
-    --pad-r: 40px;
-  }
-}
-
-.root a {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-underline-offset: 0.25em;
-  text-decoration-thickness: 1px;
-}
-.root a:hover {
-  color: var(--accent);
-}
-
-/* The rail: hairline track, accent fill scrubbed to scroll (motion only). */
-.rail {
-  position: absolute;
-  top: 64px;
-  bottom: 0;
-  left: var(--rail-x);
-  width: 1px;
-  pointer-events: none;
-  z-index: 1;
-}
-.track,
-.fill {
-  position: absolute;
-  inset: 0;
-}
-.track {
-  background: var(--border);
-}
-.fill {
-  background: var(--accent);
-  transform-origin: top;
-  opacity: 0;
-}
-.root[data-motion="on"] .fill {
-  opacity: 1;
-}
-
-.stage {
-  position: relative;
-  margin: 0 0 20px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.node {
-  position: absolute;
-  top: 50%;
-  left: calc(var(--rail-x) - var(--pad-l) - 4px);
-  width: 9px;
-  height: 9px;
-  border: 1px solid var(--text);
-  background: var(--bg);
-  transform: translateY(-50%);
-  transition:
-    background-color 250ms,
-    border-color 250ms;
-}
-.node[data-lit],
-.root:not([data-motion="on"]) .node {
-  background: var(--accent);
-  border-color: var(--accent);
-}
-
-.head,
-.section,
-.next {
-  position: relative;
-  padding-left: var(--pad-l);
-  padding-right: var(--pad-r);
-  max-width: 1440px;
-}
-.head {
-  padding-top: 72px;
-}
-@media (min-width: 768px) {
-  .head {
-    padding-top: 112px;
-  }
-}
-.section {
-  padding-top: 88px;
-  padding-bottom: 8px;
-}
-
-/* Header: the title is the page's one big moment. */
-.title {
-  margin: 0;
-  max-width: 14ch;
-  font-size: clamp(3.25rem, 11vw, 9.5rem);
-  font-weight: 800;
-  font-stretch: 62%;
-  line-height: 0.86;
-  letter-spacing: -0.03em;
-  overflow-wrap: anywhere;
-}
+/* Header. The rail, gutters, stage labels, page title and section titles are in site/rail.module.css. */
 .oneLiner {
   margin: 28px 0 0;
   max-width: 30ch;
@@ -191,14 +80,6 @@
   color: var(--text-muted);
 }
 
-.h2 {
-  margin: 0 0 40px;
-  font-size: clamp(2.25rem, 5vw, 4.25rem);
-  font-weight: 800;
-  font-stretch: 62%;
-  line-height: 0.92;
-  letter-spacing: -0.02em;
-}
 .h3 {
   margin: 0 0 16px;
   font-size: 1.125rem;
@@ -284,7 +165,7 @@
   flex-wrap: wrap;
   gap: 8px;
 }
-.tags a {
+.tags li a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -292,8 +173,8 @@
   border: 1px solid var(--text);
   text-decoration: none;
 }
-.tags a:hover,
-.tags a:focus-visible {
+.tags li a:hover,
+.tags li a:focus-visible {
   border-color: var(--accent);
 }
 .chips li {
@@ -401,6 +282,10 @@
 
 /* Next project: one large link; the poster slides in on hover (fine pointers only). */
 .next {
+  position: relative;
+  padding-left: var(--pad-l);
+  padding-right: var(--pad-r);
+  max-width: 1440px;
   margin-top: 120px;
   padding-top: 32px;
   padding-bottom: 120px;
@@ -411,7 +296,7 @@
   display: grid;
   gap: 16px;
 }
-.root .nextLink {
+.next .nextLink {
   text-decoration: none;
 }
 .nextTitle {

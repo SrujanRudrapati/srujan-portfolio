@@ -1,6 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { Flip } from "gsap/Flip";
+import { EASE, FULL, gsap } from "@/components/motion/gsap";
+import { SHOW_ALL_PROJECTS } from "@/components/work/events";
 import type { Graph } from "@/data/graph/types";
 import { useGraph } from "@/hooks/use-graph";
 import { LensErrorBoundary } from "./LensErrorBoundary";
@@ -15,14 +18,29 @@ import { LensSwitcher } from "./LensSwitcher";
 // even when the hash is already that value, and a #project-<slug> hash switches
 // back to Highlights so card links always land.
 
-/** Event the Highlights filter listens for, so a link to a card it currently hides can show it. */
-export const SHOW_ALL_PROJECTS = "work:show-all";
 
 const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "start" });
+
+gsap.registerPlugin(Flip);
+
+/** Lens switches (V6): items that appear in both lenses (same data-flip-id, the graph node id) move from
+ *  where they were to where they are; new ones fade up. Full motion only; reduced motion swaps instantly. */
+const FLIP_S = 0.6;
+const ENTER_S = 0.4;
+const FLIP_WAIT_MS = 2500; // a graph lens may still be loading; give up on the transition after this
+const visibleItems = (root: HTMLElement | null) => (root ? Array.from(root.querySelectorAll<HTMLElement>("[data-lens-panel]:not([hidden]) [data-flip-id]")) : []);
 
 export function Explore({ children }: { children: ReactNode }) {
   const [lens, setLens] = useState<LensId>(DEFAULT_LENS);
   const [switched, setSwitched] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const flipFrom = useRef<{ state: Flip.FlipState; at: number } | null>(null);
+  /** Record where the current lens's items are, before React swaps the lens. */
+  const recordFlip = useCallback(() => {
+    if (!window.matchMedia(FULL).matches) return;
+    const items = visibleItems(rootRef.current);
+    flipFrom.current = items.length ? { state: Flip.getState(items), at: performance.now() } : null;
+  }, []);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const focusAfterSwitch = useRef(false);
   const { state: graphState, retry } = useGraph(lens !== DEFAULT_LENS);
@@ -49,19 +67,21 @@ export function Explore({ children }: { children: ReactNode }) {
   const label = LENSES.find((l) => l.id === lens)?.label ?? "";
 
   const choose = useCallback((next: LensId) => {
+    recordFlip();
     setLens(next);
     setSwitched(true);
     const url = next === DEFAULT_LENS ? `${window.location.pathname}${window.location.search}` : `#lens=${next}`;
     window.history.replaceState(null, "", url);
-  }, []);
+  }, [recordFlip]);
 
   /** A switch caused by a link (not the switcher): show the section and move focus to the lens heading. */
   const followLink = useCallback((next: LensId) => {
+    recordFlip();
     setLens(next);
     setSwitched(true);
     focusAfterSwitch.current = true;
     requestAnimationFrame(() => scrollToSection("work"));
-  }, []);
+  }, [recordFlip]);
 
   // Hash: on load, on back/forward and typed URLs.
   useEffect(() => {
@@ -110,6 +130,28 @@ export function Explore({ children }: { children: ReactNode }) {
     return () => document.removeEventListener("click", onClick);
   }, [followLink]);
 
+  // Play the recorded Flip once the new lens's items are in the DOM (a graph lens renders after graph.json loads).
+  useLayoutEffect(() => {
+    const from = flipFrom.current;
+    if (!from) return;
+    if (performance.now() - from.at > FLIP_WAIT_MS) {
+      flipFrom.current = null;
+      return;
+    }
+    const targets = visibleItems(rootRef.current);
+    if (!targets.length) return; // still loading: try again on the next render
+    flipFrom.current = null;
+    const tl = Flip.from(from.state, {
+      targets,
+      duration: FLIP_S,
+      ease: EASE,
+      onEnter: (els) => gsap.fromTo(els, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: ENTER_S, ease: EASE, stagger: 0.02 }),
+    });
+    return () => {
+      tl.progress(1).kill();
+    };
+  }, [lens, graphState.status, LensView]);
+
   // Print styles key off this attribute so Recruiter mode prints alone.
   useEffect(() => {
     document.documentElement.dataset.lens = lens;
@@ -122,7 +164,7 @@ export function Explore({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!focusAfterSwitch.current) return;
     const target = lens === DEFAULT_LENS ? document.getElementById("work-heading") : headingRef.current;
-    if (!target) return;
+    if (!target) return; // a graph lens still loading: its heading renders on the next pass
     focusAfterSwitch.current = false;
     target.focus({ preventScroll: true });
   }, [lens, graphState.status]);
@@ -143,7 +185,7 @@ export function Explore({ children }: { children: ReactNode }) {
   const loading = <p className="text-muted">Loading {label.toLowerCase()}…</p>;
 
   return (
-    <div data-switched={switched ? "" : undefined}>
+    <div ref={rootRef} data-switched={switched ? "" : undefined}>
       <div className="mb-10 md:mb-14 print:hidden">
         <LensSwitcher lens={lens} onChange={choose} />
         <p className="mt-3 text-sm text-muted">Six views of the same projects and roles. Recruiter is a one-page summary you can print.</p>
@@ -153,14 +195,18 @@ export function Explore({ children }: { children: ReactNode }) {
       </div>
 
       <div data-lens-panel="" hidden={lens !== DEFAULT_LENS}>
+        {/* Focus target for a link-driven switch back to Highlights (and hidden in print by globals.css). */}
+        <h2 id="work-heading" tabIndex={-1} className="sr-only">
+          Highlights
+        </h2>
         {children}
       </div>
 
       {lens !== DEFAULT_LENS && (
         <div key={lens} data-lens-panel="" aria-busy={graphState.status === "loading"}>
-          <h3 ref={headingRef} tabIndex={-1} className="sr-only">
+          <h2 ref={headingRef} tabIndex={-1} className="sr-only">
             {label}
-          </h3>
+          </h2>
           {graphState.status === "error" || chunkFailed ? (
             errorMessage()
           ) : graphState.status === "ready" && LensView ? (

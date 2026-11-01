@@ -10,12 +10,14 @@ import { withBasePath } from "@/lib/paths";
 // figures, where now, core skills, the four featured projects as single lines, and contact.
 // Print styles (globals.css, html[data-lens="recruiter"]) hide everything else.
 
-export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
+/** `level`: the sheet's sub-heading level, 2 on /cv (under the page h1), 3 inside the Recruiter lens (under its h2). */
+export function RecruiterLens({ sheet, level = 3 }: { sheet: RecruiterSheet; level?: 2 | 3 }) {
+  const H = `h${level}` as const;
   return (
-    <article id="recruiter-sheet" aria-label="Recruiter one-pager" className="border-t-[3px] border-ink bg-surface p-6 md:p-10 print:border-t-2 print:bg-transparent print:p-0">
+    <article id="recruiter-sheet" aria-label="Recruiter one-pager" className="border-t-2 border-ink pt-6 md:pt-8 print:p-0">
       <header className="grid grid-cols-1 gap-6 border-b border-line pb-6 md:grid-cols-12">
         <div className="md:col-span-7">
-          <p className="font-display text-3xl font-bold text-ink font-stretch-expanded">{profile.name}</p>
+          <p className="font-display text-[clamp(2.75rem,7vw,4.5rem)] leading-[0.88] font-extrabold tracking-[-0.03em] text-ink font-stretch-[62%] print:text-5xl">{profile.name}</p>
           <p className="mt-2 text-lg text-ink">{profile.subline}</p>
           <div className="mt-4">
             <ul aria-label="Contact" className="flex flex-col gap-2 text-sm">
@@ -64,9 +66,9 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
 
       <div className="grid grid-cols-1 gap-8 py-6 md:grid-cols-12">
         <section aria-labelledby="recruiter-projects" className="md:col-span-7">
-          <h4 id="recruiter-projects" className="mb-3 text-base text-ink">
+          <H id="recruiter-projects" className="mb-3 font-mono text-xs font-normal text-muted lowercase">
             Featured projects
-          </h4>
+          </H>
           <ul className="space-y-2">
             {sheet.featured.map((f) => (
               <li key={f.title} className="text-sm text-ink">
@@ -79,9 +81,9 @@ export function RecruiterLens({ sheet }: { sheet: RecruiterSheet }) {
           </ul>
         </section>
         <section aria-labelledby="recruiter-skills" className="md:col-span-5">
-          <h4 id="recruiter-skills" className="mb-3 text-base text-ink">
+          <H id="recruiter-skills" className="mb-3 font-mono text-xs font-normal text-muted lowercase">
             Core skills
-          </h4>
+          </H>
           <ul aria-label="Core skills" className="flex flex-wrap gap-1.5">
             {sheet.topSkills.map((s) => (
               <li key={s} className="border border-ink px-2 py-1 text-xs leading-none font-medium text-ink">

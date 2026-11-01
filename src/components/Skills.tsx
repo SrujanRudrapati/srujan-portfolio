@@ -62,7 +62,7 @@ export function Skills() {
   // Distinct skills: Databricks and Unity Catalog each sit in two groups.
   const total = new Set(skills.flatMap((g) => [...(g.items ?? []), ...(g.subgroups ?? []).flatMap((s) => s.items)])).size;
   return (
-    <Section id="skills" title="Skills">
+    <Section id="skills" stage="source / skills" title="Skills">
       <div className="grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-3">
         {skills.map((group) => (
           <section key={group.name} aria-labelledby={`skills-${slug(group.name)}`}>

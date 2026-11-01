@@ -7,7 +7,8 @@ import { SceneSlot } from "@/components/three/SceneSlot";
 import type { SceneName } from "@/components/three/scenes/names";
 import type { CaseStudy as Data, NamedLink } from "@/data/case-study";
 import { withBasePath } from "@/lib/paths";
-import { CaseRail } from "./CaseRail";
+import { RailPage, Stage } from "@/components/site/Rail";
+import r from "@/components/site/rail.module.css";
 import { NextProject } from "./NextProject";
 import s from "./case.module.css";
 
@@ -20,12 +21,9 @@ const pad = (n: number) => String(n).padStart(2, "0");
 
 function Section({ id, stage, title, children }: { id: string; stage: string; title: string; children: ReactNode }) {
   return (
-    <section className={s.section} aria-labelledby={id}>
-      <p className={s.stage}>
-        <span className={s.node} data-node aria-hidden />
-        {stage}
-      </p>
-      <h2 id={id} className={s.h2}>
+    <section className={r.section} aria-labelledby={id}>
+      <Stage>{stage}</Stage>
+      <h2 id={id} className={r.h2}>
         {title}
       </h2>
       {children}
@@ -129,13 +127,12 @@ export function CaseStudy({ data }: { data: Data }) {
   const hasStack = p.stack.length > 0 || Boolean(p.statusNotes) || Boolean(p.credit);
 
   return (
-    <CaseRail>
-      <header className={s.head}>
-        <p className={s.stage}>
-          <span className={s.node} data-node aria-hidden />
+    <RailPage>
+      <header className={r.head}>
+        <Stage>
           work / {pad(position)} of {pad(total)}
-        </p>
-        <h1 className={s.title}>{p.title}</h1>
+        </Stage>
+        <h1 className={r.title}>{p.title}</h1>
         <p className={s.oneLiner}>{p.oneLiner}</p>
         <div className={s.metaRow}>
           <p className={s.meta}>
@@ -247,6 +244,6 @@ export function CaseStudy({ data }: { data: Data }) {
       )}
 
       <NextProject next={next} position={(position % total) + 1} total={total} />
-    </CaseRail>
+    </RailPage>
   );
 }

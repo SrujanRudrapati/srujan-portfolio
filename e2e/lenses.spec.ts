@@ -35,8 +35,8 @@ test.describe("Lenses", () => {
   test("Timeline carries every role outcome and nests projects under their role", async ({ page }) => {
     await page.goto("/explore#lens=timeline");
     const work = page.locator("#work");
-    await expect(work.getByRole("heading", { level: 4 }).first()).toHaveText("Tech Assistant, Surplus Operations");
-    const celebal = work.locator("li").filter({ has: page.getByRole("heading", { level: 4, name: "Associate, Data Engineering" }) });
+    await expect(work.getByRole("heading", { level: 3 }).first()).toHaveText("Tech Assistant, Surplus Operations");
+    const celebal = work.locator("li").filter({ has: page.getByRole("heading", { level: 3, name: "Associate, Data Engineering" }) });
     await expect(celebal.locator("dt")).toHaveCount(12);
     await expect(celebal).toContainText("Time-to-insight dropped about 50%");
     await expect(celebal).toContainText("Cut downtime about 30%");
@@ -61,9 +61,9 @@ test.describe("Lenses", () => {
 
   test("By problem and By industry key cards on graph nodes", async ({ page }) => {
     await page.goto("/explore#lens=problems");
-    await expect(page.getByRole("list", { name: "Work by problem solved" }).getByRole("heading", { level: 4, name: "Ungrounded AI output" })).toBeVisible();
+    await expect(page.getByRole("list", { name: "Work by problem solved" }).getByRole("heading", { level: 3, name: "Ungrounded AI output" })).toBeVisible();
     await page.goto("/explore#lens=industries");
-    await expect(page.getByRole("list", { name: "Work by industry" }).getByRole("heading", { level: 4, name: "E-commerce" })).toBeVisible();
+    await expect(page.getByRole("list", { name: "Work by industry" }).getByRole("heading", { level: 3, name: "E-commerce" })).toBeVisible();
   });
 
   test("a project link from a lens opens the project's page (V3)", async ({ page }) => {
@@ -132,14 +132,14 @@ test.describe("Lenses", () => {
     await expect(page.getByText("This view could not load.")).toBeVisible();
     fail = false;
     await page.getByRole("button", { name: "try again" }).click();
-    await expect(page.locator("#work").getByRole("heading", { level: 4 }).first()).toHaveText("Tech Assistant, Surplus Operations");
+    await expect(page.locator("#work").getByRole("heading", { level: 3 }).first()).toHaveText("Tech Assistant, Surplus Operations");
   });
 
   test.describe("without JavaScript", () => {
     test.use({ javaScriptEnabled: false });
 
     test("the default lens is complete static HTML", async ({ page }) => {
-      await expect(page.locator("#work").getByRole("article")).toHaveCount(11);
+      await expect(page.locator('#work [id^="project-"]')).toHaveCount(11); // 4 featured + 7 rows (V6)
       await expect(page.locator("#project-surplus-ai")).toBeVisible();
     });
   });

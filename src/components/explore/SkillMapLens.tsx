@@ -53,7 +53,7 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
       <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => (
           <section key={g.name} aria-label={g.name}>
-            <h4 className="mb-3 text-base text-ink">{g.name}</h4>
+            <h3 className="mb-3 text-base text-ink">{g.name}</h3>
             {g.skills.length > 0 && chipList(g.skills, `${g.name} skills`)}
             {g.subgroups?.map((s) => (
               <div key={s.name} className="mt-3">
@@ -66,9 +66,9 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
       </div>
       <section aria-labelledby="skill-map-results">
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
-          <h4 id="skill-map-results" className="text-lg text-ink" aria-live="polite">
+          <h3 id="skill-map-results" className="text-lg text-ink" aria-live="polite">
             {selected ? `Where ${selected.label} is used` : "All projects"}
-          </h4>
+          </h3>
           {selected && (
             <button type="button" onClick={() => setSelected(null)} className="min-h-11 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
               Show all projects
