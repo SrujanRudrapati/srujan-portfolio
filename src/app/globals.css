@@ -389,13 +389,46 @@ main.route-enter {
 /* Project diagrams: default (no JavaScript, offscreen, reduced motion, or no
    offset-path support) is every box lit and still. */
 .flow {
-  --flow-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+  --flow-lit: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  --flow-box: rgba(232, 234, 237, 0.4);
+  --draw-t: 1.8s;
+}
+/* v4 panel (runbook W4.5): a rounded tile, thin steel boxes, bronze data flow. */
+.flow-panel {
+  margin: 0;
+  padding: clamp(16px, 3vw, 36px);
+  border-radius: 28px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.flow-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.flow-narrow {
+  max-width: 400px;
+}
+.flow-wide {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .flow-wide {
+    display: block;
+  }
+  .flow-narrow {
+    display: none;
+  }
+}
+.flow-caption {
+  margin-top: 20px;
+  max-width: 65ch;
+  font-size: 15px;
+  color: var(--muted);
 }
 .flow-text {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-}
-.flow-label {
-  font-stretch: 112.5%;
+  font-family: var(--sans);
 }
 .flow-dot {
   display: none;
@@ -442,6 +475,38 @@ main.route-enter {
       opacity: 0;
       animation: flow-flash var(--period) linear infinite;
       animation-delay: calc((var(--arrive) - 1) * var(--period));
+    }
+  }
+
+  /* Project-page diagrams draw once on entry (FlowDiagram draw). "ready" hides the drawing just
+     before it scrolls in; "on" draws connectors, then lights boxes and runs one dot per track. */
+  .flow[data-draw] [data-edge="draw"] > path:first-child {
+    stroke-dasharray: 1 1;
+  }
+  .flow[data-draw="ready"] [data-edge="draw"] > path:first-child {
+    stroke-dashoffset: 1;
+  }
+  .flow[data-draw="ready"] [data-edge] > path + path,
+  .flow[data-draw="ready"] [data-edge="fade"],
+  .flow[data-draw="ready"] .flow-node[data-at] .flow-lit {
+    opacity: 0;
+  }
+  .flow[data-draw="on"] [data-edge="draw"] > path:first-child {
+    transition: stroke-dashoffset calc(var(--dur) * var(--draw-t)) linear calc(var(--start) * var(--draw-t));
+  }
+  .flow[data-draw="on"] [data-edge] > path + path {
+    transition: opacity 0.2s var(--ease) calc((var(--start) + var(--dur)) * var(--draw-t));
+  }
+  .flow[data-draw="on"] [data-edge="fade"] {
+    transition: opacity calc(var(--dur) * var(--draw-t)) var(--ease) calc(var(--start) * var(--draw-t));
+  }
+  .flow[data-draw="on"] .flow-node[data-at] .flow-lit {
+    transition: opacity 0.4s var(--ease) calc(var(--at) * var(--draw-t));
+  }
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .flow[data-draw="on"] [data-draw-dot] {
+      display: block;
+      animation: flow-run var(--draw-t) linear both;
     }
   }
 
@@ -512,6 +577,21 @@ main.route-enter {
   }
   to {
     offset-distance: 100%;
+  }
+}
+
+/* One pass of the draw-on-entry dot; it fades out where its track ends. */
+@keyframes flow-run {
+  0% {
+    offset-distance: 0%;
+    opacity: 1;
+  }
+  92% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
   }
 }
 

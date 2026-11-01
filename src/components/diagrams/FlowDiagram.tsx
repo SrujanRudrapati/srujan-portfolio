@@ -1,8 +1,7 @@
 "use client";
 
 import { useId, useRef, type CSSProperties } from "react";
-import { useScrubTimeline } from "@/components/motion/useScrubTimeline";
-import { gsap } from "@/components/motion/gsap";
+import { useDrawOnEnter } from "@/hooks/use-draw-on-enter";
 import { useInView } from "@/hooks/use-in-view";
 
 // One engine for every project diagram. A diagram is a set of boxes, the
@@ -16,6 +15,11 @@ import { useInView } from "@/hooks/use-in-view";
 // prefers-reduced-motion: no-preference, and only where offset-path is
 // supported. The default, with no JavaScript or reduced motion, is every box
 // lit and still, which reads fully on its own. Styles: .flow-* in globals.css.
+//
+// Project pages (runbook v4 W4) use `draw` instead of the loop: when the figure
+// scrolls into view, connectors draw in bronze, boxes light as the data reaches
+// them and one dot per track rides through once. Plain CSS transitions keyed on
+// data-draw; timings come from the same path lengths as the loop.
 //
 // Sizing: SVG text scales with the container, so each diagram ships a wide
 // layout (1024px and up) and a narrow one sized to the ~280px slot a phone
@@ -77,9 +81,9 @@ type Props = {
   /** Seconds for one full loop of a track. */
   loopSeconds?: number;
   className?: string;
-  /** Case studies (runbook V5): scroll draws the diagram instead of a loop. Connectors draw, boxes light as the
-   *  data reaches them, and one dot per track rides with the scroll position. The markup is the finished state. */
-  scrub?: boolean;
+  /** Project pages: the diagram draws once when it scrolls into view, instead of looping. The markup is the
+   *  finished state; motion only ever hides it just before it is drawn. */
+  draw?: boolean;
 };
 
 type Point = { x: number; y: number };
@@ -153,9 +157,9 @@ function lighting(layout: FlowLayout, byId: NodeMap, loopSeconds: number): { lit
   return { lit, paths };
 }
 
-/** Scrub timing on a 0 to 1 clock, from the same path lengths the loop uses: when each box is first reached,
+/** Draw timing on a 0 to 1 clock, from the same path lengths the loop uses: when each box is first reached,
  *  and when each connector starts and how long it takes to draw. */
-function scrubTimings(layout: FlowLayout, byId: NodeMap) {
+function drawTimings(layout: FlowLayout, byId: NodeMap) {
   const nodeAt = new Map<string, number>();
   const edgeAt = new Map<string, { start: number; dur: number }>();
   for (const track of layout.tracks) {
@@ -214,12 +218,17 @@ function arrowhead({ x, y }: Point, dir: Dir): string {
 
 function Edges({ layout, byId, edgeAt }: { layout: FlowLayout; byId: NodeMap; edgeAt?: Map<string, { start: number; dur: number }> }) {
   return (
-    <g fill="none" stroke="var(--accent-2)" strokeWidth="2" strokeLinecap="square" strokeLinejoin="miter">
+    <g fill="none" stroke="var(--accent)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       {layout.edges.map((edge) => {
         const { d, tip, dir } = edgeGeometry(nodeById(byId, edge.from), nodeById(byId, edge.to));
         const t = edgeAt?.get(`${edge.from}-${edge.to}`) ?? { start: 0, dur: 0.1 };
         return (
-          <g key={`${edge.from}-${edge.to}`} strokeDasharray={edge.dashed ? "4 4" : undefined} data-edge={edgeAt ? (edge.dashed ? "fade" : "draw") : undefined} data-start={edgeAt ? t.start : undefined} data-dur={edgeAt ? t.dur : undefined}>
+          <g
+            key={`${edge.from}-${edge.to}`}
+            strokeDasharray={edge.dashed ? "4 4" : undefined}
+            data-edge={edgeAt ? (edge.dashed ? "fade" : "draw") : undefined}
+            style={edgeAt ? ({ "--start": t.start, "--dur": t.dur } as CSSProperties) : undefined}
+          >
             <path d={d} pathLength={edgeAt && !edge.dashed ? 1 : undefined} strokeLinecap={edgeAt && !edge.dashed ? "butt" : undefined} />
             {edge.arrow !== false && <path d={arrowhead(tip, dir)} strokeDasharray="none" />}
           </g>
@@ -239,7 +248,7 @@ function Dots({ paths, loopSeconds }: { paths: DotPath[]; loopSeconds: number })
             key={`${i}-${k}`}
             className="flow-dot"
             r="4.5"
-            fill="var(--accent-2)"
+            fill="var(--accent)"
             style={{ offsetPath: `path("${path.d}")`, animationDelay: `${path.offset - (k * loopSeconds) / path.dots}s` }}
           />
         )),
@@ -249,19 +258,19 @@ function Dots({ paths, loopSeconds }: { paths: DotPath[]; loopSeconds: number })
 }
 
 function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
-  const muted = "var(--text-muted)";
+  const muted = "var(--muted)";
   const ink = node.variant === "ghost" ? muted : "var(--text)";
   const c = centre(node);
   if (node.vertical) {
     return (
-      <text x={c.x} y={c.y + type.label * 0.35} textAnchor="middle" fontSize={type.label} fontWeight={700} fill={ink} className="flow-text flow-label" transform={`rotate(-90 ${c.x} ${c.y})`}>
+      <text x={c.x} y={c.y + type.label * 0.35} textAnchor="middle" fontSize={type.label} fontWeight={500} fill={ink} className="flow-text" transform={`rotate(-90 ${c.x} ${c.y})`}>
         {lines(node.label).join(" ")}
       </text>
     );
   }
   const rows = [
-    ...(node.kicker ? [{ text: node.kicker, size: type.small, weight: 500, fill: muted }] : []),
-    ...lines(node.label).map((text) => ({ text, size: type.label, weight: 700, fill: ink })),
+    ...(node.kicker ? [{ text: node.kicker, size: type.small, weight: 400, fill: muted }] : []),
+    ...lines(node.label).map((text) => ({ text, size: type.label, weight: 500, fill: ink })),
     ...lines(node.sub).map((text) => ({ text, size: type.small, weight: 400, fill: muted })),
   ];
   const total = rows.reduce((sum, row) => sum + row.size, 0) + LINE_GAP * (rows.length - 1);
@@ -280,7 +289,7 @@ function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
             fontSize={row.size}
             fontWeight={row.weight}
             fill={row.fill}
-            className={row.weight === 700 ? "flow-text flow-label" : "flow-text"}
+            className="flow-text"
           >
             {row.text}
           </text>
@@ -290,11 +299,11 @@ function NodeText({ node, type }: { node: FlowNode; type: FlowType }) {
   );
 }
 
-function ScrubDots({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
+function DrawDots({ layout, byId }: { layout: FlowLayout; byId: NodeMap }) {
   return (
     <g aria-hidden="true">
       {layout.tracks.map((track, i) => (
-        <circle key={i} className="flow-dot" data-scrub-dot="" r="4.5" fill="var(--accent-2)" style={{ offsetPath: `path("${trackGeometry(track, byId).d}")`, offsetRotate: "0deg" }} />
+        <circle key={i} className="flow-dot" data-draw-dot="" r="4.5" fill="var(--accent)" style={{ offsetPath: `path("${trackGeometry(track, byId).d}")`, offsetRotate: "0deg" }} />
       ))}
     </g>
   );
@@ -304,13 +313,13 @@ function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Map<str
   return (
     <>
       {layout.nodes.map((node) => {
-        const stroke = node.variant === "accent" ? "var(--accent-2)" : node.variant === "ghost" ? "var(--text-muted)" : "var(--text)";
+        const stroke = node.variant === "accent" ? "var(--accent)" : node.variant === "ghost" ? "var(--muted)" : "var(--flow-box)";
         const box = { x: node.x, y: node.y, width: node.w, height: node.h };
         return (
-          <g key={node.id} className="flow-node" data-at={nodeAt ? (nodeAt.get(node.id) ?? 0) : undefined}>
-            <rect {...box} fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"} stroke={stroke} strokeWidth={node.variant === "accent" ? 2 : 1} strokeDasharray={node.variant === "ghost" ? "4 3" : undefined} />
+          <g key={node.id} className="flow-node" data-at={nodeAt ? (nodeAt.get(node.id) ?? 0) : undefined} style={nodeAt ? ({ "--at": nodeAt.get(node.id) ?? 0 } as CSSProperties) : undefined}>
+            <rect {...box} rx={10} fill={node.fill === "surface" ? "var(--surface)" : "var(--bg)"} stroke={stroke} strokeWidth={node.variant === "accent" ? 1.5 : 1} strokeDasharray={node.variant === "ghost" ? "4 3" : undefined} />
             {(lit.get(node.id) ?? []).map((glow, i) => (
-              <rect key={i} className="flow-lit" {...box} fill="var(--flow-lit)" style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties} />
+              <rect key={i} className="flow-lit" {...box} rx={10} fill="var(--flow-lit)" style={{ "--arrive": glow.arrive, "--period": `${glow.period}s` } as CSSProperties} />
             ))}
             <NodeText node={node} type={type} />
           </g>
@@ -320,20 +329,20 @@ function Nodes({ layout, lit, type, nodeAt }: { layout: FlowLayout; lit: Map<str
   );
 }
 
-function Layout({ layout, loopSeconds, ids, title, desc, className, scrub }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string; scrub: boolean }) {
+function Layout({ layout, loopSeconds, ids, title, desc, className, draw }: { layout: FlowLayout; loopSeconds: number; ids: [string, string]; title: string; desc: string; className: string; draw: boolean }) {
   const byId: NodeMap = new Map(layout.nodes.map((n) => [n.id, n]));
   const { lit, paths } = lighting(layout, byId, loopSeconds);
-  const timing = scrub ? scrubTimings(layout, byId) : undefined;
+  const timing = draw ? drawTimings(layout, byId) : undefined;
   const type = layout.type ?? DEFAULT_TYPE;
   return (
-    <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`h-auto w-full ${className}`} style={{ "--loop": `${loopSeconds}s` } as CSSProperties}>
+    <svg viewBox={`0 0 ${layout.width} ${layout.height}`} role="img" aria-labelledby={ids.join(" ")} className={`flow-svg ${className}`} style={{ "--loop": `${loopSeconds}s` } as CSSProperties}>
       <title id={ids[0]}>{title}</title>
       <desc id={ids[1]}>{desc}</desc>
       <Edges layout={layout} byId={byId} edgeAt={timing?.edgeAt} />
-      {scrub ? <ScrubDots layout={layout} byId={byId} /> : <Dots paths={paths} loopSeconds={loopSeconds} />}
+      {draw ? <DrawDots layout={layout} byId={byId} /> : <Dots paths={paths} loopSeconds={loopSeconds} />}
       <Nodes layout={layout} lit={lit} type={type} nodeAt={timing?.nodeAt} />
       {layout.notes?.map((note) => (
-        <text key={`${note.x}-${note.y}`} x={note.x} y={note.y} fontSize={type.small} fontWeight={500} fill="var(--text-muted)" className="flow-text">
+        <text key={`${note.x}-${note.y}`} x={note.x} y={note.y} fontSize={type.small} fontWeight={400} fill="var(--muted)" className="flow-text">
           {note.text}
         </text>
       ))}
@@ -341,44 +350,21 @@ function Layout({ layout, loopSeconds, ids, title, desc, className, scrub }: { l
   );
 }
 
-const num = (el: Element, key: string) => Number((el as HTMLElement).dataset[key] ?? 0);
-
-/** The scroll-drawn version: one timeline on a 0 to 1 clock, built only under full motion (useScrubTimeline). */
-function buildScrub(tl: gsap.core.Timeline, q: (s: string) => Element[]) {
-  for (const g of q('[data-edge="draw"]')) {
-    const path = g.querySelector("path");
-    if (path) tl.fromTo(path, { strokeDasharray: "1 1", strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: num(g, "dur") }, num(g, "start"));
-    const head = g.querySelectorAll("path")[1];
-    if (head) tl.fromTo(head, { opacity: 0 }, { opacity: 1, duration: 0.01 }, num(g, "start") + num(g, "dur") - 0.01);
-  }
-  for (const g of q('[data-edge="fade"]')) tl.fromTo(g, { opacity: 0 }, { opacity: 1, duration: num(g, "dur") }, num(g, "start"));
-  for (const g of q(".flow-node[data-at]")) {
-    const lit = g.querySelectorAll(".flow-lit"); // boxes no track passes through have no overlay
-    if (lit.length) tl.fromTo(lit, { opacity: 0 }, { opacity: 1, duration: 0.04 }, Math.min(0.96, num(g, "at")));
-  }
-  const dots = q("[data-scrub-dot]");
-  if (dots.length && CSS.supports("offset-path", 'path("M0 0 L1 1")')) {
-    gsap.set(dots, { display: "block" });
-    tl.fromTo(dots, { offsetDistance: "0%" }, { offsetDistance: "100%", duration: 1 }, 0);
-  }
-  tl.set({}, {}, 1); // the clock always runs 0 to 1, whatever the tracks hold
-}
-
-export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 6, className = "", scrub = false }: Props) {
+export function FlowDiagram({ title, desc, caption, wide, narrow, loopSeconds = 6, className = "", draw = false }: Props) {
   const uid = useId();
-  const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px", !scrub);
-  const scrubRef = useRef<HTMLElement | null>(null);
-  useScrubTimeline(scrubRef, scrub ? buildScrub : () => {}, { start: "top 85%", end: "bottom 60%", scrub: 0.4 });
+  const { ref, active } = useInView<HTMLElement>("0px 0px -10% 0px", !draw);
+  const drawRef = useRef<HTMLElement | null>(null);
+  useDrawOnEnter(drawRef, draw);
   const setRef = (el: HTMLElement | null) => {
     ref.current = el;
-    scrubRef.current = scrub ? el : null;
+    drawRef.current = el;
   };
   return (
-    <figure ref={setRef} data-animate={!scrub && active ? "on" : undefined} className={`flow border-t-[3px] border-ink bg-surface p-4 md:p-8 ${className}`}>
+    <figure ref={setRef} data-animate={!draw && active ? "on" : undefined} className={`flow flow-panel ${className}`}>
       {/* One layout per breakpoint. The hidden one is display:none, so it has no animation cost and screen readers skip it. */}
-      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="hidden lg:block" scrub={scrub} />
-      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="max-w-[400px] lg:hidden" scrub={scrub} />
-      <figcaption className="mt-5 max-w-measure text-sm text-muted">{caption}</figcaption>
+      <Layout layout={wide} loopSeconds={loopSeconds} ids={[`${uid}-wt`, `${uid}-wd`]} title={title} desc={desc} className="flow-wide" draw={draw} />
+      <Layout layout={narrow} loopSeconds={loopSeconds} ids={[`${uid}-nt`, `${uid}-nd`]} title={title} desc={desc} className="flow-narrow" draw={draw} />
+      <figcaption className="flow-caption">{caption}</figcaption>
     </figure>
   );
 }

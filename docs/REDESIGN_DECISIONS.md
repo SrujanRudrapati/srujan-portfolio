@@ -85,3 +85,4 @@ Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
   - The cursor grows by scale instead of width (motion rule: only transform and opacity animate).
   - `/experience` and `/contact` are interim pages (the v3 components in the v4 frame) until W5 and W6.
   Default if no reply: none; this gate waits for `approve` or a list of changes.
+  **Answer (2026-11-01): `approve`. All the differences above are accepted. Continue with W4 onward; stop only at G1.**

@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { CaseStudy } from "@/components/case/CaseStudy";
-import { caseStudy } from "@/data/case-study";
+import { ProjectView } from "@/components/project/ProjectView";
+import { projectPage } from "@/data/project-page";
 import { projects } from "@/data/projects";
 import { pageMeta } from "@/lib/meta";
 
-// One case study per project (runbook V5), statically generated from the graph. The
-// template leaves out any section the graph has no data for, so shorter projects get a
-// compact page from the same component.
+// One page per project (runbook v4 W4), statically generated from the graph. Featured
+// projects open on the art band, the smaller ones on a compact title; any section the
+// graph has no data for is left out.
 
 export const dynamicParams = false;
 
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps<"/work/[slug]">): P
 
 export default async function ProjectPage({ params }: PageProps<"/work/[slug]">) {
   const { slug } = await params;
-  const data = caseStudy(slug);
+  const data = projectPage(slug);
   if (!data) notFound();
-  return <CaseStudy data={data} />;
+  return <ProjectView data={data} />;
 }

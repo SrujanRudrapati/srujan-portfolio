@@ -18,7 +18,7 @@
     ],
     "metrics": "~80% less processing time per item, about 15 min down to about 3 min; ~10 min to list a 100+ unit pallet, instead of 1 to 2 hours; 14B Qwen model across four Mac minis, offline, via MLX",
     "skills": "MLX, Flask, Bash, Apple Vision OCR, Qwen 14B, Llama 3B, local LLM serving",
-    "text": "Private, offline AI system for ASU Surplus Built on the job, in production Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual. One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet. Handles identification, condition grading, pricing, label printing, and database export. Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word. Merge rules keyed on serial number, so a low-quality read never overwrites good data. Traced repeated cluster failures to macOS permissions and network routing. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Five-node cluster. Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually. USB spec collector. A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number. Camera inventory scanner. For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts). Merge logic. Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine. Surplus AI app. A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Launchers. One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
+    "text": "Private, offline AI system for ASU Surplus Built on the job, in production Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual. One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet. Handles identification, condition grading, pricing, label printing, and database export. Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word. Merge rules keyed on serial number, so a low-quality read never overwrites good data. Traced repeated cluster failures to macOS permissions and network routing. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds. Five-node cluster. Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple’s MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can’t hold it individually. USB spec collector. A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number. Camera inventory scanner. For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts). Merge logic. Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine. Surplus AI app. A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds. Launchers. One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
   },
   {
     "id": "project-devhacks-cubbie",
@@ -44,7 +44,7 @@
     "id": "project-label-lens",
     "type": "project",
     "label": "Label Lens",
-    "summary": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+    "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
     "tags": [
       "project",
       "featured",
@@ -59,7 +59,7 @@
     ],
     "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 tests: 56 unit, 6 end-to-end",
     "skills": "Next.js, TypeScript, Anthropic Claude API, zod, Vitest, Playwright",
-    "text": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
+    "text": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
   },
   {
     "id": "project-supply-chain-watchtower",
@@ -80,7 +80,7 @@
     ],
     "metrics": "3 agents in sequence on the Claude API",
     "skills": "Python, Anthropic Claude API, CrewAI, RAG, vector databases (ChromaDB), agentic workflows",
-    "text": "Multi-agent LLM system Personal project, built solo Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code."
+    "text": "Multi-agent LLM system Personal project, built solo Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent’s output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code."
   },
   {
     "id": "project-demand-forecasting",
@@ -330,7 +330,7 @@
     "id": "certification-aws-ai-practitioner",
     "type": "certification",
     "label": "AWS Certified AI Practitioner",
-    "summary": "AWS's AI Practitioner certification.",
+    "summary": "AWS’s AI Practitioner certification.",
     "tags": [
       "certification",
       "aws",
@@ -347,7 +347,7 @@
     "id": "certification-azure-data-engineer",
     "type": "certification",
     "label": "Microsoft Certified: Azure Data Engineer Associate",
-    "summary": "Microsoft's associate-level Azure data engineering certification.",
+    "summary": "Microsoft’s associate-level Azure data engineering certification.",
     "tags": [
       "certification",
       "azure"
@@ -363,7 +363,7 @@
     "id": "certification-azure-administrator",
     "type": "certification",
     "label": "Microsoft Certified: Azure Administrator Associate",
-    "summary": "Microsoft's associate-level Azure administration certification.",
+    "summary": "Microsoft’s associate-level Azure administration certification.",
     "tags": [
       "certification",
       "azure"
@@ -1840,7 +1840,7 @@
     "id": "metric-watchtower-agents",
     "type": "metric",
     "label": "3 agents in sequence on the Claude API",
-    "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.",
+    "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.",
     "tags": [
       "metric",
       "watchtower",
@@ -2097,7 +2097,7 @@
     "id": "industry-consumer-health",
     "type": "industry",
     "label": "Consumer health",
-    "summary": "Food and medicine labels checked against a person's allergies and medications, in Label Lens.",
+    "summary": "Food and medicine labels checked against a person’s allergies and medications, in Label Lens.",
     "tags": [
       "industry"
     ],
@@ -2480,7 +2480,7 @@
     "id": "artifact-resume",
     "type": "artifact",
     "label": "Resume",
-    "summary": "Srujan's resume as a PDF.",
+    "summary": "Srujan’s resume as a PDF.",
     "tags": [
       "artifact",
       "resume"

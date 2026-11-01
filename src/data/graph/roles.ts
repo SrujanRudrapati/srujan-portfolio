@@ -125,9 +125,9 @@ const cert = (id: string, label: string, summary: string, tags: string[]): Certi
 
 export const certificationNodes: CertificationNode[] = [
   cert("databricks-de-professional", "Databricks Certified Data Engineer Professional", "Databricks' professional-level data engineering certification.", ["databricks"]),
-  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS's AI Practitioner certification.", ["aws", "ai"]),
-  cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft's associate-level Azure data engineering certification.", ["azure"]),
-  cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft's associate-level Azure administration certification.", ["azure"]),
+  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS’s AI Practitioner certification.", ["aws", "ai"]),
+  cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft’s associate-level Azure data engineering certification.", ["azure"]),
+  cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft’s associate-level Azure administration certification.", ["azure"]),
 ];
 
 

@@ -41,14 +41,14 @@
           "Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word.",
           "Merge rules keyed on serial number, so a low-quality read never overwrites good data.",
           "Traced repeated cluster failures to macOS permissions and network routing.",
-          "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+          "A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds."
         ],
         "details": {
           "heading": "How it works",
           "items": [
             {
               "name": "Five-node cluster",
-              "text": "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually."
+              "text": "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple’s MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can’t hold it individually."
             },
             {
               "name": "USB spec collector",
@@ -56,7 +56,7 @@
             },
             {
               "name": "Camera inventory scanner",
-              "text": "For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)."
+              "text": "For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)."
             },
             {
               "name": "Merge logic",
@@ -64,7 +64,7 @@
             },
             {
               "name": "Surplus AI app",
-              "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+              "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds."
             },
             {
               "name": "Launchers",
@@ -145,7 +145,7 @@
       "id": "project-label-lens",
       "type": "project",
       "label": "Label Lens",
-      "summary": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+      "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
       "evidence": [
         {
           "label": "Label Lens page",
@@ -166,7 +166,7 @@
       ],
       "content": {
         "title": "Label Lens",
-        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications.",
+        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications.",
         "status": "live",
         "featured": true,
         "tags": [
@@ -213,7 +213,7 @@
           "ai"
         ],
         "problem": "Turning raw sales history into a logistics plan normally takes several manual steps by different people.",
-        "built": "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
+        "built": "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent’s output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
         "highlights": [],
         "statusNotes": [
           {
@@ -715,7 +715,7 @@
       "id": "certification-aws-ai-practitioner",
       "type": "certification",
       "label": "AWS Certified AI Practitioner",
-      "summary": "AWS's AI Practitioner certification.",
+      "summary": "AWS’s AI Practitioner certification.",
       "evidence": [
         {
           "label": "Certifications",
@@ -732,7 +732,7 @@
       "id": "certification-azure-data-engineer",
       "type": "certification",
       "label": "Microsoft Certified: Azure Data Engineer Associate",
-      "summary": "Microsoft's associate-level Azure data engineering certification.",
+      "summary": "Microsoft’s associate-level Azure data engineering certification.",
       "evidence": [
         {
           "label": "Certifications",
@@ -748,7 +748,7 @@
       "id": "certification-azure-administrator",
       "type": "certification",
       "label": "Microsoft Certified: Azure Administrator Associate",
-      "summary": "Microsoft's associate-level Azure administration certification.",
+      "summary": "Microsoft’s associate-level Azure administration certification.",
       "evidence": [
         {
           "label": "Certifications",
@@ -2598,7 +2598,7 @@
       "id": "metric-watchtower-agents",
       "type": "metric",
       "label": "3 agents in sequence on the Claude API",
-      "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.",
+      "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.",
       "evidence": [
         {
           "label": "Watchtower page",
@@ -2873,7 +2873,7 @@
       "id": "industry-consumer-health",
       "type": "industry",
       "label": "Consumer health",
-      "summary": "Food and medicine labels checked against a person's allergies and medications, in Label Lens.",
+      "summary": "Food and medicine labels checked against a person’s allergies and medications, in Label Lens.",
       "evidence": [
         {
           "label": "Work",
@@ -3274,7 +3274,7 @@
       "id": "artifact-resume",
       "type": "artifact",
       "label": "Resume",
-      "summary": "Srujan's resume as a PDF.",
+      "summary": "Srujan’s resume as a PDF.",
       "evidence": [
         {
           "label": "Resume",

@@ -20,7 +20,7 @@ export const industryNodes: IndustryNode[] = [
   industry("energy", "Energy", "A major US utility, where the data governance work ran for 10 months."),
   industry("manufacturing", "Manufacturing", "A US materials engineering client with an AWS pipeline handling about 10 million records a day."),
   industry("consumer-goods", "Consumer goods", "A large FMCG client, where Unity Catalog and Microsoft Purview managed access, lineage and classification."),
-  industry("consumer-health", "Consumer health", "Food and medicine labels checked against a person's allergies and medications, in Label Lens."),
+  industry("consumer-health", "Consumer health", "Food and medicine labels checked against a person’s allergies and medications, in Label Lens."),
   industry("supply-chain", "Supply chain", "Demand forecasting, inventory policy and logistics planning: the capstone and the Watchtower prototype."),
   industry("network-security", "Network security", "WLAN traffic forensics and the network security course it was built for."),
   industry("motorsport", "Motorsport", "Formula 1 race outcomes, ranked by win probability and backtested on held-out races."),

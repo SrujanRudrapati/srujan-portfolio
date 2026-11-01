@@ -32,6 +32,12 @@ A 2D canvas client component. Shapes ported from the reference: `idle` (three st
 - **Performance contract (required):** one pre-rendered glow sprite per colour drawn with `drawImage` (never `shadowBlur`, never per-dot gradients); 1100 dots, 700 under 700px wide; device pixel ratio capped at 2; target shapes computed once per shape and cached; no per-frame allocation. Full-rate frames only while the field has energy; when total squared velocity is about 0, drop to about 12 fps for the wobble; wake on tile hover/focus or the cursor coming within 60px. Stop entirely when off screen (IntersectionObserver), on hidden tabs (`visibilitychange`) and when the home route unmounts.
 - **Reduced motion:** draw the target shape once, no loop; redraw once on tile hover/focus.
 
+## Project diagrams (W4)
+
+- The architecture diagrams on `/work/[slug]` draw once when they scroll into view (`FlowDiagram draw`, `src/hooks/use-draw-on-enter.ts`): connectors draw in bronze over 1.8 s (`stroke-dashoffset`, the one property beyond transform and opacity allowed here, as the runbook's "draws on scroll" needs it), boxes light as the data reaches them, one dot rides each track once and fades out. CSS transitions keyed on `data-draw="ready"`/`"on"`; no GSAP.
+- The server HTML is the finished drawing. A figure already above 80% of the viewport at load, reduced motion and no IntersectionObserver keep it; the observer fires at the same 80% line, so nothing visible is ever hidden.
+- `/explore` keeps the looping version (dots on a loop while in view) until W7.
+
 ## Cursor and magnetic
 
 - Only with `(hover: hover) and (pointer: fine)` and not under reduced motion. A 34px bronze ring (lerp 0.18 toward the pointer) and a 5px bronze dot (exact). The ring grows to 58px over links and buttons; over the catalogue's front card it becomes an 84px solid bronze disc labelled "Open", over the rest of the stage "Drag". The native cursor stays (text fields keep their I-beam). The label resets on route change. Both are `aria-hidden` and `pointer-events: none`.

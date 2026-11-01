@@ -7,13 +7,38 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W0 — Setup | done | `redesign: phase W0 — setup` | Branch from `redesign/v3`; reference shots (11 views × 4 viewports) in `docs/v4/reference-shots/` via `scripts/v4-shots.mts`; `design-direction` and `motion-system` rewritten for v4. Checklist below. |
 | W1 — Shell | done | `redesign: phase W1 — shell` | Dark-only tokens, Bodoni Moda + Hanken Grotesk, grain and glow; header (name + availability, frosted after 30px), footer with Arizona time, back pill, progress line, page transitions (View Transitions + fallback), cursor, magnetic, Lenis 0.09. GSAP removed from the shell. Checklist below. |
 | W2 — Home | done | `redesign: phase W2 — home hub` | Headline (three masked lines), lede, now line, Ask link, four spotlight tiles, 2D dot field with five shapes; fits one screen at 1280×720 to 1920×1080; interim `/experience` and `/contact` routes so the tiles have pages. Checklist below. |
-| W3 — Work (G5) | done; blocked at G5 (DECISIONS 21) | `redesign: phase W3 — work catalogue and list` | Segmented Catalogue/List; looping catalogue of the four featured (drag, trackpad, keys, pills, arrows); list of all eleven with metal figures; view-transition morph with per-project names and 60 ms stagger. Comparisons in `docs/v4/compare/`. Checklist below. |
-| W4 — Project pages | not started | | |
+| W3 — Work (G5) | done; G5 approved (DECISIONS 21) | `redesign: phase W3 — work catalogue and list` | Segmented Catalogue/List; looping catalogue of the four featured (drag, trackpad, keys, pills, arrows); list of all eleven with metal figures; view-transition morph with per-project names and 60 ms stagger. Comparisons in `docs/v4/compare/`. Checklist below. |
+| W4 — Project pages | done | `redesign: phase W4 — project pages` | Eleven pages from one template: art band (featured) or compact title, intro with status and links, up to three metal result tiles, What it does / The entries, The problem, How it’s built (diagrams restyled, draw once on entry, no GSAP), Stack, Next project looping inside its group. v3 case-study template removed. Checklist below. |
 | W5 — Experience | not started | | |
 | W6 — About and Contact | not started | | |
 | W7 — Integrate and clean up | not started | | |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W4 checklist
+
+G5 answered `approve` on 2026-11-01 (DECISIONS 21): every listed difference accepted; continue without stops until G1.
+
+- [x] W4.1 Back pill "All work" (`/work`) on every project page.
+- [x] W4.2 Band (featured four): the catalogue's art plate, 28px radius, `min(56vh, 520px)` (phones `min(44svh, 360px)` so the one-liner and first link are in the first screen), kicker and Bodoni name at the bottom. Kicker from the catalogue (`work.ts`); DevHacks uses "Cooked won first place, Track 1" so it does not repeat its own title (facts 2.2). A shade over the lower band keeps the text readable: pixel-sampled at the brightest pixel behind the text on all four plates at 1440 and 390, kicker ≥ 5.63:1 and title ≥ 7.84:1 (worst case DevHacks' bronze conic plate).
+- [x] W4.3 Results: up to three rounded tiles (24px, tile tokens), metal-gradient number and one-line label from the graph's metrics; every project has three or fewer, so nothing is dropped.
+- [x] W4.4 What it does: two columns (heading left third), the built paragraph and the highlights as ruled bullets, then the details grid (Surplus AI "How it works").
+- [x] W4.5 How it’s built: the v3 diagrams restyled (thin steel boxes at 10px radius, bronze connectors, arrows and dots, Hanken labels, rounded 28px panel) with title and description in the SVG and the caption under it. Draw once on scroll-in; finished and static with reduced motion and without JavaScript (both tested). GSAP no longer used by the diagrams.
+- [x] W4.6 Stack as pills with status notes (live dot for running), credit and status detail; links as buttons (first solid) in the intro, so the live app and repos are in the first screen.
+- [x] W4.7 Next project: "Next project" label and large Bodoni name (italic on hover), looping through the featured four (Watchtower → Surplus AI); the seven smaller projects loop among themselves. Named by the project’s own title.
+- [x] W4.8 DevHacks × Cubbie keeps Cooked (winner), Receipts and Bailout as tiles, each with its repository (Bailout has none). Smaller projects: compact header (kicker + title), no band art, same sections when the graph has data.
+- [x] W4.9 fact-checker over all eleven pages: 118 claims, 118 supported, verdict CLEAN.
+- [x] Tests: `src/data/project-page.test.ts` (7: both loops, next name, unknown slug, every page builds, DevHacks kicker); `e2e/v4-project.spec.ts` (every page: title, back pill, one-liner, result count, band only on featured, sections only with data, next link; Watchtower loops to Surplus AI; DevHacks entries; Label Lens screenshot and live link; Surplus three diagrams static under reduced motion; no-JS finished drawing; draw on entry with motion; axe on four pages): 40 passed on desktop and phone. All v4 specs 91 passed, 13 skipped (device-specific). Unit suite 106 passed. `e2e/case.spec.ts` (v3 template) removed with the template.
+- [x] lint, typecheck, build clean. `npm run verify -- --phase W4` over all eleven `/work/<slug>` routes: all pass (axe 0, console 0, failed requests 0, overflow 0); dark screenshots in `docs/screenshots/phase-W4/`. Inspected 1440 (Surplus AI, F1) and 390 (DevHacks, Label Lens fold).
+- [x] fe-reviewer: 1 High (band text contrast on light plates; fixed and measured), Mediums fixed (result tiles on tile tokens, problem tags 44px tall, draw threshold matched to the observer), Lows fixed (easing token on the diagram fades, box outline alpha .26 → .40, screenshot lazy, unused page fields removed, dead `flow-label` class, draw hook moved to `src/hooks/`, Stack test includes `statusDetail`, no-JS test added). `/code-review` on the diff: no Critical or High.
+
+### Rulings made in Phase W4
+
+- **Result tiles keep the figure's summary line** under the label, smaller and muted. Several summaries carry facts found nowhere else on the page (F1 "52% top-1 against a 43% baseline", the capstone's "250 SKU and warehouse series", the Watchtower agent names), and rule 4 forbids dropping content.
+- **Typographic apostrophes in the graph.** Seventeen strings in `src/data/graph/` and the diagram captions used straight apostrophes ("user's", "won't"); they are now ’ as the copy rules require. Wording unchanged; `graph.json` and the search index regenerate at build.
+- **Diagram draw uses `stroke-dashoffset`**, the one exception to "transform and opacity only", because the runbook asks the diagrams to draw (recorded in `motion-system`).
+- **Sections added beyond the reference's template** because the graph has the content: "The problem" (with the named problems linking to `/explore`'s By problem view) and "Stack". The Label Lens screenshot sits under the results.
+- **Explore still uses the v3 looping diagrams and covers** until W7.
 
 ## Phase W3 checklist
 
