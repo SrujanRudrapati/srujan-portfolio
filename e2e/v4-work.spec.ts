@@ -56,7 +56,7 @@ test.describe("v4 work catalogue", () => {
     await expect(page.getByRole("button", { name: `Show ${featured[2].name}` })).toHaveAttribute("aria-current", "true");
   });
 
-  test("a drag over 60px moves one card; a short drag does not", async ({ page, isMobile }) => {
+  test("a drag past 20% of the card moves one card; a short slow drag does not", async ({ page, isMobile }) => {
     test.skip(isMobile, "mouse drag");
     await openWork(page);
     const box = await page.locator("[data-stage]").boundingBox();
@@ -64,7 +64,11 @@ test.describe("v4 work catalogue", () => {
     const y = box.y + box.height / 2;
     await page.mouse.move(box.x + box.width * 0.7, y);
     await page.mouse.down();
-    await page.mouse.move(box.x + box.width * 0.7 - 40, y, { steps: 4 });
+    for (let x = 10; x <= 40; x += 10) {
+      await page.mouse.move(box.x + box.width * 0.7 - x, y);
+      await page.waitForTimeout(40); // slow: not a flick
+    }
+    await page.waitForTimeout(150);
     await page.mouse.up();
     await expect(count(page)).toHaveText("1 of 4");
     await page.mouse.move(box.x + box.width * 0.7, y);
@@ -75,7 +79,7 @@ test.describe("v4 work catalogue", () => {
     await expect(page).toHaveURL(/\/work\/?$/); // the drag did not open the card
   });
 
-  test("a horizontal trackpad gesture moves one card", async ({ page, isMobile }) => {
+  test("a horizontal wheel gesture moves one card", async ({ page, isMobile }) => {
     test.skip(isMobile, "wheel");
     await openWork(page);
     const box = await page.locator("[data-stage]").boundingBox();

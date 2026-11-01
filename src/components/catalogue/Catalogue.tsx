@@ -1,101 +1,81 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type CSSProperties } from "react";
 import type { WorkItem } from "@/data/work";
 import { artFor, vtNames } from "./art";
-import { CLICK_SLOP_PX, dragStep, loopOffset, WHEEL_LOCK_MS, wheelStep, wrapIndex, wraps } from "./carousel";
+import { CLICK_SLOP_PX, loopOffset, SPRING_MS, wrapIndex } from "./carousel";
+import { AUTOPLAY_MS, useAutoplay } from "./use-autoplay";
+import { restingStyle, useCardMotion } from "./use-card-motion";
+import { useStageGestures } from "./use-stage-gestures";
 import s from "./work.module.css";
 
-const SIDE_SCALE = 0.94;
+const REDUCED = "(prefers-reduced-motion: reduce)";
+const subscribeReduced = (cb: () => void) => {
+  const mq = matchMedia(REDUCED);
+  mq.addEventListener("change", cb);
+  return () => mq.removeEventListener("change", cb);
+};
 
 /**
- * The featured projects, one full card at a time, looping (runbook v4 W3.3). Drag or swipe
- * (60px), a horizontal trackpad gesture (one card each), arrow keys on the focused stage,
- * the round buttons or the pills. The front card opens its project; a side card comes forward.
+ * The featured projects, one full card at a time, looping (runbook v4 W3.3). A drag, swipe or
+ * horizontal trackpad gesture moves the cards with it and commits past 20% of a card or on a flick;
+ * arrow keys on the focused stage, the round buttons and the pills move one card. The front card
+ * opens its project. Autoplay moves on every 5 s, with a pause button (none under reduced motion).
  */
 export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index: number; onIndex: (i: number) => void }) {
   const n = items.length;
+  const root = useRef<HTMLDivElement>(null);
   const stage = useRef<HTMLDivElement>(null);
-  const [prev, setPrev] = useState(index);
-  const [shown, setShown] = useState(index);
-  const drag = useRef<{ x: number; moved: number } | null>(null);
-  const moved = useRef(0);
+  const [initial] = useState(index); // React renders the resting pose once; motion owns it after that
+  const reduced = useSyncExternalStore(subscribeReduced, () => matchMedia(REDUCED).matches, () => true);
+  const motion = useCardMotion(stage, n, index, reduced);
+  const auto = useAutoplay({ enabled: !reduced, index, advance: () => onIndex(wrapIndex(index + 1, n)), watch: root });
+  const [announced, setAnnounced] = useState("");
 
-  // Remember the previous index alongside the current one, so cards that wrap around can jump.
-  if (shown !== index) {
-    setPrev(shown);
-    setShown(index);
-  }
-  const go = (i: number) => onIndex(wrapIndex(i, n));
-
-  // Trackpad: horizontal gestures, one card per gesture (needs a non-passive listener).
-  useEffect(() => {
-    const el = stage.current;
-    if (!el) return;
-    let lock = -Infinity; // the first gesture always counts, even right after load
-    const onWheel = (e: WheelEvent) => {
-      const step = wheelStep(e.deltaX, e.deltaY);
-      if (!step) return;
-      e.preventDefault();
-      const t = performance.now();
-      if (t - lock > WHEEL_LOCK_MS) {
-        lock = t;
-        el.dispatchEvent(new CustomEvent("catalogue:step", { detail: step }));
-      }
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, []);
-  useEffect(() => {
-    const el = stage.current;
-    if (!el) return;
-    const onStep = (e: Event) => onIndex(wrapIndex(index + (e as CustomEvent<number>).detail, n));
-    el.addEventListener("catalogue:step", onStep);
-    return () => el.removeEventListener("catalogue:step", onStep);
-  }, [index, n, onIndex]);
-
-  // Drag and swipe: measured from pointerdown on the stage to pointerup anywhere.
-  useEffect(() => {
-    const onMove = (e: PointerEvent) => {
-      if (drag.current) drag.current.moved = Math.abs(e.clientX - drag.current.x);
-    };
-    const onUp = (e: PointerEvent) => {
-      const d = drag.current;
-      if (!d) return;
-      drag.current = null;
-      moved.current = d.moved;
-      const step = dragStep(e.clientX - d.x);
-      if (step) stage.current?.dispatchEvent(new CustomEvent("catalogue:step", { detail: step }));
-      setTimeout(() => (moved.current = 0), 0); // after the click that ends this drag
-    };
-    addEventListener("pointermove", onMove, { passive: true });
-    addEventListener("pointerup", onUp);
-    addEventListener("pointercancel", onUp);
-    return () => {
-      removeEventListener("pointermove", onMove);
-      removeEventListener("pointerup", onUp);
-      removeEventListener("pointercancel", onUp);
-    };
-  }, []);
+  const go = (i: number) => {
+    const next = wrapIndex(i, n);
+    auto.nudge();
+    onIndex(next);
+    setAnnounced(`${next + 1} of ${n}: ${items[next].name}`);
+  };
+  const moved = useStageGestures(stage, {
+    begin: () => {
+      motion.begin();
+      auto.setBusy(true);
+    },
+    move: motion.move,
+    release: (velocityEnd, cancelled) => {
+      const step = motion.end(velocityEnd);
+      auto.setBusy(false);
+      // A cancelled gesture (the page took a vertical pan, the window lost focus) goes back.
+      if (step && !cancelled) return go(index + step);
+      auto.nudge(); // a drag that springs back is still a manual touch: wait before moving on
+      motion.settle(index, SPRING_MS);
+    },
+  });
 
   // Card clicks are judged on window in the capture phase, ahead of the page-transition listener
-  // (document, capture): the click that ends a drag opens nothing, and a side card comes forward.
+  // (document, capture): a drag over 8px opens nothing.
   useEffect(() => {
     const onClick = (e: globalThis.MouseEvent) => {
       const card = (e.target as Element | null)?.closest?.<HTMLElement>("[data-card-index]");
       if (!card || !stage.current?.contains(card)) return;
-      const i = Number(card.dataset.cardIndex);
-      // The click that ends a drag opens nothing. (Side cards are inert and outside the stage's clip, so
-      // only the front card can be clicked; the index check is a guard.)
-      if (moved.current > CLICK_SLOP_PX || i !== index) e.preventDefault();
+      // Side cards are inert and outside the stage's clip, so only the front card can be clicked; the index check is a guard.
+      if (moved.current > CLICK_SLOP_PX || Number(card.dataset.cardIndex) !== index) e.preventDefault();
     };
     addEventListener("click", onClick, { capture: true });
     return () => removeEventListener("click", onClick, { capture: true });
-  }, [index]);
+  }, [index, moved]);
 
   return (
-    <>
+    <div
+      ref={root}
+      onFocus={(e) => {
+        // Keyboard focus anywhere in the catalogue stops the rotation until play is pressed.
+        if ((e.target as HTMLElement).matches(":focus-visible") && !e.currentTarget.contains(e.relatedTarget as Node | null)) auto.pause();
+      }}
+    >
       <div
         ref={stage}
         className={s.stage}
@@ -105,9 +85,9 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
         aria-label="Featured projects, use the arrow keys to move"
         data-cursor="Drag"
         data-stage
-        onPointerDown={(e) => {
-          drag.current = { x: e.clientX, moved: 0 };
-        }}
+        data-lenis-prevent-horizontal
+        onPointerEnter={(e) => e.pointerType === "mouse" && auto.setHover(true)}
+        onPointerLeave={(e) => e.pointerType === "mouse" && auto.setHover(false)}
         onKeyDown={(e) => {
           // The stage itself or its front card (the only focusable card) takes the arrow keys.
           if (e.target !== e.currentTarget && !(e.target as HTMLElement).hasAttribute?.("data-front")) return;
@@ -121,8 +101,7 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
         onDragStart={(e) => e.preventDefault()}
       >
         {items.map((p, i) => {
-          const d = loopOffset(i, index, n);
-          const front = d === 0;
+          const front = loopOffset(i, index, n) === 0;
           const names = vtNames(i);
           return (
             <Link
@@ -130,20 +109,16 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
               href={`/work/${p.slug}`}
               className={s.card}
               data-front={front || undefined}
-              data-jump={wraps(i, index, prev, n) || undefined}
               data-cursor={front ? "Open" : undefined}
               aria-hidden={!front}
               tabIndex={front ? 0 : -1}
               inert={!front}
               data-card-index={i}
-              style={{
-                transform: `translateX(calc(${d} * (100% + max(24px, 3vw)))) scale(${front ? 1 : SIDE_SCALE})`,
-                opacity: Math.abs(d) > 1 ? 0 : 1,
-                zIndex: 10 - Math.abs(d),
-                viewTransitionName: names.item,
-              }}
+              style={{ ...restingStyle(loopOffset(i, initial, n)), viewTransitionName: names.item }}
             >
-              <span className={s.art} style={{ background: artFor(p.art), viewTransitionName: names.art }} />
+              <span className={s.art} style={{ viewTransitionName: names.art }}>
+                <span className={s.fill} data-art-fill style={{ background: artFor(p.art) }} />
+              </span>
               <span className={s.shade} />
               <span className={s.top}>
                 <span className={s.kick}>{p.kicker}</span>
@@ -179,10 +154,28 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
           );
         })}
       </div>
-      <div className={s.controls}>
-        <span className={s.count} aria-live="polite" data-catalogue-count>
-          {index + 1} of {n}
-        </span>
+      <div className={s.controls} data-autoplay={auto.running ? "running" : "held"} style={{ "--autoplay": `${AUTOPLAY_MS}ms` } as CSSProperties}>
+        <div className={s.status}>
+          <span className={s.count} data-catalogue-count>
+            {index + 1} of {n}
+          </span>
+          {/* Manual moves are announced; autoplay's are not, so a screen reader is not interrupted every 5 s. */}
+          <span className="sr-only" role="status">
+            {announced}
+          </span>
+          <button type="button" className={s.play} aria-label={auto.paused ? "Play slideshow" : "Pause slideshow"} data-autoplay-toggle onClick={auto.togglePaused}>
+            {auto.paused ? (
+              <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                <path d="M3 1.5v9l7.5-4.5z" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true">
+                <rect x="2.5" y="1.5" width="2.5" height="9" rx="0.6" />
+                <rect x="7" y="1.5" width="2.5" height="9" rx="0.6" />
+              </svg>
+            )}
+          </button>
+        </div>
         <div className={s.pips}>
           {items.map((p, i) => (
             <button key={p.slug} type="button" aria-label={`Show ${p.name}`} aria-current={i === index} onClick={() => go(i)} />
@@ -201,6 +194,6 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 }
