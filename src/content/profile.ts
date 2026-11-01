@@ -20,10 +20,11 @@ export const profile = {
   githubLabel: "github.com/SrujanRudrapati",
   resume: "/resume.pdf",
   // Hero proof chips. Each one restates a fact that already appears on the
-  // site: the Surplus AI status line, the Celebal role in Experience, and Certifications.
+  // site: the Surplus AI status line, the Celebal role in Experience (facts 2.4: Associate,
+  // Sep 2022 to Nov 2024; wording from DECISIONS 14), and Certifications.
   proof: [
     "Surplus AI, in production at ASU Surplus",
-    "Celebal: a pipeline handling about 10 million records a day",
+    "Associate at Celebal Technologies (2022 to 2024)",
     "Databricks Certified Data Engineer Professional",
   ],
 };

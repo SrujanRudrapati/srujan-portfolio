@@ -62,12 +62,13 @@ export function homeContent() {
     // The strongest single result, shown in the hero (recruiter review, V4).
     lead: { ...metric("surplus-processing-time"), where: "Surplus AI at ASU Surplus" },
     // Each figure carries the project or employer it came from (names already on the site).
+    // ~80% is in the hero and on the Surplus AI panel, so the strip leaves it out (DECISIONS 13).
     proof: [
-      { ...metric("surplus-processing-time"), source: "Surplus AI" },
       { ...metric("surplus-pallet-time"), source: "Surplus AI" },
       { ...metric("records-per-day"), source: "Celebal" },
       { ...metric("devhacks-submissions"), source: "DevHacks × Cubbie" },
       { ...metric("label-lens-latency"), source: "Label Lens" },
+      { ...metric("capstone-holding-cost"), source: "Demand forecasting capstone" },
     ],
   };
 }

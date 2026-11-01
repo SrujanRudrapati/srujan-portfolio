@@ -57,3 +57,13 @@ Srujan's replies of 2026-10-30, applied in the Phase 11 session:
 - **9. Intern title**: default kept, "Intern, Data Engineering, Celebal Technologies, Jaipur, India, July to August 2022".
 - **10. Gate G1**: "merge". Phase 11 steps 4 to 6 run; results in STATUS and NOTES.
 - **11. Gate G4 (concept)**, Srujan, 2026-10-30: "A's structure with C's typography, blue accent. We build ONE concept only; remove /lab/b and /lab/c when V2 starts." Recorded in `design-direction`. Removing `/lab/b` and `/lab/c` at the start of V2 counts as the G2 yes. Same message: delete the duplicate root `REDESIGN_V3_RUNBOOK.md` (done; it was identical to `docs/REDESIGN_V3_RUNBOOK.md`), and add Phase V1.5 "Visual layer: realistic 3D and physics" before V2 (added to the runbook; later phases amended).
+
+Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
+
+- **12. Unused v2 components** (G2 yes): delete `src/components/Hero.tsx` and `src/components/ask/HeroAsk.tsx` during the V7 `/lab` cleanup.
+- **13. "~80%" on the home page three times**: keep it in the hero and on the Surplus AI reel panel; replace the third (the "What it did" proof strip). Applied: the strip drops the processing-time row and adds the capstone's "about 28%" holding-cost figure (the suggested pallet figure was already the strip's second row, so using it would repeat it instead).
+- **14. Celebal proof chip**: "Associate at Celebal Technologies (2022 to 2024)". Written with "to" instead of the en dash in the reply, because dashes are banned in copy (portfolio-facts). The Experience section keeps the full title "Associate, Data Engineering" (unchanged).
+- **15. Phone hero art**: at most about a third of the screen at 390 and 360 px, with the headline, buttons and email on the first screen. Already true (the strip is capped at 24dvh and sits below the email); a test now holds it.
+- **16. Flaky scroll-reset test** (`motion.spec` "a client navigation lands at the top"): fix the cause in V7 by waiting on a real condition.
+- **17. `Srujan_Rudrapati_Research_Assistant.pdf`**: never commit it; added to `.gitignore`.
+- Then continue with V6 and V7 and stop only at G1.

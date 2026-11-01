@@ -38,7 +38,7 @@ test.describe("Hero (V4: stage 01 / ingest)", () => {
     await expect(hero.getByText("M.S. student at Arizona State University.")).toBeVisible();
     await expect(hero.getByRole("list", { name: "Highlights" }).getByRole("listitem")).toHaveText([
       "Surplus AI, in production at ASU Surplus",
-      "Celebal: a pipeline handling about 10 million records a day",
+      "Associate at Celebal Technologies (2022 to 2024)",
       "Databricks Certified Data Engineer Professional",
     ]);
     await expect(hero.getByRole("link", { name: "See my work" })).toHaveAttribute("href", "/work");
@@ -57,6 +57,19 @@ test.describe("Hero (V4: stage 01 / ingest)", () => {
       const box = await el.boundingBox();
       expect(box!.y).toBeGreaterThanOrEqual(0);
       expect(box!.y + box!.height).toBeLessThanOrEqual(viewport.height);
+    }
+  });
+
+  test("phone hero art stays under a third of the screen, below the email (390 and 360)", async ({ page, isMobile }) => {
+    test.skip(!isMobile, "Phone viewport only");
+    for (const width of [390, 360]) {
+      await page.setViewportSize({ width, height: 844 });
+      await page.goto("/");
+      const art = await page.locator('[data-stage="ingest"] [data-scene="hero-stream"]').boundingBox();
+      const email = await page.locator('[data-stage="ingest"]').getByRole("link", { name: /@/ }).boundingBox();
+      expect(art!.height).toBeLessThanOrEqual(844 / 3);
+      expect(email!.y + email!.height).toBeLessThanOrEqual(844);
+      expect(art!.y).toBeGreaterThanOrEqual(email!.y + email!.height);
     }
   });
 
@@ -80,7 +93,8 @@ test.describe("Hero (V4: stage 01 / ingest)", () => {
     // The raw export, before any script runs: each figure's final text and marker, as often as the page shows it
     // (reel panel + proof row for ~80%; four reel figures and five proof figures in all).
     const html = await (await request.get("/")).text();
-    const expected: Record<string, number> = { "~80%": 2, "1st": 1, "44/44": 1, "3": 1, "~10 min": 1, "about 10 million": 1, "82": 1, "4 to 9 s": 1 };
+    // ~80% once as a counter (the Surplus AI panel); the hero shows it as plain text and the strip leaves it out (DECISIONS 13).
+    const expected: Record<string, number> = { "~80%": 1, "1st": 1, "44/44": 1, "3": 1, "~10 min": 1, "about 10 million": 1, "82": 1, "4 to 9 s": 1, "about 28%": 1 };
     for (const [v, n] of Object.entries(expected)) {
       const tags = html.match(new RegExp(`data-count="${v.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}">([^<]*)<`, "g")) ?? [];
       expect(tags, v).toHaveLength(n);
