@@ -304,6 +304,22 @@ html.vt-toggle::view-transition-old(root),
 html.vt-toggle::view-transition-new(root) {
   animation: none;
 }
+/* Work Catalogue ⇄ List morph: each project's card, art and name glide to its row, 60 ms apart. */
+::view-transition-group(wi-1),
+::view-transition-group(wa-1),
+::view-transition-group(wn-1) {
+  animation-delay: 60ms;
+}
+::view-transition-group(wi-2),
+::view-transition-group(wa-2),
+::view-transition-group(wn-2) {
+  animation-delay: 120ms;
+}
+::view-transition-group(wi-3),
+::view-transition-group(wa-3),
+::view-transition-group(wn-3) {
+  animation-delay: 180ms;
+}
 main.route-leave {
   transition: opacity 0.26s ease;
   opacity: 0;

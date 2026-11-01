@@ -4,6 +4,8 @@
 //   node --experimental-strip-types scripts/v4-shots.mts reference [outDir]
 //   node --experimental-strip-types scripts/v4-shots.mts site [outDir] [baseUrl]
 // Output: <outDir>/<viewport>/<view>.jpg, e.g. docs/v4/reference-shots/1280x720/home-hover-work.jpg
+// Views: home-idle, home-hover-<tile>, work-catalogue, work-morph (mid-switch to the list), work-list,
+// project, experience, about, contact.
 import { mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -15,12 +17,15 @@ const OUT = process.argv[3] ?? (target === "reference" ? "docs/v4/reference-shot
 const BASE = process.argv[4] ?? "http://localhost:4321";
 const REFERENCE = pathToFileURL(resolve("docs/v4/reference/srujan-premium-concept.html")).href;
 
-export const VIEWPORTS = [
+const ALL_VIEWPORTS = [
   { width: 390, height: 844 },
   { width: 1280, height: 720 },
   { width: 1440, height: 900 },
   { width: 1920, height: 1080 },
 ];
+// SHOTS_VIEWPORTS=390,1280,1440 limits the run (G5 needs three of the four).
+const only = process.env.SHOTS_VIEWPORTS?.split(",").map(Number);
+const VIEWPORTS = only ? ALL_VIEWPORTS.filter((v) => only.includes(v.width)) : ALL_VIEWPORTS;
 const TILES = ["work", "experience", "about", "contact"] as const;
 
 /** Where each view lives and how to reach its states, per target. */
@@ -35,6 +40,7 @@ const TILE_SELECTOR: Record<Target, (k: string) => string> = {
 const LIST_TOGGLE: Record<Target, string> = { reference: "#m-list", site: "[data-layout='list']" };
 
 const SETTLE_MS = 1600; // longer than the slowest entrance (1.2 s headline) plus the dot spring
+const MORPH_MID_MS = 380; // about halfway through the 800 ms catalogue-to-list morph
 
 const browser = await chromium.launch();
 const errors: string[] = [];
@@ -75,6 +81,8 @@ for (const vp of VIEWPORTS) {
   await open(page, "work");
   await shoot(page, dir, "work-catalogue");
   await page.locator(LIST_TOGGLE[target]).click();
+  await page.waitForTimeout(MORPH_MID_MS);
+  await shoot(page, dir, "work-morph");
   await page.waitForTimeout(SETTLE_MS);
   await shoot(page, dir, "work-list");
 

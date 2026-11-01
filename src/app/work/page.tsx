@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { RailBlock, RailHead, RailPage } from "@/components/site/Rail";
-import { WorkIndex } from "@/components/work/WorkIndex";
-import { cover } from "@/data/case-study";
-import { projects } from "@/data/projects";
+import { WorkView } from "@/components/catalogue/WorkView";
+import { BackPill } from "@/components/shell/BackPill";
+import { workItems } from "@/data/work";
 import { pageMeta } from "@/lib/meta";
 
-export const metadata: Metadata = pageMeta("/work", "Work | Srujan Rudrapati", "Every project: the featured four first, then the rest. Filter by production, AI, data engineering or hackathon.");
+export const metadata: Metadata = pageMeta("/work", "Work | Srujan Rudrapati", "Every project, from offline AI in production to hardware: the featured four as a catalogue, all eleven as a list.");
 
-// The project index (runbook V6): featured large with their 3D covers, the rest compact,
-// filterable. Each item opens its case study, where the detail lives (V5).
+const COUNT_WORDS: Record<number, string> = { 10: "Ten", 11: "Eleven", 12: "Twelve", 13: "Thirteen" };
+
+// Runbook v4 W3: back pill, title, intro, Catalogue / List.
 export default function WorkPage() {
-  const covers = Object.fromEntries(projects.map((p) => [p.slug, cover(p.slug)]));
+  const items = workItems();
+  const count = COUNT_WORDS[items.length] ?? String(items.length);
   return (
-    <RailPage>
-      <RailHead stage="stage 02 / transform" title="Work" />
-      <RailBlock>
-        <WorkIndex projects={projects} covers={covers} />
-      </RailBlock>
-    </RailPage>
+    <main id="main" className="page">
+      <div className="wrap">
+        <BackPill />
+        <WorkView intro={`${count} projects, from offline AI in production to hardware. Each one leads with what it does and what changed.`} items={items} />
+      </div>
+    </main>
   );
 }

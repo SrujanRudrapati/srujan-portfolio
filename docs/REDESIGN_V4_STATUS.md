@@ -7,13 +7,30 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 | W0 — Setup | done | `redesign: phase W0 — setup` | Branch from `redesign/v3`; reference shots (11 views × 4 viewports) in `docs/v4/reference-shots/` via `scripts/v4-shots.mts`; `design-direction` and `motion-system` rewritten for v4. Checklist below. |
 | W1 — Shell | done | `redesign: phase W1 — shell` | Dark-only tokens, Bodoni Moda + Hanken Grotesk, grain and glow; header (name + availability, frosted after 30px), footer with Arizona time, back pill, progress line, page transitions (View Transitions + fallback), cursor, magnetic, Lenis 0.09. GSAP removed from the shell. Checklist below. |
 | W2 — Home | done | `redesign: phase W2 — home hub` | Headline (three masked lines), lede, now line, Ask link, four spotlight tiles, 2D dot field with five shapes; fits one screen at 1280×720 to 1920×1080; interim `/experience` and `/contact` routes so the tiles have pages. Checklist below. |
-| W3 — Work (G5) | in progress | | |
+| W3 — Work (G5) | done; blocked at G5 (DECISIONS 21) | `redesign: phase W3 — work catalogue and list` | Segmented Catalogue/List; looping catalogue of the four featured (drag, trackpad, keys, pills, arrows); list of all eleven with metal figures; view-transition morph with per-project names and 60 ms stagger. Comparisons in `docs/v4/compare/`. Checklist below. |
 | W4 — Project pages | not started | | |
 | W5 — Experience | not started | | |
 | W6 — About and Contact | not started | | |
 | W7 — Integrate and clean up | not started | | |
 | W8 — QA | not started | | |
 | W9 — Ship (G1) | not started | | |
+
+## Phase W3 checklist
+
+- [x] Header area: back pill, "Work" (Bodoni), intro "Eleven projects, from offline AI in production to hardware. Each one leads with what it does and what changed." (count from the data), segmented Catalogue/List whose white highlight slides (measured width and offset, transform + width only).
+- [x] Data (`src/data/work.ts`): all eleven graph projects. Featured four in runbook order (Surplus AI, Label Lens, Cooked/DevHacks × Cubbie, Supply Chain Watchtower) with kicker, key number and sublabel, one-line description and 2 to 4 tags; reference copy kept where it matches the facts, markers kept (`~15 → ~3 min`), en dashes written out (`16 s → 4 to 9 s`); Watchtower and Cooked lines from the graph (see DECISIONS 21). The seven smaller projects: one-liner, context or status as kicker, first three stack items as tags, first figure if any. The module throws if a featured slug is not featured in the graph or a project is missing.
+- [x] Catalogue (`catalogue/Catalogue.tsx`): stage inside the page margins, 32px radius, `clamp(320px, 100svh − 500px, 620px)` (40px more held back than the reference for the 44px back pill); one full card at a time, sliding by `translateX(d × (100% + max(24px, 3vw)))`, side cards at 0.94; loops endlessly, a card that wraps jumps with no transition (`carousel.ts`, unit tested). Controls: "n of 4" (live region), progress pills (24px buttons drawing an 8px dot; active 28px bronze), round previous/next (magnetic). Input: drag/swipe over 60px, a horizontal trackpad gesture (one card per gesture, 650 ms lock), arrow keys on the focused stage. The front card opens its project; only the front card is focusable (others `inert`). Card layout as the reference. Cursor: "Open" on the front card, "Drag" on the stage.
+- [x] List (`catalogue/WorkList.tsx`): rounded rows (24px) with the art thumbnail, name + kicker, description + tags, key number in the metal gradient; the four featured, then the other seven; every row links to its case study.
+- [x] Morph: `document.startViewTransition` with `html.vt-toggle` (root holds still); card/row, art and name share `wi-N`, `wa-N`, `wn-N`; 800 ms with the easing token, 60 ms stagger (globals.css). No API or reduced motion: instant. Mid-morph frames in `docs/v4/compare/*/work-morph.jpg`.
+- [x] Art: the reference's four CSS gradient plates in catalogue order (`catalogue/art.ts`), a plain plate for the smaller projects; no screenshots on cards.
+- [x] Tests: `catalogue/carousel.test.ts` (5); `e2e/v4-work.spec.ts`: order and loop both ways, keys and focus, pills, drag threshold (40px stays, a long drag moves one card and opens nothing), trackpad gesture, front card opens its project, list order and links, toggle back, view transition with `vt-toggle`, axe on both layouts, stage and controls on screen at 1280×720, 1366×768, 1440×900, 1920×1080: 21 passed, 7 skipped (desktop-only cases on the phone project). Unit suite 99 passed.
+- [x] lint, typecheck, build clean; `npm run verify -- --phase W3 --path /work --path /`: all pass (axe 0, console 0, failed requests 0, overflow 0). Screenshots inspected (phone `/work`, comparisons at 1280 and 1440).
+- [x] G5 evidence: `scripts/v4-shots.mts` (now also a `work-morph` frame; `SHOTS_VIEWPORTS` limits viewports) shot the reference and the site at 390, 1280, 1440 into `docs/v4/reference-shots/` and `docs/v4/site-shots/`; `scripts/v4-compare.mts` composed 24 side-by-side images in `docs/v4/compare/`. DECISIONS 21 written. **Stopped at G5.**
+
+### Rulings made in Phase W3
+
+- Found and fixed while testing: a trackpad gesture in the first 650 ms after load was ignored (the lock started at 0); the click that ends a drag reached the page-transition listener before React's card handler and opened the project (the guard now runs on `window` in the capture phase, ahead of it); 8px pills failed axe's 24px target size (now 24px buttons drawing the dot).
+- The v3 `/work` filters (production, AI, data, hackathon) are not in the reference and are not content; the same groupings remain in `/explore`'s lenses. The v3 work components stay until W7's cleanup.
 
 ## Phase W2 checklist
 
