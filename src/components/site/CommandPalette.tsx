@@ -1,12 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
-import { appPath } from "@/components/motion/PageTransitions";
+import { appPath } from "@/components/shell/route-paths";
 import { profile } from "@/content/profile";
 import { openAsk, preloadAsk } from "@/lib/ask/events";
 import { openGame } from "@/components/game/events";
 import { withBasePath } from "@/lib/paths";
-import { getTheme, setTheme } from "@/lib/theme";
 import { isTyping, MAIN_PAGES, PALETTE_OPEN, type PaletteOpenDetail } from "./routes";
 
 // The command palette (runbook V3): ⌘K / Ctrl+K, "/" or the nav button. A native modal
@@ -74,13 +73,6 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
     }));
     const work: Item[] = projects.map((p) => ({ id: `project-${p.slug}`, group: "Projects", label: p.title, hint: p.oneLiner, keywords: `${p.title} ${p.oneLiner} ${p.slug}`, run: () => follow(`/work/${p.slug}`) }));
     const actions: Item[] = [
-      {
-        id: "theme",
-        group: "Actions",
-        label: "Toggle light and dark",
-        keywords: "theme dark light mode colour color",
-        run: () => setTheme(getTheme() === "dark" ? "light" : "dark"),
-      },
       {
         id: "email",
         group: "Actions",

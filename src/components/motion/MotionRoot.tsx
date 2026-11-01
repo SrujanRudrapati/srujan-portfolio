@@ -1,29 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import "lenis/dist/lenis.css"; // html.lenis height, scroll-behavior: auto while Lenis drives, data-lenis-prevent
 import { StageHost } from "@/components/three/StageHost";
-import { Cursor } from "./Cursor";
 import { exposeMotionDebug } from "./debug";
-import { Intro, INTRO_SCRIPT } from "./Intro";
-import { PageTransitions } from "./PageTransitions";
-import { SmoothScroll } from "./SmoothScroll";
 
 /**
- * Everything that lives once per document across route changes: smooth scroll, page
- * transitions, the custom cursor, the first-visit intro and the shared 3D stage (so the
- * WebGL canvas persists between pages). Mount it once, in a layout.
+ * Transitional (v4 W1 to W7): only the shared v3 3D stage and the test counters remain here
+ * while pages that still use 3D slots are rebuilt. Smooth scroll, transitions and the cursor
+ * moved to src/components/shell. Removed in W7 with three.js.
  */
 export function MotionRoot() {
   useEffect(() => exposeMotionDebug(), []);
-  return (
-    <>
-      <script dangerouslySetInnerHTML={{ __html: INTRO_SCRIPT }} />
-      <Intro />
-      <SmoothScroll />
-      <PageTransitions />
-      <Cursor />
-      <StageHost />
-    </>
-  );
+  return <StageHost />;
 }

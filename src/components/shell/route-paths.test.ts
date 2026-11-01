@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { appPath, isPendingArrival } from "./PageTransitions";
+import { appPath, isPendingArrival } from "./route-paths";
 
 describe("appPath (router targets never carry the GitHub Pages basePath)", () => {
   it("strips the basePath so router.push does not add it twice", () => {

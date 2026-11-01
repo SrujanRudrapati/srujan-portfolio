@@ -1,102 +1,67 @@
 @import "tailwindcss";
 
-/* Spec sheet. Light by default, dark when the user asks for it (data-theme on
-   <html>, set before first paint by the inline script in layout.tsx) or when
-   the system prefers it and nothing is stored.
-
-   Colour tokens live on :root as plain custom properties because they change at
-   runtime. Everything that never changes with theme (type scale, spacing,
-   radii, shadows, easing) is declared once inside @theme, so Tailwind utilities
-   and hand-written CSS read the same values. There is one colour system: the
-   @theme inline block below maps each token to a Tailwind utility name. */
-
-/* v3 tokens (design-direction, DECISIONS 11): black and white neutrals and one blue
-   accent. The v2 names stay so every component keeps working; --accent and --accent-2
-   are now the same blue (C's red is dropped). Light by default; dark from data-theme
-   or the system preference. AA ratios for every pair are in docs/v3/IA.md, Tokens. */
+/* v4 "Midnight & Bronze" (design-direction; runbook v4 §1). Dark only.
+   Colour tokens are plain custom properties on :root; @theme inline maps them to the
+   Tailwind utility names the older components still use (ink, muted, line, surface,
+   accent...), so pages not yet rebuilt pick up the new palette without edits. */
 :root {
-  color-scheme: light;
-  --bg: #ffffff;
-  --surface: #f2f2f2;
-  --surface-raised: #ffffff;
-  --border: #d9d9d9;
-  --text: #000000;
-  --text-muted: #5c5c5c;
-  --accent: #1d4ed8;
-  --accent-hover: #1e40af;
-  --accent-2: #1d4ed8;
-  --accent-2-hover: #1e40af;
-  --on-accent: #ffffff;
-  /* Data states: medallion tiers and the travelling record only. */
-  --bronze: #9a5f35;
-  --silver: #7c838b;
-  --gold: #9c7a1c;
-}
-
-:root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #000000;
-  --surface: #141414;
-  --surface-raised: #1c1c1c;
-  --border: #2b2b2b;
-  --text: #ffffff;
-  --text-muted: #a3a3a3;
-  --accent: #7c9bff;
-  --accent-hover: #9db3ff;
-  --accent-2: #7c9bff;
-  --accent-2-hover: #9db3ff;
-  --on-accent: #000000;
+  --bg: #0b0f14;
+  --surface: #141b23;
+  --text: #e8eaed;
+  --muted: #8d98a5;
+  --accent: #c49a6c;
+  --line: rgba(232, 234, 237, 0.11);
+  --metal: linear-gradient(180deg, #eed7b4 0%, #c49a6c 45%, #8c6845 72%, #e2c59e 100%);
+  --live: #7cc4a4;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --tile-bg: rgba(232, 234, 237, 0.035);
+  --tile-border: rgba(232, 234, 237, 0.09);
+  --tile-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
+  --sans: var(--font-hanken), system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Older names, kept as aliases until W7 retires the components that read them. */
+  --surface-raised: var(--surface);
+  --border: var(--line);
+  --text-muted: var(--muted);
+  --accent-hover: #d8b48a;
+  --accent-2: var(--accent);
+  --accent-2-hover: #d8b48a;
+  --on-accent: var(--bg);
+  /* Data states: the medallion diagram tiers only. */
   --bronze: #d08b57;
   --silver: #b5bcc3;
   --gold: #e0b84a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #000000;
-    --surface: #141414;
-    --surface-raised: #1c1c1c;
-    --border: #2b2b2b;
-    --text: #ffffff;
-    --text-muted: #a3a3a3;
-    --accent: #7c9bff;
-    --accent-hover: #9db3ff;
-    --accent-2: #7c9bff;
-    --accent-2-hover: #9db3ff;
-    --on-accent: #000000;
-    --bronze: #d08b57;
-    --silver: #b5bcc3;
-    --gold: #e0b84a;
-  }
-}
-
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-raised: var(--surface-raised);
-  --color-line: var(--border);
+  --color-raised: var(--surface);
+  --color-line: var(--line);
   --color-ink: var(--text);
-  --color-muted: var(--text-muted);
+  --color-muted: var(--muted);
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
-  --color-accent-2: var(--accent-2);
-  --color-accent-2-hover: var(--accent-2-hover);
-  --color-on-accent: var(--on-accent);
+  --color-accent-2: var(--accent);
+  --color-accent-2-hover: var(--accent-hover);
+  --color-on-accent: var(--bg);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-martian), ui-monospace, monospace;
+  --font-sans: var(--sans);
+  --font-display: var(--serif);
+  --font-serif: var(--serif);
+  /* No monospace in v4: older "font-mono" labels render in the text face. */
+  --font-mono: var(--sans);
 }
 
 @theme {
-  /* Type scale. Fluid between a 390px phone and a 1280px desktop. */
   --text-xs: 0.75rem;
   --text-xs--line-height: 1.45;
   --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
-  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
-  --text-base--line-height: 1.55;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.6;
   --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
   --text-lg--line-height: 1.5;
   --text-xl: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
@@ -108,113 +73,241 @@
   --text-4xl: clamp(2.5rem, 1.55rem + 4vw, 4.5rem);
   --text-4xl--line-height: 1;
 
-  /* Spacing. Tailwind's --spacing (0.25rem) is the 4px base scale; p-4 is 16px,
-     gap-6 is 24px. These two name the rhythms the layout repeats. */
-  --spacing-gutter: clamp(1rem, 0.4rem + 2.4vw, 2.5rem);
+  --spacing-gutter: 24px;
   --spacing-section: clamp(4rem, 2.4rem + 6.5vw, 7rem);
-
-  /* Widths */
-  --container-page: 1200px;
+  --container-page: 1240px;
   --container-measure: 65ch;
 
-  /* Shape. Spec sheet has square corners; the only radii are the focus ring and dots. */
   --radius-sm: 2px;
+  --radius-tile: 24px;
+  --radius-panel: 28px;
+  --radius-stage: 32px;
   --radius-full: 9999px;
 
-  /* Depth. Flat by default; one lift for hovered cards. */
-  --shadow-lift: 0 10px 24px -14px rgb(0 0 0 / 0.35);
-
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  /* One easing family: every transition without its own ease- utility uses the house curve. */
-  --default-transition-timing-function: var(--ease-out-quart);
+  --shadow-lift: 0 30px 60px -40px rgba(0, 0, 0, 0.6);
+  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px);
+  }
+  html,
+  body {
+    overflow-x: clip;
   }
 
+  /* The page glow scrolls with the page (never fixed); the grain is one static layer. */
   body {
-    background: var(--bg);
+    margin: 0;
+    background:
+      radial-gradient(110% 55% at 50% -12%, #1a2633 0%, rgba(26, 38, 51, 0) 62%) no-repeat,
+      var(--bg);
     color: var(--text);
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    line-height: var(--text-base--line-height);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
-  /* Headings: one family, hierarchy through weight and width. */
   h1,
   h2,
   h3,
   h4 {
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-family: var(--serif);
+    font-weight: 400;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  /* v3 type (C's): page titles condensed and heavy; section and card titles wide. */
-  h1 {
-    font-weight: 800;
-    font-stretch: 62%;
-    letter-spacing: -0.03em;
+  h1:focus {
+    outline: none;
   }
-  h2 {
-    font-stretch: 112.5%;
-  }
-  h3 {
-    font-stretch: 112.5%;
-    letter-spacing: -0.015em;
-  }
-  h4 {
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
   p {
     text-wrap: pretty;
   }
-
-  /* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
   [id] {
     scroll-margin-top: 5rem;
   }
-
   :focus-visible {
-    outline: 2px solid var(--accent-2);
-    outline-offset: 3px;
-    border-radius: var(--radius-sm);
+    outline: 1.5px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
-
   a,
   button {
     touch-action: manipulation;
   }
 }
 
+/* Shared v4 primitives (reference classes). Page-specific styles live in CSS modules. */
 @layer components {
-  /* Theme toggle icons. CSS decides which icon shows, so the button is correct
-     before hydration and never mismatches the server render. */
-  .theme-icon-sun {
-    display: none;
+  .wrap {
+    width: min(1240px, 100% - 48px);
+    margin-inline: auto;
   }
-  .theme-icon-moon {
-    display: block;
+  .metal {
+    background: var(--metal);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  :root[data-theme="dark"] .theme-icon-sun {
-    display: block;
+  .page {
+    min-height: 100svh;
+    padding: clamp(92px, 14vh, 140px) 0 120px;
   }
-  :root[data-theme="dark"] .theme-icon-moon {
-    display: none;
+  .page-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, min(7vw, 11vh), 112px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin: 0;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .theme-icon-sun {
-      display: block;
-    }
-    :root:not([data-theme="light"]) .theme-icon-moon {
-      display: none;
-    }
+  .page-intro {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: clamp(10px, 2vh, 18px) 0 0;
+    font-size: clamp(16px, 2vh, 18px);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 15px;
+    margin-bottom: clamp(16px, 3vh, 32px);
+    min-height: 44px;
+    padding: 0 16px 0 12px;
+    border-radius: 999px;
+    background: rgba(232, 234, 237, 0.06);
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .back:hover {
+    background: rgba(232, 234, 237, 0.12);
+    color: var(--text);
+  }
+  .back svg {
+    width: 14px;
+    height: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 50px;
+    padding: 0 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 16px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+  .btn:hover {
+    border-color: var(--accent);
+  }
+  .btn-solid {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .btn-solid:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .pill {
+    display: inline-block;
+    margin: 0 6px 8px 0;
+    padding: 4px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tag {
+    font-size: 13px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(240, 242, 245, 0.12);
+    color: rgba(240, 242, 245, 0.9);
+  }
+  /* Magnetic elements move by transform only; the spring back is a transition. */
+  [data-magnetic] {
+    transition: transform 0.6s var(--ease), background-color 0.3s, color 0.3s, border-color 0.3s;
+  }
+}
+
+/* Page transitions (motion-system): the old page fades out over 260 ms, the new one rises
+   14px into place over 800 ms. View Transitions API first; .route-leave/.route-enter on
+   <main> otherwise. The Work layout toggle sets html.vt-toggle to keep the root still. */
+@keyframes route-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+::view-transition-old(root) {
+  animation: route-out 0.26s ease both;
+}
+::view-transition-new(root) {
+  animation: route-in 0.8s var(--ease) 0.26s both;
+}
+::view-transition-group(*) {
+  animation-duration: 0.8s;
+  animation-timing-function: var(--ease);
+}
+html.vt-toggle::view-transition-old(root),
+html.vt-toggle::view-transition-new(root) {
+  animation: none;
+}
+main.route-leave {
+  transition: opacity 0.26s ease;
+  opacity: 0;
+}
+main.route-enter {
+  animation: route-in 0.8s var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(*) {
+    animation: none !important;
   }
 }
 
