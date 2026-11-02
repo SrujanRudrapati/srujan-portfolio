@@ -1,0 +1,52 @@
+{
+  "phase": "W9-d24",
+  "generatedAt": "2026-11-02T00:58:49.913Z",
+  "runs": [
+    {
+      "path": "/",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-mobile-dark.png",
+      "foldScreenshot": "home-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-contact-mobile-dark.png",
+      "foldScreenshot": "home-contact-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/contact",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-contact-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

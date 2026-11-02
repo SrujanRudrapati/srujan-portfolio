@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { profile } from "../src/content/profile";
 import { homeContent } from "../src/data/home";
 import { expectNoA11yViolations, openHome } from "./helpers";
 
@@ -56,14 +57,31 @@ test.describe("v4 home", () => {
   });
 });
 
+test.describe("v4 home, DECISIONS 24", () => {
+  test("a: the lede names Celebal for the 10 million records line", async ({ page }) => {
+    await openHome(page);
+    await expect(page.locator("main p").filter({ hasText: "10 million" })).toContainText("At Celebal Technologies I was on call for a pipeline moving about 10 million records a day");
+  });
+
+  test("b: a quiet row on the hub reaches me: email, LinkedIn and resume", async ({ page }) => {
+    await openHome(page);
+    const row = page.getByRole("list", { name: "Contact details" });
+    await expect(row.getByRole("link")).toHaveCount(3);
+    await expect(row.getByRole("link", { name: profile.email })).toHaveAttribute("href", `mailto:${profile.email}`);
+    await expect(row.getByRole("link", { name: /^LinkedIn/ })).toHaveAttribute("href", profile.linkedin);
+    await expect(row.getByRole("link", { name: /^Resume \(PDF\)/ })).toHaveAttribute("href", /\/resume\.pdf$/);
+    for (const link of await row.getByRole("link").all()) expect((await link.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+  });
+});
+
 test.describe("v4 home fits one screen on desktops", () => {
   for (const vp of DESKTOP_FITS) {
-    test(`${vp.width}x${vp.height}: headline, lede, now line, dots and all four tiles`, async ({ page, isMobile }) => {
+    test(`${vp.width}x${vp.height}: headline, lede, now line, contact row, dots and all four tiles`, async ({ page, isMobile }) => {
       test.skip(isMobile, "desktop sizes");
       await page.setViewportSize(vp);
       await openHome(page);
       const bottoms = await page.evaluate(() =>
-        [...document.querySelectorAll("main h1, main p, [data-tile], [data-dot-field]")].map((el) => el.getBoundingClientRect().bottom),
+        [...document.querySelectorAll("main h1, main p, main ul[aria-label='Contact details'], [data-tile], [data-dot-field]")].map((el) => el.getBoundingClientRect().bottom),
       );
       for (const b of bottoms) expect(b).toBeLessThanOrEqual(vp.height);
       expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBe(0);
