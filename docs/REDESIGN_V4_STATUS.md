@@ -59,7 +59,7 @@ Ledger for `docs/REDESIGN_V4_RUNBOOK.md` ("Midnight & Bronze"; same format as `d
 - [x] **Browsers.** Final run, Chrome desktop and Pixel 7: 263 passed, 41 skipped. WebKit desktop and iPhone 14 (`npm run test:e2e:cross`): 256 passed, 47 skipped, plus the cursor test, which raced hydration and now waits for it (passes 3 of 3). Firefox cannot launch on this machine (the Playwright Firefox process fails to start, as in v3 V7); without the View Transitions API the catalogue/list switch is instant by design.
 - [x] `npm run verify -- --phase W8` over 13 routes: all pass. Screenshots are in `docs/screenshots/phase-W8/`.
 - [x] **fact-checker** (whole site, about 230 claims, nothing contradicted). Four unsupported claims, all fixed:
-  - The Cooked figure "1st of 82" read as first of all 82; it is now "1st" with "Track 1, public student vote" (2.2), which also stops it overflowing the phone card.
+  - The Cooked figure "1st of 82" read as first of all 82; it is now "1st" with "Track 1, DevHacks × Cubbie" (2.2), which also stops it overflowing the phone card.
   - The home lede said "LLM systems that run offline" (plural); it now says "an offline LLM system in production" (2.1).
   - "in one run" was removed from the Watchtower problem summary.
   - "certification" became "certifications" on the About tile.
@@ -253,3 +253,10 @@ Asked for before merging: the trackpad swipe did nothing (each wheel event was j
 - [x] Checks: lint, typecheck, unit 115 passed; Playwright Chrome 285 passed / 51 skipped, WebKit 279 passed / 57 skipped; `npm run verify -- --phase W9-catalogue` passed (`/work`, `/`). A touch swipe sent through CDP on a Pixel 7 profile advanced one card; mid-drag screenshots checked.
 - [x] Budget: `/work` module JS 155 kB gzip (unchanged). Lighthouse median of 3: `/work` mobile 92, desktop 100; `/` mobile 95, desktop 100; accessibility 100, CLS 0.
 - [x] fe-reviewer: 1 High (a drag left stranded if the release never arrives) and the Mediums (touch axis check, vertical wheel lock, Lenis leak on diagonals, tap-flick, uncapped resistance) fixed; Lows fixed except caching card nodes for paint (4 cards; noted).
+
+### Fact correction: DevHacks × Cubbie was not a public vote (Srujan, before G1)
+
+- [x] Every "public student vote" / "chosen by public student vote" / "by vote" removed: portfolio-facts 2.2 (now says how the winner was chosen is not a fact, never say vote), `src/data/work.ts` (catalogue card and list row sublabel now "Track 1, DevHacks × Cubbie"), `src/data/graph/projects.ts` (project summary, the 1st-place metric label, the 82-submissions summary), `src/data/graph/context.ts` (Experience milestone), comments in `project-page.ts`; docs: v2 runbook and STATUS, this STATUS, `docs/screenshots/phase-5/content-dump.md`, `docs/v4/reference/srujan-premium-concept.html`. Kept: 1st place, Track 1, October 2026, 82 submissions, 350+ students and the Cooked, Receipts and Bailout descriptions; no other claim about how the winner was chosen.
+- [x] graph.json, search-index.json and sitemap regenerated (`npm run graph`, 157 nodes); 0 hits for "vote" in `out/`.
+- [x] fact-checker: 64 claims checked, 0 contradicted, 0 unsupported, verdict clean.
+- [x] lint, typecheck, unit 115 passed; Playwright Chrome 285 passed / 51 skipped, WebKit 279 passed / 57 skipped; `npm run verify -- --phase W9-facts` passed (`/work`, `/work/devhacks-cubbie`, `/experience`, `/cv`); `npm run release:check` ok.

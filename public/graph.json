@@ -88,7 +88,7 @@
       "id": "project-devhacks-cubbie",
       "type": "project",
       "label": "DevHacks × Cubbie hackathon",
-      "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, by public student vote among 82 submissions from 350+ students.",
+      "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, among 82 submissions from 350+ students.",
       "dates": {
         "start": "2026-10",
         "end": "2026-10"
@@ -2473,7 +2473,7 @@
     {
       "id": "metric-devhacks-place",
       "type": "metric",
-      "label": "1st place, Track 1, chosen by public student vote",
+      "label": "1st place, Track 1, DevHacks × Cubbie",
       "summary": "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.",
       "evidence": [
         {
@@ -2491,13 +2491,13 @@
         "headline"
       ],
       "value": "1st",
-      "valueLabel": "place, Track 1, chosen by public student vote"
+      "valueLabel": "place, Track 1, DevHacks × Cubbie"
     },
     {
       "id": "metric-devhacks-submissions",
       "type": "metric",
       "label": "82 submissions from 350+ students",
-      "summary": "The field Cooked was chosen from, by public student vote.",
+      "summary": "Submissions to the DevHacks × Cubbie hackathon in October 2026, from 350+ students.",
       "evidence": [
         {
           "label": "DevHacks × Cubbie page",
@@ -3292,7 +3292,7 @@
       "id": "event-devhacks-win",
       "type": "event",
       "label": "1st place, DevHacks × Cubbie hackathon",
-      "summary": "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.",
+      "summary": "1st place, Track 1, among 82 submissions from 350+ students.",
       "dates": {
         "start": "2026-10",
         "end": "2026-10"

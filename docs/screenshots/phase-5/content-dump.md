@@ -34,7 +34,7 @@ diagram: surplus-pipeline, surplus-network, surplus-privacy
 status: hackathon (featured)
 date: October 2026
 one-liner: Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout.
-impact: 1st place, Track 1, chosen by public student vote
+impact: 1st place, Track 1
 impact: 82 submissions from 350+ students
 impact: 493 automated tests in CI for Receipts
 highlight: Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.

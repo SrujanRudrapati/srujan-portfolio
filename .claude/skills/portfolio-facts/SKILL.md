@@ -28,7 +28,7 @@ Live site: https://srujanrudrapati.github.io/srujan-portfolio/
 - Traced repeated cluster failures to macOS permissions and network routing.
 
 ### 2.2 DevHacks × Cubbie hackathon — featured, status: hackathon
-- 1st place, Track 1, Oct 2026. Chosen by public student vote among 82 submissions from 350+ students.
+- 1st place, Track 1, Oct 2026, among 82 submissions from 350+ students. How the winner was chosen is not a fact here: never say it was a vote or describe the judging. Where a sublabel needs words after "1st", use "Track 1, DevHacks × Cubbie".
 - **Cooked** (winner): reads Canvas deadlines and grade weights, scores the week 0–100 with plain math, books study blocks on Google Calendar after the student says yes. Repo: https://github.com/SrujanRudrapati/cooked
 - **Receipts**: Discord bot that catches promises in chat; 493 automated tests in CI. Repo: https://github.com/SrujanRudrapati/receipts
 - **Bailout**: roommates' AI agents trade chores via an auction with human approval at each step. No repo link.

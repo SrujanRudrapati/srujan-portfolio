@@ -20,7 +20,7 @@ export type ProjectPage = CaseStudy & {
 
 /** The band's kicker where the catalogue's would repeat the page title. */
 const BAND_KICKER: Record<string, string> = {
-  // Facts 2.2: 1st place, Track 1, chosen by public student vote. The title already names the hackathon.
+  // Facts 2.2: 1st place, Track 1. The title already names the hackathon.
   "devhacks-cubbie": "Cooked won first place, Track 1",
 };
 

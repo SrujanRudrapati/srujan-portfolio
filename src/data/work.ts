@@ -40,13 +40,13 @@ const FEATURED: Record<string, FeaturedCopy> = {
     description: "Photograph a label; get allergy and medication warnings that quote it word for word.",
     tags: ["Live", "Claude API", "Next.js", "Tested"],
   },
-  // Facts 2.2: Cooked won first place, Track 1, public student vote, 82 submissions.
+  // Facts 2.2: Cooked won first place, Track 1, among 82 submissions.
   "devhacks-cubbie": {
     name: "Cooked",
     kicker: "First place, DevHacks × Cubbie",
-    // 2.2: 1st place in Track 1, by public student vote among 82 submissions (not first of all 82 overall).
+    // 2.2: 1st place in Track 1, among 82 submissions (not first of all 82 overall).
     num: "1st",
-    numSub: "Track 1, public student vote",
+    numSub: "Track 1, DevHacks × Cubbie",
     description: "Scores a student’s week from Canvas deadlines and books study blocks on Google Calendar once they say yes.",
     tags: ["Hackathon winner", "Canvas", "Google Calendar"],
   },
