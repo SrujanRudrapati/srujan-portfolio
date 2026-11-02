@@ -6,8 +6,8 @@ import { metric } from "./factories.ts";
 // figures, stack chips, links and diagrams. Content strings are the Phase 5
 // text verbatim; see .claude/skills/portfolio-facts for sources.
 
-const anchor = (slug: string) => `#project-${slug}`;
-const site = (slug: string, label: string) => ({ label: `${label} card`, url: anchor(slug) });
+const anchor = (slug: string) => `/work/${slug}`; // the project's own page (V3)
+const site = (slug: string, label: string) => ({ label: `${label} page`, url: anchor(slug) });
 
 export const projectNodes: ProjectNode[] = [
   {
@@ -33,16 +33,16 @@ export const projectNodes: ProjectNode[] = [
         "Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word.",
         "Merge rules keyed on serial number, so a low-quality read never overwrites good data.",
         "Traced repeated cluster failures to macOS permissions and network routing.",
-        "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds.",
+        "A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds.",
       ],
       details: {
         heading: "How it works",
         items: [
-          { name: "Five-node cluster", text: "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually." },
+          { name: "Five-node cluster", text: "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple’s MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can’t hold it individually." },
           { name: "USB spec collector", text: "A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number." },
-          { name: "Camera inventory scanner", text: "For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)." },
+          { name: "Camera inventory scanner", text: "For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)." },
           { name: "Merge logic", text: "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine." },
-          { name: "Surplus AI app", text: "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds." },
+          { name: "Surplus AI app", text: "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds." },
           { name: "Launchers", text: "One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node." },
         ],
       },
@@ -56,7 +56,7 @@ export const projectNodes: ProjectNode[] = [
     id: "project-devhacks-cubbie",
     type: "project",
     label: "DevHacks × Cubbie hackathon",
-    summary: "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, by public student vote among 82 submissions from 350+ students.",
+    summary: "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, among 82 submissions from 350+ students.",
     dates: { start: "2026-10", end: "2026-10" },
     evidence: [site("devhacks-cubbie", "DevHacks × Cubbie"), { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }],
     tags: ["project", "featured", "hackathon", "ai", "agents"],
@@ -70,7 +70,12 @@ export const projectNodes: ProjectNode[] = [
       highlights: [
         "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
         "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
-        "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step.",
+        "Bailout: roommates’ AI agents trade chores through an auction, with human approval at each step.",
+      ],
+      entries: [
+        { name: "Cooked", note: "winner", text: "Reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes." },
+        { name: "Receipts", text: "A Discord bot that catches promises in chat, with 493 automated tests in CI." },
+        { name: "Bailout", text: "Roommates’ AI agents trade chores through an auction, with human approval at each step." },
       ],
     },
   },
@@ -78,12 +83,12 @@ export const projectNodes: ProjectNode[] = [
     id: "project-label-lens",
     type: "project",
     label: "Label Lens",
-    summary: "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+    summary: "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
     evidence: [site("label-lens", "Label Lens"), { label: "Live app", url: "https://label-lens-iota.vercel.app" }],
     tags: ["project", "featured", "live", "ai", "llm", "web"],
     content: {
       title: "Label Lens",
-      oneLiner: "Reads food and medicine labels from a photo and checks them against the user's allergies and medications.",
+      oneLiner: "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications.",
       status: "live",
       featured: true,
       tags: ["ai"],
@@ -110,7 +115,7 @@ export const projectNodes: ProjectNode[] = [
       context: "Personal project, built solo",
       tags: ["ai"],
       problem: "Turning raw sales history into a logistics plan normally takes several manual steps by different people.",
-      built: "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
+      built: "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent’s output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
       highlights: [],
       statusNotes: [{ state: "neutral", text: "Personal prototype" }],
     },
@@ -254,13 +259,13 @@ export const projectMetricNodes: MetricNode[] = [
   metric("surplus-processing-time", "~80%", "less processing time per item, about 15 min down to about 3 min", "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.", [surplus], ["surplus-ai", "headline"]),
   metric("surplus-pallet-time", "~10 min", "to list a 100+ unit pallet, instead of 1 to 2 hours", "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.", [surplus], ["surplus-ai"]),
   metric("surplus-model-size", "14B", "Qwen model across four Mac minis, offline, via MLX", "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.", [surplus], ["surplus-ai", "llm"]),
-  metric("devhacks-place", "1st", "place, Track 1, chosen by public student vote", "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.", [devhacks, { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }], ["hackathon", "headline"]),
-  metric("devhacks-submissions", "82", "submissions from 350+ students", "The field Cooked was chosen from, by public student vote.", [devhacks], ["hackathon"]),
+  metric("devhacks-place", "1st", "place, Track 1, DevHacks × Cubbie", "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.", [devhacks, { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }], ["hackathon", "headline"]),
+  metric("devhacks-submissions", "82", "submissions from 350+ students", "Submissions to the DevHacks × Cubbie hackathon in October 2026, from 350+ students.", [devhacks], ["hackathon"]),
   metric("receipts-tests", "493", "automated tests in CI for Receipts", "Receipts, the Discord bot that catches promises in chat, runs 493 automated tests in CI.", [devhacks, { label: "Receipts repository", url: "https://github.com/SrujanRudrapati/receipts" }], ["hackathon", "testing"]),
   metric("label-lens-quotes", "44/44", "AI warnings verified to quote the label word for word", "Every AI warning in Label Lens must quote the label word for word; 44 of 44 verified.", [labelLens, { label: "Live app", url: "https://label-lens-iota.vercel.app" }], ["label-lens", "grounding"]),
   metric("label-lens-latency", "4 to 9 s", "response time, down from 16 s, with a fast and a deep model in parallel", "Running a fast and a deep model in parallel cut Label Lens response time from 16 s to 4 to 9 s.", [labelLens], ["label-lens"]),
   metric("label-lens-tests", "56 + 6", "tests: 56 unit, 6 end-to-end", "Label Lens has 56 unit tests and 6 end-to-end tests.", [labelLens], ["label-lens", "testing"]),
-  metric("watchtower-agents", "3", "agents in sequence on the Claude API", "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.", [site("supply-chain-watchtower", "Watchtower")], ["watchtower", "agents"]),
+  metric("watchtower-agents", "3", "agents in sequence on the Claude API", "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.", [site("supply-chain-watchtower", "Watchtower")], ["watchtower", "agents"]),
   metric("capstone-wape", "27.7%", "WAPE vs. 38.5% naive baseline", "Forecast error across 250 SKU and warehouse series with a strict time-based test window.", [site("demand-forecasting", "Demand Forecasting")], ["capstone", "forecasting"]),
   metric("capstone-holding-cost", "about 28%", "lower simulated holding cost", "A reorder-point policy on the forecast, at comparable service levels.", [site("demand-forecasting", "Demand Forecasting")], ["capstone"]),
   metric("wlan-packets", "100,000+", "WPA2-encrypted packets parsed", "The toolkit rebuilds the network topology from the parsed packets as a directed graph.", [site("wlan-forensics-toolkit", "WLAN toolkit")], ["wlan", "networking"]),
@@ -288,7 +293,7 @@ export const artifactNodes: ArtifactNode[] = [
   artifact("label-lens-live", "live", "Label Lens live app", "https://label-lens-iota.vercel.app", "Label Lens, live app.", "https://label-lens-iota.vercel.app"),
   artifact("watchtower-flow-diagram", "diagram", "Watchtower agent flow diagram", "watchtower-flow", "Three agents in sequence; only the Risk Analyst has a tool.", anchor("supply-chain-watchtower")),
   artifact("aws-cicd-repo", "repo", "CI/CD pipeline repository", "https://github.com/SrujanRudrapati/aws-cicd-pipeline", "Terraform, Docker and GitHub Actions for the multi-tier AWS environment.", "https://github.com/SrujanRudrapati/aws-cicd-pipeline"),
-  artifact("resume", "resume", "Resume", "/resume.pdf", "Srujan's resume as a PDF.", "/resume.pdf"),
+  artifact("resume", "resume", "Resume", "/resume.pdf", "Srujan’s resume as a PDF.", "/resume.pdf"),
 ];
 
 const e = (from: string, type: Edge["type"], to: string, label?: string): Edge => ({ from, to, type, ...(label ? { label } : {}) });

@@ -2,7 +2,7 @@
 // client component can import them without pulling the whole graph into the
 // browser bundle.
 
-import type { Project, ProjectStatus } from "./graph/types.ts";
+import type { ProjectStatus } from "./graph/types.ts";
 
 export const statusLabel: Record<ProjectStatus, string> = {
   production: "Production",
@@ -11,6 +11,3 @@ export const statusLabel: Record<ProjectStatus, string> = {
   academic: "Academic",
   personal: "Personal",
 };
-
-/** Which project links the whole card should open, if any. */
-export const primaryLink = (p: Project): string | undefined => p.links.live ?? p.links.repo ?? p.links.writeup;

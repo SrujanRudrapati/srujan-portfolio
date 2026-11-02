@@ -1,34 +1,7 @@
-import { About } from "@/components/About";
-import { Contact, SiteFooter } from "@/components/Contact";
-import { Credentials } from "@/components/Credentials";
-import { Experience } from "@/components/Experience";
-import { Hero } from "@/components/Hero";
-import { SiteHeader } from "@/components/SiteNav";
-import { Work } from "@/components/work/Work";
-import { Skills } from "@/components/Skills";
-import { AskPanel } from "@/components/ask/AskPanel";
+import { Home } from "@/components/home/Home";
+import { homeContent } from "@/data/home";
 
-export default function Home() {
-  return (
-    <>
-      <a
-        href="#main"
-        className="sr-only z-50 bg-accent px-4 py-2 font-medium text-on-accent focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
-      >
-        Skip to content
-      </a>
-      <SiteHeader />
-      <main id="main">
-        <Hero />
-        <About />
-        <Work />
-        <Experience />
-        <Skills />
-        <Credentials />
-        <Contact />
-      </main>
-      <SiteFooter />
-      <AskPanel />
-    </>
-  );
+// v4: the home is a hub (runbook W2). Everything the v3 story held lives on its own route.
+export default function Page() {
+  return <Home content={homeContent()} />;
 }

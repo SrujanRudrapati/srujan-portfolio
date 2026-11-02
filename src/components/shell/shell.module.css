@@ -1,0 +1,169 @@
+/* v4 shell (design-direction): header, footer, progress line, cursor. */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  padding-top: env(safe-area-inset-top, 0px);
+  border-bottom: 1px solid transparent;
+  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease);
+  view-transition-name: shell-header;
+}
+/* The only backdrop-filter on the site (runbook v4 §2). */
+.header[data-solid] {
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(10px);
+  border-color: var(--line);
+}
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  gap: 20px;
+}
+.mark {
+  font-family: var(--serif);
+  font-size: 20px;
+  text-decoration: none;
+  letter-spacing: 0.1px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+.avail {
+  font-size: 15px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.avail::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+@media (max-width: 900px) {
+  .avail {
+    font-size: 13px;
+  }
+}
+
+.footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 0 40px;
+  color: var(--muted);
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.progress {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 1px;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  background: var(--metal);
+  z-index: 40;
+  pointer-events: none;
+  view-transition-name: shell-progress;
+}
+
+/* The cursor grows by scale (motion-system: transform and opacity only). The positioner
+   follows the pointer; the ring scales inside it; the label sits above, unscaled. */
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 70;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  view-transition-name: shell-cursor;
+}
+.cursor[data-on] {
+  opacity: 1;
+}
+.ring {
+  position: absolute;
+  left: -17px;
+  top: -17px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid rgba(196, 154, 108, 0.7);
+  transition:
+    transform 0.45s var(--ease),
+    background-color 0.35s var(--ease),
+    border-color 0.35s var(--ease);
+}
+.cursor[data-state="hover"] .ring {
+  transform: scale(1.706); /* 58px */
+  border-color: rgba(196, 154, 108, 0.9);
+}
+.cursor[data-state="label"] .ring {
+  transform: scale(2.471); /* 84px */
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.cursorLabel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--bg);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease);
+}
+.cursor[data-state="label"] .cursorLabel {
+  opacity: 1;
+}
+.cursorDot {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 71;
+  pointer-events: none;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0;
+  view-transition-name: shell-cursor-dot;
+}
+.cursor[data-on] + .cursorDot {
+  opacity: 1;
+}
+
+/* No fine pointer (touch): no custom cursor at all, not just a transparent one. */
+@media not ((hover: hover) and (pointer: fine)) {
+  .cursor,
+  .cursorDot {
+    display: none;
+  }
+}
+
+@media print {
+  .header,
+  .footer,
+  .progress,
+  .cursor,
+  .cursorDot {
+    display: none !important;
+  }
+}

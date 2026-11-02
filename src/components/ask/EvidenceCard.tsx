@@ -24,24 +24,15 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
   const figures = hit.metrics ? hit.metrics.split("; ") : [];
   const links = externalEvidence(hit);
   return (
-    <li id={`evidence-${hit.id}`} tabIndex={-1} className="scroll-mt-4 border-t-[3px] border-ink bg-surface p-4">
-      <p className="text-xs font-medium text-muted">{TYPE_LABEL[hit.type] ?? hit.type}</p>
-      <h3 className="mt-1 font-display text-base font-semibold text-ink font-stretch-semi-expanded">
+    <li id={`evidence-${hit.id}`} tabIndex={-1} className="scroll-mt-4 border-t border-line py-4">
+      <p className="text-xs text-muted">{TYPE_LABEL[hit.type] ?? hit.type}</p>
+      <h3 className="mt-1 [font-family:var(--serif)] font-normal tracking-[-0.02em] text-2xl leading-tight text-ink">
         <a
-          href={anchorFor(hit)}
-          onClick={() => {
-            onNavigate();
-            const target = anchorFor(hit);
-            // Project cards: land focus on the card once the hash handler has scrolled to it. Lens links focus their own heading.
-            if (target.startsWith("#project-"))
-              window.setTimeout(() => {
-                const card = document.getElementById(target.slice(1));
-                if (!card) return;
-                card.tabIndex = -1;
-                card.focus({ preventScroll: true });
-              }, 50);
-          }}
-          className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent-2"
+          href={withBasePath(anchorFor(hit))}
+          // A page on the site: the Ask panel closes and the route transition takes over
+          // (it scrolls to any #anchor and moves focus there).
+          onClick={onNavigate}
+          className="underline decoration-line decoration-1 underline-offset-4 hover:decoration-accent"
         >
           {hit.label}
         </a>
@@ -50,7 +41,7 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
       {figures.length > 0 && (
         <ul aria-label={`${hit.label} figures`} className="mt-2 space-y-0.5">
           {figures.map((f) => (
-            <li key={f} className="text-sm font-semibold text-ink tabular-nums">
+            <li key={f} className="text-sm font-semibold text-accent tabular-nums">
               {f}
             </li>
           ))}
@@ -60,7 +51,7 @@ export function EvidenceCard({ hit, onNavigate }: { hit: Hit; onNavigate: () => 
         <ul aria-label={`${hit.label} links`} className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
           {links.map((u) => (
             <li key={u}>
-              <a href={external(u)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+              <a href={external(u)} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-accent underline decoration-1 underline-offset-4 hover:text-accent">
                 {hostLabel(u)}
                 <ArrowUpRightIcon aria-hidden="true" size={12} weight="bold" />
                 <span className="sr-only">(opens in a new tab)</span>

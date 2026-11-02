@@ -1,64 +1,78 @@
 ---
 name: design-direction
-description: The chosen visual direction for the portfolio redesign ("Spec sheet"): palette hex values for light and dark, Archivo type rules, spacing scale, radii, motion rules, status vocabulary, and the explicit avoid list. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or Tailwind class on the portfolio site, and whenever tokens in globals.css change (then update this file too).
+description: The chosen visual direction for the portfolio. v4 "Midnight & Bronze" (dark only, Bodoni Moda + Hanken Grotesk, bronze accent, rounded tiles, a hub home with a dot field) supersedes v3 from Phase W0 on. Covers token values, type rules, radii, surfaces, layout and interaction notes per page, the banned list, and copy rules. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or CSS on the portfolio site, and whenever tokens in globals.css change (then update this file too).
 ---
 
-# Design direction: Spec sheet
+# v4 direction: Midnight & Bronze (runbook v4, 2026-11-01)
 
-Chosen in Phase 1, built in Phase 2 (`docs/REDESIGN_NOTES.md`). Feel: a datasheet for a person. Bright, exact, strong type on a visible grid, no decoration. Colour appears only where it means something. The diagrams are the hero; everything else stays quiet so they read.
+Source of truth for look, layout, spacing, motion and interaction: the approved reference `docs/v4/reference/srujan-premium-concept.html` (screenshots in `docs/v4/reference-shots/<viewport>/`). Where the reference and `docs/REDESIGN_V4_RUNBOOK.md` disagree, the runbook wins. Motion detail lives in `motion-system`; facts in `portfolio-facts`.
 
-Source of truth for values: `src/app/globals.css`. Use the Tailwind utility names below; never hard-code a hex in a component. Light is the default; dark via `data-theme="dark"` on `<html>` or system preference with nothing stored.
+Feel: a quiet, expensive object. Midnight graphite, one warm metal, a high-contrast Didone for display and a plain grotesk for reading. Depth comes from soft rounded surfaces, a faint top glow and grain, never from colour noise.
 
-## Palette
+## Tokens (exact; CSS custom properties in `src/app/globals.css`)
 
-| Token | Utility | Light | Dark | Role |
-|---|---|---|---|---|
-| `--bg` | `bg-bg` | `#F6F6F3` | `#161616` | Page |
-| `--surface` | `bg-surface` | `#EBEBE6` | `#202020` | Cards, diagram panels |
-| `--surface-raised` | `bg-raised` | `#FDFDFB` | `#262626` | Inputs, popovers, the Ask panel |
-| `--border` | `border-line` | `#CFCFC8` | `#3A3A36` | Hairlines, list dividers |
-| `--text` | `text-ink`, `border-ink` | `#0A0A0A` | `#F2F2EE` | All body copy and headings, structural rules, chip outlines |
-| `--text-muted` | `text-muted` | `#55554F` | `#A3A39B` | Dates, captions, meta only. Never body copy |
-| `--accent` (red) | `text-accent`, `bg-accent` | `#C42A14` | `#FF6A4E` | Impact numbers (`Stat`) and the one primary button. Nothing else |
-| `--accent-hover` | `*-accent-hover` | `#A32310` | `#FF8A72` | Hover of the above |
-| `--accent-2` (cobalt) | `text-accent-2`, `border-accent-2` | `#1B4FD8` | `#7F9CFF` | Links, focus ring, diagram flow lines, travelling dots, the LLM tile, status dots, active nav underline |
-| `--accent-2-hover` | `*-accent-2-hover` | `#1640B0` | `#9DB3FF` | Hover of the above |
-| `--on-accent` | `text-on-accent` | `#FFFFFF` | `#0A0A0A` | Label on a red fill |
+| Token | Value | Use |
+|---|---|---|
+| `--bg` | `#0B0F14` | Page (midnight graphite) |
+| `--surface` | `#141B23` | Raised panels that need an opaque fill (portrait frame, dialogs) |
+| `--text` | `#E8EAED` | All body text and headings |
+| `--muted` | `#8D98A5` | Meta, intros, descriptions, labels (steel) |
+| `--accent` | `#C49A6C` | Bronze: hints, focus ring, cursor, active pills, chart bars, link underline |
+| `--line` | `rgba(232,234,237,.11)` | Hairlines and borders |
+| `--metal` | `linear-gradient(180deg,#EED7B4 0%,#C49A6C 45%,#8C6845 72%,#E2C59E 100%)` | Key numbers only, as `background-clip: text` (`.metal`) and the scroll progress line |
+| Live dot | `#7CC4A4` with a soft 2.4 s pulse | The "Now" line only |
+| Page glow | `radial-gradient(110% 55% at 50% -12%, #1A2633, transparent 62%)` | On `body`, scrolls with the page (never `fixed`) |
+| Grain | static SVG fractal noise, opacity `.035` | One fixed `body::after`, no animation, no blend mode |
+| Easing | `cubic-bezier(.16,1,.3,1)` (`--ease`) | Everything |
 
-All pairs are WCAG AA in both themes (table in NOTES, Phase 2). Red is 4.8:1 on surface in light, so red text is only ever large (`text-3xl` and up). Bronze, silver and gold tints appear only inside the medallion diagram, never elsewhere. No success or warning hues: status is a dot plus a word in cobalt (filled = running, outlined = in progress, none = neutral).
+Dark only: `color-scheme: dark`, no theme toggle, no light tokens. `/cv` keeps a print stylesheet that prints black on white.
 
-## Typography
+**Tile surface:** `rgba(232,234,237,.035)` fill, 1px `rgba(232,234,237,.09)` border, `box-shadow: inset 0 1px 0 rgba(255,255,255,.05)` (plus `0 30px 60px -40px rgba(0,0,0,.6)` on the home tiles). **Soft pill:** `rgba(232,234,237,.06)` (back pill), `.07` (segmented control track, list tags), `.08` (round arrow buttons); hover steps up by about `.06`.
 
-One family: Archivo (`next/font/google`, variable weight, `wdth` axis, `--font-archivo`). Hierarchy comes from weight and width, not from a second face.
+**Radii:** tiles and list rows 24px · panels, bands, composer, portrait, timeline 28px · catalogue stage and its cards 32px · pills, buttons, segmented control, arrow buttons 999px. Nothing is square-cornered except the timeline milestone diamond (4px).
 
-- Display (`h1`, `h2`, `Stat` figures, name in nav): weight 700, `font-stretch: 125%` (`font-stretch-expanded`), letter-spacing -0.02em.
-- `h3`: 700 at 112.5% (`font-stretch-semi-expanded`). `h4`: 600, normal width.
-- Body: 400; emphasis and labels 500; buttons 500. Numbers data-shaped (dates, IPs, GPAs) use `tabular-nums`, not a mono face.
-- Scale (fluid, 390px to 1280px): `text-xs` 12, `text-sm` 14, `text-base` 16 to 17, `text-lg` 18 to 20, `text-xl` 20 to 24, `text-2xl` 24 to 32, `text-3xl` 30 to 44 (section h2), `text-4xl` 40 to 72 (hero h1). Body line-height 1.55.
-- Measure: `max-w-measure` (65ch) for paragraphs; never a full-width paragraph.
-- Sentence case everywhere. No all-caps labels, no tracked-out eyebrows, no single coloured word inside a headline.
+## Type
 
-## Spacing, shape, depth
+- **Display:** Bodoni Moda 400 and 500, plus 400 italic (hover state of "Next project"), via `next/font/google`; fallback `Didot, 'Bodoni 72', Georgia, serif`. Used for the name in the header, h1 titles, tile names, project names, key numbers, the About statement, the email, the timeline detail title. Letter-spacing -0.025em on large titles, -0.02em on names. Weight 400 almost always.
+- **Text:** Hanken Grotesk 400 and 500 via `next/font/google`; fallback `system-ui, -apple-system, 'Segoe UI', sans-serif`. Body 17px / 1.6. Labels and meta 13 to 15px.
+- Sizes follow the reference's `clamp()` values: page title `clamp(44px, min(7vw, 11vh), 112px)` line-height .95; home h1 `clamp(40px, min(6.6vw, 11.5vh), 112px)` line-height .98 (tightened to `min(6.2vw, 9.6vh)` at ≥901px wide and ≤820px tall); tile name `clamp(28px, 3vw, 42px)`; card name `clamp(44px, 6vw, 92px)`; email `clamp(30px, 6vw, 92px)`.
+- Sentence case. No all-caps, no tracked-out eyebrows, no monospace.
 
-- 4px base scale (Tailwind default). Two named rhythms: `px-gutter` (16 to 40px) and `py-section` (64 to 112px). Page `max-w-page` 1200px.
-- Square corners everywhere. `rounded-sm` (2px) exists only for the focus ring; `rounded-full` only for status dots and travelling dots.
-- Structure is drawn with rules, not shadows: sections open with a 2px ink rule (`border-t-2 border-ink`), cards and diagram panels with a 3px ink rule, list items with a 1px `border-line`. The only shadow is `shadow-lift` on a hovered card.
-- Layout is left-aligned on a 12-column grid with deliberate asymmetry (7/5, 5/7, 6/6 spans). Never centre whole sections.
-- Focus: `outline 2px solid var(--accent-2)`, offset 3px, identical for `:focus-visible` and hover states.
+## Layout
 
-## Motion
+- Content width `.wrap`: `min(1240px, 100% - 48px)` centred (a 24px gutter on phones). No horizontal page scroll at any width.
+- Fixed header 60px: name left (Bodoni 20px, links home), "Available early 2027" with a bronze dot (4px bronze halo) right. Nothing else; no nav links, no theme toggle. Transparent at the top; after 30px of scroll `color-mix(in srgb, var(--bg) 90%, transparent)` + `backdrop-filter: blur(10px)` + hairline bottom border.
+- Inner pages start `padding-top: clamp(92px, 14vh, 140px)`, then the back pill, then the Bodoni title, then a muted one-line intro (max 52ch).
+- Footer: hairline top, name and year left, live Arizona time, nothing else claiming draft status.
 
-- Only `transform` and `opacity` animate (plus `background-color`/`color` on hover). One easing: `--ease-out-quart` (`cubic-bezier(0.25, 1, 0.5, 1)`).
-- Hover and focus: 150 to 200ms. Cards lift 2 to 4px (`-translate-y-0.5`), border goes to cobalt, arrows slide 2px.
-- Page-load entrance (hero only): `.enter`, 400ms, 70ms stagger, finished under 700ms.
-- Scroll reveals: `Reveal` primitive, 600ms fade and 14px lift, fires once, never on content already on screen, no layout shift.
-- Diagrams: cobalt dots travel the connectors on a loop and each stage lights as a dot arrives (see `.medallion-*`). Loop only while in view and while the tab is visible.
-- Reduced motion: nothing moves except the theme colour fade. Entrance, reveals and dots are all gated behind `@media (prefers-reduced-motion: no-preference)`; the reduced default is the finished, lit, still state. Diagrams must read fully without motion.
+## Page notes
 
-## Avoid
+- **Home (hub):** headline (three masked lines), lede (first sentence in `--text` 500, rest muted, max 46ch), now line, Ask link, then four tiles in one row on desktop (2×2 under 900px). The dot field sits top right on desktop (`width: min(46vw, 620px)`, `height: min(40vw, 52vh, 500px)`, a faint bronze radial behind it) and full width above the headline on phones. At 1280×720 to 1920×1080 everything fits in one viewport.
+- **Tiles:** Bodoni name, bronze hint (13px), muted description pinned to the bottom, 34px arrow circle top right that turns 45° on hover (hidden under 900px). Hover: 4px lift, bronze border at 40%, a 240px bronze radial (`.16`) following the pointer via `--mx`/`--my`.
+- **Work:** title and intro left, segmented Catalogue/List control right (white highlight that slides). Catalogue stage 32px radius, `height: clamp(320px, calc(100svh - 460px), 620px)`, one card at a time; card: kicker top left, key number top right (Bodoni, with a sans sublabel), big name bottom left, description + tags + "Open the project" bottom right; dark bottom shade over the art. Controls row: "2 of 4" with a quiet 44px pause/play button beside it, progress pills (8px dots; the active one a 28px bronze track that fills over the 5 s autoplay), two 44px round arrows. List: rounded rows `112px | name+kicker | description+tags | key number (metal)`; under 900px `80px | rest`.
+- **Art plates:** the reference's four CSS gradient plates (navy, steel, bronze) one per featured project, in that order; smaller projects use a plain dark plate `linear-gradient(160deg,#1A2430,#0F141A)`. Screenshots only on the project page, never on catalogue cards.
+- **Project page:** back pill "All work"; band (art, 28px radius, `height: min(56vh, 520px)`, kicker and Bodoni name over a bottom gradient); up to three result tiles (metal number + muted label); two-column "What it does" (title 1fr, bullets 2fr, hairline separated); diagram; stack pills; link buttons; "Next project" row with a large Bodoni name that turns italic on hover.
+- **Experience:** rounded panel with a year axis and lanes (200px label column); bars are bronze outlines with a 16% fill, solid bronze when hovered or selected; milestone is a 24px diamond; a "Today" line; detail panel below (dates left, Bodoni title, bronze organisation, muted bullets).
+- **About:** portrait frame (4:5, 28px, sticky on desktop) left, Bodoni statement right, two muted paragraphs, facts grid (2 columns, hairline top).
+- **Contact:** email in large Bodoni with an underline that draws on hover; composer panel (28px) with a Bodoni textarea, "Copy email" (outline) and "Open in my email app" (solid white, bronze on hover); muted links row.
+- **Buttons:** 50px pills, 1px `--line` border, bronze border on hover; the solid variant is `--text` on `--bg`, bronze on hover.
 
-Gradient heroes, glass or frosted cards, neon grids, stock tech imagery, centred-everything template layouts, identical rounded cards with soft grey shadows, all-caps eyebrow labels, numbered markers on content that is not a sequence, arrows appended to link text, a monospace face for data labels, purple or blue gradients, a second accent hue, decorative icons without a job, more than one red element per viewport, hover transitions on every element, scroll-triggered motion on every section. In copy: em and en dashes, the words leverage, seamless, robust, cutting-edge, passionate, synergy, spearheaded, utilize, delve.
+## Banned (they caused lag or read as template)
+
+Animated full-screen overlays; `mix-blend-mode` on large layers; `backdrop-filter` anywhere except the header (and the Ask panel's header); CSS `filter` transitions on large elements; `shadowBlur` in canvas loops; `background-attachment: fixed`; light mode; nav links in the header; a second accent hue; gradients on text other than key numbers; monospace labels; square cards; stock imagery; decorative icons without a job.
+
+## Copy
+
+Sentence case, no em or en dashes in UI copy, typographic apostrophes (’), facts only (`portfolio-facts`). Banned words: leverage, seamless, robust, cutting-edge, passionate, synergy, spearheaded, utilize, delve.
+
+## Accessibility
+
+Focus ring `1.5px solid var(--accent)`, offset 4px, everywhere. Measured: `--text` on `--bg` 15.95:1; `--muted` on `--bg` 6.56:1 (on `--surface` 5.92:1); bronze on `--bg` 7.49:1 (on `--surface` 6.76:1); `--bg` on bronze (cursor label, selected bars) 7.49:1. All AA at every size; recheck any new pair. Tap targets at least 44px on touch.
 
 ## When tokens change
 
-Edit `globals.css` first, then this file (the `/design-preview` style guide was removed in Phase 10). Re-check AA contrast for every changed pair in both themes and record the ratios in `docs/REDESIGN_NOTES.md`.
+Edit `globals.css` first, then this file. Re-check AA contrast for every changed pair.
+
+## History
+
+v3 "Pipeline" (Archivo + Martian Mono, black/white with one blue accent, 3D scenes, rail) and v2 "Spec sheet" are retired; their records are in `docs/REDESIGN_V3_STATUS.md`, `docs/v3/` and `docs/REDESIGN_NOTES.md`.

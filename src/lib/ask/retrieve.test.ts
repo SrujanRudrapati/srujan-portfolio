@@ -67,6 +67,6 @@ describe("evidence fields survive indexing", () => {
   test("tags and evidence stay arrays", () => {
     const hit = retrieve(index, "What runs in production?")[0];
     expect(Array.isArray(hit.tags)).toBe(true);
-    expect(hit.evidence).toContain("#project-surplus-ai");
+    expect(hit.evidence).toContain("/work/surplus-ai");
   });
 });

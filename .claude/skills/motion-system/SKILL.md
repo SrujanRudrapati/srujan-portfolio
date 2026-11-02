@@ -1,0 +1,61 @@
+---
+name: motion-system
+description: The motion rules for the v4 portfolio (Midnight & Bronze): one easing, durations, page transitions via the View Transitions API, the home dot field (2D canvas spring physics and its performance contract), custom cursor, magnetic buttons, Lenis smooth scroll, the catalogue and list morph, and reduced motion. Load whenever adding or changing any animation, transition, hover, scroll effect, canvas, or interaction.
+---
+
+# Motion system (v4)
+
+Rewritten at Phase W0 from runbook v4 §10 and the reference (`docs/v4/reference/srujan-premium-concept.html`). v3's GSAP scroll primitives, WebGL stage, posters and physics scenes were removed in W7 (with `three`, `@react-three/*`, `cannon-es` and `gsap`); nothing new may bring them back. Colours and layout: `design-direction`.
+
+## Rules
+
+- **One easing:** `cubic-bezier(.16,1,.3,1)` (`--ease`). No other curve, except `ease` on the 260 ms fade-out.
+- **Durations:** entrances 800 ms; hovers 300 to 600 ms; toggles and morphs 800 ms; fades 260 ms. The home headline lines rise over 1.2 s with a 90 ms stagger (reference).
+- **Only `transform` and `opacity` animate**, plus `width` on the progress pills and the segmented-control highlight (and colour/border/background on hover, which do not trigger layout).
+- **The dot field is the only ambient motion.** Everything else answers a person's action. The live dot's pulse is the one exception (a 2.4 s box-shadow pulse on an 8px element).
+- **Nothing in JS animates layout.** Positions are written as `transform`; pointer-driven values go through CSS variables.
+- **Banned:** animated full-screen overlays, `mix-blend-mode` on large layers, `backdrop-filter` outside the header, `filter` transitions on large elements, `shadowBlur` in canvas loops, `background-attachment: fixed`, GSAP, WebGL, any animation runtime.
+
+## Page transitions
+
+- On an internal route change: the old page fades out over 260 ms; the new page enters over 800 ms from 14px below with `--ease`. Use `document.startViewTransition` where supported (root old: opacity to 0 in 260 ms; root new: from `opacity 0, translateY(14px)` in 800 ms, delayed so it starts as the old one ends); otherwise a CSS class fallback on `main` with the same numbers.
+- After the swap: scroll resets to the top (Lenis `immediate`), focus moves to the new page's `h1` (`tabindex="-1"`, no visible outline), the cursor label resets.
+- The Work Catalogue ⇄ List toggle is a separate view transition: `html.vt-toggle` turns off the root cross-fade; each project has three names (`wi-N` row/card, `wa-N` art, `wn-N` name), groups animate 800 ms with a 60 ms stagger per item. No View Transitions API: instant switch.
+- **Catalogue gestures and autoplay** (`src/components/catalogue/`, owner's request after W9): one continuous position drives every card; `use-card-motion.ts` writes transform, opacity and the art's `translate` per frame. Drag, touch swipe and horizontal trackpad wheel follow 1:1 (the wheel's deltaX adds up across the gesture, which ends after 120 ms idle; a gesture's first event decides its axis, and vertical ones pass to the page). Past 0.75 of a card the track resists and is capped below one card. Release: advance past 20% of the width or above 0.5 px/ms (and more than 8 px), otherwise spring back over 500 ms; commits glide 700 ms on `--ease`; moving cards dip to about 0.955 and the art lags 6.5% for depth. Autoplay: every 5 s, looping, with the current pill filling as the timer; holds on hover, during gestures, on a hidden tab, off screen and for 8 s after any manual move; keyboard focus or the pause button stops it until play is pressed; none under reduced motion (the control is hidden too). Manual moves are announced in a status region; autoplay's are not.
+- Reduced motion: every transition is instant.
+
+## Dot field (home)
+
+A 2D canvas client component. Shapes ported from the reference: `idle` (three streams converging into a ring with a short output line), `work` (three overlapping plates), `experience` (timeline bars, an axis and a milestone diamond), `about` (head and shoulders), `contact` (envelope). Hovering or focusing a tile switches the target shape; leaving the tile row returns to idle.
+
+- **Physics:** per-dot spring toward the target, k between 0.018 and 0.048; velocity damping 0.86; a sine wobble of 0.004 units; cursor repulsion within 60px.
+- **Colour:** steel-white `rgba(214,224,236,.6)` and about 18% bronze `rgba(226,197,158,1)` with a wider glow.
+- **Performance contract (required):** one pre-rendered glow sprite per colour drawn with `drawImage` (never `shadowBlur`, never per-dot gradients); 1100 dots, 700 under 700px wide; device pixel ratio capped at 2; target shapes computed once per shape and cached; no per-frame allocation. Full-rate frames only while the field has energy; when total squared velocity is about 0, drop to about 12 fps for the wobble; wake on tile hover/focus or the cursor coming within 60px. Stop entirely when off screen (IntersectionObserver), on hidden tabs (`visibilitychange`) and when the home route unmounts.
+- **Reduced motion:** draw the target shape once, no loop; redraw once on tile hover/focus.
+
+## Project diagrams (W4)
+
+- The architecture diagrams on `/work/[slug]` draw once when they scroll into view (`FlowDiagram draw`, `src/hooks/use-draw-on-enter.ts`): connectors draw in bronze over 1.8 s (`stroke-dashoffset`, the one property beyond transform and opacity allowed here, as the runbook's "draws on scroll" needs it), boxes light as the data reaches them, one dot rides each track once and fades out. CSS transitions keyed on `data-draw="ready"`/`"on"`; no GSAP.
+- The server HTML is the finished drawing. A figure already above 80% of the viewport at load, reduced motion and no IntersectionObserver keep it; the observer fires at the same 80% line, so nothing visible is ever hidden.
+- No diagram loops any more: the medallion diagram on `/about` is static, and `/explore`'s lens switch is a 200 ms fade (the GSAP Flip went in W7).
+
+## Cursor and magnetic
+
+- Only with `(hover: hover) and (pointer: fine)` and not under reduced motion. A 34px bronze ring (lerp 0.18 toward the pointer) and a 5px bronze dot (exact). The ring grows to 58px over links and buttons; over the catalogue's front card it becomes an 84px solid bronze disc labelled "Open", over the rest of the stage "Drag". The native cursor stays (text fields keep their I-beam). The label resets on route change. Both are `aria-hidden` and `pointer-events: none`.
+- Magnetic: arrow buttons, back pills and main buttons move up to 25% of the pointer offset toward the pointer (transform only) and spring back on leave over 600 ms with `--ease`.
+
+## Smooth scroll
+
+Lenis with `lerp: 0.09`, its own rAF loop, off under reduced motion and on touch. Native scroll underneath so keyboard, anchors and find-in-page keep working. The header's frosted state and the 1px metal progress line (scaleX of scroll position) read the native scroll position with a passive listener and write one transform per frame.
+
+## Hero headline
+
+Three lines, each in an `overflow: hidden` mask with `padding-bottom: .16em; margin-bottom: -.1em` so descenders are never clipped; the inner span rises from `translateY(105%)` over 1.2 s, 90 ms stagger, on first load only. Lines do not wrap on desktop (`white-space: nowrap` above 560px). Under reduced motion the lines are simply there.
+
+## Reduced motion (full alternate mode)
+
+Instant page transitions and toggles, static dots, no cursor, no magnetic, no headline reveal, no Lenis, no pulse. Every page must read completely in this mode.
+
+## Not allowed
+
+Autoplay sound, scroll-jacking, preloaders that block content, intro screens, animation of layout properties, third-party CDN requests.

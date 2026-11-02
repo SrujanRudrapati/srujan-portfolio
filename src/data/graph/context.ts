@@ -8,7 +8,7 @@ const industry = (id: string, label: string, summary: string, tags: string[] = [
   type: "industry",
   label,
   summary,
-  evidence: [{ label: "Work section", url: "#work" }],
+  evidence: [{ label: "Work", url: "/work" }],
   tags: ["industry", ...tags],
 });
 
@@ -20,7 +20,7 @@ export const industryNodes: IndustryNode[] = [
   industry("energy", "Energy", "A major US utility, where the data governance work ran for 10 months."),
   industry("manufacturing", "Manufacturing", "A US materials engineering client with an AWS pipeline handling about 10 million records a day."),
   industry("consumer-goods", "Consumer goods", "A large FMCG client, where Unity Catalog and Microsoft Purview managed access, lineage and classification."),
-  industry("consumer-health", "Consumer health", "Food and medicine labels checked against a person's allergies and medications, in Label Lens."),
+  industry("consumer-health", "Consumer health", "Food and medicine labels checked against a person’s allergies and medications, in Label Lens."),
   industry("supply-chain", "Supply chain", "Demand forecasting, inventory policy and logistics planning: the capstone and the Watchtower prototype."),
   industry("network-security", "Network security", "WLAN traffic forensics and the network security course it was built for."),
   industry("motorsport", "Motorsport", "Formula 1 race outcomes, ranked by win probability and backtested on held-out races."),
@@ -32,7 +32,7 @@ const problem = (id: string, label: string, summary: string, tags: string[] = []
   type: "problem",
   label,
   summary,
-  evidence: [{ label: "Work section", url: "#work" }],
+  evidence: [{ label: "Work", url: "/work" }],
   tags: ["problem", ...tags],
 });
 
@@ -44,7 +44,7 @@ export const problemNodes: ProblemNode[] = [
   problem("pipeline-cost", "Pipeline cost", "Spark jobs and SQL on Databricks tuned for performance and cost."),
   problem("manual-governance", "Governance by hand", "A Microsoft Purview catalog maintained by hand. Scheduled automation on Databricks pushed entities and classifications into Purview, with Apache Atlas lineage and a business glossary."),
   problem("inventory-cost", "Inventory cost", "Forecast error and holding cost across 250 SKU and warehouse series. A reorder-point policy on the forecast cut simulated holding cost about 28% at comparable service levels."),
-  problem("manual-logistics-planning", "Manual logistics planning", "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run."),
+  problem("manual-logistics-planning", "Manual logistics planning", "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it."),
   problem("deadline-overload", "Deadline overload", "Students juggling Canvas deadlines and grade weights. Cooked scores the week 0 to 100 and books study blocks after the student says yes."),
   problem("network-attack-detection", "Network attack detection", "Finding a live attack inside 100,000+ WPA2-encrypted packets. A Z-score detector caught a denial-of-service deauthentication attack."),
   problem("backtest-leakage", "Backtest leakage", "Rolling features shifted forward so predictions never see the future. 80% top-3 accuracy on 44 held-out races against a 73% baseline."),
@@ -62,7 +62,7 @@ const event = (id: string, label: string, summary: string, dates: EventNode["dat
 });
 
 export const eventNodes: EventNode[] = [
-  event("devhacks-win", "1st place, DevHacks × Cubbie hackathon", "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.", { start: "2026-10", end: "2026-10" }, [{ label: "DevHacks × Cubbie card", url: "#project-devhacks-cubbie" }], ["hackathon"]),
-  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "#experience" }, { label: "Surplus AI card", url: "#project-surplus-ai" }], ["role", "production"]),
-  event("graduation", "M.S. graduation (expected)", "Expected December 2026 from Arizona State University. Available early 2027.", { start: "2026-12", end: "2026-12" }, [{ label: "Education", url: "#credentials" }], ["education"]),
+  event("devhacks-win", "1st place, DevHacks × Cubbie hackathon", "1st place, Track 1, among 82 submissions from 350+ students.", { start: "2026-10", end: "2026-10" }, [{ label: "DevHacks × Cubbie page", url: "/work/devhacks-cubbie" }], ["hackathon"]),
+  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "/experience" }, { label: "Surplus AI page", url: "/work/surplus-ai" }], ["role", "production"]),
+  event("graduation", "M.S. graduation (expected)", "Expected December 2026 from Arizona State University. Available early 2027.", { start: "2026-12", end: "2026-12" }, [{ label: "Education", url: "/about#credentials" }], ["education"]),
 ];

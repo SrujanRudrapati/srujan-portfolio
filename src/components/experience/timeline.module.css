@@ -1,0 +1,256 @@
+/* Experience timeline (runbook v4 W5), values from the reference's .chartwrap, .lane, .barx and .xdetail. */
+
+.panel {
+  margin-top: clamp(32px, 6vh, 56px);
+  padding: 36px 32px 44px;
+  border-radius: 28px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+  overflow-x: auto;
+}
+.chart {
+  position: relative;
+  min-width: 700px; /* phones scroll the chart sideways inside its panel (runbook W5.5) */
+}
+
+.axis,
+.lane {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+}
+.axis {
+  align-items: end;
+}
+.years {
+  position: relative;
+  height: 28px;
+  border-bottom: 1px solid var(--line);
+}
+.years span {
+  position: absolute;
+  bottom: 8px;
+  left: var(--x);
+  transform: translateX(-50%);
+  font-size: 14px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.lane {
+  align-items: center;
+  min-height: 72px;
+  border-bottom: 1px solid var(--line);
+}
+.laneLabel {
+  padding-right: 16px;
+  font-size: 15px;
+  color: var(--muted);
+}
+.track {
+  position: relative;
+  height: 72px;
+}
+
+/* Bars: bronze outline with a soft fill; hovered or selected bars fill solid bronze. Each button is a
+   44px touch target; the visible 28px pill (24px diamond) is drawn inside it by ::before. */
+.bar,
+.diamond {
+  position: absolute;
+  top: 14px;
+  left: var(--l);
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--text);
+  cursor: pointer;
+  transition: color 0.3s var(--ease);
+}
+.bar::before,
+.diamond::before {
+  content: "";
+  position: absolute;
+  border: 1px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  transition: background-color 0.3s var(--ease), transform 0.4s var(--ease);
+}
+.bar {
+  width: var(--w);
+  min-width: 44px; /* the two-month internship would be 20px; the reference draws it as a short pill too */
+}
+.bar::before {
+  inset: 8px 0;
+  border-radius: 999px;
+}
+.barLabel {
+  position: relative;
+  display: block;
+  padding: 0 14px;
+  font-size: 14px;
+  line-height: 44px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.diamond {
+  width: 44px;
+  margin-left: -22px;
+}
+.diamond::before {
+  left: 10px;
+  top: 10px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  transform: rotate(45deg);
+}
+.bar:hover,
+.bar[aria-pressed="true"] {
+  color: var(--bg);
+}
+.bar:hover::before,
+.bar[aria-pressed="true"]::before,
+.diamond:hover::before,
+.diamond[aria-pressed="true"]::before {
+  background: var(--accent);
+}
+.diamond:hover::before,
+.diamond[aria-pressed="true"]::before {
+  transform: rotate(45deg) scale(1.1);
+}
+
+/* Labels of narrow bars sit outside: right of the intern bar, left of ASU Surplus and the milestone. */
+.tagLeft,
+.tagRight {
+  position: absolute;
+  top: 26px;
+  left: var(--x);
+  font-size: 14px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.tagLeft {
+  transform: translateX(calc(-100% - 22px));
+}
+.tagLeft[data-for="bar"] {
+  transform: translateX(calc(-100% - 12px));
+}
+.tagRight {
+  /* After the drawn pill, which is at least 44px wide even when the dates are shorter. */
+  left: max(var(--x), calc(var(--l) + 44px));
+  margin-left: 12px;
+}
+
+.today {
+  position: absolute;
+  top: -6px;
+  bottom: 0;
+  left: var(--x);
+  width: 1px;
+  background: var(--text);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.todayLabel {
+  position: absolute;
+  bottom: -28px;
+  left: -18px;
+  font-size: 13px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+/* Detail panel under the chart. */
+.detail {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  margin-top: 48px;
+  min-height: 220px;
+}
+.when {
+  margin: 0;
+  padding-top: 10px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.title {
+  margin: 0;
+  font-size: clamp(32px, 3.6vw, 48px);
+  line-height: 1.05;
+}
+.org {
+  margin: 6px 0 18px;
+  color: var(--accent);
+}
+.place {
+  color: var(--muted);
+}
+.summary {
+  margin: 0 0 18px;
+  max-width: 68ch;
+}
+.figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0 0 22px;
+  padding: 0;
+  list-style: none;
+  color: var(--muted);
+  font-size: 15px;
+}
+.figure {
+  font-family: var(--serif);
+  font-size: 28px;
+  line-height: 1.1;
+}
+.outcomes {
+  margin: 0;
+  padding-left: 18px;
+  max-width: 68ch;
+  color: var(--muted);
+}
+.outcomes li {
+  margin: 10px 0;
+  line-height: 1.55;
+}
+.outcomeLabel {
+  display: block;
+  color: var(--text);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 26px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .inner {
+    animation: rise 0.6s var(--ease);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@media (max-width: 900px) {
+  .panel {
+    padding: 28px 20px 40px;
+  }
+  .axis,
+  .lane {
+    grid-template-columns: 140px minmax(0, 1fr);
+  }
+  .detail {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+}

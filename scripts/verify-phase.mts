@@ -3,7 +3,7 @@
 //   npm run verify -- --phase 4 [--no-build] [--tablet] [--path /] [--path "/#lens=timeline"] [--port 4321]
 //
 // Builds the static export (unless --no-build), serves out/ with `serve`, then for
-// each path drives headless Chrome at 390px and 1280px in light and dark:
+// each path drives headless Chrome at 390px and 1280px in the dark theme (v4 is dark only):
 // scrolls the page so Reveal blocks fire, saves full-page screenshots to
 // docs/screenshots/phase-N/, runs axe (WCAG 2.2 AA), records console errors,
 // failed requests, and horizontal overflow. Writes verify.json and verify.md
@@ -50,10 +50,14 @@ const VIEWPORTS: Viewport[] = [
   { name: "desktop", width: 1280, height: 800 },
 ];
 const TABLET: Viewport = { name: "tablet", width: 768, height: 1024 };
-const THEMES: Theme[] = ["light", "dark"];
+const THEMES: Theme[] = ["dark"]; // v4 is dark only (runbook §1); "light" stays a valid Theme for older reports
 const WCAG_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"];
 const SERVER_START_TIMEOUT_MS = 20_000;
 const REVEAL_SETTLE_MS = 800;
+
+// Third-party warnings we cannot fix in this repo. Each needs a reason.
+const KNOWN_WARNINGS: string[] = [
+];
 
 type Args = { phase: string; build: boolean; paths: string[]; port: number; tablet: boolean };
 
@@ -140,15 +144,29 @@ async function runOne(
     hasTouch: viewport.name === "mobile",
   });
   const page = await context.newPage();
+  await page.addInitScript(() => sessionStorage.setItem("intro", "1")); // screenshots show the page, not the first-visit intro
   const consoleErrors: string[] = [];
   const failedRequests: string[] = [];
+  // A deliberate not-found probe (a path starting /no-such) is meant to answer 404: the document's own 404
+  // and the browser's console line about it are the expected result, not a failure.
+  const notFoundProbe = path.startsWith("/no-such");
+  const expected404 = (url: string, status: number) => notFoundProbe && status === 404 && new URL(url).pathname === path.split("#")[0];
   page.on("console", (message) => {
-    if (message.type() === "error" || message.type() === "warning") consoleErrors.push(`${message.type()}: ${message.text()}`);
+    if (notFoundProbe && message.text().includes("status of 404")) return;
+    if ((message.type() === "error" || message.type() === "warning") && !KNOWN_WARNINGS.some((k) => message.text().includes(k))) consoleErrors.push(`${message.type()}: ${message.text()}`);
   });
   page.on("pageerror", (error) => consoleErrors.push(`pageerror: ${error.message}`));
-  page.on("requestfailed", (request) => failedRequests.push(`${request.url()} (${request.failure()?.errorText ?? "failed"})`));
+  page.on("requestfailed", (request) => {
+    // next/link prefetching: Next aborts its own route probe (a plain fetch of the route path)
+    // once segment prefetches start, and RSC prefetches are cancelled when the page closes.
+    // Neither is a broken asset.
+    const aborted = request.failure()?.errorText === "net::ERR_ABORTED";
+    const routeProbe = request.resourceType() === "fetch" && !/\.[a-z0-9]+$/i.test(new URL(request.url()).pathname);
+    if (aborted && (request.headers()["rsc"] || routeProbe)) return;
+    failedRequests.push(`${request.url()} (${request.failure()?.errorText ?? "failed"})`);
+  });
   page.on("response", (response) => {
-    if (response.status() >= 400) failedRequests.push(`${response.url()} (${response.status()})`);
+    if (response.status() >= 400 && !expected404(response.url(), response.status())) failedRequests.push(`${response.url()} (${response.status()})`);
   });
 
   await page.goto(`${baseUrl}${path}`, { waitUntil: "networkidle" });

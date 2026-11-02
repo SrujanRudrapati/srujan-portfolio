@@ -51,3 +51,8 @@ PORTFOLIO_BRIEF.md
 worker/node_modules/
 worker/dist/
 worker/.wrangler/
+docs/v3/refs/**/*.webm
+assets-src/
+
+# Personal file kept out of the repo (DECISIONS 17)
+Srujan_Rudrapati_Research_Assistant.pdf

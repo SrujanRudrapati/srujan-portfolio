@@ -11,7 +11,7 @@ import { LensItemList } from "./LensItemList";
 
 function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; onToggle: () => void }) {
   if (chip.count === 0) {
-    return <li className="inline-flex min-h-11 items-center border border-line px-2.5 text-xs font-medium text-muted">{chip.label}</li>;
+    return <li className="inline-flex min-h-11 items-center rounded-full border border-line px-3.5 text-xs text-muted">{chip.label}</li>;
   }
   return (
     <li>
@@ -19,13 +19,13 @@ function Chip({ chip, pressed, onToggle }: { chip: SkillChip; pressed: boolean; 
         type="button"
         aria-pressed={pressed}
         onClick={onToggle}
-        className={`inline-flex min-h-11 items-center gap-1.5 border px-2.5 text-xs font-medium transition-colors duration-150 ${
-          pressed ? "border-ink bg-ink text-bg" : "border-ink text-ink hover:bg-surface"
+        className={`inline-flex min-h-11 items-center gap-1.5 rounded-full border px-3.5 text-xs transition-colors duration-300 ${
+          pressed ? "border-ink bg-ink text-bg" : "border-line text-ink hover:border-accent"
         }`}
       >
         {chip.label}
         <span className="sr-only">, used in </span>
-        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent-2"}`}>{chip.count}</span>
+        <span className={`tabular-nums ${pressed ? "text-bg" : "text-accent"}`}>{chip.count}</span>
       </button>
     </li>
   );
@@ -53,7 +53,7 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
       <div className="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-2 lg:grid-cols-3">
         {groups.map((g) => (
           <section key={g.name} aria-label={g.name}>
-            <h4 className="mb-3 text-base text-ink">{g.name}</h4>
+            <h3 className="mb-3 text-base text-ink">{g.name}</h3>
             {g.skills.length > 0 && chipList(g.skills, `${g.name} skills`)}
             {g.subgroups?.map((s) => (
               <div key={s.name} className="mt-3">
@@ -66,11 +66,11 @@ export function SkillMapLens({ graph }: { graph: Graph }) {
       </div>
       <section aria-labelledby="skill-map-results">
         <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3">
-          <h4 id="skill-map-results" className="text-lg text-ink" aria-live="polite">
+          <h3 id="skill-map-results" className="text-lg text-ink" aria-live="polite">
             {selected ? `Where ${selected.label} is used` : "All projects"}
-          </h4>
+          </h3>
           {selected && (
-            <button type="button" onClick={() => setSelected(null)} className="min-h-11 text-sm font-medium text-accent-2 underline decoration-1 underline-offset-4 hover:text-accent-2-hover">
+            <button type="button" onClick={() => setSelected(null)} className="min-h-11 text-sm font-medium text-accent underline decoration-1 underline-offset-4 hover:text-accent">
               Show all projects
             </button>
           )}

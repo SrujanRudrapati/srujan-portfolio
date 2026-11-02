@@ -7,9 +7,10 @@
 // The emitted files are committed: the Pages workflow runs `next build`
 // directly (not `npm run build`), so it serves whatever was generated locally.
 
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { graph } from "../src/data/graph.ts";
+import { LENSES } from "../src/components/explore/lenses.ts";
 import type { Edge, GraphNode } from "../src/data/graph.ts";
 
 const ALLOWED: Record<Edge["type"], { from: GraphNode["type"][]; to: GraphNode["type"][] }> = {
@@ -23,6 +24,26 @@ const ALLOWED: Record<Edge["type"], { from: GraphNode["type"][]; to: GraphNode["
 };
 
 const sentences = (text: string) => text.split(/(?<=[.!?])\s+(?=[A-Z0-9"'])/).filter(Boolean).length;
+
+// Evidence URLs (V3): a page on the site, a file in public/, or an http(s) URL. Bare
+// "#fragment" anchors from the one-page v2 site are rejected, and every route must exist.
+const LENS_IDS: string[] = LENSES.map((l) => l.id); // from the lens switcher itself
+const ABOUT_ANCHORS = ["skills", "credentials"]; // the section ids on /about (v4 W6); e2e/v4-about-contact.spec.ts checks both land
+function checkUrl(url: string | undefined): string | null {
+  if (!url) return "is empty";
+  if (/^https?:\/\//.test(url)) return null;
+  if (url.startsWith("#")) return "is a bare fragment; point at a page (for example /work/<slug> or /experience)";
+  if (!url.startsWith("/")) return "is not a root path or http(s) URL";
+  const [path, hash = ""] = url.split("#");
+  if (/\.[a-z0-9]+$/i.test(path)) return existsSync(join("public", path)) ? null : "names a file that is not in public/";
+  const slugs = new Set(graph.nodes.filter((x) => x.type === "project").map((x) => x.id.replace(/^project-/, "")));
+  const work = /^\/work\/([a-z0-9-]+)$/.exec(path);
+  if (work) return slugs.has(work[1]) ? null : `names no project ("${work[1]}")`;
+  if (path === "/explore") return !hash || (hash.startsWith("lens=") && LENS_IDS.includes(hash.slice(5))) ? null : `has an unknown lens "#${hash}"`;
+  if (path === "/about") return !hash || ABOUT_ANCHORS.includes(hash) ? null : `has an unknown anchor "#${hash}"`;
+  if (["/", "/work", "/experience", "/contact", "/cv"].includes(path)) return null;
+  return "is not a page on the site";
+}
 
 function validate(): string[] {
   const errors: string[] = [];
@@ -47,7 +68,8 @@ function validate(): string[] {
     if (n.type === "project" && n.evidence.length === 0) errors.push(`project "${n.id}" has no evidence link`);
     for (const ev of n.evidence) {
       if (!ev.label?.trim()) errors.push(`node "${n.id}" has an evidence entry with no label`);
-      if (!ev.url || !(ev.url.startsWith("#") || ev.url.startsWith("/") || /^https?:\/\//.test(ev.url))) errors.push(`node "${n.id}" evidence url "${ev.url}" is not a fragment, root path or http(s) URL`);
+      const problem = checkUrl(ev.url);
+      if (problem) errors.push(`node "${n.id}" evidence url "${ev.url}" ${problem}`);
     }
     if (/[–—]/.test(`${n.label} ${n.summary}`)) errors.push(`node "${n.id}" contains an em or en dash`);
   }
@@ -127,5 +149,12 @@ mkdirSync(publicDir, { recursive: true });
 writeFileSync(join(publicDir, "graph.json"), JSON.stringify(graph, null, 2) + "\n");
 writeFileSync(join(publicDir, "search-index.json"), JSON.stringify(searchIndex(), null, 2) + "\n");
 
+// The sitemap (v4 W8): every route, from the same list the site uses plus one page per project.
+const SITE = "https://srujanrudrapati.github.io/srujan-portfolio";
+const ROUTES = ["/", "/work", "/experience", "/about", "/contact", "/explore", "/cv"];
+const projectSlugs = graph.nodes.filter((x) => x.type === "project").map((x) => x.id.replace(/^project-/, ""));
+const urls = [...ROUTES, ...projectSlugs.map((slug) => `/work/${slug}`)].map((r) => `  <url>\n    <loc>${SITE}${r === "/" ? "/" : r}</loc>\n  </url>`);
+writeFileSync(join(publicDir, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
+
 const counts = graph.nodes.reduce<Record<string, number>>((acc, n) => ({ ...acc, [n.type]: (acc[n.type] ?? 0) + 1 }), {});
-console.log(`✓ graph ok: ${graph.nodes.length} nodes (${Object.entries(counts).map(([t, c]) => `${t} ${c}`).join(", ")}), ${graph.edges.length} edges → public/graph.json, public/search-index.json`);
+console.log(`✓ graph ok: ${graph.nodes.length} nodes (${Object.entries(counts).map(([t, c]) => `${t} ${c}`).join(", ")}), ${graph.edges.length} edges → public/graph.json, public/search-index.json, public/sitemap.xml`);

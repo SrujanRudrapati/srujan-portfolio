@@ -1,0 +1,429 @@
+/* v4 Work page: catalogue and list (design-direction "Work"; values from the reference). */
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+/* Segmented control: the white highlight slides between the options. */
+.seg {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 4px;
+  background: rgba(232, 234, 237, 0.07);
+  position: relative;
+}
+.seg::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: var(--sw, 96px);
+  transform: translateX(var(--sx, 0));
+  border-radius: 999px;
+  background: var(--text);
+  transition:
+    transform 0.6s var(--ease),
+    width 0.6s var(--ease);
+}
+.seg button {
+  background: none;
+  border: none;
+  border-radius: 999px;
+  min-height: 44px; /* touch target (the reference is 36px) */
+  padding: 8px 18px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--muted);
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  transition: color 0.4s var(--ease);
+}
+.seg button[aria-pressed="true"] {
+  color: var(--bg);
+}
+
+/* Catalogue */
+.stage {
+  position: relative;
+  /* Reference: 100svh - 460px. 40px more is held back for the 44px back pill (36px in the reference). */
+  height: clamp(320px, calc(100svh - 500px), 620px);
+  margin-top: clamp(18px, 3vh, 32px);
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  border-radius: 32px;
+  isolation: isolate;
+  user-select: none;
+}
+.stage:active {
+  cursor: grabbing;
+}
+.stage:focus-visible {
+  outline-offset: 4px;
+  border-radius: 32px;
+}
+.card {
+  position: absolute;
+  inset: 0;
+  border-radius: 32px;
+  overflow: hidden;
+  color: var(--on-art);
+  text-decoration: none;
+  /* Transform, opacity and the art's translate are written per frame by use-card-motion.ts. */
+  will-change: transform;
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.7);
+  -webkit-user-drag: none;
+}
+.card:focus-visible {
+  outline-offset: -6px;
+  border-radius: 32px;
+}
+.art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  transition: transform 1.6s var(--ease);
+}
+/* Wider than the card so it can lag behind it (parallax) without showing an edge. */
+.fill {
+  position: absolute;
+  inset: 0 -10%;
+}
+.card[data-front]:hover .art {
+  transform: scale(1.03);
+}
+/* Darkens the top (kicker and figure) and the bottom (name and description) of the art, so text on
+   the light plates stays readable; the middle of the plate is left alone. */
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(6, 9, 13, 0.82) 0%, rgba(6, 9, 13, 0.5) 24%, rgba(6, 9, 13, 0.08) 38%, rgba(6, 9, 13, 0.62) 50%, rgba(6, 9, 13, 0.78) 62%, rgba(6, 9, 13, 0.9) 100%);
+}
+.top {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 34px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+.kick {
+  font-size: 15px;
+  color: var(--on-art);
+}
+.big {
+  font-family: var(--serif);
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 1;
+  text-align: right;
+}
+.big small {
+  display: block;
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--on-art);
+  margin-top: 10px;
+  max-width: 24ch;
+  margin-left: auto;
+}
+.bot {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  bottom: 36px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: end;
+}
+.nm {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(44px, 6vw, 92px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+.ds {
+  display: block;
+  font-size: 17px;
+  color: var(--on-art);
+  margin: 0 0 14px;
+  max-width: 40ch;
+}
+.open {
+  display: inline-flex;
+  margin-top: 16px;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.6s var(--ease),
+    transform 0.6s var(--ease);
+}
+.card[data-front] .open {
+  opacity: 1;
+  transform: none;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 22px;
+}
+.status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.count {
+  font-size: 14px;
+  color: var(--muted);
+  min-width: 52px;
+}
+/* Pause and play for autoplay: a quiet 44px target beside the counter. */
+.play {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: var(--muted);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition:
+    color 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+.play:hover {
+  color: var(--text);
+  background: rgba(232, 234, 237, 0.08);
+}
+.play svg {
+  width: 12px;
+  height: 12px;
+}
+/* No autoplay under reduced motion, so no control for it. */
+@media (prefers-reduced-motion: reduce) {
+  .play {
+    display: none;
+  }
+}
+/* 8px dots drawn inside 24px buttons (axe target size); the active one stretches to 28px. */
+.pips {
+  display: flex;
+  gap: 0;
+}
+.pips button {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: width 0.6s var(--ease);
+}
+.pips button::before {
+  content: "";
+  grid-area: 1 / 1;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(232, 234, 237, 0.22);
+  transition:
+    width 0.6s var(--ease),
+    background-color 0.4s var(--ease);
+}
+.pips button[aria-current="true"] {
+  width: 44px;
+}
+.pips button[aria-current="true"]::before {
+  width: 28px;
+  background: var(--accent);
+}
+/* The autoplay timer: with motion on, the current pill is a track that fills left to right over 5 s
+   (in step with use-autoplay.ts) and holds wherever autoplay holds. */
+@media (prefers-reduced-motion: no-preference) {
+  .pips button[aria-current="true"]::before {
+    background: color-mix(in srgb, var(--accent) 32%, transparent);
+  }
+  .pips button[aria-current="true"]::after {
+    content: "";
+    grid-area: 1 / 1;
+    width: 28px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    transform-origin: left center;
+    animation: pip-fill var(--autoplay, 5s) linear forwards; /* AUTOPLAY_MS, set on .controls */
+    animation-play-state: paused;
+  }
+  .controls[data-autoplay="running"] .pips button[aria-current="true"]::after {
+    animation-play-state: running;
+  }
+}
+@keyframes pip-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.arrows {
+  display: flex;
+  gap: 10px;
+}
+.arw {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(232, 234, 237, 0.08);
+  color: var(--text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.arw:hover {
+  background: rgba(232, 234, 237, 0.16);
+}
+.arw svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* List */
+.list {
+  list-style: none;
+  margin: 44px 0 0;
+  padding: 0;
+}
+.list li + li {
+  margin-top: 10px;
+}
+.row {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr) minmax(0, 1.3fr) 150px;
+  gap: 28px;
+  align-items: center;
+  padding: 14px 22px 14px 14px;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid rgba(232, 234, 237, 0.07);
+  text-decoration: none;
+  color: var(--text);
+  transition:
+    background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease),
+    transform 0.6s var(--ease);
+}
+.row:hover {
+  background: rgba(232, 234, 237, 0.06);
+  border-color: rgba(196, 154, 108, 0.35);
+  transform: translateX(4px);
+}
+.row:focus-visible {
+  border-radius: 24px;
+}
+.rowArt {
+  display: block;
+  width: 112px;
+  height: 84px;
+  border-radius: 16px;
+}
+.rowName {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(24px, 2.4vw, 34px);
+  line-height: 1.05;
+}
+.rowKick {
+  display: block;
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.rowDs {
+  display: block;
+  color: var(--muted);
+  font-size: 15px;
+  margin: 0 0 8px;
+}
+.rowTag {
+  background: rgba(232, 234, 237, 0.07);
+  color: var(--muted);
+}
+.rowBig {
+  font-family: var(--serif);
+  font-size: 22px;
+  text-align: right;
+  line-height: 1.1;
+}
+
+@media (max-width: 900px) {
+  .head > div:last-child {
+    align-self: flex-start;
+  }
+  .row {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .rowArt {
+    width: 80px;
+    height: 64px;
+  }
+  .rowText,
+  .rowBig {
+    grid-column: 2;
+  }
+  .rowBig {
+    text-align: left;
+    font-size: 18px;
+  }
+  .rowBig:empty {
+    display: none;
+  }
+  .bot {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .top,
+  .bot {
+    left: 22px;
+    right: 22px;
+  }
+  .top {
+    top: 22px;
+  }
+  /* Phone cards are short, so text covers most of the plate: shade it more evenly. */
+  .shade {
+    background: linear-gradient(180deg, rgba(6, 9, 13, 0.82) 0%, rgba(6, 9, 13, 0.62) 35%, rgba(6, 9, 13, 0.7) 60%, rgba(6, 9, 13, 0.9) 100%);
+  }
+  .bot {
+    bottom: 24px;
+  }
+  .big {
+    font-size: 26px;
+    white-space: nowrap;
+  }
+  .ds {
+    font-size: 15px;
+  }
+  .pips {
+    display: none;
+  }
+}

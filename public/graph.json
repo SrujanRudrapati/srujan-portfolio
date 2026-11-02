@@ -10,8 +10,8 @@
       },
       "evidence": [
         {
-          "label": "Surplus AI card",
-          "url": "#project-surplus-ai"
+          "label": "Surplus AI page",
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -41,14 +41,14 @@
           "Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word.",
           "Merge rules keyed on serial number, so a low-quality read never overwrites good data.",
           "Traced repeated cluster failures to macOS permissions and network routing.",
-          "A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+          "A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds."
         ],
         "details": {
           "heading": "How it works",
           "items": [
             {
               "name": "Five-node cluster",
-              "text": "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually."
+              "text": "Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple’s MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can’t hold it individually."
             },
             {
               "name": "USB spec collector",
@@ -56,7 +56,7 @@
             },
             {
               "name": "Camera inventory scanner",
-              "text": "For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)."
+              "text": "For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)."
             },
             {
               "name": "Merge logic",
@@ -64,7 +64,7 @@
             },
             {
               "name": "Surplus AI app",
-              "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds."
+              "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds."
             },
             {
               "name": "Launchers",
@@ -88,15 +88,15 @@
       "id": "project-devhacks-cubbie",
       "type": "project",
       "label": "DevHacks × Cubbie hackathon",
-      "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, by public student vote among 82 submissions from 350+ students.",
+      "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, among 82 submissions from 350+ students.",
       "dates": {
         "start": "2026-10",
         "end": "2026-10"
       },
       "evidence": [
         {
-          "label": "DevHacks × Cubbie card",
-          "url": "#project-devhacks-cubbie"
+          "label": "DevHacks × Cubbie page",
+          "url": "/work/devhacks-cubbie"
         },
         {
           "label": "Cooked repository",
@@ -122,7 +122,22 @@
         "highlights": [
           "Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes.",
           "Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI.",
-          "Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
+          "Bailout: roommates’ AI agents trade chores through an auction, with human approval at each step."
+        ],
+        "entries": [
+          {
+            "name": "Cooked",
+            "note": "winner",
+            "text": "Reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes."
+          },
+          {
+            "name": "Receipts",
+            "text": "A Discord bot that catches promises in chat, with 493 automated tests in CI."
+          },
+          {
+            "name": "Bailout",
+            "text": "Roommates’ AI agents trade chores through an auction, with human approval at each step."
+          }
         ]
       }
     },
@@ -130,11 +145,11 @@
       "id": "project-label-lens",
       "type": "project",
       "label": "Label Lens",
-      "summary": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+      "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
       "evidence": [
         {
-          "label": "Label Lens card",
-          "url": "#project-label-lens"
+          "label": "Label Lens page",
+          "url": "/work/label-lens"
         },
         {
           "label": "Live app",
@@ -151,7 +166,7 @@
       ],
       "content": {
         "title": "Label Lens",
-        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications.",
+        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications.",
         "status": "live",
         "featured": true,
         "tags": [
@@ -174,8 +189,8 @@
       },
       "evidence": [
         {
-          "label": "Watchtower card",
-          "url": "#project-supply-chain-watchtower"
+          "label": "Watchtower page",
+          "url": "/work/supply-chain-watchtower"
         }
       ],
       "tags": [
@@ -198,7 +213,7 @@
           "ai"
         ],
         "problem": "Turning raw sales history into a logistics plan normally takes several manual steps by different people.",
-        "built": "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
+        "built": "Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent’s output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code.",
         "highlights": [],
         "statusNotes": [
           {
@@ -218,8 +233,8 @@
       },
       "evidence": [
         {
-          "label": "Demand Forecasting card",
-          "url": "#project-demand-forecasting"
+          "label": "Demand Forecasting page",
+          "url": "/work/demand-forecasting"
         }
       ],
       "tags": [
@@ -258,8 +273,8 @@
       },
       "evidence": [
         {
-          "label": "CI/CD pipeline card",
-          "url": "#project-aws-cicd-pipeline"
+          "label": "CI/CD pipeline page",
+          "url": "/work/aws-cicd-pipeline"
         },
         {
           "label": "Repository",
@@ -295,8 +310,8 @@
       },
       "evidence": [
         {
-          "label": "WLAN toolkit card",
-          "url": "#project-wlan-forensics-toolkit"
+          "label": "WLAN toolkit page",
+          "url": "/work/wlan-forensics-toolkit"
         }
       ],
       "tags": [
@@ -334,8 +349,8 @@
       },
       "evidence": [
         {
-          "label": "F1 predictor card",
-          "url": "#project-f1-race-predictor"
+          "label": "F1 predictor page",
+          "url": "/work/f1-race-predictor"
         }
       ],
       "tags": [
@@ -369,8 +384,8 @@
       },
       "evidence": [
         {
-          "label": "Flask on Kubernetes card",
-          "url": "#project-flask-on-kubernetes"
+          "label": "Flask on Kubernetes page",
+          "url": "/work/flask-on-kubernetes"
         }
       ],
       "tags": [
@@ -399,8 +414,8 @@
       },
       "evidence": [
         {
-          "label": "Group chat card",
-          "url": "#project-java-group-chat"
+          "label": "Group chat page",
+          "url": "/work/java-group-chat"
         }
       ],
       "tags": [
@@ -427,8 +442,8 @@
       "summary": "B.Tech major project, team of three: an RC car steered by hand gestures read by an ADXL335 accelerometer and sent over RF. Arduino C++, L298 motor driver, IR obstacle detection, tested in Gazebo.",
       "evidence": [
         {
-          "label": "RC Car card",
-          "url": "#project-gesture-rc-car"
+          "label": "RC Car page",
+          "url": "/work/gesture-rc-car"
         }
       ],
       "tags": [
@@ -460,7 +475,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -498,7 +513,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -536,7 +551,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -593,7 +608,7 @@
           },
           {
             "label": "Code review and mentoring",
-            "text": "Reviewed teammates' code as senior data engineer on one project, and mentored two interns."
+            "text": "Reviewed teammates’ code as senior data engineer on one project, and mentored two interns."
           },
           {
             "label": "Pre-sales",
@@ -614,7 +629,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -641,7 +656,7 @@
       "evidence": [
         {
           "label": "Education",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -667,7 +682,7 @@
       "evidence": [
         {
           "label": "Education",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -684,11 +699,11 @@
       "id": "certification-databricks-de-professional",
       "type": "certification",
       "label": "Databricks Certified Data Engineer Professional",
-      "summary": "Databricks' professional-level data engineering certification.",
+      "summary": "Databricks’ professional-level data engineering certification.",
       "evidence": [
         {
           "label": "Certifications",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -700,11 +715,11 @@
       "id": "certification-aws-ai-practitioner",
       "type": "certification",
       "label": "AWS Certified AI Practitioner",
-      "summary": "AWS's AI Practitioner certification.",
+      "summary": "AWS’s AI Practitioner certification.",
       "evidence": [
         {
           "label": "Certifications",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -717,11 +732,11 @@
       "id": "certification-azure-data-engineer",
       "type": "certification",
       "label": "Microsoft Certified: Azure Data Engineer Associate",
-      "summary": "Microsoft's associate-level Azure data engineering certification.",
+      "summary": "Microsoft’s associate-level Azure data engineering certification.",
       "evidence": [
         {
           "label": "Certifications",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -733,11 +748,11 @@
       "id": "certification-azure-administrator",
       "type": "certification",
       "label": "Microsoft Certified: Azure Administrator Associate",
-      "summary": "Microsoft's associate-level Azure administration certification.",
+      "summary": "Microsoft’s associate-level Azure administration certification.",
       "evidence": [
         {
           "label": "Certifications",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [
@@ -753,7 +768,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -775,7 +790,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -797,7 +812,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -818,7 +833,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -838,7 +853,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -864,7 +879,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -885,7 +900,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -910,7 +925,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -930,7 +945,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -950,7 +965,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -971,7 +986,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -991,7 +1006,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1011,7 +1026,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1031,7 +1046,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1051,7 +1066,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1071,7 +1086,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1093,7 +1108,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1115,7 +1130,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1137,7 +1152,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1159,7 +1174,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1181,7 +1196,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1203,7 +1218,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1225,7 +1240,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1247,7 +1262,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1269,7 +1284,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1291,7 +1306,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1313,7 +1328,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1335,7 +1350,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1357,7 +1372,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1379,7 +1394,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1401,7 +1416,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1422,7 +1437,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1444,7 +1459,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1466,7 +1481,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1487,7 +1502,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1509,7 +1524,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1531,7 +1546,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1552,7 +1567,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1573,7 +1588,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1594,7 +1609,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1615,7 +1630,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1636,7 +1651,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1657,7 +1672,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1678,7 +1693,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1699,7 +1714,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1720,7 +1735,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1741,7 +1756,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1762,7 +1777,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1783,7 +1798,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1804,7 +1819,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1825,7 +1840,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1846,7 +1861,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1867,7 +1882,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1888,7 +1903,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1909,7 +1924,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1930,7 +1945,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1951,7 +1966,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1972,7 +1987,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -1993,7 +2008,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2014,7 +2029,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2035,7 +2050,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2051,7 +2066,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2068,7 +2083,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2085,7 +2100,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2102,7 +2117,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2120,7 +2135,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2137,7 +2152,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2154,7 +2169,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2171,7 +2186,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2188,7 +2203,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2205,7 +2220,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2221,7 +2236,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2238,7 +2253,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2255,7 +2270,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2272,7 +2287,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2288,7 +2303,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2304,7 +2319,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2321,7 +2336,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2339,7 +2354,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2356,7 +2371,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2373,7 +2388,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2390,7 +2405,7 @@
       "evidence": [
         {
           "label": "Skills section",
-          "url": "#skills"
+          "url": "/about#skills"
         }
       ],
       "tags": [
@@ -2406,8 +2421,8 @@
       "summary": "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.",
       "evidence": [
         {
-          "label": "Surplus AI card",
-          "url": "#project-surplus-ai"
+          "label": "Surplus AI page",
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -2425,8 +2440,8 @@
       "summary": "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.",
       "evidence": [
         {
-          "label": "Surplus AI card",
-          "url": "#project-surplus-ai"
+          "label": "Surplus AI page",
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -2443,8 +2458,8 @@
       "summary": "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.",
       "evidence": [
         {
-          "label": "Surplus AI card",
-          "url": "#project-surplus-ai"
+          "label": "Surplus AI page",
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -2458,12 +2473,12 @@
     {
       "id": "metric-devhacks-place",
       "type": "metric",
-      "label": "1st place, Track 1, chosen by public student vote",
+      "label": "1st place, Track 1, DevHacks × Cubbie",
       "summary": "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.",
       "evidence": [
         {
-          "label": "DevHacks × Cubbie card",
-          "url": "#project-devhacks-cubbie"
+          "label": "DevHacks × Cubbie page",
+          "url": "/work/devhacks-cubbie"
         },
         {
           "label": "Cooked repository",
@@ -2476,17 +2491,17 @@
         "headline"
       ],
       "value": "1st",
-      "valueLabel": "place, Track 1, chosen by public student vote"
+      "valueLabel": "place, Track 1, DevHacks × Cubbie"
     },
     {
       "id": "metric-devhacks-submissions",
       "type": "metric",
       "label": "82 submissions from 350+ students",
-      "summary": "The field Cooked was chosen from, by public student vote.",
+      "summary": "Submissions to the DevHacks × Cubbie hackathon in October 2026, from 350+ students.",
       "evidence": [
         {
-          "label": "DevHacks × Cubbie card",
-          "url": "#project-devhacks-cubbie"
+          "label": "DevHacks × Cubbie page",
+          "url": "/work/devhacks-cubbie"
         }
       ],
       "tags": [
@@ -2503,8 +2518,8 @@
       "summary": "Receipts, the Discord bot that catches promises in chat, runs 493 automated tests in CI.",
       "evidence": [
         {
-          "label": "DevHacks × Cubbie card",
-          "url": "#project-devhacks-cubbie"
+          "label": "DevHacks × Cubbie page",
+          "url": "/work/devhacks-cubbie"
         },
         {
           "label": "Receipts repository",
@@ -2526,8 +2541,8 @@
       "summary": "Every AI warning in Label Lens must quote the label word for word; 44 of 44 verified.",
       "evidence": [
         {
-          "label": "Label Lens card",
-          "url": "#project-label-lens"
+          "label": "Label Lens page",
+          "url": "/work/label-lens"
         },
         {
           "label": "Live app",
@@ -2549,8 +2564,8 @@
       "summary": "Running a fast and a deep model in parallel cut Label Lens response time from 16 s to 4 to 9 s.",
       "evidence": [
         {
-          "label": "Label Lens card",
-          "url": "#project-label-lens"
+          "label": "Label Lens page",
+          "url": "/work/label-lens"
         }
       ],
       "tags": [
@@ -2567,8 +2582,8 @@
       "summary": "Label Lens has 56 unit tests and 6 end-to-end tests.",
       "evidence": [
         {
-          "label": "Label Lens card",
-          "url": "#project-label-lens"
+          "label": "Label Lens page",
+          "url": "/work/label-lens"
         }
       ],
       "tags": [
@@ -2583,11 +2598,11 @@
       "id": "metric-watchtower-agents",
       "type": "metric",
       "label": "3 agents in sequence on the Claude API",
-      "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.",
+      "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.",
       "evidence": [
         {
-          "label": "Watchtower card",
-          "url": "#project-supply-chain-watchtower"
+          "label": "Watchtower page",
+          "url": "/work/supply-chain-watchtower"
         }
       ],
       "tags": [
@@ -2605,8 +2620,8 @@
       "summary": "Forecast error across 250 SKU and warehouse series with a strict time-based test window.",
       "evidence": [
         {
-          "label": "Demand Forecasting card",
-          "url": "#project-demand-forecasting"
+          "label": "Demand Forecasting page",
+          "url": "/work/demand-forecasting"
         }
       ],
       "tags": [
@@ -2624,8 +2639,8 @@
       "summary": "A reorder-point policy on the forecast, at comparable service levels.",
       "evidence": [
         {
-          "label": "Demand Forecasting card",
-          "url": "#project-demand-forecasting"
+          "label": "Demand Forecasting page",
+          "url": "/work/demand-forecasting"
         }
       ],
       "tags": [
@@ -2642,8 +2657,8 @@
       "summary": "The toolkit rebuilds the network topology from the parsed packets as a directed graph.",
       "evidence": [
         {
-          "label": "WLAN toolkit card",
-          "url": "#project-wlan-forensics-toolkit"
+          "label": "WLAN toolkit page",
+          "url": "/work/wlan-forensics-toolkit"
         }
       ],
       "tags": [
@@ -2661,8 +2676,8 @@
       "summary": "Backtested on 44 held-out races; 52% top-1 against a 43% baseline.",
       "evidence": [
         {
-          "label": "F1 predictor card",
-          "url": "#project-f1-race-predictor"
+          "label": "F1 predictor page",
+          "url": "/work/f1-race-predictor"
         }
       ],
       "tags": [
@@ -2681,7 +2696,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -2699,7 +2714,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -2719,7 +2734,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -2738,7 +2753,7 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         }
       ],
       "tags": [
@@ -2756,8 +2771,8 @@
       "summary": "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus AI runs here.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2771,8 +2786,8 @@
       "summary": "Students and teaching: a Canvas-reading study planner and two 400-level networking courses.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2786,8 +2801,8 @@
       "summary": "A major fashion e-commerce client at Celebal: impressions, clicks, conversions, spend and attribution pipelines.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2801,8 +2816,8 @@
       "summary": "A telehealth client in New Zealand and a US medical device manufacturer, both at Celebal.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2816,8 +2831,8 @@
       "summary": "A major US utility, where the data governance work ran for 10 months.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2831,8 +2846,8 @@
       "summary": "A US materials engineering client with an AWS pipeline handling about 10 million records a day.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2846,8 +2861,8 @@
       "summary": "A large FMCG client, where Unity Catalog and Microsoft Purview managed access, lineage and classification.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2858,11 +2873,11 @@
       "id": "industry-consumer-health",
       "type": "industry",
       "label": "Consumer health",
-      "summary": "Food and medicine labels checked against a person's allergies and medications, in Label Lens.",
+      "summary": "Food and medicine labels checked against a person’s allergies and medications, in Label Lens.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2876,8 +2891,8 @@
       "summary": "Demand forecasting, inventory policy and logistics planning: the capstone and the Watchtower prototype.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2891,8 +2906,8 @@
       "summary": "WLAN traffic forensics and the network security course it was built for.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2906,8 +2921,8 @@
       "summary": "Formula 1 race outcomes, ranked by win probability and backtested on held-out races.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2921,8 +2936,8 @@
       "summary": "A hand gesture controlled RC car built as a B.Tech major project.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2936,8 +2951,8 @@
       "summary": "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus AI cut processing per item from about 15 min to about 3 min.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2951,8 +2966,8 @@
       "summary": "Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2966,8 +2981,8 @@
       "summary": "Clinical and operations teams were waiting days for reports. A Lakehouse on Microsoft Fabric dropped time-to-insight about 50%.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2981,8 +2996,8 @@
       "summary": "An AWS pipeline handling about 10 million records a day kept failing in the same ways. Tracing recurring failures to root causes cut downtime about 30%.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -2996,8 +3011,8 @@
       "summary": "Spark jobs and SQL on Databricks tuned for performance and cost.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3011,8 +3026,8 @@
       "summary": "A Microsoft Purview catalog maintained by hand. Scheduled automation on Databricks pushed entities and classifications into Purview, with Apache Atlas lineage and a business glossary.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3026,8 +3041,8 @@
       "summary": "Forecast error and holding cost across 250 SKU and warehouse series. A reorder-point policy on the forecast cut simulated holding cost about 28% at comparable service levels.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3038,11 +3053,11 @@
       "id": "problem-manual-logistics-planning",
       "type": "problem",
       "label": "Manual logistics planning",
-      "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run.",
+      "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3056,8 +3071,8 @@
       "summary": "Students juggling Canvas deadlines and grade weights. Cooked scores the week 0 to 100 and books study blocks after the student says yes.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3071,8 +3086,8 @@
       "summary": "Finding a live attack inside 100,000+ WPA2-encrypted packets. A Z-score detector caught a denial-of-service deauthentication attack.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3086,8 +3101,8 @@
       "summary": "Rolling features shifted forward so predictions never see the future. 80% top-3 accuracy on 44 held-out races against a 73% baseline.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3101,8 +3116,8 @@
       "summary": "One Terraform codebase deploys dev or prod; GitHub Actions tests, builds and deploys on every push to main.",
       "evidence": [
         {
-          "label": "Work section",
-          "url": "#work"
+          "label": "Work",
+          "url": "/work"
         }
       ],
       "tags": [
@@ -3117,7 +3132,7 @@
       "evidence": [
         {
           "label": "Surplus AI pipeline diagram",
-          "url": "#project-surplus-ai"
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -3135,7 +3150,7 @@
       "evidence": [
         {
           "label": "Surplus AI cluster network diagram",
-          "url": "#project-surplus-ai"
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -3153,7 +3168,7 @@
       "evidence": [
         {
           "label": "Surplus AI privacy layers diagram",
-          "url": "#project-surplus-ai"
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -3227,7 +3242,7 @@
       "evidence": [
         {
           "label": "Watchtower agent flow diagram",
-          "url": "#project-supply-chain-watchtower"
+          "url": "/work/supply-chain-watchtower"
         }
       ],
       "tags": [
@@ -3259,7 +3274,7 @@
       "id": "artifact-resume",
       "type": "artifact",
       "label": "Resume",
-      "summary": "Srujan's resume as a PDF.",
+      "summary": "Srujan’s resume as a PDF.",
       "evidence": [
         {
           "label": "Resume",
@@ -3277,15 +3292,15 @@
       "id": "event-devhacks-win",
       "type": "event",
       "label": "1st place, DevHacks × Cubbie hackathon",
-      "summary": "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.",
+      "summary": "1st place, Track 1, among 82 submissions from 350+ students.",
       "dates": {
         "start": "2026-10",
         "end": "2026-10"
       },
       "evidence": [
         {
-          "label": "DevHacks × Cubbie card",
-          "url": "#project-devhacks-cubbie"
+          "label": "DevHacks × Cubbie page",
+          "url": "/work/devhacks-cubbie"
         }
       ],
       "tags": [
@@ -3304,11 +3319,11 @@
       "evidence": [
         {
           "label": "Experience",
-          "url": "#experience"
+          "url": "/experience"
         },
         {
-          "label": "Surplus AI card",
-          "url": "#project-surplus-ai"
+          "label": "Surplus AI page",
+          "url": "/work/surplus-ai"
         }
       ],
       "tags": [
@@ -3329,7 +3344,7 @@
       "evidence": [
         {
           "label": "Education",
-          "url": "#credentials"
+          "url": "/about#credentials"
         }
       ],
       "tags": [

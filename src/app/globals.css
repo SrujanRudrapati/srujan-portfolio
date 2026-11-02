@@ -1,87 +1,52 @@
 @import "tailwindcss";
 
-/* Spec sheet. Light by default, dark when the user asks for it (data-theme on
-   <html>, set before first paint by the inline script in layout.tsx) or when
-   the system prefers it and nothing is stored.
-
-   Colour tokens live on :root as plain custom properties because they change at
-   runtime. Everything that never changes with theme (type scale, spacing,
-   radii, shadows, easing) is declared once inside @theme, so Tailwind utilities
-   and hand-written CSS read the same values. There is one colour system: the
-   @theme inline block below maps each token to a Tailwind utility name. */
-
+/* v4 "Midnight & Bronze" (design-direction; runbook v4 §1). Dark only.
+   Colour tokens are plain custom properties on :root; @theme inline maps them to the
+   Tailwind utility names the components use (ink, muted, line, surface, accent). */
 :root {
-  color-scheme: light;
-  --bg: #f6f6f3;
-  --surface: #ebebe6;
-  --surface-raised: #fdfdfb;
-  --border: #cfcfc8;
-  --text: #0a0a0a;
-  --text-muted: #55554f;
-  --accent: #c42a14;
-  --accent-hover: #a32310;
-  --accent-2: #1b4fd8;
-  --accent-2-hover: #1640b0;
-  --on-accent: #ffffff;
-}
-
-:root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #161616;
-  --surface: #202020;
-  --surface-raised: #262626;
-  --border: #3a3a36;
-  --text: #f2f2ee;
-  --text-muted: #a3a39b;
-  --accent: #ff6a4e;
-  --accent-hover: #ff8a72;
-  --accent-2: #7f9cff;
-  --accent-2-hover: #9db3ff;
-  --on-accent: #0a0a0a;
-}
+  --bg: #0b0f14;
+  --surface: #141b23;
+  --text: #e8eaed;
+  --muted: #8d98a5;
+  --accent: #c49a6c;
+  --line: rgba(232, 234, 237, 0.11);
+  --metal: linear-gradient(180deg, #eed7b4 0%, #c49a6c 45%, #8c6845 72%, #e2c59e 100%);
+  --live: #7cc4a4;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --tile-bg: rgba(232, 234, 237, 0.035);
+  --tile-border: rgba(232, 234, 237, 0.09);
+  --tile-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --metal-light: #e2c59e; /* the metal gradient's light stop (game: the gold band) */
+  --backdrop: rgba(6, 9, 13, 0.6); /* behind dialogs: palette, Ask, game */
+  --on-art: #f0f2f5; /* text set on the art plates (catalogue cards, project band) */
+  --serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
+  --sans: var(--font-hanken), system-ui, -apple-system, "Segoe UI", sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg: #161616;
-    --surface: #202020;
-    --surface-raised: #262626;
-    --border: #3a3a36;
-    --text: #f2f2ee;
-    --text-muted: #a3a39b;
-    --accent: #ff6a4e;
-    --accent-hover: #ff8a72;
-    --accent-2: #7f9cff;
-    --accent-2-hover: #9db3ff;
-    --on-accent: #0a0a0a;
-  }
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-raised: var(--surface-raised);
-  --color-line: var(--border);
+  --color-line: var(--line);
   --color-ink: var(--text);
-  --color-muted: var(--text-muted);
+  --color-muted: var(--muted);
   --color-accent: var(--accent);
-  --color-accent-hover: var(--accent-hover);
-  --color-accent-2: var(--accent-2);
-  --color-accent-2-hover: var(--accent-2-hover);
-  --color-on-accent: var(--on-accent);
 
-  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--sans);
+  --font-display: var(--serif);
+  --font-serif: var(--serif);
+  /* No monospace in v4: older "font-mono" labels render in the text face. */
+  --font-mono: var(--sans);
 }
 
 @theme {
-  /* Type scale. Fluid between a 390px phone and a 1280px desktop. */
-  --text-xs: 0.75rem;
+  --text-xs: 0.8125rem; /* 13px: the v4 label floor (design-direction) */
   --text-xs--line-height: 1.45;
   --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
-  --text-base: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
-  --text-base--line-height: 1.55;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.6;
   --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
   --text-lg--line-height: 1.5;
   --text-xl: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
@@ -93,108 +58,266 @@
   --text-4xl: clamp(2.5rem, 1.55rem + 4vw, 4.5rem);
   --text-4xl--line-height: 1;
 
-  /* Spacing. Tailwind's --spacing (0.25rem) is the 4px base scale; p-4 is 16px,
-     gap-6 is 24px. These two name the rhythms the layout repeats. */
-  --spacing-gutter: clamp(1rem, 0.4rem + 2.4vw, 2.5rem);
+  --spacing-gutter: 24px;
   --spacing-section: clamp(4rem, 2.4rem + 6.5vw, 7rem);
-
-  /* Widths */
-  --container-page: 1200px;
+  --container-page: 1240px;
   --container-measure: 65ch;
 
-  /* Shape. Spec sheet has square corners; the only radii are the focus ring and dots. */
   --radius-sm: 2px;
+  --radius-tile: 24px;
+  --radius-panel: 28px;
+  --radius-stage: 32px;
   --radius-full: 9999px;
 
-  /* Depth. Flat by default; one lift for hovered cards. */
-  --shadow-lift: 0 10px 24px -14px rgb(0 0 0 / 0.35);
-
-  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
-  /* One easing family: every transition without its own ease- utility uses the house curve. */
-  --default-transition-timing-function: var(--ease-out-quart);
+  --shadow-lift: 0 30px 60px -40px rgba(0, 0, 0, 0.6);
+  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
+  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   html {
-    scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px);
+  }
+  html,
+  body {
+    overflow-x: clip;
   }
 
+  /* The page glow scrolls with the page (never fixed); the grain is one static layer. */
   body {
-    background: var(--bg);
+    margin: 0;
+    background:
+      radial-gradient(110% 55% at 50% -12%, #1a2633 0%, rgba(26, 38, 51, 0) 62%) no-repeat,
+      var(--bg);
     color: var(--text);
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    line-height: var(--text-base--line-height);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
 
-  /* Headings: one family, hierarchy through weight and width. */
   h1,
   h2,
   h3,
   h4 {
-    font-family: var(--font-display);
-    font-weight: 700;
+    font-family: var(--serif);
+    font-weight: 400;
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
-  h1,
-  h2 {
-    font-stretch: 125%;
+  h1:focus {
+    outline: none;
   }
-  h3 {
-    font-stretch: 112.5%;
-    letter-spacing: -0.015em;
-  }
-  h4 {
-    font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-
   p {
     text-wrap: pretty;
   }
-
-  /* Sticky nav is 64px; keep anchored headings and focused elements clear of it. */
+  a {
+    color: inherit;
+  }
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
   [id] {
     scroll-margin-top: 5rem;
   }
-
   :focus-visible {
-    outline: 2px solid var(--accent-2);
-    outline-offset: 3px;
-    border-radius: var(--radius-sm);
+    outline: 1.5px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
   }
-
   a,
   button {
     touch-action: manipulation;
   }
 }
 
+/* Shared v4 primitives (reference classes). Page-specific styles live in CSS modules. */
 @layer components {
-  /* Theme toggle icons. CSS decides which icon shows, so the button is correct
-     before hydration and never mismatches the server render. */
-  .theme-icon-sun {
-    display: none;
+  .wrap {
+    width: min(1240px, 100% - 48px);
+    margin-inline: auto;
   }
-  .theme-icon-moon {
-    display: block;
+  .metal {
+    background: var(--metal);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
-  :root[data-theme="dark"] .theme-icon-sun {
-    display: block;
+  .page {
+    min-height: 100svh;
+    padding: clamp(92px, 14vh, 140px) 0 120px;
   }
-  :root[data-theme="dark"] .theme-icon-moon {
-    display: none;
+  .page-title {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(44px, min(7vw, 11vh), 112px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin: 0;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) .theme-icon-sun {
-      display: block;
-    }
-    :root:not([data-theme="light"]) .theme-icon-moon {
-      display: none;
-    }
+  .page-intro {
+    color: var(--muted);
+    max-width: 52ch;
+    margin: clamp(10px, 2vh, 18px) 0 0;
+    font-size: clamp(16px, 2vh, 18px);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 15px;
+    margin-bottom: clamp(16px, 3vh, 32px);
+    min-height: 44px;
+    padding: 0 16px 0 12px;
+    border-radius: 999px;
+    background: rgba(232, 234, 237, 0.06);
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .back:hover {
+    background: rgba(232, 234, 237, 0.12);
+    color: var(--text);
+  }
+  .back svg {
+    width: 14px;
+    height: 14px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 50px;
+    padding: 0 24px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 16px;
+    border: 1px solid var(--line);
+    background: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+  .btn:hover {
+    border-color: var(--accent);
+  }
+  .btn-solid {
+    background: var(--text);
+    color: var(--bg);
+    border-color: var(--text);
+  }
+  .btn-solid:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .pill {
+    display: inline-block;
+    margin: 0 6px 8px 0;
+    padding: 4px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .tag {
+    font-size: 13px;
+    padding: 4px 11px;
+    border-radius: 999px;
+    background: rgba(240, 242, 245, 0.12);
+    color: rgba(240, 242, 245, 0.9);
+  }
+  /* Magnetic elements move by transform only; the spring back is a transition. */
+  [data-magnetic] {
+    transition: transform 0.6s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+}
+
+/* Page transitions (motion-system): the old page fades out over 260 ms, the new one rises
+   14px into place over 800 ms. View Transitions API first; .route-leave/.route-enter on
+   <main> otherwise. The Work layout toggle sets html.vt-toggle to keep the root still. */
+@keyframes route-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes route-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+::view-transition-old(root) {
+  animation: route-out 0.26s ease both;
+}
+::view-transition-new(root) {
+  animation: route-in 0.8s var(--ease) 0.26s both;
+}
+::view-transition-group(*) {
+  animation-duration: 0.8s;
+  animation-timing-function: var(--ease);
+}
+/* The shell (header, progress line, cursor) has its own names, so it holds still. */
+::view-transition-group(shell-header),
+::view-transition-group(shell-progress),
+::view-transition-group(shell-cursor),
+::view-transition-group(shell-cursor-dot),
+::view-transition-old(shell-header),
+::view-transition-new(shell-header) {
+  animation: none;
+}
+html.vt-toggle::view-transition-old(root),
+html.vt-toggle::view-transition-new(root) {
+  animation: none;
+}
+/* Work Catalogue ⇄ List morph: each project's card, art and name glide to its row, 60 ms apart. */
+::view-transition-group(wi-1),
+::view-transition-group(wa-1),
+::view-transition-group(wn-1) {
+  animation-delay: 60ms;
+}
+::view-transition-group(wi-2),
+::view-transition-group(wa-2),
+::view-transition-group(wn-2) {
+  animation-delay: 120ms;
+}
+::view-transition-group(wi-3),
+::view-transition-group(wa-3),
+::view-transition-group(wn-3) {
+  animation-delay: 180ms;
+}
+main.route-leave {
+  transition: opacity 0.26s ease;
+  opacity: 0;
+}
+main.route-enter {
+  animation: route-in 0.8s var(--ease) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(*) {
+    animation: none !important;
   }
 }
 
@@ -214,14 +337,11 @@
 /* Hero diagram: default (reduced motion, or no offset-path support) is fully
    lit and still. Fonts are set here so the SVG follows the site family. */
 .medallion {
-  --stage-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+  --stage-lit: color-mix(in srgb, var(--accent) 14%, var(--surface));
 }
-.medallion-label {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-  font-stretch: 112.5%;
-}
+.medallion-label,
 .medallion-text {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--sans);
 }
 /* Phones: the diagram is scaled to about 0.8, so the small sub-labels would
    render under 12px. Hide them (the SVG title and desc carry the full text)
@@ -244,20 +364,50 @@
 .medallion-lit {
   fill: var(--stage-lit);
 }
-.medallion-dot {
-  display: none;
-}
 
 /* Project diagrams: default (no JavaScript, offscreen, reduced motion, or no
    offset-path support) is every box lit and still. */
 .flow {
-  --flow-lit: color-mix(in srgb, var(--accent-2) 16%, var(--surface));
+  --flow-lit: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  --flow-box: rgba(232, 234, 237, 0.4);
+  --draw-t: 1.8s;
+}
+/* v4 panel (runbook W4.5): a rounded tile, thin steel boxes, bronze data flow. */
+.flow-panel {
+  margin: 0;
+  padding: clamp(16px, 3vw, 36px);
+  border-radius: 28px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.flow-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.flow-narrow {
+  max-width: 400px;
+}
+.flow-wide {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .flow-wide {
+    display: block;
+  }
+  .flow-narrow {
+    display: none;
+  }
+}
+.flow-caption {
+  margin-top: 20px;
+  max-width: 65ch;
+  font-size: 15px;
+  color: var(--muted);
 }
 .flow-text {
-  font-family: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
-}
-.flow-label {
-  font-stretch: 112.5%;
+  font-family: var(--sans);
 }
 .flow-dot {
   display: none;
@@ -266,96 +416,42 @@
 /* Motion. Only defined when the user has not asked for reduced motion, so the
    reduced-motion default is the finished state. */
 @media (prefers-reduced-motion: no-preference) {
-  /* Hero entrance: five blocks, 70ms apart, 400ms each, done by 680ms. */
-  .enter {
-    animation: enter 400ms var(--ease-out-quart) both;
-    animation-delay: calc(var(--i, 0) * 70ms);
-  }
-
-  /* Reveal primitive. The attribute is only ever set by JavaScript, so without
-     it (no JS, reduced motion, already on screen) children are simply visible. */
-  [data-reveal="pending"] {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  [data-reveal="in"] {
-    opacity: 1;
-    transform: none;
-    transition:
-      opacity 600ms var(--ease-out-quart),
-      transform 600ms var(--ease-out-quart);
-    transition-delay: var(--reveal-delay, 0ms);
-  }
-
   [data-switched] > [data-lens-panel]:not([hidden]) {
-    animation: lens-in 200ms var(--ease-out-quart);
+    animation: lens-in 200ms var(--ease);
   }
 
-  /* Project diagrams (FlowDiagram). Dots ride each track; a box's lit overlay
-     fades in the moment a dot reaches it. Runs only while the figure is on
-     screen (data-animate set by useInView). Overlays animate opacity only. */
-  @supports (offset-path: path("M0 0 L1 1")) {
-    .flow[data-animate="on"] .flow-dot {
-      display: block;
-      offset-rotate: 0deg;
-      animation: flow-travel var(--loop) linear infinite;
-    }
-    .flow[data-animate="on"] .flow-lit {
-      opacity: 0;
-      animation: flow-flash var(--period) linear infinite;
-      animation-delay: calc((var(--arrive) - 1) * var(--period));
-    }
+  /* Project-page diagrams draw once on entry (FlowDiagram draw). "ready" hides the drawing just
+     before it scrolls in; "on" draws connectors, then lights boxes and runs one dot per track. */
+  .flow[data-draw] [data-edge="draw"] > path:first-child {
+    stroke-dasharray: 1 1;
   }
-
-  /* Medallion diagram. Two dots share one 5s loop, 2.5s apart, so every stage
-     sees an arrival every 2.5s; the stage keyframes run on that 2.5s period.
-     Arrival points were measured along the offset path (906 units long). */
-  @supports (offset-path: path("M0 0 L1 1")) {
-    [data-animate="on"] > .medallion .medallion-dot {
-      display: block;
-      offset-path: path("M220 402 H76 V296 H364 V190 H220 V72");
-      offset-rotate: 0deg;
-      animation: medallion-travel 5s linear infinite;
-    }
-    [data-animate="on"] > .medallion .medallion-dot-2 {
-      animation-delay: -2.5s;
-    }
-    [data-animate="on"] > .medallion .medallion-lit {
-      opacity: 0;
-      animation-duration: 2.5s;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-    [data-animate="on"] > .medallion [data-stage="source"] .medallion-lit {
-      animation-name: stage-source;
-    }
-    [data-animate="on"] > .medallion [data-stage="bronze"] .medallion-lit {
-      animation-name: stage-bronze;
-    }
-    [data-animate="on"] > .medallion [data-stage="silver"] .medallion-lit {
-      animation-name: stage-silver;
-    }
-    [data-animate="on"] > .medallion [data-stage="gold"] .medallion-lit {
-      animation-name: stage-gold;
-    }
-    [data-animate="on"] > .medallion [data-stage="serving"] .medallion-lit {
-      animation-name: stage-serving;
-    }
-    [data-animate="on"] > .medallion [data-stage="llm"] .medallion-lit {
-      animation-name: stage-llm;
-    }
+  .flow[data-draw="ready"] [data-edge="draw"] > path:first-child {
+    stroke-dashoffset: 1;
   }
-}
-
-@keyframes enter {
-  from {
+  .flow[data-draw="ready"] [data-edge] > path + path,
+  .flow[data-draw="ready"] [data-edge="fade"],
+  .flow[data-draw="ready"] .flow-node[data-at] .flow-lit {
     opacity: 0;
-    transform: translateY(10px);
   }
-  to {
-    opacity: 1;
-    transform: none;
+  .flow[data-draw="on"] [data-edge="draw"] > path:first-child {
+    transition: stroke-dashoffset calc(var(--dur) * var(--draw-t)) linear calc(var(--start) * var(--draw-t));
   }
+  .flow[data-draw="on"] [data-edge] > path + path {
+    transition: opacity 0.2s var(--ease) calc((var(--start) + var(--dur)) * var(--draw-t));
+  }
+  .flow[data-draw="on"] [data-edge="fade"] {
+    transition: opacity calc(var(--dur) * var(--draw-t)) var(--ease) calc(var(--start) * var(--draw-t));
+  }
+  .flow[data-draw="on"] .flow-node[data-at] .flow-lit {
+    transition: opacity 0.4s var(--ease) calc(var(--at) * var(--draw-t));
+  }
+  @supports (offset-path: path("M0 0 L1 1")) {
+    .flow[data-draw="on"] [data-draw-dot] {
+      display: block;
+      animation: flow-run var(--draw-t) linear both;
+    }
+  }
+
 }
 
 /* Lens switch: the incoming panel fades in over 200ms (motion allowed only). */
@@ -368,104 +464,130 @@
   }
 }
 
-@keyframes flow-travel {
-  from {
+/* One pass of the draw-on-entry dot; it fades out where its track ends. */
+@keyframes flow-run {
+  0% {
     offset-distance: 0%;
+    opacity: 1;
   }
-  to {
+  92% {
+    opacity: 1;
+  }
+  100% {
     offset-distance: 100%;
+    opacity: 0;
   }
 }
 
-/* A box lights when a dot arrives (0%), holds, then fades over 14% of its period. */
-@keyframes flow-flash {
-  0%, 8% { opacity: 1; }
-  22%, 100% { opacity: 0; }
-}
-
-@keyframes medallion-travel {
-  from {
-    offset-distance: 0%;
-  }
-  to {
-    offset-distance: 100%;
-  }
-}
-
-/* Each stage: snap to lit when a dot arrives, hold 8%, fade back over 14%. */
-@keyframes stage-source {
-  0%, 6% { opacity: 1; }
-  20%, 100% { opacity: 0; }
-}
-@keyframes stage-bronze {
-  0%, 48% { opacity: 0; }
-  49%, 57% { opacity: 1; }
-  71%, 100% { opacity: 0; }
-}
-@keyframes stage-silver {
-  0%, 73.6% { opacity: 0; }
-  74.6%, 82.6% { opacity: 1; }
-  96.6%, 100% { opacity: 0; }
-}
-@keyframes stage-gold {
-  0%, 5.4% { opacity: 0; }
-  6.4%, 14.4% { opacity: 1; }
-  28.4%, 100% { opacity: 0; }
-}
-@keyframes stage-serving {
-  0%, 36.4% { opacity: 0; }
-  37.4%, 45.4% { opacity: 1; }
-  59.4%, 100% { opacity: 0; }
-}
-@keyframes stage-llm {
-  0% { opacity: 1; }
-  14%, 91% { opacity: 0; }
-  92%, 100% { opacity: 1; }
-}
 
 
-/* Featured cards on phones: title, figures and one line first; the rest opens
-   with "Show details". Only when scripted (data-js), so no-JS shows all. */
-.featured-toggle {
-  display: none;
+
+/* 404 (runbook v4 W7.2). */
+.nf-query {
+  max-width: 100%;
+  margin: clamp(24px, 4vh, 40px) 0 0;
+  padding: 20px 24px;
+  overflow-x: auto;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
 }
-@media (max-width: 47.99rem) {
-  html[data-js] .featured-toggle {
-    display: inline-flex;
-  }
-  html[data-js] .featured-more:not([data-open]) {
-    display: none;
-  }
+.nf-pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.nf-pages .pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 18px;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.3s var(--ease);
+}
+.nf-pages .pill:hover {
+  border-color: var(--accent);
+}
+.nf-game {
+  margin-top: 72px;
+}
+.nf-game-title {
+  margin: 0 0 20px;
+  font-size: 32px;
 }
 
-/* Print. Recruiter mode prints alone on one page, in light colours, whatever
-   theme is on screen. Other lenses print the page as it is. */
+/* /cv on screen (runbook v4 W7.1): the recruiter sheet on a rounded tile, the name in Bodoni. */
+.cv-sheet {
+  margin-top: clamp(28px, 5vh, 48px);
+  padding: clamp(22px, 4vw, 48px);
+  border-radius: 28px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.cv-name {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(44px, 6vw, 72px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+}
+
+/* Print. /cv (and the Recruiter lens) prints alone on one page, black on white, whatever is on
+   screen (the site is dark only). Other pages print as they are. */
 @media print {
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  :root,
-  :root[data-theme="dark"],
-  :root:not([data-theme="light"]) {
+  :root {
     color-scheme: light;
     --bg: #ffffff;
     --surface: #ffffff;
-    --surface-raised: #ffffff;
-    --border: #cfcfc8;
-    --text: #0a0a0a;
-    --text-muted: #55554f;
-    --accent: #c42a14;
-    --accent-2: #1b4fd8;
+    --line: #d9d9d9;
+    --text: #000000;
+    --muted: #4a4a4a;
+    --accent: #000000;
+    --metal: linear-gradient(#000000, #000000);
+  }
+  body {
+    background: #ffffff;
+  }
+  body::after {
+    display: none;
+  }
+  .cv-sheet {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+  main[data-print="cv"] {
+    min-height: 0;
+    padding: 0;
+  }
+  /* /cv (V3): only the one-pager prints. */
+  body:has(main[data-print="cv"]) > *:not(main) {
+    display: none !important;
   }
   html[data-lens="recruiter"] body > *:not(main),
-  html[data-lens="recruiter"] main > *:not(#work),
+  html[data-lens="recruiter"] main > .wrap > *:not(#work),
   html[data-lens="recruiter"] #work-heading,
   html[data-lens="recruiter"] #work [data-lens-panel][hidden] {
     display: none !important;
   }
   html[data-lens="recruiter"] #work {
     border: 0;
+  }
+  html[data-lens="recruiter"] main {
+    min-height: 0;
+    padding: 0;
   }
   html[data-lens="recruiter"] #work > div {
     padding: 0;

@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type ComponentType, type ReactNode } from "react";
+import { SHOW_ALL_PROJECTS } from "@/components/work/events";
 import type { Graph } from "@/data/graph/types";
 import { useGraph } from "@/hooks/use-graph";
 import { LensErrorBoundary } from "./LensErrorBoundary";
@@ -15,10 +16,11 @@ import { LensSwitcher } from "./LensSwitcher";
 // even when the hash is already that value, and a #project-<slug> hash switches
 // back to Highlights so card links always land.
 
-/** Event the Highlights filter listens for, so a link to a card it currently hides can show it. */
-export const SHOW_ALL_PROJECTS = "work:show-all";
 
 const scrollToSection = (id: string) => document.getElementById(id)?.scrollIntoView({ block: "start" });
+
+// Lens switches fade the incoming panel in over 200 ms ([data-switched], globals.css; full motion only).
+// v4 (runbook W7.4) dropped the GSAP Flip that moved shared items between lenses.
 
 export function Explore({ children }: { children: ReactNode }) {
   const [lens, setLens] = useState<LensId>(DEFAULT_LENS);
@@ -95,8 +97,12 @@ export function Explore({ children }: { children: ReactNode }) {
   useEffect(() => {
     const onClick = (event: MouseEvent) => {
       if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-      const link = (event.target as Element | null)?.closest?.('a[href^="#lens="]');
-      const next = link ? lensFromHash(link.getAttribute("href") ?? "") : null;
+      // "#lens=x" and, since V3, "/explore#lens=x" when we are already on /explore.
+      const link = (event.target as Element | null)?.closest?.('a[href*="#lens="]');
+      if (!(link instanceof HTMLAnchorElement)) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.pathname !== window.location.pathname) return;
+      const next = lensFromHash(url.hash);
       if (!next) return;
       event.preventDefault();
       window.history.pushState(null, "", next === DEFAULT_LENS ? `${window.location.pathname}${window.location.search}` : `#lens=${next}`);
@@ -118,7 +124,7 @@ export function Explore({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!focusAfterSwitch.current) return;
     const target = lens === DEFAULT_LENS ? document.getElementById("work-heading") : headingRef.current;
-    if (!target) return;
+    if (!target) return; // a graph lens still loading: its heading renders on the next pass
     focusAfterSwitch.current = false;
     target.focus({ preventScroll: true });
   }, [lens, graphState.status]);
@@ -126,11 +132,11 @@ export function Explore({ children }: { children: ReactNode }) {
   const errorMessage = () => (
     <p className="max-w-measure text-lg text-ink">
       This view could not load. Check your connection, then{" "}
-      <button type="button" onClick={tryAgain} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
+      <button type="button" onClick={tryAgain} className="min-h-11 font-medium text-accent underline decoration-1 underline-offset-4">
         try again
       </button>{" "}
       or{" "}
-      <button type="button" onClick={() => choose(DEFAULT_LENS)} className="min-h-11 font-medium text-accent-2 underline decoration-1 underline-offset-4">
+      <button type="button" onClick={() => choose(DEFAULT_LENS)} className="min-h-11 font-medium text-accent underline decoration-1 underline-offset-4">
         show highlights
       </button>
       .
@@ -149,14 +155,18 @@ export function Explore({ children }: { children: ReactNode }) {
       </div>
 
       <div data-lens-panel="" hidden={lens !== DEFAULT_LENS}>
+        {/* Focus target for a link-driven switch back to Highlights (and hidden in print by globals.css). */}
+        <h2 id="work-heading" tabIndex={-1} className="sr-only">
+          Highlights
+        </h2>
         {children}
       </div>
 
       {lens !== DEFAULT_LENS && (
         <div key={lens} data-lens-panel="" aria-busy={graphState.status === "loading"}>
-          <h3 ref={headingRef} tabIndex={-1} className="sr-only">
+          <h2 ref={headingRef} tabIndex={-1} className="sr-only">
             {label}
-          </h3>
+          </h2>
           {graphState.status === "error" || chunkFailed ? (
             errorMessage()
           ) : graphState.status === "ready" && LensView ? (

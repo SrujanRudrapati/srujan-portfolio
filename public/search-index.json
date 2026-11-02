@@ -14,17 +14,17 @@
       "offline"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "~80% less processing time per item, about 15 min down to about 3 min; ~10 min to list a 100+ unit pallet, instead of 1 to 2 hours; 14B Qwen model across four Mac minis, offline, via MLX",
     "skills": "MLX, Flask, Bash, Apple Vision OCR, Qwen 14B, Llama 3B, local LLM serving",
-    "text": "Private, offline AI system for ASU Surplus Built on the job, in production Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual. One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet. Handles identification, condition grading, pricing, label printing, and database export. Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word. Merge rules keyed on serial number, so a low-quality read never overwrites good data. Traced repeated cluster failures to macOS permissions and network routing. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Five-node cluster. Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple's MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can't hold it individually. USB spec collector. A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number. Camera inventory scanner. For Macs that won't boot, a webcam photographs the bottom label and Apple's Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts). Merge logic. Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine. Surplus AI app. A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row's real specs, and a Cluster tab polls each node over SSH every 5 seconds. Launchers. One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
+    "text": "Private, offline AI system for ASU Surplus Built on the job, in production Surplus staff were typing hardware specs into a spreadsheet by hand, which introduced typos into the inventory. Writing product listings was also manual. One connected pipeline: collect specs, build a master spreadsheet, and have AI write the listings, all on a private network that never touches the internet. Handles identification, condition grading, pricing, label printing, and database export. Runs offline: Qwen 14B across four Mac minis plus Llama 3B on one, via MLX. Replies stream word by word. Merge rules keyed on serial number, so a low-quality read never overwrites good data. Traced repeated cluster failures to macOS permissions and network routing. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds. Five-node cluster. Five M1 Mac minis on a gigabit switch with no internet uplink, fixed IPs, and passwordless SSH from the head node. Apple’s MLX framework splits one model across several machines with tensor parallelism, so a 14B model can run across Macs that can’t hold it individually. USB spec collector. A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number. Camera inventory scanner. For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts). Merge logic. Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine. Surplus AI app. A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds. Launchers. One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node."
   },
   {
     "id": "project-devhacks-cubbie",
     "type": "project",
     "label": "DevHacks × Cubbie hackathon",
-    "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, by public student vote among 82 submissions from 350+ students.",
+    "summary": "Three entries, Cooked, Receipts and Bailout, for the DevHacks × Cubbie hackathon in October 2026. Cooked took 1st place, Track 1, among 82 submissions from 350+ students.",
     "tags": [
       "project",
       "featured",
@@ -33,18 +33,18 @@
       "agents"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
-    "metrics": "1st place, Track 1, chosen by public student vote; 82 submissions from 350+ students; 493 automated tests in CI for Receipts",
+    "metrics": "1st place, Track 1, DevHacks × Cubbie; 82 submissions from 350+ students; 493 automated tests in CI for Receipts",
     "skills": "",
-    "text": "Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout. Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes. Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI. Bailout: roommates' AI agents trade chores through an auction, with human approval at each step."
+    "text": "Three entries built for the DevHacks × Cubbie hackathon: Cooked, Receipts, and Bailout. Cooked (winner): reads Canvas deadlines and grade weights, scores the week 0 to 100 with plain math, and books study blocks on Google Calendar after the student says yes. Receipts: a Discord bot that catches promises in chat, with 493 automated tests in CI. Bailout: roommates’ AI agents trade chores through an auction, with human approval at each step."
   },
   {
     "id": "project-label-lens",
     "type": "project",
     "label": "Label Lens",
-    "summary": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+    "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
     "tags": [
       "project",
       "featured",
@@ -54,12 +54,12 @@
       "web"
     ],
     "evidence": [
-      "#project-label-lens",
+      "/work/label-lens",
       "https://label-lens-iota.vercel.app"
     ],
     "metrics": "44/44 AI warnings verified to quote the label word for word; 4 to 9 s response time, down from 16 s, with a fast and a deep model in parallel; 56 + 6 tests: 56 unit, 6 end-to-end",
     "skills": "Next.js, TypeScript, Anthropic Claude API, zod, Vitest, Playwright",
-    "text": "Reads food and medicine labels from a photo and checks them against the user's allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
+    "text": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning must quote the label word for word (44 of 44 verified). Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
   },
   {
     "id": "project-supply-chain-watchtower",
@@ -76,11 +76,11 @@
       "rag"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "3 agents in sequence on the Claude API",
     "skills": "Python, Anthropic Claude API, CrewAI, RAG, vector databases (ChromaDB), agentic workflows",
-    "text": "Multi-agent LLM system Personal project, built solo Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent's output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code."
+    "text": "Multi-agent LLM system Personal project, built solo Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents running in sequence on the native Anthropic Claude API through CrewAI, each consuming the previous agent’s output. The Risk Analyst has a custom tool backed by a retrieval-augmented generation pipeline over ChromaDB, so its output is grounded in real shipping-disruption data instead of model recall. Built with Claude Code."
   },
   {
     "id": "project-demand-forecasting",
@@ -96,7 +96,7 @@
       "forecasting"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "27.7% WAPE vs. 38.5% naive baseline; about 28% lower simulated holding cost",
     "skills": "Python, LightGBM, Prophet, scikit-learn, forecasting",
@@ -114,7 +114,7 @@
       "aws"
     ],
     "evidence": [
-      "#project-aws-cicd-pipeline",
+      "/work/aws-cicd-pipeline",
       "https://github.com/SrujanRudrapati/aws-cicd-pipeline"
     ],
     "metrics": "",
@@ -135,7 +135,7 @@
       "security"
     ],
     "evidence": [
-      "#project-wlan-forensics-toolkit"
+      "/work/wlan-forensics-toolkit"
     ],
     "metrics": "100,000+ WPA2-encrypted packets parsed",
     "skills": "Python, Pyshark, NetworkX, scikit-learn, clustering, anomaly detection",
@@ -153,7 +153,7 @@
       "ml"
     ],
     "evidence": [
-      "#project-f1-race-predictor"
+      "/work/f1-race-predictor"
     ],
     "metrics": "80% top-3 accuracy vs. 73% baseline",
     "skills": "Python, scikit-learn, HistGradientBoosting, feature engineering",
@@ -170,7 +170,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#project-flask-on-kubernetes"
+      "/work/flask-on-kubernetes"
     ],
     "metrics": "",
     "skills": "Docker, docker-compose, Kubernetes, Flask",
@@ -187,7 +187,7 @@
       "java"
     ],
     "evidence": [
-      "#project-java-group-chat"
+      "/work/java-group-chat"
     ],
     "metrics": "",
     "skills": "Java, Swing, AWT, TCP sockets",
@@ -205,7 +205,7 @@
       "robotics"
     ],
     "evidence": [
-      "#project-gesture-rc-car"
+      "/work/gesture-rc-car"
     ],
     "metrics": "",
     "skills": "Arduino C++, ADXL335, RF HT12E/HT12D, L298, Gazebo",
@@ -222,7 +222,7 @@
       "current"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "Power BI",
@@ -239,7 +239,7 @@
       "teaching"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "40+ students in office hours",
     "skills": "",
@@ -256,11 +256,11 @@
       "data-engineering"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "about 50% less time-to-insight; about 10 million records a day; about 30% less downtime",
     "skills": "Databricks, Spark, dbt, Delta Lake, Kafka, medallion architecture, Microsoft Purview, Apache Atlas, Unity Catalog, Fabric, Data Factory, Glue, S3, Redshift, Power BI, SQL, feature engineering, data lineage, metadata management",
-    "text": "Celebal Technologies Jaipur, India A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks. Telehealth client in New Zealand, Microsoft Fabric. Clinical and operations teams were waiting days for reports. I designed the Lakehouse architecture and coordinated a five-person team. Time-to-insight dropped about 50%, and the dashboards ended up in their weekly operational meetings. A US materials engineering client, AWS. Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems, and was on call for it. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them. A major fashion e-commerce client, Databricks. Kafka and Spark pipelines on Databricks modeling impressions, clicks, conversions, spend, and attribution, with Power BI dashboards on top. A major US utility, data governance (10 months). Their Microsoft Purview catalog was maintained by hand. I built automation on Databricks that pushed entities and custom classifications into Purview on a schedule, plus Apache Atlas lineage pipelines and a business glossary mapped to their governance policies. Medallion architecture on Databricks. Built bronze, silver, and gold layers plus a serving layer on Azure Databricks and Delta Lake. Wrote the Spark transformations and dbt models. A US medical device manufacturer. Audited their existing Azure Data Factory pipelines before changing anything, and shipped updates with zero disruption to production. A large FMCG client. Data governance engineer, using Unity Catalog alongside Microsoft Purview to manage access, lineage, and classification across the Databricks workspace. Production ML pipeline. Built the Spark and Databricks pipelines feeding a production machine learning model, worked with the data science team on feature engineering, and built the serving layer that delivered model-ready data. A/B testing. Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results. Performance and cost. Tuned Spark jobs and SQL on Databricks for performance and cost. Code review and mentoring. Reviewed teammates' code as senior data engineer on one project, and mentored two interns. Pre-sales. Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team."
+    "text": "Celebal Technologies Jaipur, India A data and AI consultancy. I worked on client engagements across healthcare, energy, manufacturing, and e-commerce, mostly on Azure Databricks. Telehealth client in New Zealand, Microsoft Fabric. Clinical and operations teams were waiting days for reports. I designed the Lakehouse architecture and coordinated a five-person team. Time-to-insight dropped about 50%, and the dashboards ended up in their weekly operational meetings. A US materials engineering client, AWS. Ran a production pipeline on Glue, S3, and Redshift handling about 10 million records a day from 7+ source systems, and was on call for it. Cut downtime about 30% by tracing recurring failures to root causes instead of patching them. A major fashion e-commerce client, Databricks. Kafka and Spark pipelines on Databricks modeling impressions, clicks, conversions, spend, and attribution, with Power BI dashboards on top. A major US utility, data governance (10 months). Their Microsoft Purview catalog was maintained by hand. I built automation on Databricks that pushed entities and custom classifications into Purview on a schedule, plus Apache Atlas lineage pipelines and a business glossary mapped to their governance policies. Medallion architecture on Databricks. Built bronze, silver, and gold layers plus a serving layer on Azure Databricks and Delta Lake. Wrote the Spark transformations and dbt models. A US medical device manufacturer. Audited their existing Azure Data Factory pipelines before changing anything, and shipped updates with zero disruption to production. A large FMCG client. Data governance engineer, using Unity Catalog alongside Microsoft Purview to manage access, lineage, and classification across the Databricks workspace. Production ML pipeline. Built the Spark and Databricks pipelines feeding a production machine learning model, worked with the data science team on feature engineering, and built the serving layer that delivered model-ready data. A/B testing. Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results. Performance and cost. Tuned Spark jobs and SQL on Databricks for performance and cost. Code review and mentoring. Reviewed teammates’ code as senior data engineer on one project, and mentored two interns. Pre-sales. Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team."
   },
   {
     "id": "role-intern-celebal",
@@ -273,7 +273,7 @@
       "internship"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -289,7 +289,7 @@
       "asu"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -304,7 +304,7 @@
       "education"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -314,13 +314,13 @@
     "id": "certification-databricks-de-professional",
     "type": "certification",
     "label": "Databricks Certified Data Engineer Professional",
-    "summary": "Databricks' professional-level data engineering certification.",
+    "summary": "Databricks’ professional-level data engineering certification.",
     "tags": [
       "certification",
       "databricks"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -330,14 +330,14 @@
     "id": "certification-aws-ai-practitioner",
     "type": "certification",
     "label": "AWS Certified AI Practitioner",
-    "summary": "AWS's AI Practitioner certification.",
+    "summary": "AWS’s AI Practitioner certification.",
     "tags": [
       "certification",
       "aws",
       "ai"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -347,13 +347,13 @@
     "id": "certification-azure-data-engineer",
     "type": "certification",
     "label": "Microsoft Certified: Azure Data Engineer Associate",
-    "summary": "Microsoft's associate-level Azure data engineering certification.",
+    "summary": "Microsoft’s associate-level Azure data engineering certification.",
     "tags": [
       "certification",
       "azure"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -363,13 +363,13 @@
     "id": "certification-azure-administrator",
     "type": "certification",
     "label": "Microsoft Certified: Azure Administrator Associate",
-    "summary": "Microsoft's associate-level Azure administration certification.",
+    "summary": "Microsoft’s associate-level Azure administration certification.",
     "tags": [
       "certification",
       "azure"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",
@@ -386,7 +386,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -403,7 +403,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -419,7 +419,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -434,7 +434,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -451,7 +451,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -467,7 +467,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -483,7 +483,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -498,7 +498,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -513,7 +513,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -529,7 +529,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -544,7 +544,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -559,7 +559,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -574,7 +574,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -589,7 +589,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -604,7 +604,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -620,7 +620,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -636,7 +636,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -652,7 +652,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -668,7 +668,7 @@
       "azure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -684,7 +684,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -700,7 +700,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -716,7 +716,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -732,7 +732,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -748,7 +748,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -764,7 +764,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -780,7 +780,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -796,7 +796,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -812,7 +812,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -828,7 +828,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -844,7 +844,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -859,7 +859,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -876,7 +876,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -893,7 +893,7 @@
       "core"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -909,7 +909,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -926,7 +926,7 @@
       "agents"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -943,7 +943,7 @@
       "agents"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -959,7 +959,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -975,7 +975,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -991,7 +991,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1007,7 +1007,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1023,7 +1023,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1039,7 +1039,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1055,7 +1055,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1071,7 +1071,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1087,7 +1087,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1103,7 +1103,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1119,7 +1119,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1135,7 +1135,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1151,7 +1151,7 @@
       "governance"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1167,7 +1167,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1183,7 +1183,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1199,7 +1199,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1215,7 +1215,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1231,7 +1231,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1247,7 +1247,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1263,7 +1263,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1279,7 +1279,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1295,7 +1295,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1311,7 +1311,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1327,7 +1327,7 @@
       "bi"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1342,7 +1342,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1358,7 +1358,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1374,7 +1374,7 @@
       "llm"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1390,7 +1390,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1407,7 +1407,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1423,7 +1423,7 @@
       "web"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1439,7 +1439,7 @@
       "testing"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1455,7 +1455,7 @@
       "testing"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1471,7 +1471,7 @@
       "aws"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1487,7 +1487,7 @@
       "networking"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1502,7 +1502,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1518,7 +1518,7 @@
       "ml"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1534,7 +1534,7 @@
       "infrastructure"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1550,7 +1550,7 @@
       "language"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1565,7 +1565,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1580,7 +1580,7 @@
       "skill"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1596,7 +1596,7 @@
       "networking"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1613,7 +1613,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1629,7 +1629,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1645,7 +1645,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1661,7 +1661,7 @@
       "hardware"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1677,7 +1677,7 @@
       "simulation"
     ],
     "evidence": [
-      "#skills"
+      "/about#skills"
     ],
     "metrics": "",
     "skills": "",
@@ -1694,7 +1694,7 @@
       "headline"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1710,7 +1710,7 @@
       "surplus-ai"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1727,7 +1727,7 @@
       "llm"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -1736,7 +1736,7 @@
   {
     "id": "metric-devhacks-place",
     "type": "metric",
-    "label": "1st place, Track 1, chosen by public student vote",
+    "label": "1st place, Track 1, DevHacks × Cubbie",
     "summary": "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.",
     "tags": [
       "metric",
@@ -1744,7 +1744,7 @@
       "headline"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/cooked"
     ],
     "metrics": "",
@@ -1755,13 +1755,13 @@
     "id": "metric-devhacks-submissions",
     "type": "metric",
     "label": "82 submissions from 350+ students",
-    "summary": "The field Cooked was chosen from, by public student vote.",
+    "summary": "Submissions to the DevHacks × Cubbie hackathon in October 2026, from 350+ students.",
     "tags": [
       "metric",
       "hackathon"
     ],
     "evidence": [
-      "#project-devhacks-cubbie"
+      "/work/devhacks-cubbie"
     ],
     "metrics": "",
     "skills": "",
@@ -1778,7 +1778,7 @@
       "testing"
     ],
     "evidence": [
-      "#project-devhacks-cubbie",
+      "/work/devhacks-cubbie",
       "https://github.com/SrujanRudrapati/receipts"
     ],
     "metrics": "",
@@ -1796,7 +1796,7 @@
       "grounding"
     ],
     "evidence": [
-      "#project-label-lens",
+      "/work/label-lens",
       "https://label-lens-iota.vercel.app"
     ],
     "metrics": "",
@@ -1813,7 +1813,7 @@
       "label-lens"
     ],
     "evidence": [
-      "#project-label-lens"
+      "/work/label-lens"
     ],
     "metrics": "",
     "skills": "",
@@ -1830,7 +1830,7 @@
       "testing"
     ],
     "evidence": [
-      "#project-label-lens"
+      "/work/label-lens"
     ],
     "metrics": "",
     "skills": "",
@@ -1840,14 +1840,14 @@
     "id": "metric-watchtower-agents",
     "type": "metric",
     "label": "3 agents in sequence on the Claude API",
-    "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent's output.",
+    "summary": "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.",
     "tags": [
       "metric",
       "watchtower",
       "agents"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "",
     "skills": "",
@@ -1864,7 +1864,7 @@
       "forecasting"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "",
     "skills": "",
@@ -1880,7 +1880,7 @@
       "capstone"
     ],
     "evidence": [
-      "#project-demand-forecasting"
+      "/work/demand-forecasting"
     ],
     "metrics": "",
     "skills": "",
@@ -1897,7 +1897,7 @@
       "networking"
     ],
     "evidence": [
-      "#project-wlan-forensics-toolkit"
+      "/work/wlan-forensics-toolkit"
     ],
     "metrics": "",
     "skills": "",
@@ -1914,7 +1914,7 @@
       "ml"
     ],
     "evidence": [
-      "#project-f1-race-predictor"
+      "/work/f1-race-predictor"
     ],
     "metrics": "",
     "skills": "",
@@ -1930,7 +1930,7 @@
       "celebal"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1948,7 +1948,7 @@
       "headline"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1965,7 +1965,7 @@
       "aws"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1982,7 +1982,7 @@
       "teaching"
     ],
     "evidence": [
-      "#experience"
+      "/experience"
     ],
     "metrics": "",
     "skills": "",
@@ -1997,7 +1997,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2012,7 +2012,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2027,7 +2027,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2042,7 +2042,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2057,7 +2057,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2072,7 +2072,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2087,7 +2087,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2097,12 +2097,12 @@
     "id": "industry-consumer-health",
     "type": "industry",
     "label": "Consumer health",
-    "summary": "Food and medicine labels checked against a person's allergies and medications, in Label Lens.",
+    "summary": "Food and medicine labels checked against a person’s allergies and medications, in Label Lens.",
     "tags": [
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2117,7 +2117,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2132,7 +2132,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2147,7 +2147,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2162,7 +2162,7 @@
       "industry"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2177,7 +2177,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2192,7 +2192,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2207,7 +2207,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2222,7 +2222,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2237,7 +2237,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2252,7 +2252,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2267,7 +2267,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2277,12 +2277,12 @@
     "id": "problem-manual-logistics-planning",
     "type": "problem",
     "label": "Manual logistics planning",
-    "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it in one run.",
+    "summary": "Turning raw sales history into a logistics plan normally takes several manual steps by different people. Three agents in sequence do it.",
     "tags": [
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2297,7 +2297,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2312,7 +2312,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2327,7 +2327,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2342,7 +2342,7 @@
       "problem"
     ],
     "evidence": [
-      "#work"
+      "/work"
     ],
     "metrics": "",
     "skills": "",
@@ -2358,7 +2358,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2374,7 +2374,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2390,7 +2390,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-surplus-ai"
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2454,7 +2454,7 @@
       "diagram"
     ],
     "evidence": [
-      "#project-supply-chain-watchtower"
+      "/work/supply-chain-watchtower"
     ],
     "metrics": "",
     "skills": "",
@@ -2480,7 +2480,7 @@
     "id": "artifact-resume",
     "type": "artifact",
     "label": "Resume",
-    "summary": "Srujan's resume as a PDF.",
+    "summary": "Srujan’s resume as a PDF.",
     "tags": [
       "artifact",
       "resume"
@@ -2496,13 +2496,13 @@
     "id": "event-devhacks-win",
     "type": "event",
     "label": "1st place, DevHacks × Cubbie hackathon",
-    "summary": "1st place, Track 1, chosen by public student vote among 82 submissions from 350+ students.",
+    "summary": "1st place, Track 1, among 82 submissions from 350+ students.",
     "tags": [
       "event",
       "hackathon"
     ],
     "evidence": [
-      "#project-devhacks-cubbie"
+      "/work/devhacks-cubbie"
     ],
     "metrics": "",
     "skills": "",
@@ -2519,8 +2519,8 @@
       "production"
     ],
     "evidence": [
-      "#experience",
-      "#project-surplus-ai"
+      "/experience",
+      "/work/surplus-ai"
     ],
     "metrics": "",
     "skills": "",
@@ -2536,7 +2536,7 @@
       "education"
     ],
     "evidence": [
-      "#credentials"
+      "/about#credentials"
     ],
     "metrics": "",
     "skills": "",

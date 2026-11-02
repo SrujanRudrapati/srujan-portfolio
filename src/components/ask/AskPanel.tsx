@@ -21,7 +21,7 @@ function Suggestions({ onPick, label }: { onPick: (q: string) => void; label: st
     <ul aria-label={label} className="flex flex-wrap gap-2">
       {SUGGESTIONS.map((s) => (
         <li key={s}>
-          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center border border-line px-3 text-left text-sm text-ink transition-colors duration-150 hover:border-ink">
+          <button type="button" onClick={() => onPick(s)} className="inline-flex min-h-11 items-center rounded-full border border-line px-4 text-left text-sm text-ink transition-colors duration-300 hover:border-accent">
             {s}
           </button>
         </li>
@@ -33,7 +33,7 @@ function Suggestions({ onPick, label }: { onPick: (q: string) => void; label: st
 function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evidence" }>; labels: Map<string, string> }) {
   if (result.generated.length === 0) return null;
   return (
-    <div aria-label="Answer" role="group" className="border-l-2 border-accent-2 pl-4">
+    <div aria-label="Answer" role="group" className="border-l-2 border-accent pl-4">
       <p className="text-ink">
         {result.generated.map((s, i) => (
           <span key={i}>
@@ -47,7 +47,7 @@ function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evi
                   card?.scrollIntoView({ block: "nearest" });
                   card?.focus();
                 }}
-                className="mr-1 text-xs font-medium text-accent-2 underline decoration-1 underline-offset-2"
+                className="mr-1 text-xs font-medium text-accent underline decoration-1 underline-offset-2"
               >
                 {labels.get(id) ?? id}
               </button>
@@ -59,7 +59,10 @@ function Generated({ result, labels }: { result: Extract<AskResult, { kind: "evi
   );
 }
 
-export function AskPanel() {
+/** The event that made AskLoader fetch this panel (it arrived before the panel existed). */
+export type FirstAskEvent = { kind: "open"; question?: string; opener: HTMLElement | null } | { kind: "preload" };
+
+export function AskPanel({ first, onReady }: { first?: FirstAskEvent | null; onReady?: () => void } = {}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [question, setQuestion] = useState("");
@@ -89,30 +92,43 @@ export function AskPanel() {
   }, []);
 
   useEffect(() => {
-    const onOpen = (event: Event) => {
-      const { question: q } = (event as CustomEvent<AskOpenDetail>).detail ?? {};
+    const open = (q: string | undefined, from: HTMLElement | null) => {
       if (!dialogRef.current?.open) {
-        opener.current = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+        opener.current = from;
         dialogRef.current?.showModal();
       }
       inputRef.current?.focus();
       if (q) void submit(q);
     };
+    const onOpen = (event: Event) => {
+      const { question: q } = (event as CustomEvent<AskOpenDetail>).detail ?? {};
+      open(q, document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    };
     const onPreload = () => void loadIndex().catch(() => undefined);
     window.addEventListener(ASK_OPEN, onOpen);
     window.addEventListener(ASK_PRELOAD, onPreload);
+    // Replay what the loader caught before this chunk arrived, then take over listening from it.
+    if (first?.kind === "open") open(first.question, first.opener);
+    else if (first?.kind === "preload") onPreload();
+    onReady?.();
     return () => {
       window.removeEventListener(ASK_OPEN, onOpen);
       window.removeEventListener(ASK_PRELOAD, onPreload);
     };
+    // `first` is fixed once this panel mounts (the loader stops updating it when onReady fires).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [submit]);
 
   const close = () => dialogRef.current?.close();
   // If the opener is gone (the phone menu closed behind the dialog), give focus to the menu button instead of <body>.
+  // Focus goes back to the opener; if it is gone or hidden, to the bar's Search/Menu button (never <body>).
   const onClose = () => {
     const target = opener.current;
-    if (target && target.offsetParent === null) document.querySelector<HTMLElement>('[aria-controls="mobile-menu"]')?.focus();
+    opener.current = null;
+    if (target?.isConnected && target.getClientRects().length > 0) target.focus(); // offsetParent is null in the fixed bar
+    else document.querySelector<HTMLElement>("header button[aria-keyshortcuts]")?.focus();
   };
+
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     void submit(question);
@@ -131,19 +147,21 @@ export function AskPanel() {
       onClick={(e) => {
         if (e.target === dialogRef.current && pressedOnBackdrop.current) close();
       }}
-      className="m-0 h-dvh max-h-dvh w-full max-w-none bg-raised p-0 text-ink backdrop:bg-ink/50 md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:border-t-[3px] md:border-ink"
+      className="m-0 h-dvh max-h-dvh w-full max-w-none bg-surface p-0 text-ink backdrop:bg-[var(--backdrop)] md:m-auto md:h-auto md:max-h-[85dvh] md:max-w-2xl md:overflow-hidden md:rounded-[28px] md:border md:border-[var(--tile-border)]"
     >
       <div className="flex h-full max-h-[inherit] flex-col">
-        <header className="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
-          <h2 id="ask-title" className="text-xl text-ink">
-            Ask about my work
-          </h2>
-          <button type="button" onClick={close} aria-label="Close" className="inline-flex h-11 w-11 shrink-0 items-center justify-center border-2 border-ink text-ink transition-colors duration-150 hover:bg-ink hover:text-bg">
+        <header className="flex items-end justify-between gap-4 border-b border-line px-5 py-4">
+          <div>
+            <h2 id="ask-title" className="[font-family:var(--serif)] font-normal tracking-[-0.02em] text-[clamp(1.75rem,5vw,2.5rem)] leading-[0.95] text-ink">
+              Ask about my work
+            </h2>
+          </div>
+          <button type="button" onClick={close} aria-label="Close" className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line text-ink transition-colors duration-300 hover:border-accent">
             <XIcon aria-hidden="true" size={18} weight="bold" />
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex-1 overflow-y-auto px-5 py-5" data-lenis-prevent>
           <form onSubmit={onSubmit} role="search" className="flex gap-2">
             <label htmlFor="ask-input" className="sr-only">
               Your question
@@ -157,9 +175,9 @@ export function AskPanel() {
               maxLength={MAX_QUESTION}
               autoComplete="off"
               placeholder="What did you build with Spark?"
-              className="min-h-11 min-w-0 flex-1 border-2 border-ink bg-bg px-3 text-base text-ink placeholder:text-muted"
+              className="min-h-11 min-w-0 flex-1 rounded-full border border-line bg-bg px-4 text-base text-ink placeholder:text-muted focus-visible:border-accent"
             />
-            <button type="submit" className="inline-flex min-h-11 shrink-0 items-center bg-ink px-4 text-sm font-medium text-bg hover:bg-accent-2">
+            <button type="submit" className="inline-flex min-h-11 shrink-0 items-center rounded-full bg-ink px-5 text-sm text-bg transition-colors duration-300 hover:bg-accent">
               Ask
             </button>
           </form>
@@ -171,7 +189,7 @@ export function AskPanel() {
               : result?.kind === "evidence"
                 ? result.summary
                 : result?.kind === "none"
-                  ? "I don't have anything on that."
+                  ? "I don’t have anything on that."
                   : status.state === "error"
                     ? "The search could not load."
                     : ""}
@@ -182,15 +200,15 @@ export function AskPanel() {
             {status.state === "error" && <p className="text-ink">The search could not load. Check your connection and try again.</p>}
             {result?.kind === "none" && (
               <>
-                <p className="text-lg text-ink">I don&apos;t have anything on that. Try one of these:</p>
+                <p className="text-lg text-ink">I don’t have anything on that. Try one of these:</p>
                 <Suggestions onPick={(q) => void submit(q)} label="Try one of these" />
               </>
             )}
             {result?.kind === "evidence" && (
               <>
                 <Generated result={result} labels={labels} />
-                <p className="font-medium text-ink">{result.summary}</p>
-                <ul aria-label="Evidence" className="space-y-3">
+                <p className="text-sm text-muted">{result.summary}</p>
+                <ul aria-label="Evidence" className="border-b border-line">
                   {result.hits.map((h) => (
                     <EvidenceCard key={h.id} hit={h} onNavigate={close} />
                   ))}

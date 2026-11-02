@@ -5,6 +5,13 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  // 3D scenes keep their simulation state (positions, bodies, timers) in plain
+  // objects that the frame loop mutates outside React on purpose; React never
+  // renders from them. The React Compiler immutability check does not apply there.
+  {
+    files: ["src/components/three/scenes/**"],
+    rules: { "react-hooks/immutability": "off" },
+  },
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
@@ -18,6 +25,8 @@ const eslintConfig = defineConfig([
     "worker/dist/**",
     "worker/.wrangler/**",
     "worker/node_modules/**",
+    // Vendored decoders copied from three (scripts/assets/build.mts), not our code.
+    "public/three/**",
   ]),
 ]);
 

@@ -1,0 +1,29 @@
+{
+  "phase": "W9-catalogue",
+  "generatedAt": "2026-11-01T23:45:20.826Z",
+  "runs": [
+    {
+      "path": "/work",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-work-mobile-dark.png",
+      "foldScreenshot": "home-work-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/work",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-work-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

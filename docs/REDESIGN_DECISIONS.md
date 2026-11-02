@@ -4,6 +4,12 @@ The only place Claude Code asks Srujan anything (runbook rule 7). Each question 
 
 ## Open
 
+12. **Photo slots** (v3 Phase V1.5, does not block). Three empty slots are reserved in `public/images/`; until a file exists, the page shows the 3D scene or its poster instead, so nothing breaks. Drop in your own photos (JPEG or PNG, at least 1600 px on the long side; the build makes the AVIF/WebP sizes):
+    - `public/images/portrait.jpg`: a portrait for About and the CV header.
+    - `public/images/hackathon.jpg`: DevHacks (team, stage or demo).
+    - `public/images/surplus-station.jpg`: the Surplus Station setup (the Mac mini cluster or the intake station).
+    Default applied: no photos; the scenes stand in. Reply with alt text for each photo you add (or accept the defaults written next to each slot in `public/images/README.md`).
+
 Nothing below blocks a phase; each has a default already applied. Answer whenever convenient.
 
 1. **Label Lens has no date in the facts** (Phase 5). Default applied: the card shows no date (empty beats invented). If you want one, reply with the month and year.
@@ -50,3 +56,60 @@ Srujan's replies of 2026-10-30, applied in the Phase 11 session:
 - **8. Repeated availability sentence**: recommended change applied (counts as the G2 yes). About's last sentence, "I graduate in December 2026 and I'm available early 2027.", was removed; the hero status line and Contact still say it.
 - **9. Intern title**: default kept, "Intern, Data Engineering, Celebal Technologies, Jaipur, India, July to August 2022".
 - **10. Gate G1**: "merge". Phase 11 steps 4 to 6 run; results in STATUS and NOTES.
+- **11. Gate G4 (concept)**, Srujan, 2026-10-30: "A's structure with C's typography, blue accent. We build ONE concept only; remove /lab/b and /lab/c when V2 starts." Recorded in `design-direction`. Removing `/lab/b` and `/lab/c` at the start of V2 counts as the G2 yes. Same message: delete the duplicate root `REDESIGN_V3_RUNBOOK.md` (done; it was identical to `docs/REDESIGN_V3_RUNBOOK.md`), and add Phase V1.5 "Visual layer: realistic 3D and physics" before V2 (added to the runbook; later phases amended).
+
+Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
+
+- **12. Unused v2 components** (G2 yes): delete `src/components/Hero.tsx` and `src/components/ask/HeroAsk.tsx` during the V7 `/lab` cleanup.
+- **13. "~80%" on the home page three times**: keep it in the hero and on the Surplus AI reel panel; replace the third (the "What it did" proof strip). Applied: the strip drops the processing-time row and adds the capstone's "about 28%" holding-cost figure (the suggested pallet figure was already the strip's second row, so using it would repeat it instead).
+- **14. Celebal proof chip**: "Associate at Celebal Technologies (2022 to 2024)". Written with "to" instead of the en dash in the reply, because dashes are banned in copy (portfolio-facts). The Experience section keeps the full title "Associate, Data Engineering" (unchanged).
+- **15. Phone hero art**: at most about a third of the screen at 390 and 360 px, with the headline, buttons and email on the first screen. Already true (the strip is capped at 24dvh and sits below the email); a test now holds it.
+- **16. Flaky scroll-reset test** (`motion.spec` "a client navigation lands at the top"): fix the cause in V7 by waiting on a real condition.
+- **17. `Srujan_Rudrapati_Research_Assistant.pdf`**: never commit it; added to `.gitignore`.
+- Then continue with V6 and V7 and stop only at G1.
+
+## Open (raised in V7; defaults applied, nothing blocks)
+
+- **18. Live 3D on phones.** Lighthouse mobile on `/` scored 77 (target 85) with 495 ms of blocking time: starting three.js on a throttled phone CPU costs about 1.9 s of script work, including one 617 ms task (target: none over 200 ms after load). Default applied: phones and tablets show the posters (the same frames, still; the site's designed fallback for low-power devices); desktop keeps live 3D; `?3d=on` still forces the lighter mobile tier. Reply "3D on phones" to bring it back on capable phones at that cost.
+- **19. Home page JS budget (runbook §1: at most 180 kB gzip).** Measured after V7: 206.7 kB of module JS on `/` (the 38 kB core-js chunk is `nomodule`, so modern browsers never load it). React 19 and the Next 16 router are about 115 kB of that and GSAP with ScrollTrigger 43 kB, which leaves about 22 kB for all site code; V1 was already at 196 kB. V7 moved the Ask panel and engine out of the first load (4.5 kB). Every Lighthouse target is met (mobile 92, desktop 100, accessibility 100, CLS 0, no task over 200 ms). The fe-reviewer's estimate for the remaining contained cuts (Lenis on demand, the palette body lazy, cursor and magnetic only on fine pointers) is 8 to 11 kB, which still misses 180; reaching it means loading GSAP after first paint, a change to every motion primitive. Default applied: accept 207 kB as a documented exception. Reply "defer GSAP" to schedule that refactor after the merge.
+  **Resolved by v4 (W7, 2026-11-01):** GSAP and three.js are gone; module JS on `/` is 154.1 kB gzip (151 to 157 kB on every route), under v4's 160 kB budget.
+- **20. Gate G1: Ready to merge `redesign/v3`. Reply `merge`.** (Phase V8, 2026-10-31.) Lint and typecheck are clean; the CI-parity build (`NEXT_PUBLIC_BASE_PATH=/srujan-portfolio`) served at `http://localhost:4000/srujan-portfolio/` loads all 16 routes (home, work, the 11 case studies, explore, about, cv) with status 200, no console errors, no failed requests, every link prefixed, all 17 internal links resolving, the timeline lens loading `graph.json` and Ask answering from `search-index.json`; `out/404.html` is the "Row not found" page; `npm run release:check` passes. The rollback point `v2-before-v3` is tagged on `main` at ecfa9fc (local, not pushed yet). On `merge`, Claude Code runs `git checkout main && git merge --no-ff redesign/v3`, pushes `main` and the tag, lets the existing Pages workflow deploy (unchanged), and verifies the live site (every route and asset, Lighthouse mobile on the live URL) into NOTES. Open with defaults applied, none blocking: 18 (3D posters on phones), 19 (home JS 207 kB against 180), and the removal of the five unused v2 work components (`WorkExplorer`, `FeaturedCard`, `ProjectCard`, `MoreToggle`, `Work`; content all on the case pages): reply "remove v2 work components" to delete them, otherwise they stay.
+  **Note (v4 W7, 2026-11-01):** the v4 runbook (W7.4) removes v3 code that is no longer used once `docs/v4/IA.md` shows its content on a v4 route, so these five components were deleted in commit `redesign: phase W7`. Their content is on the `/work/[slug]` pages, and the index they fed is on `/explore`. This overrides the "they stay" default above; if you want them back, they are in git history at `4679bf1`.
+
+## Open (v4, raised 2026-11-01)
+
+- **21. Gate G5: Home and Work are built. Compare `docs/v4/compare/` or run the site, then reply `approve` or list changes.** (Phase W3.) Each image in `docs/v4/compare/<viewport>/` puts the reference (left) beside the site (right) at 390×844, 1280×720 and 1440×900: `home-idle`, `home-hover-work`, `home-hover-experience`, `home-hover-about`, `home-hover-contact`, `work-catalogue`, `work-morph` (mid-switch to the list), `work-list`. To run it: `npm run build && npx serve out -l 4321`, then open `http://localhost:4321/`. Differences on purpose (real data replacing placeholders, or a rule winning over the reference):
+  - Eleven projects, not ten: the graph also has the capstone (Demand Forecasting & Inventory Optimization), so the Work tile reads "4 featured, 7 more" and the intro says "Eleven projects". The six smaller projects carry their real one-liners, kickers and stack tags instead of the reference's one-word tags.
+  - Figures keep their markers and avoid dashes: "~15 → ~3 min", "about 10 million records a day", "16 s → 4 to 9 s".
+  - Watchtower has real copy from its case study: "Personal project, built solo", "3 agents in sequence on the Claude API", "Turns sales history into a logistics plan, with risk analysis grounded in real shipping-disruption data." Cooked's line is "Scores a student’s week from Canvas deadlines and books study blocks on Google Calendar once they say yes." (the facts say it scores the week, and books after the student says yes).
+  - An "Ask about my work" link under the now line (runbook W2.4), so the home is about 36px taller than the reference; it still fits one screen at every desktop size.
+  - Tile names capped at 38px (the reference's "Experience" runs into the arrow at 1440); the back pill is 44px tall for touch (36px in the reference), so the catalogue stage is 40px shorter to keep its controls on screen at 1920×1080.
+  - The cursor grows by scale instead of width (motion rule: only transform and opacity animate).
+  - `/experience` and `/contact` are interim pages (the v3 components in the v4 frame) until W5 and W6.
+  Default if no reply: none; this gate waits for `approve` or a list of changes.
+  **Answer (2026-11-01): `approve`. All the differences above are accepted. Continue with W4 onward; stop only at G1.**
+- **22. Portrait for the About page (optional).** (Phase W6.) The About page has a rounded 4:5 portrait frame, sticky on desktop. Until a photo exists it shows the reference's outline figure, marked decorative (no "your portrait goes here" text for visitors). To use a photo, add `public/images/portrait.jpg` (portrait orientation, about 800×1000 or larger, 4:5 crops best); the build detects it and shows it with the alt text "Srujan Rudrapati". Default if no reply: keep the outline.
+- **23. Keep `/explore`?** (Phase W7.) The v4 runbook does not mention `/explore` (the lenses: Highlights with the work filters, Timeline, Skill map, By problem, By industry, Recruiter). It holds no fact that is not elsewhere, but it is a working feature and other pages link to it (project problem tags, the About skill-map link, the palette). Default, applied: keep it in the v4 page frame, with the featured projects' art plates in place of the v3 3D covers and a fade instead of the GSAP Flip; it is not on the home hub. Reply "remove explore" to drop it (gate G2: its links would then be repointed).
+- **24. Recruiter scan suggestions that would change the approved design (optional).** (Phase W8.) The recruiter-eyes review scored the 30-second scan 6/10: what you do and where come through in 5 seconds, but reaching you takes leaving the home page, and the big figure has no employer next to it. Each item below changes something you approved at G5, so none is applied. Reply with the letters you want (for example "24 a b").
+  - a. (Recommended.) Name the employer in the home lede: "At Celebal Technologies I was on call for a pipeline moving about 10 million records a day; now I run an offline LLM system in production." (facts 2.4, 2.1; W8 already made the second half singular, since only Surplus AI runs offline in production).
+  - b. (Recommended.) A small "Email · LinkedIn · Resume (PDF)" row on the home page under the now line, so recruiters can reach you without opening Contact.
+  - c. Swap the tile text weights so the facts ("Celebal, ASU Surplus", "M.S., Arizona State", "Open to roles in 2027") are the large line and the descriptions are the small one.
+  - d. On phones, open `/work` in List (all eleven) instead of the one-card catalogue.
+  - e. On `/about`, put Education and Certifications above the medallion diagram.
+  - f. Put "Graduating December 2026" in the header availability pill as well.
+  Already fixed in W8 without a question: on phones the Experience chart opened scrolled to 2022, hiding the current role and the DevHacks win; it now opens at Today. Default if no reply: keep the approved design for a to f.
+- **25. Gate G1: Ready to merge `redesign/v4`. Reply `merge`.** (Phase W9, 2026-11-01.) This replaces question 20: `redesign/v4` contains all of v3, so v3 and v4 ship together and v3 is not merged on its own.
+  - **Checks:** lint and typecheck are clean. The CI-parity build (`NEXT_PUBLIC_BASE_PATH=/srujan-portfolio`) passes `npm run release:check`. Served at `http://localhost:4000/srujan-portfolio/`, all 18 routes load with status 200, no console errors, no failed requests, every link prefixed and all 49 internal links resolving.
+  - **Tests:** the full Playwright suite passes in Chrome (desktop and phone) and WebKit (desktop and iPhone). Firefox cannot launch on this machine.
+  - **Quality:** Lighthouse mobile 92 to 95, desktop 100, accessibility 100, CLS 0. Initial JS is 151 to 157 kB on every route.
+  - **Rollback:** `main` is tagged `v2-before-v4` (local).
+  - **On `merge`**, Claude Code will:
+    1. run `git checkout main && git merge --no-ff redesign/v4`;
+    2. push `main` and the tags;
+    3. let the existing Pages workflow deploy (unchanged);
+    4. check every route and asset live and record live Lighthouse in NOTES.
+  - **Open, with defaults applied, none blocking:**
+    - 22: portrait (outline until a photo is added).
+    - 23: `/explore` kept.
+    - 24: the recruiter suggestions a to f; the approved design is kept until you pick any.
+  - Default if no reply: none; this gate waits for `merge`.

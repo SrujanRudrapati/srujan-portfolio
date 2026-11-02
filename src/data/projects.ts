@@ -7,6 +7,6 @@ import { graph, selectProjects } from "./graph.ts";
 import type { Project } from "./graph.ts";
 
 export type { Impact, Project, ProjectLinks, ProjectStatus, ProjectTag, StatusNote } from "./graph.ts";
-export { primaryLink, statusLabel } from "./project-helpers.ts";
+export { statusLabel } from "./project-helpers.ts";
 
 export const projects: Project[] = selectProjects(graph);

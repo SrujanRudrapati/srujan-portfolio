@@ -5,8 +5,8 @@ import { metric } from "./factories.ts";
 // contain as metric nodes. Content strings are the Experience and Credentials
 // sections verbatim (facts 2.4 applied in Phase 5).
 
-const EXPERIENCE = "#experience";
-const CREDENTIALS = "#credentials";
+const EXPERIENCE = "/experience";
+const CREDENTIALS = "/about#credentials";
 
 export const roleNodes: RoleNode[] = [
   {
@@ -74,7 +74,7 @@ export const roleNodes: RoleNode[] = [
         { label: "Production ML pipeline", text: "Built the Spark and Databricks pipelines feeding a production machine learning model, worked with the data science team on feature engineering, and built the serving layer that delivered model-ready data." },
         { label: "A/B testing", text: "Built the pipelines feeding experiment data, set up test and control assignment logic, and ran the statistical analysis on results." },
         { label: "Performance and cost", text: "Tuned Spark jobs and SQL on Databricks for performance and cost." },
-        { label: "Code review and mentoring", text: "Reviewed teammates' code as senior data engineer on one project, and mentored two interns." },
+        { label: "Code review and mentoring", text: "Reviewed teammates’ code as senior data engineer on one project, and mentored two interns." },
         { label: "Pre-sales", text: "Wrote Azure cloud architectures and Bill-of-Materials cost estimates, and presented them directly to prospective clients alongside the sales team." },
       ],
     },
@@ -124,10 +124,10 @@ const cert = (id: string, label: string, summary: string, tags: string[]): Certi
 });
 
 export const certificationNodes: CertificationNode[] = [
-  cert("databricks-de-professional", "Databricks Certified Data Engineer Professional", "Databricks' professional-level data engineering certification.", ["databricks"]),
-  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS's AI Practitioner certification.", ["aws", "ai"]),
-  cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft's associate-level Azure data engineering certification.", ["azure"]),
-  cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft's associate-level Azure administration certification.", ["azure"]),
+  cert("databricks-de-professional", "Databricks Certified Data Engineer Professional", "Databricks’ professional-level data engineering certification.", ["databricks"]),
+  cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS’s AI Practitioner certification.", ["aws", "ai"]),
+  cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft’s associate-level Azure data engineering certification.", ["azure"]),
+  cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft’s associate-level Azure administration certification.", ["azure"]),
 ];
 
 

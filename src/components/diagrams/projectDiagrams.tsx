@@ -8,6 +8,7 @@ import { FlowDiagram, type FlowLayout } from "./FlowDiagram";
 // drawn on a 300-unit canvas for the ~280px slot a 390px phone gives it, so
 // text stays at or above 12px rendered. See FlowDiagram for the engine.
 
+
 const flowEdges = (pairs: [string, string][]): FlowLayout["edges"] => pairs.map(([from, to]) => ({ from, to }));
 
 /* Surplus AI: how a Mac goes from the shelf to a listing. */
@@ -59,7 +60,7 @@ export function SurplusPipelineDiagram() {
     <FlowDiagram
       title="Surplus AI pipeline: from spec collection to AI-written listings"
       desc="Two spec sources, a USB collector for working Macs and a camera scanner for Macs that will not boot, feed a lookup table, then one master inventory keyed on serial number, then an LLM with a strict prompt that never invents specs, which writes the listings."
-      caption="How a Mac goes from the shelf to a listing. Working Macs report their own specs; Macs that won't boot get their label scanned. Both land in one inventory keyed on serial number."
+      caption="How a Mac goes from the shelf to a listing. Working Macs report their own specs; Macs that won’t boot get their label scanned. Both land in one inventory keyed on serial number."
       wide={surplusPipelineWide}
       narrow={surplusPipelineNarrow}
     />
@@ -120,7 +121,7 @@ export function SurplusNetworkDiagram() {
 const privacyLayers = [
   "No uplink on the switch",
   "Wi-Fi off",
-  "HF_HUB_OFFLINE=1, so the model software can't download anything",
+  "HF_HUB_OFFLINE=1, so the model software can’t download anything",
   "Model server only answers on localhost",
 ];
 
@@ -154,7 +155,7 @@ const surplusPrivacyWide = privacyLayout(920, 18, [40, 40, 40, 40], privacyLayer
 const surplusPrivacyNarrow = privacyLayout(300, 10, [40, 40, 74, 56], [
   "No uplink on the switch",
   "Wi-Fi off",
-  ["HF_HUB_OFFLINE=1,", "so the model software", "can't download anything"],
+  ["HF_HUB_OFFLINE=1,", "so the model software", "can’t download anything"],
   ["Model server only", "answers on localhost"],
 ]);
 
@@ -166,7 +167,6 @@ export function SurplusPrivacyDiagram() {
       caption="Four layers sit between the model and the internet. The app checks Wi-Fi and internet status live."
       wide={surplusPrivacyWide}
       narrow={surplusPrivacyNarrow}
-      loopSeconds={5}
     />
   );
 }
@@ -219,10 +219,9 @@ export function WatchtowerFlowDiagram() {
     <FlowDiagram
       title="Watchtower agent flow: sales history to logistics plan through three agents"
       desc="Sales history goes to Agent 1, the Inventory Forecaster, then Agent 2, the Risk Analyst, which calls a RAG tool over ChromaDB shipping-disruption data, then Agent 3, the Logistics Coordinator, which produces the logistics plan."
-      caption="Three agents run in sequence, each consuming the previous agent's output. Only the Risk Analyst has a tool: retrieval over real shipping-disruption data in ChromaDB."
+      caption="Three agents run in sequence, each consuming the previous agent’s output. Only the Risk Analyst has a tool: retrieval over real shipping-disruption data in ChromaDB."
       wide={watchtowerWide}
       narrow={watchtowerNarrow}
-      loopSeconds={7}
     />
   );
 }

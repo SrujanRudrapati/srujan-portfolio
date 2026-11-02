@@ -1,0 +1,386 @@
+/* Project page (runbook v4 W4), values from the reference's .pband, .results, .pbody and .next. */
+
+/* Band: the project's art plate, 28px radius, kicker and name over a bottom gradient. */
+.band {
+  position: relative;
+  height: min(56vh, 520px);
+  min-height: 300px;
+  border-radius: 28px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.art {
+  position: absolute;
+  inset: 0;
+}
+/* A shade over the lower band, sized to the band rather than the text box, so the kicker and
+   name stay readable on the light plates (the bronze conic one most of all). */
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 25%, color-mix(in srgb, var(--bg) 68%, transparent) 58%, color-mix(in srgb, var(--bg) 90%, transparent) 100%);
+}
+.over {
+  position: absolute;
+  z-index: 1;
+  inset: auto 0 0 0;
+  padding: clamp(22px, 3vw, 32px);
+  color: var(--on-art);
+}
+.kick {
+  margin: 0;
+  color: var(--on-art);
+  font-size: 15px;
+}
+.title {
+  font-size: clamp(40px, 6.4vw, 96px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  margin: 8px 0 0;
+  max-width: 16ch;
+}
+
+/* Compact header for the smaller projects: no art, the page title. */
+.compact {
+  margin-top: 4px;
+}
+.compactKick {
+  margin: 0 0 14px;
+  color: var(--accent);
+  font-size: 15px;
+}
+.compact h1 {
+  max-width: 18ch;
+}
+
+/* Intro: the one-liner on the left; status, date and links on the right. */
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px 48px;
+  align-items: start;
+  margin-top: 28px;
+}
+.lede {
+  margin: 0;
+  font-size: clamp(19px, 1.7vw, 23px);
+  line-height: 1.45;
+  max-width: 40ch;
+}
+.side {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+.liveDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--live);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--live) 16%, transparent);
+}
+.pendingDot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Results: up to three rounded tiles, a metal number and a one-line label. */
+.results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.result {
+  padding: 30px 28px;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.figure {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(34px, 4vw, 54px);
+  line-height: 1.05;
+}
+.figureLabel {
+  margin: 10px 0 0;
+  max-width: 30ch;
+  font-size: 15px;
+}
+.figureNote {
+  margin: 10px 0 0;
+  max-width: 34ch;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.media {
+  margin: 20px 0 0;
+}
+.shot {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 28px;
+  border: 1px solid var(--tile-border);
+}
+.caption {
+  margin-top: 12px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+/* Sections: heading on the left third, content on the right, like the reference's .pbody. */
+.section {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: 48px;
+  margin-top: 88px;
+}
+.sectionWide {
+  margin-top: 88px;
+}
+.sectionWide .h2 {
+  margin-bottom: 28px;
+}
+.h2 {
+  margin: 0;
+  font-size: 32px;
+  line-height: 1.1;
+}
+.body {
+  min-width: 0;
+}
+.h3 {
+  margin: 0 0 14px;
+  font-size: 24px;
+}
+.prose {
+  margin: 0 0 24px;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: 62ch;
+}
+.small {
+  margin: 16px 0 0;
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 62ch;
+}
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-width: 66ch;
+}
+.list li {
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  line-height: 1.55;
+}
+.list li:first-child {
+  border-top: none;
+  padding-top: 4px;
+}
+
+.details {
+  margin-top: 40px;
+}
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+.detailGrid > div {
+  padding: 20px 22px;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+}
+.detailGrid dt {
+  font-weight: 500;
+}
+.detailGrid dd {
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* DevHacks × Cubbie: one tile per entry. */
+.entries {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.entry {
+  padding: 26px 28px;
+  border-radius: 24px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  box-shadow: var(--tile-inset);
+}
+.entryName {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-size: 30px;
+}
+.entryNote {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  color: var(--accent);
+}
+.entryText {
+  margin: 10px 0 0;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.entry .links {
+  margin-top: 18px;
+}
+
+.problemTags,
+.pills,
+.notes {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.problemTags a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-bottom: 6px;
+  text-decoration: none;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.problemTags a:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.notes {
+  gap: 8px;
+  margin-top: 14px;
+}
+.note {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--tile-bg);
+  border: 1px solid var(--tile-border);
+  font-size: 14px;
+}
+
+.diagrams {
+  display: grid;
+  gap: 20px;
+}
+
+/* Next project: a large Bodoni name; it turns italic on hover, like the reference. */
+.nextNav {
+  margin-top: 112px;
+}
+.next {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+  text-decoration: none;
+}
+.nextLabel {
+  display: block;
+  color: var(--muted);
+  font-size: 15px;
+}
+.nextName {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.next:hover .nextName,
+.next:focus-visible .nextName {
+  font-style: italic;
+}
+.next:hover :global(.btn) {
+  border-color: var(--accent);
+}
+
+@media (max-width: 900px) {
+  .intro,
+  .section {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+  .results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .detailGrid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .section,
+  .sectionWide {
+    margin-top: 64px;
+  }
+  .nextNav {
+    margin-top: 80px;
+  }
+}
+@media (max-width: 560px) {
+  /* Phones: a shorter band, so the one-liner and the first link sit in the first screen. */
+  .band {
+    height: min(44svh, 360px);
+    min-height: 240px;
+  }
+  .next :global(.btn) {
+    display: none;
+  }
+}

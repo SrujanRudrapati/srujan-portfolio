@@ -17,7 +17,8 @@ export type NodeType =
 
 export type EdgeType = "uses" | "achieved" | "solved" | "in" | "at" | "produced" | "during";
 
-/** `url` is a fragment ("#work"), an http(s) URL, or a root path ("/resume.pdf"). Root paths are
+/** `url` is a page on the site ("/work/label-lens", "/explore#lens=timeline"; no bare "#fragment" since V3),
+ *  a file ("/resume.pdf"), or an http(s) URL. Root paths are
  *  stored without the GitHub Pages prefix: anything that renders one from graph.json must pass it
  *  through `withBasePath` (src/lib/paths.ts). Same for `ArtifactNode.url`. */
 export type Evidence = { label: string; url: string };
@@ -57,6 +58,9 @@ export type ProjectContent = {
   problem?: string;
   built?: string;
   details?: { heading: string; items: { name: string; text: string }[] };
+  /** Separate builds inside one project (DevHacks: Cooked, Receipts, Bailout). Text is the matching highlight's, verbatim;
+   *  the case study gives each one a sub-section, and links an artifact whose label starts with the name. */
+  entries?: { name: string; note?: string; text: string }[];
   statusNotes?: StatusNote[];
   statusDetail?: string;
 };

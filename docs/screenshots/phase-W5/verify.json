@@ -1,0 +1,52 @@
+{
+  "phase": "W5",
+  "generatedAt": "2026-11-01T18:39:33.624Z",
+  "runs": [
+    {
+      "path": "/experience",
+      "viewport": "mobile",
+      "theme": "light",
+      "screenshot": "home-experience-mobile-light.png",
+      "foldScreenshot": "home-experience-mobile-light-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/experience",
+      "viewport": "mobile",
+      "theme": "dark",
+      "screenshot": "home-experience-mobile-dark.png",
+      "foldScreenshot": "home-experience-mobile-dark-fold.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/experience",
+      "viewport": "desktop",
+      "theme": "light",
+      "screenshot": "home-experience-desktop-light.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    },
+    {
+      "path": "/experience",
+      "viewport": "desktop",
+      "theme": "dark",
+      "screenshot": "home-experience-desktop-dark.png",
+      "consoleErrors": [],
+      "failedRequests": [],
+      "horizontalOverflowPx": 0,
+      "axeViolations": [],
+      "passed": true
+    }
+  ]
+}

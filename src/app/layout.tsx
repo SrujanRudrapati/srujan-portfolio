@@ -1,20 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Archivo } from "next/font/google";
+import { Bodoni_Moda, Hanken_Grotesk } from "next/font/google";
+import { AskLoader } from "@/components/ask/AskLoader";
+import { CommandPalette } from "@/components/site/CommandPalette";
+import { GameDialog } from "@/components/game/GameDialog";
+import { Footer } from "@/components/shell/Footer";
+import { Header } from "@/components/shell/Header";
+import { PageTransitions } from "@/components/shell/PageTransitions";
+import { ShellEffects } from "@/components/shell/ShellEffects";
+import { projects } from "@/data/projects";
 import "./globals.css";
 
-// One family. The width axis gives headlines their expanded cut and body its normal cut.
-const archivo = Archivo({
+// v4 type (design-direction): Bodoni Moda for display (variable, optical size axis, roman and
+// italic) and Hanken Grotesk for text, both self-hosted by next/font.
+const bodoni = Bodoni_Moda({
   subsets: ["latin"],
-  axes: ["wdth"],
-  variable: "--font-archivo",
+  style: ["normal", "italic"],
+  axes: ["opsz"],
+  variable: "--font-bodoni",
   display: "swap",
 });
-
-// Runs synchronously while the HTML parses, before first paint. It marks the
-// page as scripted (data-js: phone-only collapses key off it), then a stored choice
-// sets data-theme so the matching token set applies immediately; no stored
-// choice leaves the attribute off and the system preference decides.
-const themeScript = `(function(){document.documentElement.setAttribute("data-js","");try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark"){document.documentElement.setAttribute("data-theme",t)}}catch(e){}})();`;
+const hanken = Hanken_Grotesk({ subsets: ["latin"], variable: "--font-hanken", display: "swap" });
 
 const SITE_URL = "https://srujanrudrapati.github.io/srujan-portfolio/";
 const TITLE = "Srujan Rudrapati | Data Engineer";
@@ -25,6 +30,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
+  // Defaults for the home page; every other route sets its own canonical and card (src/lib/meta.ts).
   alternates: { canonical: SITE_URL },
   openGraph: {
     type: "website",
@@ -38,19 +44,27 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#161616" },
-    { media: "(prefers-color-scheme: light)", color: "#f6f6f3" },
-  ],
+  themeColor: "#0b0f14",
+  colorScheme: "dark",
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${archivo.variable} antialiased`}>
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
-      </head>
-      <body className="min-h-dvh">{children}</body>
+    <html lang="en" className={`${bodoni.variable} ${hanken.variable}`}>
+      <body>
+        <a href="#main" className="sr-only z-[80] rounded-full bg-accent px-4 py-2 font-medium text-bg focus:not-sr-only focus:fixed focus:top-3 focus:left-3">
+          Skip to content
+        </a>
+        <Header />
+        {children}
+        <Footer />
+        <PageTransitions />
+        <ShellEffects />
+        <CommandPalette projects={projects.map((p) => ({ slug: p.slug, title: p.title, oneLiner: p.oneLiner }))} />
+        <AskLoader />
+        <GameDialog />
+      </body>
     </html>
   );
 }

@@ -16,6 +16,8 @@ if (!process.argv.includes("--no-build")) {
 
 const required = [".nojekyll", "index.html", "404.html", "resume.pdf", "graph.json", "search-index.json", "og.png", "sitemap.xml", "robots.txt"];
 const missing = required.filter((f) => !existsSync(`out/${f}`));
+// Tooling routes must never ship: /studio and /lab were removed (V7, v4 W7); this guards against their return.
+const forbidden = ["studio", "studio.html", "lab", "lab.html"].filter((f) => existsSync(`out/${f}`));
 
 // Every hand-written root-relative href or src in the page (outside _next) must exist in out/.
 const html = readFileSync("out/index.html", "utf8");
@@ -26,8 +28,9 @@ if (!html.includes(`"${base}/_next/`)) {
 const refs = [...html.matchAll(/(?:href|src)="(\/[^"#?]*)/g)].map((m) => m[1]).filter((u) => !u.includes("/_next/"));
 const broken = [...new Set(refs)].map((u) => u.slice(base.length) || "/").filter((u) => u !== "/" && !existsSync(`out${u}`));
 
-if (missing.length || broken.length) {
+if (missing.length || broken.length || forbidden.length) {
   if (missing.length) console.error(`missing from out/: ${missing.join(", ")}`);
+  if (forbidden.length) console.error(`tooling routes in out/ (they must not ship): ${forbidden.join(", ")}`);
   if (broken.length) console.error(`linked from index.html but absent: ${broken.join(", ")}`);
   process.exit(1);
 }
