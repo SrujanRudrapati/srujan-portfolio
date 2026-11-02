@@ -592,3 +592,7 @@ Live Lighthouse, median of 3 (performance / accessibility / best practices / SEO
 | `/contact` | 98 / 100 / 100 / 100; 2.49 s, 21 ms, 0 | 100 / 100 / 100 / 100; 0.52 s, 0 ms, 0 |
 
 All above the v4 budget (mobile 90+, desktop 98+, accessibility 100, CLS under 0.02). Not checked from here: a real Mac trackpad on the catalogue, and the LinkedIn link (it blocks automated checks).
+
+### DECISIONS 24 a and b live (2026-11-01)
+
+Merged as `e75311e`; Pages deploy succeeded. Live home shows the Celebal lede and the contact row (mailto, LinkedIn, `/srujan-portfolio/resume.pdf` answering 200). All 18 sitemap routes and every home `_next` asset answer 200. Live Lighthouse `/`, median of 3: mobile 98 / 100 / 100 / 100 (LCP 2.48 s, CLS 0), desktop 100 / 100 / 100 / 100 (LCP 0.53 s, CLS 0).
