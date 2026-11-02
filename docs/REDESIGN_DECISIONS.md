@@ -99,6 +99,7 @@ Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
   - f. Put "Graduating December 2026" in the header availability pill as well.
   Already fixed in W8 without a question: on phones the Experience chart opened scrolled to 2022, hiding the current role and the DevHacks win; it now opens at Today. Default if no reply: keep the approved design for a to f.
 - **25. Gate G1: Ready to merge `redesign/v4`. Reply `merge`.** (Phase W9, 2026-11-01.) This replaces question 20: `redesign/v4` contains all of v3, so v3 and v4 ship together and v3 is not merged on its own.
+  - **Answer (Srujan, 2026-11-01): `merge`.** Merged as `377c614` after the catalogue follow-up and the DevHacks fact correction; deployed and verified live (NOTES, "v4 live").
   - **Checks:** lint and typecheck are clean. The CI-parity build (`NEXT_PUBLIC_BASE_PATH=/srujan-portfolio`) passes `npm run release:check`. Served at `http://localhost:4000/srujan-portfolio/`, all 18 routes load with status 200, no console errors, no failed requests, every link prefixed and all 49 internal links resolving.
   - **Tests:** the full Playwright suite passes in Chrome (desktop and phone) and WebKit (desktop and iPhone). Firefox cannot launch on this machine.
   - **Quality:** Lighthouse mobile 92 to 95, desktop 100, accessibility 100, CLS 0. Initial JS is 151 to 157 kB on every route.

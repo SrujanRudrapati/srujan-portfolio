@@ -569,3 +569,26 @@ Bundle: client JS 214 KB gzipped before and after (no new runtime code in Phase 
 There was an earlier three-run batch just before this one. Its output got cut off and only part of it was kept: SEO 100 on every run, median LCP 2.36 s, TBT 46 ms, CLS 0. The live score beats the local export because GitHub Pages serves compressed files with cache headers, and local `serve` does not. Simulated-throttling LCP moves by about 0.8 s between batches.
 
 - Not confirmed: the job-steps API and the job log for run 41111138727 list only Setup Pages and the cache steps, so this session could not see the new lint and test step's output. The run did succeed on the merge commit, and the deployed `graph.json` matches a local `npm run build`.
+
+
+## v4 live (Phase W9, 2026-11-01)
+
+Merged `redesign/v4` (with v3) into `main` as `377c614` (`--no-ff`) and pushed `main` plus the tags `v2-before-v3` and `v2-before-v4` (rollback point: `v2-before-v4` = `ecfa9fc`). The existing Pages workflow (run 41367322294) built and deployed it; both jobs succeeded.
+
+Live check at https://srujanrudrapati.github.io/srujan-portfolio/:
+- All 18 sitemap routes plus `resume.pdf`, `graph.json`, `search-index.json`, `favicon.ico`, `.nojekyll` and `sitemap.xml` answer 200; `/no-such-page` answers 404.
+- All 28 `_next` scripts, styles and fonts referenced from the 18 pages answer 200, all under the `/srujan-portfolio` prefix.
+- `/work` serves the new catalogue (pause control present); the Cooked sublabel reads "Track 1, DevHacks × Cubbie"; no "vote" on `/work`, `/work/devhacks-cubbie`, `/experience`, `/cv`, `graph.json` or `search-index.json`.
+
+Live Lighthouse, median of 3 (performance / accessibility / best practices / SEO; LCP, TBT, CLS):
+
+| Route | Mobile | Desktop |
+|---|---|---|
+| `/` | 98 / 100 / 100 / 100; 2.48 s, 31 ms, 0 | 100 / 100 / 100 / 100; 0.52 s, 0 ms, 0 |
+| `/work` | 97 / 100 / 100 / 100; 2.63 s, 17 ms, 0 | 100 / 100 / 100 / 100; 0.53 s, 0 ms, 0 |
+| `/work/surplus-ai` | 97 / 100 / 100 / 100; 2.57 s, 26 ms, 0 | 100 / 100 / 100 / 100; 0.53 s, 0 ms, 0 |
+| `/experience` | 98 / 100 / 100 / 100; 2.48 s, 30 ms, 0 | 100 / 100 / 100 / 100; 0.51 s, 0 ms, 0 |
+| `/about` | 98 / 100 / 100 / 100; 2.49 s, 12 ms, 0 | 100 / 100 / 100 / 100; 0.52 s, 0 ms, 0 |
+| `/contact` | 98 / 100 / 100 / 100; 2.49 s, 21 ms, 0 | 100 / 100 / 100 / 100; 0.52 s, 0 ms, 0 |
+
+All above the v4 budget (mobile 90+, desktop 98+, accessibility 100, CLS under 0.02). Not checked from here: a real Mac trackpad on the catalogue, and the LinkedIn link (it blocks automated checks).
