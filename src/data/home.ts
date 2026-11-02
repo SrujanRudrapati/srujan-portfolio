@@ -13,6 +13,8 @@ function metric(id: string): MetricNode {
   return n;
 }
 
+const CELEBAL = "Celebal Technologies";
+
 function hasRoleAt(org: RegExp): boolean {
   return graph.nodes.some((n) => n.type === "role" && org.test(n.content.org));
 }
@@ -37,14 +39,16 @@ function tiles(): HubTile[] {
 
 export function homeContent() {
   const records = metric("records-per-day"); // "about 10 million" "records a day" (facts 2.4)
+  if (!hasRoleAt(new RegExp(CELEBAL)) || !records.tags.includes("celebal")) throw new Error("home: the lede's pipeline is not a Celebal role in the graph");
   return {
     // Three lines, each its own mask (motion-system: hero headline). Same sentence as profile.headline.
     headline: ["I build the", "data layer, and the", "AI on top of it."],
     headlineText: profile.headline,
     lede: {
       lead: "Data and AI engineer, finishing an M.S. at Arizona State University.",
-      // Facts 2.4 (on call, about 10 million records a day) and 2.1 (Surplus AI, one offline LLM system, in production).
-      rest: `I’ve been on call for a pipeline moving ${records.value} ${records.valueLabel}, and I now run an offline LLM system in production.`,
+      // Facts 2.4 (Celebal Technologies; on call for the pipeline, about 10 million records a day) and 2.1
+      // (Surplus AI, one offline LLM system, in production). Naming the employer: DECISIONS 24a.
+      rest: `At ${CELEBAL} I was on call for a pipeline moving ${records.value} ${records.valueLabel}; now I run an offline LLM system in production.`,
     },
     now: "Now running Surplus AI in production at ASU Surplus",
     tiles: tiles(),

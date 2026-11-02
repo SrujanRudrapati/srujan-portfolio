@@ -260,3 +260,10 @@ Asked for before merging: the trackpad swipe did nothing (each wheel event was j
 - [x] graph.json, search-index.json and sitemap regenerated (`npm run graph`, 157 nodes); 0 hits for "vote" in `out/`.
 - [x] fact-checker: 64 claims checked, 0 contradicted, 0 unsupported, verdict clean.
 - [x] lint, typecheck, unit 115 passed; Playwright Chrome 285 passed / 51 skipped, WebKit 279 passed / 57 skipped; `npm run verify -- --phase W9-facts` passed (`/work`, `/work/devhacks-cubbie`, `/experience`, `/cv`); `npm run release:check` ok.
+
+### DECISIONS 24 a and b (Srujan, after G1)
+
+- [x] a: the home lede names Celebal Technologies for the about 10 million records a day line (facts 2.4; `home.ts` checks that the metric is tagged Celebal and that a Celebal role is in the graph).
+- [x] b: email, LinkedIn and Resume (PDF) on the hub, quiet muted links after the Ask link on the now line's indent (44px targets; resume through `withBasePath`; new-tab links say so to screen readers).
+- [x] The home fits one screen at 1280×720, 1366×768, 1440×900 and 1920×1080 (the fit test now counts the contact row); phones wrap the links under Ask.
+- [x] Checks: lint, typecheck, unit 115 passed; Playwright Chrome 289 passed / 51 skipped, WebKit 283 passed / 57 skipped; `npm run verify -- --phase W9-d24` passed (`/`, `/contact`); `release:check` ok; home JS 154 kB; local Lighthouse `/` mobile 95, desktop 100, accessibility 100, CLS 0.
