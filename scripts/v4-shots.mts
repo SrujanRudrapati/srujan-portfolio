@@ -30,8 +30,8 @@ const TILES = ["work", "experience", "about", "contact"] as const;
 
 /** Where each view lives and how to reach its states, per target. */
 const ROUTES: Record<Target, Record<string, string>> = {
-  reference: { home: "#", work: "#work", project: "#surplus-ai", experience: "#experience", about: "#about", contact: "#contact" },
-  site: { home: "/", work: "/work", project: "/work/surplus-ai", experience: "/experience", about: "/about", contact: "/contact" },
+  reference: { home: "#", work: "#work", project: "#surplus-station", experience: "#experience", about: "#about", contact: "#contact" },
+  site: { home: "/", work: "/work", project: "/work/surplus-station", experience: "/experience", about: "/about", contact: "/contact" },
 };
 const TILE_SELECTOR: Record<Target, (k: string) => string> = {
   reference: (k) => `.hub a[href="#${k}"]`,

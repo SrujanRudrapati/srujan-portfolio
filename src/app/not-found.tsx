@@ -4,7 +4,12 @@ import { PipelineGame } from "@/components/game/PipelineGame";
 import { BackPill } from "@/components/shell/BackPill";
 import { MAIN_PAGES } from "@/components/site/routes";
 
-export const metadata: Metadata = { title: "Page not found | Srujan Rudrapati" };
+// Not indexed, and no canonical: there is no real page here.
+export const metadata: Metadata = {
+  title: "Page not found | Srujan Rudrapati",
+  description: "This page does not exist. The pages that do are listed here.",
+  robots: { index: false, follow: true },
+};
 
 // 404 (runbook v4 W7.2): the query ran, no row came back. The pages that do exist, then the
 // "Clean the pipeline" game (also in the command palette), restyled in the v4 tokens.

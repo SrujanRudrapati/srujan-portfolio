@@ -1,4 +1,4 @@
-import { AskEntry } from "@/components/home/AskEntry";
+import { AskButton } from "@/components/v5/AskButton";
 import { BackPill } from "@/components/shell/BackPill";
 import { profile } from "@/content/profile";
 import { withBasePath } from "@/lib/paths";
@@ -44,7 +44,7 @@ export function ContactView() {
           </li>
         </ul>
         <p className={s.ask}>
-          Questions first? <AskEntry className={s.askButton} />
+          Questions first? <AskButton className={s.askButton} />
         </p>
       </div>
     </main>

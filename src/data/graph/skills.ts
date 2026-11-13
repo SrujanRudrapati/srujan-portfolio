@@ -110,6 +110,12 @@ const specs: Spec[] = [
   tool("rf-ht12e-ht12d", "RF HT12E/HT12D", ["hardware"]),
   tool("l298", "L298", ["hardware"]),
   tool("gazebo", "Gazebo", ["simulation"]),
+  // v5 projects (DECISIONS 26): InvoiceGuard, RecordSync, Margin Radar.
+  tool("llm-evaluation", "LLM evaluation", ["llm"]),
+  tool("pydantic", "pydantic", ["python"]),
+  tool("sqlite", "SQLite", ["database"]),
+  tool("pytest", "pytest", ["testing"]),
+  tool("duckdb", "DuckDB", ["database"]),
 ];
 
 export const skillNodes: SkillNode[] = specs.map(([id, label, groups, tags = []]) => ({

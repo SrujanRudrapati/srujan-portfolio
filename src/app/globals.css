@@ -1,54 +1,89 @@
 @import "tailwindcss";
 
-/* v4 "Midnight & Bronze" (design-direction; runbook v4 §1). Dark only.
-   Colour tokens are plain custom properties on :root; @theme inline maps them to the
-   Tailwind utility names the components use (ink, muted, line, surface, accent). */
-:root {
-  color-scheme: dark;
-  --bg: #0b0f14;
-  --surface: #141b23;
-  --text: #e8eaed;
-  --muted: #8d98a5;
-  --accent: #c49a6c;
-  --line: rgba(232, 234, 237, 0.11);
-  --metal: linear-gradient(180deg, #eed7b4 0%, #c49a6c 45%, #8c6845 72%, #e2c59e 100%);
-  --live: #7cc4a4;
-  --ease: cubic-bezier(0.16, 1, 0.3, 1);
-  --tile-bg: rgba(232, 234, 237, 0.035);
-  --tile-border: rgba(232, 234, 237, 0.09);
-  --tile-inset: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  --metal-light: #e2c59e; /* the metal gradient's light stop (game: the gold band) */
-  --backdrop: rgba(6, 9, 13, 0.6); /* behind dialogs: palette, Ask, game */
-  --on-art: #f0f2f5; /* text set on the art plates (catalogue cards, project band) */
-  --serif: var(--font-bodoni), "Didot", "Bodoni 72", Georgia, serif;
-  --sans: var(--font-hanken), system-ui, -apple-system, "Segoe UI", sans-serif;
+/* v5 "Thread" (design/redesign.html; DESIGN.md). Light only.
+   Three registered colours (--ground, --ink, --thread) carry the whole palette. The home page
+   swaps them per section (src/lib/themes.ts); because they are registered with @property,
+   the change fades over 0.9 s instead of jumping. Everything else is derived with color-mix. */
+@property --ground {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #f4f0e8;
+}
+@property --ink {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #26241f;
+}
+@property --thread {
+  syntax: "<color>";
+  inherits: true;
+  initial-value: #c2673f;
+}
 
+:root {
+  color-scheme: light;
+  --ground: #f4f0e8;
+  --ink: #26241f;
+  --thread: #c2673f;
+  /* Secondary text. The prototype mixes 66%; 72% keeps 4.5:1 on every section theme (sync was 4.3:1). */
+  --mute: color-mix(in srgb, var(--ink) 72%, var(--ground));
+  --edge: color-mix(in srgb, var(--ink) 24%, var(--ground));
+  --panel: color-mix(in srgb, var(--ink) 6%, var(--ground));
+  /* Thread-coloured small text (labels, links). The raw thread is a line colour and reaches
+     only about 2.5 to 3.9:1 on some grounds, so text uses it mixed toward ink (4.8:1 or better). */
+  --thread-text: color-mix(in srgb, var(--thread) 55%, var(--ink));
+  --sans: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+  --pad: clamp(18px, 4.6vw, 72px);
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-draw: cubic-bezier(0.5, 0, 0.2, 1);
+  transition:
+    --ground 0.9s ease,
+    --ink 0.9s ease,
+    --thread 0.9s ease;
+
+  /* v4 names, kept as aliases so the pages not yet restyled read the v5 palette. */
+  --bg: var(--ground);
+  --surface: var(--panel);
+  --text: var(--ink);
+  --muted: var(--mute);
+  /* v4 modules use --accent for text, so it is the text-safe thread. */
+  --accent: var(--thread-text);
+  --line: var(--edge);
+  --metal: linear-gradient(var(--ink), var(--ink));
+  --metal-light: var(--thread);
+  --live: var(--thread);
+  --tile-bg: var(--panel);
+  --tile-border: var(--edge);
+  --tile-inset: none;
+  --backdrop: color-mix(in srgb, var(--ink) 45%, transparent);
+  --on-art: #f4f0e8;
+  --serif: var(--sans);
 }
 
 @theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-line: var(--line);
-  --color-ink: var(--text);
-  --color-muted: var(--muted);
-  --color-accent: var(--accent);
+  --color-bg: var(--ground);
+  --color-surface: var(--panel);
+  --color-line: var(--edge);
+  --color-ink: var(--ink);
+  --color-muted: var(--mute);
+  --color-accent: var(--thread-text);
 
   --font-sans: var(--sans);
-  --font-display: var(--serif);
-  --font-serif: var(--serif);
-  /* No monospace in v4: older "font-mono" labels render in the text face. */
-  --font-mono: var(--sans);
+  --font-display: var(--sans);
+  --font-serif: var(--sans);
+  --font-mono: var(--mono);
 }
 
 @theme {
-  --text-xs: 0.8125rem; /* 13px: the v4 label floor (design-direction) */
+  --text-xs: 0.8125rem;
   --text-xs--line-height: 1.45;
   --text-sm: 0.875rem;
   --text-sm--line-height: 1.5;
   --text-base: 1.0625rem;
-  --text-base--line-height: 1.6;
+  --text-base--line-height: 1.5;
   --text-lg: clamp(1.125rem, 1.07rem + 0.3vw, 1.25rem);
-  --text-lg--line-height: 1.5;
+  --text-lg--line-height: 1.45;
   --text-xl: clamp(1.25rem, 1.14rem + 0.45vw, 1.5rem);
   --text-xl--line-height: 1.3;
   --text-2xl: clamp(1.5rem, 1.28rem + 0.9vw, 2rem);
@@ -64,55 +99,41 @@
   --container-measure: 65ch;
 
   --radius-sm: 2px;
-  --radius-tile: 24px;
-  --radius-panel: 28px;
-  --radius-stage: 32px;
+  --radius-tile: 4px;
+  --radius-panel: 4px;
+  --radius-stage: 4px;
   --radius-full: 9999px;
 
-  --shadow-lift: 0 30px 60px -40px rgba(0, 0, 0, 0.6);
-  --ease-out-quart: cubic-bezier(0.16, 1, 0.3, 1);
-  --default-transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  --shadow-lift: 7px 7px 0 var(--ink);
+  --ease-out-quart: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --default-transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
-    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 80px);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 72px);
   }
   html,
   body {
     overflow-x: clip;
   }
-
-  /* The page glow scrolls with the page (never fixed); the grain is one static layer. */
   body {
     margin: 0;
-    background:
-      radial-gradient(110% 55% at 50% -12%, #1a2633 0%, rgba(26, 38, 51, 0) 62%) no-repeat,
-      var(--bg);
-    color: var(--text);
+    position: relative;
+    background: var(--ground);
+    color: var(--ink);
     font-family: var(--sans);
     font-size: 17px;
-    line-height: 1.6;
+    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
   }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
   h1,
   h2,
   h3,
   h4 {
-    font-family: var(--serif);
-    font-weight: 400;
+    font-family: var(--sans);
     letter-spacing: -0.02em;
     text-wrap: balance;
   }
@@ -126,16 +147,17 @@
     color: inherit;
   }
   ::selection {
-    background: var(--accent);
-    color: var(--bg);
+    background: var(--thread);
+    color: var(--ground);
   }
   [id] {
-    scroll-margin-top: 5rem;
+    scroll-margin-top: 4.5rem;
   }
+  /* --thread-text, not the raw thread: the raw colour is 2.5:1 on the sync ground, under the 3:1 a focus ring needs. */
   :focus-visible {
-    outline: 1.5px solid var(--accent);
+    outline: 2px solid var(--thread-text);
     outline-offset: 4px;
-    border-radius: 2px;
+    border-radius: 4px;
   }
   a,
   button {
@@ -143,32 +165,48 @@
   }
 }
 
-/* Shared v4 primitives (reference classes). Page-specific styles live in CSS modules. */
+/* Shared primitives. Page-specific styles live in CSS modules. */
 @layer components {
   .wrap {
-    width: min(1240px, 100% - 48px);
+    width: min(1240px, 100% - 2 * var(--pad));
     margin-inline: auto;
   }
+  /* Mono label: the prototype's ".m". */
+  .label-mono {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  /* Wide black display type (Archivo at 125% width, weight 900). */
+  .display {
+    font-weight: 900;
+    font-stretch: 125%;
+    font-variation-settings: "wdth" 125;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.9;
+  }
   .metal {
-    background: var(--metal);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--ink);
   }
   .page {
     min-height: 100svh;
     padding: clamp(92px, 14vh, 140px) 0 120px;
   }
   .page-title {
-    font-family: var(--serif);
-    font-weight: 400;
-    font-size: clamp(44px, min(7vw, 11vh), 112px);
-    line-height: 0.95;
-    letter-spacing: -0.025em;
+    font-weight: 900;
+    font-stretch: 125%;
+    font-variation-settings: "wdth" 125;
+    text-transform: uppercase;
+    font-size: clamp(40px, min(8vw, 11vh), 112px);
+    line-height: 0.9;
+    letter-spacing: -0.02em;
     margin: 0;
+    overflow-wrap: break-word;
   }
   .page-intro {
-    color: var(--muted);
+    color: var(--mute);
     max-width: 52ch;
     margin: clamp(10px, 2vh, 18px) 0 0;
     font-size: clamp(16px, 2vh, 18px);
@@ -177,19 +215,17 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
     text-decoration: none;
-    font-size: 15px;
     margin-bottom: clamp(16px, 3vh, 32px);
     min-height: 44px;
-    padding: 0 16px 0 12px;
-    border-radius: 999px;
-    background: rgba(232, 234, 237, 0.06);
-    transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+    border-bottom: 1.5px solid var(--thread);
   }
   .back:hover {
-    background: rgba(232, 234, 237, 0.12);
-    color: var(--text);
+    color: var(--thread-text);
   }
   .back svg {
     width: 14px;
@@ -199,37 +235,44 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    height: 50px;
-    padding: 0 24px;
+    min-height: 44px;
+    padding: 0 18px;
     border-radius: 999px;
     text-decoration: none;
-    font-size: 16px;
-    border: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    border: 1.5px solid var(--ink);
     background: none;
-    color: var(--text);
+    color: var(--ink);
     cursor: pointer;
     transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
   }
   .btn:hover {
-    border-color: var(--accent);
+    border-color: var(--thread);
+    color: var(--thread-text);
   }
   .btn-solid {
-    background: var(--text);
-    color: var(--bg);
-    border-color: var(--text);
+    background: var(--ink);
+    color: var(--ground);
   }
   .btn-solid:hover {
-    background: var(--accent);
-    border-color: var(--accent);
+    background: var(--thread);
+    border-color: var(--thread);
+    color: var(--ground);
+  }
+  .pill,
+  .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 10px;
+    border: 1px solid var(--edge);
+    border-radius: 999px;
+    color: var(--ink);
+    background: none;
   }
   .pill {
-    display: inline-block;
     margin: 0 6px 8px 0;
-    padding: 4px 12px;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    font-size: 14px;
-    color: var(--muted);
   }
   .tags {
     display: flex;
@@ -239,17 +282,71 @@
     margin: 0;
     padding: 0;
   }
-  .tag {
-    font-size: 13px;
-    padding: 4px 11px;
-    border-radius: 999px;
-    background: rgba(240, 242, 245, 0.12);
-    color: rgba(240, 242, 245, 0.9);
-  }
-  /* Magnetic elements move by transform only; the spring back is a transition. */
-  [data-magnetic] {
-    transition: transform 0.6s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
-  }
+}
+
+
+/* Section background patterns (design/redesign.html). Each themed section draws its tile in ink at
+   11% (label 13%, night 20%), faded out at the top and bottom 9%. The highlights strip uses paper's. */
+[data-theme],
+[data-theme-tile] {
+  position: relative;
+}
+[data-theme]::before,
+[data-theme-tile]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: var(--ink);
+  opacity: 0.11;
+  -webkit-mask-image: var(--tile), linear-gradient(transparent, #000 9%, #000 91%, transparent);
+  -webkit-mask-size: var(--tsz), 100% 100%;
+  -webkit-mask-repeat: repeat, no-repeat;
+  -webkit-mask-composite: source-in;
+  mask-image: var(--tile), linear-gradient(transparent, #000 9%, #000 91%, transparent);
+  mask-size: var(--tsz), 100% 100%;
+  mask-repeat: repeat, no-repeat;
+  mask-composite: intersect;
+}
+[data-theme="paper"],
+[data-theme-tile="paper"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Ccircle cx=%223%22 cy=%223%22 r=%221.3%22 fill=%22%23000%22 stroke=%22none%22/%3E%3C/svg%3E");
+  --tsz: 24px 24px;
+}
+[data-theme="surplus"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2256%22 height=%2256%22 viewBox=%220 0 56 56%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M56 .5H.5V56%22/%3E%3Cpath d=%22M28 24v8M24 28h8%22 stroke-width=%221%22/%3E%3C/svg%3E");
+  --tsz: 56px 56px;
+}
+[data-theme="invoice"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%2230%22 viewBox=%220 0 120 30%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M0 29.4h120%22/%3E%3Cpath d=%22M90 0v30%22 stroke-width=%22.8%22/%3E%3C/svg%3E");
+  --tsz: 120px 30px;
+}
+[data-theme="label"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2222%22 height=%2222%22 viewBox=%220 0 22 22%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Ccircle cx=%225.5%22 cy=%225.5%22 r=%222.3%22 fill=%22%23000%22 stroke=%22none%22/%3E%3Ccircle cx=%2216.5%22 cy=%2216.5%22 r=%222.3%22 fill=%22%23000%22 stroke=%22none%22/%3E%3C/svg%3E");
+  --tsz: 22px 22px;
+}
+[data-theme="sync"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22 viewBox=%220 0 40 40%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M20 14v12M14 20h12%22/%3E%3C/svg%3E");
+  --tsz: 40px 40px;
+}
+[data-theme="hacks"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22130%22 height=%22130%22 viewBox=%220 0 130 130%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M12 22l9 4M74 12l-4 10M40 64h10M100 74l7-7M62 106l5 9M18 110l8-3M112 118h8%22/%3E%3Ccircle cx=%22104%22 cy=%2226%22 r=%222.4%22/%3E%3Ccircle cx=%2226%22 cy=%2274%22 r=%222.4%22/%3E%3Cpath d=%22M84 48l4 4-4 4M52 30l-4 4 4 4%22/%3E%3C/svg%3E");
+  --tsz: 130px 130px;
+}
+[data-theme="celebal"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2226%22 viewBox=%220 0 80 26%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Cpath d=%22M0 13q10-10 20 0t20 0 20 0 20 0%22/%3E%3C/svg%3E");
+  --tsz: 80px 26px;
+}
+[data-theme="night"] {
+  --tile: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2244%22 height=%2244%22 viewBox=%220 0 44 44%22 fill=%22none%22 stroke=%22%23000%22 stroke-width=%221.2%22 stroke-linecap=%22round%22%3E%3Ccircle cx=%2211%22 cy=%2211%22 r=%221.6%22 fill=%22%23000%22 stroke=%22none%22/%3E%3Ccircle cx=%2233%22 cy=%2233%22 r=%221.6%22 fill=%22%23000%22 stroke=%22none%22/%3E%3C/svg%3E");
+  --tsz: 44px 44px;
+}
+[data-theme="label"]::before {
+  opacity: 0.13;
+}
+[data-theme="night"]::before {
+  opacity: 0.2;
 }
 
 /* Page transitions (motion-system): the old page fades out over 260 ms, the new one rises
@@ -328,7 +425,10 @@ main.route-enter {
   *,
   *::before,
   *::after {
-    transition-duration: 0.01ms !important;
+    /* 0s, not 0.01ms: transition-property defaults to "all", so a tiny non-zero duration would
+       transition every property, including inherited font-size (the giant headings then measure
+       wrong). Nothing listens for transitionend. */
+    transition-duration: 0s !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
@@ -546,19 +646,12 @@ main.route-enter {
 @media print {
   :root {
     color-scheme: light;
-    --bg: #ffffff;
-    --surface: #ffffff;
-    --line: #d9d9d9;
-    --text: #000000;
-    --muted: #4a4a4a;
-    --accent: #000000;
-    --metal: linear-gradient(#000000, #000000);
+    --ground: #ffffff;
+    --ink: #000000;
+    --thread: #000000;
   }
   body {
     background: #ffffff;
-  }
-  body::after {
-    display: none;
   }
   .cv-sheet {
     margin: 0;

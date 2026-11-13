@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { homeContent } from "../src/data/home";
+import { hero } from "../src/data/home";
 import { projects } from "../src/data/projects";
 import { expectNoA11yViolations, openHome } from "./helpers";
 
@@ -50,8 +50,8 @@ test.describe("keyboard", () => {
       seen.add(stop.id);
       expect(stop.ring, stop.id).toBe(true);
     }
-    // v4 home: skip link, name, Ask, four tiles (and the palette is one key away).
-    expect(seen.size).toBeGreaterThanOrEqual(6);
+    // v5 home: skip link, nav (SR, Projects, Contact, Ask), the cue and the project links and demos.
+    expect(seen.size).toBeGreaterThanOrEqual(10);
   });
 });
 
@@ -59,9 +59,11 @@ test.describe("home headline with motion", () => {
   test.use({ reducedMotion: "no-preference" });
   test("screen readers hear the headline once, as one plain sentence", async ({ page }) => {
     await openHome(page);
-    await expect(page.locator("main h1")).toHaveAccessibleName(homeContent().headlineText);
-    const snapshot = await page.locator("main h1").ariaSnapshot();
-    expect(snapshot.split("I build the").length - 1).toBe(1);
+    await expect(page.locator("main h1")).toHaveAccessibleName(hero.headline);
+    const snapshot = await page.locator("main").ariaSnapshot();
+    expect(snapshot.split("I build cloud data pipelines").length - 1).toBe(1);
+    // The giant name is decoration (aria-hidden); its letters are never read one by one.
+    expect(snapshot).not.toMatch(/- text: S\n\s*- text: R/);
   });
 });
 

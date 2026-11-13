@@ -7,7 +7,7 @@ describe("Ask evidence links point at pages (V3)", () => {
     expect(anchorFor({ id: "role-x", type: "role", evidence: [] })).toBe("/experience");
     expect(anchorFor({ id: "education-x", type: "education", evidence: [] })).toBe("/about#credentials");
     expect(anchorFor({ id: "cert-x", type: "certification", evidence: [] })).toBe("/about#credentials");
-    expect(anchorFor({ id: "metric-x", type: "metric", evidence: ["https://example.com", "/work/surplus-ai"] })).toBe("/work/surplus-ai");
+    expect(anchorFor({ id: "metric-x", type: "metric", evidence: ["https://example.com", "/work/surplus-station"] })).toBe("/work/surplus-station");
   });
 
   it("tells pages from files and other sites", () => {

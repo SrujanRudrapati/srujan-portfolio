@@ -55,7 +55,7 @@ describe("experience timeline: data", () => {
     const associate = items[1];
     expect(associate.figures.map((f) => f.value)).toEqual(["about 50%", "about 10 million", "about 30%"]);
     expect(associate.outcomes.length).toBeGreaterThan(5);
-    expect(items[3].links).toEqual([{ label: "Surplus AI", href: "/work/surplus-ai" }]);
+    expect(items[3].links).toEqual([{ label: "Surplus Station", href: "/work/surplus-station" }]);
     expect(items[4].links.map((l) => l.href)).toEqual(["/work/devhacks-cubbie"]);
   });
 

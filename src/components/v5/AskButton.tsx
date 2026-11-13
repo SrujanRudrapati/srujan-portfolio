@@ -2,8 +2,8 @@
 
 import { openAsk, preloadAsk } from "@/lib/ask/events";
 
-/** "Ask about my work": opens the Ask panel (runbook v4 W2.4). ⌘K / Ctrl+K still reaches it from anywhere. */
-export function AskEntry({ className }: { className?: string }) {
+/** Opens the "Ask about my work" panel. ⌘K / Ctrl+K reaches the palette from anywhere. */
+export function AskButton({ className, label = "Ask about my work" }: { className?: string; label?: string }) {
   return (
     <button
       type="button"
@@ -15,7 +15,7 @@ export function AskEntry({ className }: { className?: string }) {
         openAsk();
       }}
     >
-      Ask about my work
+      {label}
     </button>
   );
 }

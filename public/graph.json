@@ -1,17 +1,17 @@
 {
   "nodes": [
     {
-      "id": "project-surplus-ai",
+      "id": "project-surplus-station",
       "type": "project",
-      "label": "Surplus AI",
+      "label": "Surplus Station",
       "summary": "Private, offline AI system for ASU Surplus, in production. Built on the job from June 2026; processing per item dropped from about 15 min to about 3 min.",
       "dates": {
         "start": "2026-06"
       },
       "evidence": [
         {
-          "label": "Surplus AI page",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station page",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
@@ -24,7 +24,7 @@
         "offline"
       ],
       "content": {
-        "title": "Surplus AI",
+        "title": "Surplus Station",
         "oneLiner": "Private, offline AI system for ASU Surplus",
         "status": "production",
         "featured": true,
@@ -63,7 +63,7 @@
               "text": "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine."
             },
             {
-              "name": "Surplus AI app",
+              "name": "Surplus Station app",
               "text": "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds."
             },
             {
@@ -81,6 +81,117 @@
             "state": "running",
             "text": "Llama 3B on one"
           }
+        ]
+      }
+    },
+    {
+      "id": "project-invoiceguard",
+      "type": "project",
+      "label": "InvoiceGuard",
+      "summary": "AI extracts invoice fields, proves every value against the original page, checks the math, and sends only doubtful invoices to a person, whose corrections become test cases. 6 of 6 bad invoices caught, 15 of 16 good ones auto-approved.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard page",
+          "url": "/work/invoiceguard"
+        },
+        {
+          "label": "Live demo",
+          "url": "https://invoiceguard-srujan.onrender.com"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "live",
+        "ai",
+        "llm",
+        "evaluation"
+      ],
+      "content": {
+        "title": "InvoiceGuard",
+        "oneLiner": "AI reads the invoice. Then it has to prove it.",
+        "status": "live",
+        "featured": true,
+        "tags": [
+          "ai"
+        ],
+        "problem": "AI extraction from documents can’t be trusted without checks.",
+        "built": "AI extracts invoice fields, proves every value against the original page, checks the math, and sends only doubtful invoices to a person, whose corrections become test cases.",
+        "highlights": [
+          "6 of 6 bad invoices caught, and 15 of 16 good ones auto-approved.",
+          "About $0.0005 per invoice. A model costing 20 times more changed no decisions.",
+          "113 tests."
+        ]
+      }
+    },
+    {
+      "id": "project-label-lens",
+      "type": "project",
+      "label": "Label Lens",
+      "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
+      "evidence": [
+        {
+          "label": "Label Lens page",
+          "url": "/work/label-lens"
+        },
+        {
+          "label": "Live app",
+          "url": "https://label-lens-iota.vercel.app"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "live",
+        "ai",
+        "llm",
+        "web"
+      ],
+      "content": {
+        "title": "Label Lens",
+        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications.",
+        "status": "live",
+        "featured": true,
+        "tags": [
+          "ai"
+        ],
+        "highlights": [
+          "Every AI warning must quote the label word for word (44 of 44 verified).",
+          "Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
+        ]
+      }
+    },
+    {
+      "id": "project-recordsync",
+      "type": "project",
+      "label": "RecordSync",
+      "summary": "A pipeline that validates, normalizes, and matches customer records from two systems into one golden record each, tracks where every field came from, and sends unclear matches to a person. 80 tests, same results on every re-run.",
+      "evidence": [
+        {
+          "label": "RecordSync page",
+          "url": "/work/recordsync"
+        }
+      ],
+      "tags": [
+        "project",
+        "featured",
+        "personal",
+        "data",
+        "data-quality"
+      ],
+      "content": {
+        "title": "RecordSync",
+        "oneLiner": "Two systems disagree about a customer. One record comes out.",
+        "status": "personal",
+        "featured": true,
+        "tags": [
+          "data"
+        ],
+        "problem": "Customer records in two systems don’t agree.",
+        "built": "A pipeline that validates, normalizes, and matches records into one golden record each, tracks where every field came from, and sends unclear matches to a person.",
+        "highlights": [
+          "80 tests.",
+          "Same results on every re-run."
         ]
       }
     },
@@ -142,43 +253,6 @@
       }
     },
     {
-      "id": "project-label-lens",
-      "type": "project",
-      "label": "Label Lens",
-      "summary": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications. Every AI warning quotes the label word for word (44 of 44 verified).",
-      "evidence": [
-        {
-          "label": "Label Lens page",
-          "url": "/work/label-lens"
-        },
-        {
-          "label": "Live app",
-          "url": "https://label-lens-iota.vercel.app"
-        }
-      ],
-      "tags": [
-        "project",
-        "featured",
-        "live",
-        "ai",
-        "llm",
-        "web"
-      ],
-      "content": {
-        "title": "Label Lens",
-        "oneLiner": "Reads food and medicine labels from a photo and checks them against the user’s allergies and medications.",
-        "status": "live",
-        "featured": true,
-        "tags": [
-          "ai"
-        ],
-        "highlights": [
-          "Every AI warning must quote the label word for word (44 of 44 verified).",
-          "Running a fast and a deep model in parallel cut response time from 16 s to 4 to 9 s."
-        ]
-      }
-    },
-    {
       "id": "project-supply-chain-watchtower",
       "type": "project",
       "label": "Autonomous Supply Chain Watchtower",
@@ -195,7 +269,6 @@
       ],
       "tags": [
         "project",
-        "featured",
         "personal",
         "ai",
         "llm",
@@ -206,7 +279,7 @@
         "title": "Autonomous Supply Chain Watchtower",
         "oneLiner": "Multi-agent LLM system",
         "status": "personal",
-        "featured": true,
+        "featured": false,
         "date": "November 2025",
         "context": "Personal project, built solo",
         "tags": [
@@ -221,6 +294,74 @@
             "text": "Personal prototype"
           }
         ]
+      }
+    },
+    {
+      "id": "project-margin-radar",
+      "type": "project",
+      "label": "Margin Radar",
+      "summary": "A prototype agent, October 2026, that flags a business’s margin problems early, where every number in its briefs traces back to a SQL query. Tested on held-out data, with documentation of where it still fails.",
+      "dates": {
+        "start": "2026-10",
+        "end": "2026-10"
+      },
+      "evidence": [
+        {
+          "label": "Margin Radar page",
+          "url": "/work/margin-radar"
+        }
+      ],
+      "tags": [
+        "project",
+        "personal",
+        "ai",
+        "llm",
+        "agents",
+        "data"
+      ],
+      "content": {
+        "title": "Margin Radar",
+        "oneLiner": "An agent that flags a business’s margin problems early, where every number in its briefs traces back to a SQL query.",
+        "status": "personal",
+        "featured": false,
+        "date": "October 2026",
+        "tags": [
+          "ai",
+          "data"
+        ],
+        "highlights": [
+          "Tested on held-out data, with documentation of where it still fails."
+        ],
+        "statusNotes": [
+          {
+            "state": "neutral",
+            "text": "Prototype"
+          }
+        ]
+      }
+    },
+    {
+      "id": "project-heatshift",
+      "type": "project",
+      "label": "HeatShift",
+      "summary": "A heat-safety planner built in about 75 minutes at IBM’s Bobathon.",
+      "evidence": [
+        {
+          "label": "HeatShift page",
+          "url": "/work/heatshift"
+        }
+      ],
+      "tags": [
+        "project",
+        "hackathon"
+      ],
+      "content": {
+        "title": "HeatShift",
+        "oneLiner": "A heat-safety planner built in about 75 minutes at IBM’s Bobathon.",
+        "status": "hackathon",
+        "featured": false,
+        "tags": [],
+        "highlights": []
       }
     },
     {
@@ -302,7 +443,7 @@
     {
       "id": "project-wlan-forensics-toolkit",
       "type": "project",
-      "label": "WLAN Traffic Forensics Toolkit",
+      "label": "Network Anomaly Toolkit",
       "summary": "Parses 100,000+ WPA2-encrypted packets, rebuilds the network topology as a directed graph, and classifies device types with K-Means. A Z-score detector caught a live deauthentication attack.",
       "dates": {
         "start": "2026-01",
@@ -310,7 +451,7 @@
       },
       "evidence": [
         {
-          "label": "WLAN toolkit page",
+          "label": "Network Anomaly Toolkit page",
           "url": "/work/wlan-forensics-toolkit"
         }
       ],
@@ -323,7 +464,7 @@
         "security"
       ],
       "content": {
-        "title": "WLAN Traffic Forensics Toolkit",
+        "title": "Network Anomaly Toolkit",
         "oneLiner": "Rebuilds the network topology as a directed graph and classifies device types with K-Means clustering.",
         "status": "academic",
         "featured": false,
@@ -468,7 +609,7 @@
       "id": "role-tech-assistant-asu",
       "type": "role",
       "label": "Tech Assistant, Surplus Operations, Arizona State University",
-      "summary": "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production. Also a Power BI dashboard on asset sorting data, and advice to departments and buyers on equipment.",
+      "summary": "Built Surplus Station, a private, offline AI system for ASU Surplus, now in production. Also a Power BI dashboard on asset sorting data, and advice to departments and buyers on equipment.",
       "dates": {
         "start": "2026-06"
       },
@@ -486,11 +627,11 @@
       "content": {
         "title": "Tech Assistant, Surplus Operations",
         "org": "Arizona State University",
-        "place": "Tempe, AZ",
+        "place": "Phoenix, AZ",
         "dates": "June 2026 to present",
         "outcomes": [
           {
-            "text": "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production."
+            "text": "Built Surplus Station, a private, offline AI system for ASU Surplus, now in production."
           },
           {
             "text": "Built a Power BI dashboard on asset sorting data showing where items stall."
@@ -761,10 +902,27 @@
       ]
     },
     {
+      "id": "certification-fabric-analytics-engineer",
+      "type": "certification",
+      "label": "Microsoft Certified: Fabric Analytics Engineer Associate",
+      "summary": "Microsoft’s associate-level Fabric analytics engineering certification.",
+      "evidence": [
+        {
+          "label": "Certifications",
+          "url": "/about#credentials"
+        }
+      ],
+      "tags": [
+        "certification",
+        "azure",
+        "fabric"
+      ]
+    },
+    {
       "id": "skill-python",
       "type": "skill",
       "label": "Python",
-      "summary": "Listed under Data engineering in the Skills section. Used in Autonomous Supply Chain Watchtower, Demand Forecasting & Inventory Optimization, WLAN Traffic Forensics Toolkit and F1 Race Outcome Predictor.",
+      "summary": "Listed under Data engineering in the Skills section. Used in Autonomous Supply Chain Watchtower, Demand Forecasting & Inventory Optimization, Network Anomaly Toolkit, F1 Race Outcome Predictor, InvoiceGuard, RecordSync and Margin Radar.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1433,7 +1591,7 @@
       "id": "skill-anthropic-claude-api",
       "type": "skill",
       "label": "Anthropic Claude API",
-      "summary": "Listed under AI and ML in the Skills section. Used in Label Lens and Autonomous Supply Chain Watchtower.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Label Lens, Autonomous Supply Chain Watchtower, InvoiceGuard and Margin Radar.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1542,7 +1700,7 @@
       "id": "skill-mlx",
       "type": "skill",
       "label": "MLX",
-      "summary": "Listed under AI and ML in the Skills section. Used in Surplus AI.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1563,7 +1721,7 @@
       "id": "skill-local-llm-serving",
       "type": "skill",
       "label": "local LLM serving",
-      "summary": "Listed under AI and ML in the Skills section. Used in Surplus AI.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1626,7 +1784,7 @@
       "id": "skill-scikit-learn",
       "type": "skill",
       "label": "scikit-learn",
-      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization, WLAN Traffic Forensics Toolkit and F1 Race Outcome Predictor.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Demand Forecasting & Inventory Optimization, Network Anomaly Toolkit and F1 Race Outcome Predictor.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1668,7 +1826,7 @@
       "id": "skill-clustering",
       "type": "skill",
       "label": "clustering",
-      "summary": "Listed under AI and ML in the Skills section. Used in WLAN Traffic Forensics Toolkit.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Network Anomaly Toolkit.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1689,7 +1847,7 @@
       "id": "skill-anomaly-detection",
       "type": "skill",
       "label": "anomaly detection",
-      "summary": "Listed under AI and ML in the Skills section. Used in WLAN Traffic Forensics Toolkit.",
+      "summary": "Listed under AI and ML in the Skills section. Used in Network Anomaly Toolkit.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1941,7 +2099,7 @@
       "id": "skill-bash",
       "type": "skill",
       "label": "Bash",
-      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus AI.",
+      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -1962,7 +2120,7 @@
       "id": "skill-flask",
       "type": "skill",
       "label": "Flask",
-      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus AI and Containerized Flask Service on Kubernetes.",
+      "summary": "Listed under Infrastructure in the Skills section. Used in Surplus Station and Containerized Flask Service on Kubernetes.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2046,7 +2204,7 @@
       "id": "skill-apple-vision-ocr",
       "type": "skill",
       "label": "Apple Vision OCR",
-      "summary": "Part of a project stack. Used in Surplus AI.",
+      "summary": "Part of a project stack. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2062,7 +2220,7 @@
       "id": "skill-qwen-14b",
       "type": "skill",
       "label": "Qwen 14B",
-      "summary": "Part of a project stack. Used in Surplus AI.",
+      "summary": "Part of a project stack. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2079,7 +2237,7 @@
       "id": "skill-llama-3b",
       "type": "skill",
       "label": "Llama 3B",
-      "summary": "Part of a project stack. Used in Surplus AI.",
+      "summary": "Part of a project stack. Used in Surplus Station.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2199,7 +2357,7 @@
       "id": "skill-pyshark",
       "type": "skill",
       "label": "Pyshark",
-      "summary": "Part of a project stack. Used in WLAN Traffic Forensics Toolkit.",
+      "summary": "Part of a project stack. Used in Network Anomaly Toolkit.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2216,7 +2374,7 @@
       "id": "skill-networkx",
       "type": "skill",
       "label": "NetworkX",
-      "summary": "Part of a project stack. Used in WLAN Traffic Forensics Toolkit.",
+      "summary": "Part of a project stack. Used in Network Anomaly Toolkit.",
       "evidence": [
         {
           "label": "Skills section",
@@ -2415,19 +2573,104 @@
       "groups": []
     },
     {
+      "id": "skill-llm-evaluation",
+      "type": "skill",
+      "label": "LLM evaluation",
+      "summary": "Part of a project stack. Used in InvoiceGuard.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "/about#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "llm"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-pydantic",
+      "type": "skill",
+      "label": "pydantic",
+      "summary": "Part of a project stack. Used in RecordSync.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "/about#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "python"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-sqlite",
+      "type": "skill",
+      "label": "SQLite",
+      "summary": "Part of a project stack. Used in RecordSync.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "/about#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "database"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-pytest",
+      "type": "skill",
+      "label": "pytest",
+      "summary": "Part of a project stack. Used in RecordSync.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "/about#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "testing"
+      ],
+      "groups": []
+    },
+    {
+      "id": "skill-duckdb",
+      "type": "skill",
+      "label": "DuckDB",
+      "summary": "Part of a project stack. Used in Margin Radar.",
+      "evidence": [
+        {
+          "label": "Skills section",
+          "url": "/about#skills"
+        }
+      ],
+      "tags": [
+        "skill",
+        "database"
+      ],
+      "groups": []
+    },
+    {
       "id": "metric-surplus-processing-time",
       "type": "metric",
       "label": "~80% less processing time per item, about 15 min down to about 3 min",
-      "summary": "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.",
+      "summary": "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus Station.",
       "evidence": [
         {
-          "label": "Surplus AI page",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station page",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
         "metric",
-        "surplus-ai",
+        "surplus-station",
         "headline"
       ],
       "value": "~80%",
@@ -2440,13 +2683,13 @@
       "summary": "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.",
       "evidence": [
         {
-          "label": "Surplus AI page",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station page",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
         "metric",
-        "surplus-ai"
+        "surplus-station"
       ],
       "value": "~10 min",
       "valueLabel": "to list a 100+ unit pallet, instead of 1 to 2 hours"
@@ -2458,13 +2701,13 @@
       "summary": "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.",
       "evidence": [
         {
-          "label": "Surplus AI page",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station page",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
         "metric",
-        "surplus-ai",
+        "surplus-station",
         "llm"
       ],
       "value": "14B",
@@ -2657,7 +2900,7 @@
       "summary": "The toolkit rebuilds the network topology from the parsed packets as a directed graph.",
       "evidence": [
         {
-          "label": "WLAN toolkit page",
+          "label": "Network Anomaly Toolkit page",
           "url": "/work/wlan-forensics-toolkit"
         }
       ],
@@ -2687,6 +2930,105 @@
       ],
       "value": "80%",
       "valueLabel": "top-3 accuracy vs. 73% baseline"
+    },
+    {
+      "id": "metric-invoiceguard-caught",
+      "type": "metric",
+      "label": "6 of 6 bad invoices caught",
+      "summary": "InvoiceGuard caught 6 of 6 bad invoices.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard page",
+          "url": "/work/invoiceguard"
+        },
+        {
+          "label": "Live demo",
+          "url": "https://invoiceguard-srujan.onrender.com"
+        }
+      ],
+      "tags": [
+        "metric",
+        "invoiceguard",
+        "evaluation"
+      ],
+      "value": "6 of 6",
+      "valueLabel": "bad invoices caught"
+    },
+    {
+      "id": "metric-invoiceguard-approved",
+      "type": "metric",
+      "label": "15 of 16 good ones auto-approved",
+      "summary": "InvoiceGuard auto-approved 15 of 16 good invoices.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard page",
+          "url": "/work/invoiceguard"
+        }
+      ],
+      "tags": [
+        "metric",
+        "invoiceguard",
+        "evaluation"
+      ],
+      "value": "15 of 16",
+      "valueLabel": "good ones auto-approved"
+    },
+    {
+      "id": "metric-invoiceguard-cost",
+      "type": "metric",
+      "label": "$0.0005 per invoice, roughly. A model costing 20 times more changed no decisions.",
+      "summary": "InvoiceGuard costs about $0.0005 per invoice; a model costing 20 times more changed no decisions.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard page",
+          "url": "/work/invoiceguard"
+        }
+      ],
+      "tags": [
+        "metric",
+        "invoiceguard",
+        "cost"
+      ],
+      "value": "$0.0005",
+      "valueLabel": "per invoice, roughly. A model costing 20 times more changed no decisions."
+    },
+    {
+      "id": "metric-invoiceguard-tests",
+      "type": "metric",
+      "label": "113 tests",
+      "summary": "InvoiceGuard has 113 tests.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard page",
+          "url": "/work/invoiceguard"
+        }
+      ],
+      "tags": [
+        "metric",
+        "invoiceguard",
+        "testing"
+      ],
+      "value": "113",
+      "valueLabel": "tests"
+    },
+    {
+      "id": "metric-recordsync-tests",
+      "type": "metric",
+      "label": "80 tests",
+      "summary": "RecordSync has 80 tests.",
+      "evidence": [
+        {
+          "label": "RecordSync page",
+          "url": "/work/recordsync"
+        }
+      ],
+      "tags": [
+        "metric",
+        "recordsync",
+        "testing"
+      ],
+      "value": "80",
+      "valueLabel": "tests"
     },
     {
       "id": "metric-time-to-insight",
@@ -2768,7 +3110,7 @@
       "id": "industry-higher-ed-surplus",
       "type": "industry",
       "label": "Higher-ed surplus",
-      "summary": "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus AI runs here.",
+      "summary": "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus Station runs here.",
       "evidence": [
         {
           "label": "Work",
@@ -2948,7 +3290,7 @@
       "id": "problem-manual-processing-bottleneck",
       "type": "problem",
       "label": "Manual processing bottleneck",
-      "summary": "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus AI cut processing per item from about 15 min to about 3 min.",
+      "summary": "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus Station cut processing per item from about 15 min to about 3 min.",
       "evidence": [
         {
           "label": "Work",
@@ -2963,7 +3305,7 @@
       "id": "problem-ungrounded-ai-output",
       "type": "problem",
       "label": "Ungrounded AI output",
-      "summary": "Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
+      "summary": "Surplus Station uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB.",
       "evidence": [
         {
           "label": "Work",
@@ -3110,6 +3452,21 @@
       ]
     },
     {
+      "id": "problem-heat-safety",
+      "type": "problem",
+      "label": "Heat safety",
+      "summary": "Planning work around dangerous heat. HeatShift, a heat-safety planner, was built in about 75 minutes at IBM’s Bobathon.",
+      "evidence": [
+        {
+          "label": "Work",
+          "url": "/work"
+        }
+      ],
+      "tags": [
+        "problem"
+      ]
+    },
+    {
       "id": "problem-manual-deployment",
       "type": "problem",
       "label": "Manual deployment",
@@ -3127,12 +3484,12 @@
     {
       "id": "artifact-surplus-pipeline-diagram",
       "type": "artifact",
-      "label": "Surplus AI pipeline diagram",
+      "label": "Surplus Station pipeline diagram",
       "summary": "From spec collection to AI-written listings.",
       "evidence": [
         {
-          "label": "Surplus AI pipeline diagram",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station pipeline diagram",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
@@ -3145,12 +3502,12 @@
     {
       "id": "artifact-surplus-network-diagram",
       "type": "artifact",
-      "label": "Surplus AI cluster network diagram",
+      "label": "Surplus Station cluster network diagram",
       "summary": "Five Mac minis on a switch with no internet uplink.",
       "evidence": [
         {
-          "label": "Surplus AI cluster network diagram",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station cluster network diagram",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
@@ -3163,12 +3520,12 @@
     {
       "id": "artifact-surplus-privacy-diagram",
       "type": "artifact",
-      "label": "Surplus AI privacy layers diagram",
+      "label": "Surplus Station privacy layers diagram",
       "summary": "Four layers between the model and the internet.",
       "evidence": [
         {
-          "label": "Surplus AI privacy layers diagram",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station privacy layers diagram",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
@@ -3289,6 +3646,24 @@
       "url": "/resume.pdf"
     },
     {
+      "id": "artifact-invoiceguard-live",
+      "type": "artifact",
+      "label": "InvoiceGuard live demo",
+      "summary": "InvoiceGuard, live demo.",
+      "evidence": [
+        {
+          "label": "InvoiceGuard live demo",
+          "url": "https://invoiceguard-srujan.onrender.com"
+        }
+      ],
+      "tags": [
+        "artifact",
+        "live"
+      ],
+      "kind": "live",
+      "url": "https://invoiceguard-srujan.onrender.com"
+    },
+    {
       "id": "event-devhacks-win",
       "type": "event",
       "label": "1st place, DevHacks × Cubbie hackathon",
@@ -3312,7 +3687,7 @@
       "id": "event-asu-surplus-start",
       "type": "event",
       "label": "Started at ASU Surplus",
-      "summary": "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.",
+      "summary": "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus Station, built on the job, is in production there.",
       "dates": {
         "start": "2026-06"
       },
@@ -3322,8 +3697,8 @@
           "url": "/experience"
         },
         {
-          "label": "Surplus AI page",
-          "url": "/work/surplus-ai"
+          "label": "Surplus Station page",
+          "url": "/work/surplus-station"
         }
       ],
       "tags": [
@@ -3336,7 +3711,7 @@
       "id": "event-graduation",
       "type": "event",
       "label": "M.S. graduation (expected)",
-      "summary": "Expected December 2026 from Arizona State University. Available early 2027.",
+      "summary": "Expected December 2026 from Arizona State University. Available January 2027.",
       "dates": {
         "start": "2026-12",
         "end": "2026-12"
@@ -3355,94 +3730,94 @@
   ],
   "edges": [
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "metric-surplus-processing-time",
       "type": "achieved"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "metric-surplus-pallet-time",
       "type": "achieved"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "metric-surplus-model-size",
       "type": "achieved"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-mlx",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-flask",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-bash",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-apple-vision-ocr",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-qwen-14b",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-llama-3b",
       "type": "uses"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "skill-local-llm-serving",
       "type": "uses",
       "chip": false
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "problem-manual-processing-bottleneck",
       "type": "solved",
       "metric": "metric-surplus-processing-time"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "problem-ungrounded-ai-output",
       "type": "solved"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "industry-higher-ed-surplus",
       "type": "in"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "role-tech-assistant-asu",
       "type": "at"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "role-tech-assistant-asu",
       "type": "during"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "artifact-surplus-pipeline-diagram",
       "type": "produced"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "artifact-surplus-network-diagram",
       "type": "produced"
     },
     {
-      "from": "project-surplus-ai",
+      "from": "project-surplus-station",
       "to": "artifact-surplus-privacy-diagram",
       "type": "produced"
     },
@@ -3900,6 +4275,104 @@
       "from": "project-gesture-rc-car",
       "to": "education-btech-rtu",
       "type": "during"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "metric-invoiceguard-caught",
+      "type": "achieved"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "metric-invoiceguard-approved",
+      "type": "achieved"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "metric-invoiceguard-cost",
+      "type": "achieved"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "metric-invoiceguard-tests",
+      "type": "achieved"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "skill-anthropic-claude-api",
+      "type": "uses",
+      "label": "Claude API"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "skill-llm-evaluation",
+      "type": "uses"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "problem-ungrounded-ai-output",
+      "type": "solved",
+      "metric": "metric-invoiceguard-caught"
+    },
+    {
+      "from": "project-invoiceguard",
+      "to": "artifact-invoiceguard-live",
+      "type": "produced"
+    },
+    {
+      "from": "project-recordsync",
+      "to": "metric-recordsync-tests",
+      "type": "achieved"
+    },
+    {
+      "from": "project-recordsync",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-recordsync",
+      "to": "skill-pydantic",
+      "type": "uses"
+    },
+    {
+      "from": "project-recordsync",
+      "to": "skill-sqlite",
+      "type": "uses"
+    },
+    {
+      "from": "project-recordsync",
+      "to": "skill-pytest",
+      "type": "uses"
+    },
+    {
+      "from": "project-margin-radar",
+      "to": "skill-python",
+      "type": "uses"
+    },
+    {
+      "from": "project-margin-radar",
+      "to": "skill-duckdb",
+      "type": "uses"
+    },
+    {
+      "from": "project-margin-radar",
+      "to": "skill-anthropic-claude-api",
+      "type": "uses",
+      "label": "Claude API"
+    },
+    {
+      "from": "project-margin-radar",
+      "to": "education-ms-asu",
+      "type": "during"
+    },
+    {
+      "from": "project-heatshift",
+      "to": "problem-heat-safety",
+      "type": "solved"
     },
     {
       "from": "role-associate-celebal",

@@ -1,13 +1,13 @@
 import { describe, expect, test } from "vitest";
 import { parseCitedAnswer } from "./citations";
 
-const allowed = new Set(["project-surplus-ai", "project-label-lens", "role-associate-celebal"]);
+const allowed = new Set(["project-surplus-station", "project-label-lens", "role-associate-celebal"]);
 
 describe("parseCitedAnswer", () => {
   test("keeps sentences with valid citations and strips the markers from the text", () => {
-    const out = parseCitedAnswer("Surplus AI runs offline on four Mac minis [project-surplus-ai]. Label Lens quotes the label word for word [project-label-lens].", allowed);
+    const out = parseCitedAnswer("Surplus Station runs offline on four Mac minis [project-surplus-station]. Label Lens quotes the label word for word [project-label-lens].", allowed);
     expect(out).toEqual([
-      { text: "Surplus AI runs offline on four Mac minis.", citations: ["project-surplus-ai"] },
+      { text: "Surplus Station runs offline on four Mac minis.", citations: ["project-surplus-station"] },
       { text: "Label Lens quotes the label word for word.", citations: ["project-label-lens"] },
     ]);
   });
@@ -19,8 +19,8 @@ describe("parseCitedAnswer", () => {
   });
 
   test("drops sentences with no citation at all", () => {
-    expect(parseCitedAnswer("He is the best engineer alive. Surplus AI is in production [project-surplus-ai].", allowed)).toEqual([
-      { text: "Surplus AI is in production.", citations: ["project-surplus-ai"] },
+    expect(parseCitedAnswer("He is the best engineer alive. Surplus Station is in production [project-surplus-station].", allowed)).toEqual([
+      { text: "Surplus Station is in production.", citations: ["project-surplus-station"] },
     ]);
   });
 
@@ -31,12 +31,12 @@ describe("parseCitedAnswer", () => {
   });
 
   test("dedupes repeated citations and handles multiple per sentence", () => {
-    expect(parseCitedAnswer("Both ground their output [project-surplus-ai][project-label-lens][project-surplus-ai].", allowed)[0].citations).toEqual(["project-surplus-ai", "project-label-lens"]);
+    expect(parseCitedAnswer("Both ground their output [project-surplus-station][project-label-lens][project-surplus-station].", allowed)[0].citations).toEqual(["project-surplus-station", "project-label-lens"]);
   });
 
   test("decimals and abbreviations do not split a sentence", () => {
-    expect(parseCitedAnswer("My capstone reached 27.7% WAPE vs. a 38.5% naive baseline [project-surplus-ai]. My GPA is 3.96 [project-label-lens].", allowed)).toEqual([
-      { text: "My capstone reached 27.7% WAPE vs. a 38.5% naive baseline.", citations: ["project-surplus-ai"] },
+    expect(parseCitedAnswer("My capstone reached 27.7% WAPE vs. a 38.5% naive baseline [project-surplus-station]. My GPA is 3.96 [project-label-lens].", allowed)).toEqual([
+      { text: "My capstone reached 27.7% WAPE vs. a 38.5% naive baseline.", citations: ["project-surplus-station"] },
       { text: "My GPA is 3.96.", citations: ["project-label-lens"] },
     ]);
   });
@@ -47,8 +47,8 @@ describe("parseCitedAnswer", () => {
   });
 
   test("never lets markup through: brackets that are not ids stay as plain text and still need a citation", () => {
-    expect(parseCitedAnswer("<img src=x onerror=alert(1)> [project-surplus-ai].", allowed)).toEqual([
-      { text: "<img src=x onerror=alert(1)>.", citations: ["project-surplus-ai"] },
+    expect(parseCitedAnswer("<img src=x onerror=alert(1)> [project-surplus-station].", allowed)).toEqual([
+      { text: "<img src=x onerror=alert(1)>.", citations: ["project-surplus-station"] },
     ]);
   });
 });

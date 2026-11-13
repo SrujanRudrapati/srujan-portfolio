@@ -1,0 +1,584 @@
+/* v5 home sections (design/redesign.html): hero, highlights strip, project sections, Celebal,
+   More projects, Skills/Experience/Education/Certified, Let's talk. */
+
+.z {
+  position: relative;
+  z-index: 3;
+}
+.mono {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.wide {
+  font-weight: 900;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  letter-spacing: -0.02em;
+}
+/* Each section clips its own sides: the ghosts and the edge pins deliberately bleed past the
+   heading, and clipping here (not only on <html>) keeps the page from ever scrolling sideways. */
+.section {
+  position: relative;
+  overflow-x: clip;
+}
+
+/* Hero */
+.hero {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: clamp(14px, 2.6svh, 28px);
+  padding: 96px var(--pad) clamp(24px, 5svh, 56px);
+}
+.heroTop {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.heroScene {
+  max-width: 560px;
+}
+.h1 {
+  font-weight: 600;
+  font-size: clamp(1.35rem, 3vw, 2.5rem);
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  max-width: 22em;
+  margin: 0;
+  overflow-wrap: break-word;
+}
+.heroSub {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px 32px;
+}
+.cue {
+  color: var(--thread-text);
+  padding: 10px 0;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  text-decoration: none;
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero [data-gl] span {
+    animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(0.1s + var(--i, 0) * 0.035s);
+  }
+  .heroTop,
+  .h1,
+  .heroSub {
+    animation: fadeUp 0.9s cubic-bezier(0.33, 1, 0.68, 1) both;
+  }
+  .heroTop {
+    animation-delay: 0.7s;
+  }
+  .h1 {
+    animation-delay: 0.8s;
+  }
+  .heroSub {
+    animation-delay: 0.9s;
+  }
+}
+@keyframes rise {
+  from {
+    transform: translateY(60%);
+    opacity: 0;
+  }
+}
+@keyframes fadeUp {
+  from {
+    transform: translateY(14px);
+    opacity: 0;
+  }
+}
+
+/* Highlights strip */
+.strip {
+  position: relative;
+  z-index: 3;
+  list-style: none;
+  margin: 0;
+  padding: clamp(28px, 6svh, 80px) var(--pad) clamp(48px, 9svh, 110px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+}
+.strip li {
+  min-width: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--ink);
+  line-height: 1.3;
+}
+.strip b {
+  display: block;
+  font-size: clamp(2.2rem, 7vw, 5rem);
+  line-height: 0.95;
+  margin-bottom: 6px;
+}
+
+/* Project sections */
+.proj {
+  padding: clamp(70px, 13svh, 150px) var(--pad) clamp(60px, 11svh, 140px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: clamp(18px, 3svh, 30px);
+}
+.proj > * {
+  min-width: 0;
+}
+.projTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px 32px;
+  flex-wrap: wrap;
+}
+.projTop p {
+  max-width: 26em;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: clamp(0.84rem, 1.2vw, 1rem);
+  line-height: 1.45;
+  overflow-wrap: break-word;
+}
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+  margin-top: clamp(34px, 6svh, 60px);
+}
+.layout > * {
+  min-width: 0;
+}
+.parts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+.parts > * {
+  min-width: 0;
+}
+.dl {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+.dl dt {
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--thread-text);
+  margin-bottom: 4px;
+}
+.dl dd {
+  margin: 0;
+  max-width: 31rem;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  overflow-wrap: break-word;
+}
+.nums {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 20px;
+}
+.nums li {
+  min-width: 0;
+  border-top: 1px solid var(--ink);
+  padding-top: 10px;
+  color: var(--mute);
+  font-size: 15px;
+  line-height: 1.3;
+  overflow-wrap: break-word;
+}
+.nums b {
+  display: block;
+  font-size: clamp(1.55rem, 5.6vw, 3.2rem);
+  line-height: 1.02;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.stack {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.stack li {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--edge);
+  border-radius: 999px;
+}
+.go {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+}
+.go a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--thread);
+}
+.go a:hover {
+  color: var(--thread-text);
+}
+/* A link Srujan has not supplied yet: visible, dashed, not clickable. */
+.todo {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--mute);
+  border-bottom: 1.5px dashed var(--edge);
+}
+.note {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+  margin: 0;
+  padding: 12px;
+  border: 1.5px dashed var(--edge);
+  text-align: center;
+}
+@media (min-width: 860px) {
+  /* Project sections open with a Spread (spread.module.css); only the layout grid is set here. */
+  .layout {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 64px;
+  }
+  .layout > [data-card] {
+    justify-self: center;
+    position: sticky;
+    top: 110px;
+  }
+  .flip .layout > [data-card] {
+    order: -1;
+  }
+}
+
+/* Celebal */
+.tiles {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+  margin: clamp(34px, 6svh, 60px) 0 0;
+}
+.tiles li {
+  min-width: 0;
+  border-top: 1px solid var(--ink);
+  padding: 12px 0 22px;
+  color: var(--mute);
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: break-word;
+}
+.tiles b {
+  display: block;
+  font-size: clamp(1.9rem, 7.6vw, 4.4rem);
+  line-height: 1;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.lede {
+  max-width: 30rem;
+  margin: 0;
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  overflow-wrap: break-word;
+}
+.tick {
+  display: block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  line-height: 0.9;
+  font-size: clamp(3.2rem, 17vw, 13rem);
+  color: var(--thread);
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 860px) {
+  .strip,
+  .tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* More projects */
+.more {
+  padding: clamp(60px, 11svh, 140px) 0 clamp(30px, 6svh, 70px);
+}
+.moreHead {
+  padding: 0 var(--pad);
+  margin: 0 0 16px;
+}
+.moreList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mrow {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 16px;
+  padding: 16px var(--pad);
+  border-top: 1px solid var(--ink);
+  background: var(--ground);
+  overflow: hidden;
+  isolation: isolate;
+  text-decoration: none;
+}
+.moreList li:last-child .mrow {
+  border-bottom: 1px solid var(--ink);
+}
+.mrow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.45s cubic-bezier(0.7, 0, 0.2, 1);
+  z-index: -1;
+}
+.mrow b {
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 4.6vw, 3.2rem);
+  line-height: 0.95;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.mrow :global(svg) {
+  grid-row: 1 / span 2;
+}
+.mrow span {
+  color: var(--mute);
+  grid-column: 2;
+  overflow-wrap: break-word;
+  min-width: 0;
+}
+.mrow:hover,
+.mrow:active,
+.mrow:focus-visible {
+  color: var(--ground);
+}
+.mrow:hover span,
+.mrow:active span,
+.mrow:focus-visible span {
+  color: var(--ground);
+}
+.mrow:hover::before,
+.mrow:active::before,
+.mrow:focus-visible::before {
+  transform: scaleY(1);
+}
+.mrow:hover :global(.b),
+.mrow:active :global(.b),
+.mrow:focus-visible :global(.b) {
+  fill: var(--ink);
+}
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 18px var(--pad) 0;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--thread);
+}
+@media (min-width: 860px) {
+  .mrow {
+    grid-template-columns: 48px minmax(0, 30rem) minmax(0, 1fr);
+    gap: 4px 28px;
+  }
+  .mrow :global(svg) {
+    grid-row: auto;
+    width: 48px;
+    height: 48px;
+  }
+  .mrow span {
+    grid-column: auto;
+  }
+}
+
+/* About: Skills, Experience, Education, Certified */
+.sect {
+  padding: clamp(40px, 8svh, 110px) 0;
+}
+.sectIn {
+  padding: 0 var(--pad);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+.sectIn > * {
+  min-width: 0;
+}
+/* The graduation cap alone (viewBox 180 wide): 180/400 of the prototype's 520px, so the cap keeps its size. */
+.sectScene {
+  max-width: 234px;
+}
+.h2 {
+  text-transform: uppercase;
+  line-height: 0.9;
+  font-size: min(9.2vw, 7rem);
+  margin: 0;
+  overflow-wrap: break-word;
+}
+.h2 + .h2,
+.sectIn > .h2:not(:first-of-type) {
+  margin-top: clamp(36px, 7svh, 80px);
+}
+.groups {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 22px;
+}
+.groups > * {
+  min-width: 0;
+}
+.groups h3 {
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--thread-text);
+  margin: 0 0 10px;
+}
+.rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.rows li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2px 32px;
+  padding: 14px 0;
+  border-top: 1px solid var(--ink);
+}
+.rows b {
+  font-weight: 700;
+  font-size: clamp(1.15rem, 2.2vw, 1.7rem);
+  line-height: 1.15;
+  overflow-wrap: break-word;
+}
+.rows span {
+  color: var(--mute);
+  overflow-wrap: break-word;
+}
+.rows em {
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--mute);
+}
+.sectLink {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+  border-bottom: 1.5px solid var(--thread);
+}
+@media (min-width: 860px) {
+  .groups {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 64px;
+  }
+  .rows li {
+    grid-template-columns: minmax(0, 28rem) minmax(0, 1fr) auto;
+    align-items: baseline;
+  }
+}
+
+/* Let's talk */
+.contact {
+  min-height: 118svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 120px var(--pad) 80px;
+}
+.q {
+  max-width: 26rem;
+  line-height: 1.6;
+  margin: 0 0 18px;
+  color: var(--mute);
+  background: var(--ground);
+  padding: 6px 10px;
+}
+.talk {
+  text-transform: uppercase;
+  line-height: 0.9;
+  font-size: clamp(2.2rem, 9.4vw, 8.5rem);
+  white-space: nowrap;
+  margin: 0;
+}
+.talk a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.talk a:hover {
+  color: var(--thread);
+}
+.kolamPin {
+  left: 50%;
+  top: 50%;
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 26px;
+}
+.links a,
+.links button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+}
+.links a:hover,
+.links button:hover {
+  color: var(--thread);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mrow::before {
+    transition: none;
+  }
+}

@@ -28,12 +28,15 @@ describe("project pages: next project", () => {
 });
 
 describe("project pages: data", () => {
-  it("builds a page for every project, featured ones with an art plate", () => {
+  // Until the v5 project pages replace this template, the art plates follow the v4 catalogue's
+  // four (FEATURED_ORDER), not the graph's v5 featured set (DECISIONS 26).
+  it("builds a page for every project, the catalogue's featured ones with an art plate", () => {
+    const plated = new Set<string>(FEATURED_ORDER);
     for (const p of projects) {
       const page = projectPage(p.slug);
       expect(page, p.slug).toBeDefined();
-      expect(page!.featured).toBe(p.featured);
-      expect(page!.art !== undefined).toBe(p.featured);
+      expect(page!.featured).toBe(plated.has(p.slug));
+      expect(page!.art !== undefined).toBe(plated.has(p.slug));
       expect(page!.kicker.length).toBeGreaterThan(0);
     }
   });

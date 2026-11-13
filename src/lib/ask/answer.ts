@@ -31,7 +31,7 @@ function relevantFigure(hit: Hit, question: string): string | undefined {
     });
 }
 
-/** "3 projects and 1 role match; strongest evidence: Surplus AI (~80% less processing time per item...)." */
+/** "3 projects and 1 role match; strongest evidence: Surplus Station (~80% less processing time per item...)." */
 export function summaryLine(hits: Hit[], question = ""): string {
   if (hits.length === 0) return "";
   const counts = new Map<string, number>();

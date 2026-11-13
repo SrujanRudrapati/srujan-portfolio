@@ -66,6 +66,39 @@ Featured order: Surplus AI, DevHacks × Cubbie, Label Lens, Supply Chain Watchto
 
 ---
 
+## 3. v5 additions and overrides (DECISIONS 26, 2026-11-13; these win over Section 2)
+
+### 3.1 Names, places, availability
+- Surplus AI is now **Surplus Station** (same project, same facts as 2.1). Page `/work/surplus-station`; `/work/surplus-ai` redirects.
+- Processing time wording: "~80% less time per item" (never "80% faster").
+- The WLAN Traffic Forensics Toolkit is now **Network Anomaly Toolkit** (résumé). It flags anomalies in 100,000+ network packets and caught a live denial-of-service attack.
+- Personal location: "Phoenix, AZ". The M.S. campus stays "Tempe, AZ".
+- Availability: "Available January 2027. Open to relocating anywhere in the US, or remote."
+- Surplus Station hardware and tools stay as in 2.1 (Bash USB script that reads Macs; Qwen 14B on four Mac minis plus Llama 3B on a fifth). Do not write "PowerShell" or "Windows" for it.
+
+### 3.2 InvoiceGuard (featured, status: live demo)
+- AI extracts invoice fields, proves every value against the original page, checks the math, and sends only doubtful invoices to a person, whose corrections become test cases.
+- 6 of 6 bad invoices caught; 15 of 16 good ones auto-approved; about $0.0005 per invoice; a model costing 20 times more changed no decisions; 113 tests.
+- Stack: Python, Claude API, LLM evaluation.
+- Live demo: https://invoiceguard-srujan.onrender.com . Repository: not supplied yet (show a placeholder). Walkthrough video: not supplied yet (placeholder).
+
+### 3.3 RecordSync (featured, status: personal)
+- A pipeline that validates, normalizes, and matches customer records from two systems into one golden record each, tracks where every field came from, and sends unclear matches to a person.
+- 80 tests; same results on every re-run. Stack: Python, pydantic, SQLite, pytest. Repository: not supplied yet (placeholder).
+
+### 3.4 Margin Radar (other project, status: prototype)
+- Résumé wording: an agent that flags a business's margin problems early, where every number in its briefs traces back to a SQL query; tested on held-out data, with documentation of where it still fails. Python, DuckDB, Claude API. October 2026.
+
+### 3.5 HeatShift (other project, status: hackathon)
+- A heat-safety planner built in about 75 minutes at IBM's Bobathon.
+
+### 3.6 Certifications
+- Five: the four in the graph plus Microsoft Certified: Fabric Analytics Engineer Associate.
+
+Featured order (v5): Surplus Station, InvoiceGuard, Label Lens, RecordSync, DevHacks × Cubbie, then Celebal Technologies (experience, shown with the projects).
+
+---
+
 
 ---
 

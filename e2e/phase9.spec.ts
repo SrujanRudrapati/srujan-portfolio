@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { hero } from "../src/data/home";
 import { askFromHome } from "./helpers";
 
 // Runbook Phase 9: mobile widths and targets, touch flows, motion gating, metadata.
@@ -107,8 +108,9 @@ test.describe("Mobile, touch and motion (Phase 9)", () => {
 test.describe("Metadata (Phase 9)", () => {
   test("lang, title, description, Open Graph and Twitter cards point at a 1200x630 image", async ({ page, request }) => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
-    await expect(page).toHaveTitle("Srujan Rudrapati | Data Engineer");
-    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", /Databricks, Azure, and AWS/);
+    // v5: the home page's own title and the hero sentence (src/app/page.tsx).
+    await expect(page).toHaveTitle("Srujan Rudrapati | Data and AI Engineer");
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute("content", hero.headline);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", "https://srujanrudrapati.github.io/srujan-portfolio/og.png");
     await expect(page.locator('meta[property="og:image:width"]')).toHaveAttribute("content", "1200");
     await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");

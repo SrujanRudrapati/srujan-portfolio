@@ -1,169 +1,136 @@
-/* v4 shell (design-direction): header, footer, progress line, cursor. */
+/* v5 shell (design/redesign.html): nav, footer, cursor. */
 .header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
-  padding-top: env(safe-area-inset-top, 0px);
-  border-bottom: 1px solid transparent;
-  transition: background-color 0.5s var(--ease), border-color 0.5s var(--ease);
-  view-transition-name: shell-header;
-}
-/* The only backdrop-filter on the site (runbook v4 §2). */
-.header[data-solid] {
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(10px);
-  border-color: var(--line);
-}
-.bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 60px;
-  gap: 20px;
+  gap: 12px;
+  padding: calc(6px + env(safe-area-inset-top, 0px)) var(--pad) 6px;
+  background: var(--ground);
+  transition: transform 0.45s var(--ease);
+  view-transition-name: shell-header;
 }
-.mark {
-  font-family: var(--serif);
-  font-size: 20px;
+.header[data-up] {
+  transform: translateY(-110%);
+}
+.me {
+  font-weight: 900;
+  font-stretch: 125%;
+  font-variation-settings: "wdth" 125;
+  font-size: 22px;
+  letter-spacing: -0.02em;
   text-decoration: none;
-  letter-spacing: 0.1px;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  min-width: 44px;
 }
-.avail {
-  font-size: 15px;
-  color: var(--muted);
+.nav {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
 }
-.avail::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent);
+.nav a,
+.ask {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 9px;
+  text-decoration: none;
+  color: inherit;
 }
-@media (max-width: 900px) {
-  .avail {
-    font-size: 13px;
+.nav a:hover,
+.ask:hover {
+  color: var(--thread-text);
+}
+.ask {
+  background: none;
+  border: 0;
+  font: inherit;
+  text-transform: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  /* Underlined like the prototype's links, but the button itself stays 44px tall. */
+  text-decoration: underline 1.5px var(--thread);
+  text-underline-offset: 6px;
+  margin-left: 6px;
+  padding: 0 4px;
+}
+.hideSmall {
+  display: none !important;
+}
+@media (min-width: 860px) {
+  .hideSmall {
+    display: inline-flex !important;
+  }
+  .nav a {
+    padding: 0 16px;
   }
 }
 
 .footer {
-  border-top: 1px solid var(--line);
-  padding: 28px 0 40px;
-  color: var(--muted);
-  font-size: 14px;
+  position: relative;
+  z-index: 3;
   display: flex;
-  justify-content: space-between;
-  gap: 20px;
   flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 6px 24px;
+  padding: 20px var(--pad) calc(24px + env(safe-area-inset-bottom, 0px));
+  font-family: var(--mono);
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-decoration: none;
+}
+.footer a:hover {
+  color: var(--thread-text);
 }
 
-.progress {
-  position: fixed;
-  left: 0;
-  top: 0;
-  height: 1px;
-  width: 100%;
-  transform-origin: 0 50%;
-  transform: scaleX(0);
-  background: var(--metal);
-  z-index: 40;
-  pointer-events: none;
-  view-transition-name: shell-progress;
-}
-
-/* The cursor grows by scale (motion-system: transform and opacity only). The positioner
-   follows the pointer; the ring scales inside it; the label sits above, unscaled. */
+/* The "View" cursor: a thread disc, scaled 0 until over a target (transform only). */
 .cursor {
   position: fixed;
   left: 0;
   top: 0;
   z-index: 70;
+  width: 92px;
+  height: 92px;
+  margin: -46px 0 0 -46px;
+  border-radius: 50%;
+  background: var(--thread);
+  color: var(--ground);
+  display: none;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  transition: opacity 0.3s var(--ease);
+  transform: translate(-200px, -200px) scale(0);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   view-transition-name: shell-cursor;
 }
-.cursor[data-on] {
-  opacity: 1;
-}
-.ring {
-  position: absolute;
-  left: -17px;
-  top: -17px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 1px solid rgba(196, 154, 108, 0.7);
-  transition:
-    transform 0.45s var(--ease),
-    background-color 0.35s var(--ease),
-    border-color 0.35s var(--ease);
-}
-.cursor[data-state="hover"] .ring {
-  transform: scale(1.706); /* 58px */
-  border-color: rgba(196, 154, 108, 0.9);
-}
-.cursor[data-state="label"] .ring {
-  transform: scale(2.471); /* 84px */
-  background: var(--accent);
-  border-color: var(--accent);
-}
-.cursorLabel {
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translate(-50%, -50%);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--bg);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.25s var(--ease);
-}
-.cursor[data-state="label"] .cursorLabel {
-  opacity: 1;
-}
-.cursorDot {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 71;
-  pointer-events: none;
-  width: 5px;
-  height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  border-radius: 50%;
-  background: var(--accent);
-  opacity: 0;
-  view-transition-name: shell-cursor-dot;
-}
-.cursor[data-on] + .cursorDot {
-  opacity: 1;
-}
-
-/* No fine pointer (touch): no custom cursor at all, not just a transparent one. */
-@media not ((hover: hover) and (pointer: fine)) {
-  .cursor,
-  .cursorDot {
-    display: none;
+@media (hover: hover) and (pointer: fine) {
+  .cursor[data-on] {
+    display: flex;
   }
 }
-
-@media print {
-  .header,
-  .footer,
-  .progress,
-  .cursor,
-  .cursorDot {
-    display: none !important;
+@media (prefers-reduced-motion: reduce) {
+  .header {
+    transition: none;
   }
 }

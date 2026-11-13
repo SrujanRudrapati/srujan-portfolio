@@ -6,7 +6,7 @@ import { expect, test, type Page } from "@playwright/test";
 
 test.beforeEach(({}, info) => test.skip(!["mobile-dark", "webkit-mobile"].includes(info.project.name), "phones only"));
 
-const ROUTES = ["/", "/work", "/work/surplus-ai", "/work/devhacks-cubbie", "/work/f1-race-predictor", "/experience", "/about", "/contact", "/explore", "/cv", "/no-such-page"];
+const ROUTES = ["/", "/work", "/work/surplus-station", "/work/devhacks-cubbie", "/work/f1-race-predictor", "/experience", "/about", "/contact", "/explore", "/cv", "/no-such-page"];
 const WIDTHS = [390, 360];
 
 /** Interactive elements under 44 px either way, except inline text links inside sentences (WCAG 2.5.8 exception). */

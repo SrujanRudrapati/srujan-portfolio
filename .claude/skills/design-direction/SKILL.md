@@ -1,9 +1,15 @@
 ---
 name: design-direction
-description: The chosen visual direction for the portfolio. v4 "Midnight & Bronze" (dark only, Bodoni Moda + Hanken Grotesk, bronze accent, rounded tiles, a hub home with a dot field) supersedes v3 from Phase W0 on. Covers token values, type rules, radii, surfaces, layout and interaction notes per page, the banned list, and copy rules. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or CSS on the portfolio site, and whenever tokens in globals.css change (then update this file too).
+description: The chosen visual direction for the portfolio. v5 "Thread" (light only, Archivo + IBM Plex Mono, per-section paper themes, a scroll-drawn line through the page, line-art scenes; spec in DESIGN.md, prototype design/redesign.html) supersedes v4 "Midnight & Bronze" from DECISIONS 26 on; the v4 notes below are history. Covers token values, type rules, radii, surfaces, layout and interaction notes per page, the banned list, and copy rules. Load whenever creating or styling any component, page, section, card, SVG, diagram, animation, or CSS on the portfolio site, and whenever tokens in globals.css change (then update this file too).
 ---
 
-# v4 direction: Midnight & Bronze (runbook v4, 2026-11-01)
+# v5 direction: Thread (DECISIONS 26, 2026-11-13). Read DESIGN.md first.
+
+`DESIGN.md` is the v5 spec: tokens (`--ground`, `--ink`, `--thread` registered with `@property`, derived `--mute`, `--edge`, `--panel`, `--thread-text`), the eight section themes in `src/lib/themes.ts`, Archivo (wide black display at `wdth` 125) and IBM Plex Mono, the 860px breakpoint, 4px radii, the card's hard 7px ink shadow, and the components in `src/components/v5/`. When v5 and the v4 notes below disagree, v5 wins. Light only; no Bodoni, Hanken, metal gradient, grain, glow or rounded tiles. The v4 token names (`--bg`, `--text`, `--accent`...) survive only as aliases in `globals.css` for pages not yet restyled.
+
+---
+
+# History: v4 direction, Midnight & Bronze (runbook v4, 2026-11-01)
 
 Source of truth for look, layout, spacing, motion and interaction: the approved reference `docs/v4/reference/srujan-premium-concept.html` (screenshots in `docs/v4/reference-shots/<viewport>/`). Where the reference and `docs/REDESIGN_V4_RUNBOOK.md` disagree, the runbook wins. Motion detail lives in `motion-system`; facts in `portfolio-facts`.
 

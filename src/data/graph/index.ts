@@ -2,7 +2,8 @@
 // selectors are pure functions of the graph, so the site renders from one
 // source of truth; the Phase 4 and 5 components did not change.
 
-import { artifactNodes, projectEdges, projectMetricNodes, projectNodes } from "./projects.ts";
+import { artifactNodes, projectEdges, projectMetricNodes, projectNodes as v4ProjectNodes } from "./projects.ts";
+import { v5ArtifactNodes, v5MetricNodes, v5ProjectEdges, v5ProjectNodes } from "./projects-v5.ts";
 import { certificationNodes, educationNodes, roleEdges, roleMetricNodes, roleNodes } from "./roles.ts";
 import { skillNodes } from "./skills.ts";
 import { eventNodes, industryNodes, problemNodes } from "./context.ts";
@@ -12,7 +13,26 @@ export * from "./types.ts";
 export * from "./selectors.ts";
 export { skillGroupOrder } from "./groups.ts";
 
-const edges: Edge[] = [...projectEdges, ...roleEdges];
+// Render order (facts 3, v5 featured order): Surplus Station, InvoiceGuard, Label Lens, RecordSync,
+// DevHacks × Cubbie, then the rest with the two new smaller projects after Watchtower.
+const PROJECT_ORDER = [
+  "project-surplus-station",
+  "project-invoiceguard",
+  "project-label-lens",
+  "project-recordsync",
+  "project-devhacks-cubbie",
+  "project-supply-chain-watchtower",
+  "project-margin-radar",
+  "project-heatshift",
+];
+const allProjects = [...v4ProjectNodes, ...v5ProjectNodes];
+const rank = (id: string) => {
+  const i = PROJECT_ORDER.indexOf(id);
+  return i === -1 ? PROJECT_ORDER.length : i;
+};
+const projectNodes = [...allProjects].sort((a, b) => rank(a.id) - rank(b.id) || allProjects.indexOf(a) - allProjects.indexOf(b));
+
+const edges: Edge[] = [...projectEdges, ...v5ProjectEdges, ...roleEdges];
 
 const listNames = (names: string[]): string =>
   names.length <= 1 ? names.join("") : `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
@@ -38,10 +58,12 @@ function assemble(): Graph {
     ...certificationNodes,
     ...skillNodes,
     ...projectMetricNodes,
+    ...v5MetricNodes,
     ...roleMetricNodes,
     ...industryNodes,
     ...problemNodes,
     ...artifactNodes,
+    ...v5ArtifactNodes,
     ...eventNodes,
   ];
   const byId = new Map(raw.map((n) => [n.id, n]));

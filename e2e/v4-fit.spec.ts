@@ -5,7 +5,7 @@ import { expectNoA11yViolations } from "./helpers";
 // sizes, and axe clean on every route. The home and Work fits (tiles, catalogue controls) are in
 // v4-home.spec.ts and v4-work.spec.ts.
 
-const ROUTES = ["/", "/work", "/work/surplus-ai", "/work/devhacks-cubbie", "/work/label-lens", "/work/supply-chain-watchtower", "/work/gesture-rc-car", "/experience", "/about", "/contact", "/explore", "/cv", "/no-such-page"];
+const ROUTES = ["/", "/work", "/work/surplus-station", "/work/devhacks-cubbie", "/work/label-lens", "/work/supply-chain-watchtower", "/work/gesture-rc-car", "/experience", "/about", "/contact", "/explore", "/cv", "/no-such-page"];
 const SIZES = [
   { width: 360, height: 780 },
   { width: 390, height: 844 },

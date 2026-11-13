@@ -1,17 +1,12 @@
 import { profile } from "@/content/profile";
-import { Clock } from "./Clock";
 import s from "./shell.module.css";
 
-/** Name and year, and the live time in Arizona (runbook v4 W1.4). */
+/** The v5 footer: name and a way back up. */
 export function Footer() {
   return (
-    <div className="wrap">
-      <footer className={s.footer}>
-        <span>
-          {profile.name}, {new Date().getFullYear()}
-        </span>
-        <Clock />
-      </footer>
-    </div>
+    <footer className={s.footer}>
+      <span>{profile.name}</span>
+      <a href="#main">Back to top</a>
+    </footer>
   );
 }

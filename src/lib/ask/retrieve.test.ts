@@ -16,7 +16,7 @@ describe("retrieve", () => {
   });
 
   test("finds the right nodes for real questions", () => {
-    expect(ids("What runs in production?")[0]).toBe("project-surplus-ai");
+    expect(ids("What runs in production?")[0]).toBe("project-surplus-station");
     expect(ids("What have you done with Spark?")[0]).toBe("role-associate-celebal");
     expect(ids("Show me something with the Claude API")).toEqual(expect.arrayContaining(["project-label-lens", "project-supply-chain-watchtower"]));
     expect(ids("What did you do at Celebal?")[0]).toMatch(/^role-.*celebal$/);
@@ -46,7 +46,7 @@ describe("retrieve", () => {
 
   test("the summary line is a template over the hits, with a figure only when it fits the question", () => {
     const q = "What runs in production?";
-    expect(summaryLine(retrieve(index, q), q)).toMatch(/^\d+ \w+.* match(es)?; strongest evidence: Surplus AI\.$/);
+    expect(summaryLine(retrieve(index, q), q)).toMatch(/^\d+ \w+.* match(es)?; strongest evidence: Surplus Station\.$/);
     const rt = "What cut response time?";
     expect(summaryLine(retrieve(index, rt), rt)).toContain("Label Lens (4 to 9 s response time, down from 16 s");
     const spark = "What have you done with Spark?";
@@ -67,6 +67,6 @@ describe("evidence fields survive indexing", () => {
   test("tags and evidence stay arrays", () => {
     const hit = retrieve(index, "What runs in production?")[0];
     expect(Array.isArray(hit.tags)).toBe(true);
-    expect(hit.evidence).toContain("/work/surplus-ai");
+    expect(hit.evidence).toContain("/work/surplus-station");
   });
 });

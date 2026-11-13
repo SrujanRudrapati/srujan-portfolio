@@ -115,3 +115,24 @@ Srujan's replies of 2026-10-31 to the V4/V5 notes (recorded at the start of V6):
     - 23: `/explore` kept.
     - 24: the recruiter suggestions a to f; the approved design is kept until you pick any.
   - Default if no reply: none; this gate waits for `merge`.
+
+## v5 "Thread" (raised 2026-11-13, port of `design/redesign.html`)
+
+- **26. Plan and content answers (Srujan, 2026-11-13).** Plan approved with changes: remove Lenis; light only; no GSAP (the hero intro uses CSS and the Web Animations API, the no-animation-library rule stands); build the design system and the home page first, then stop for a preview before the project pages.
+  - A. InvoiceGuard: every figure and the live demo URL (`https://invoiceguard-srujan.onrender.com`) are correct. **Repo URL not given** (the reply had a blank `[URL]`): the page shows a visible "Repository link coming" placeholder until it is supplied.
+  - B. RecordSync: correct. **Repo URL not given**: same placeholder.
+  - C. HeatShift: correct (built in about 75 minutes at IBM's Bobathon).
+  - D. Add Margin Radar with the résumé wording (prototype; Python, DuckDB, Claude API; Oct 2026).
+  - E. Availability line: "Available January 2027. Open to relocating anywhere in the US, or remote."
+  - F. Five certifications: add Microsoft Fabric Analytics Engineer.
+  - G. The project is **Surplus Station** (was Surplus AI); `/work/surplus-ai` redirects to `/work/surplus-station`.
+  - H. "~80% less time per item".
+  - I. **Not answered** (the reply listed both options). Default applied: keep what the site and facts 2.1 already say (a Bash script on a USB stick that reads Macs; Qwen 14B on four Mac minis plus Llama 3B on a fifth). The prototype's "Bash and PowerShell, macOS and Windows" is not used. Reply to change it.
+  - J. The WLAN toolkit is named **Network Anomaly Toolkit** (résumé).
+  - K. Experience dates from the résumé; the B.Tech is listed.
+  - L. Location: "Phoenix, AZ" everywhere a personal location is given (the M.S. keeps its campus, Tempe, AZ, as on the résumé).
+
+- **27. Résumé versus site, and robots.txt (raised 2026-11-13, v5 T1; defaults applied, nothing blocks).**
+  - a. Celebal lede: the résumé says "for US clients"; the site's telehealth client is in New Zealand. Default applied: "for clients in healthcare, energy, manufacturing, and e-commerce" (no "US"). Reply "a US" to restore it.
+  - b. Fabric pilot: the résumé says "Led a five-person Microsoft Fabric pilot"; the site says "coordinated a five-person team". Default applied: "coordinated". Reply "b led" to use the résumé's word.
+  - c. `public/robots.txt` has been in the repo since v2 (it allows everything and points at the sitemap) and `npm run release:check` requires it. You asked not to add one; it is not removed without a yes. Reply "c remove" to delete it and drop it from the release check.

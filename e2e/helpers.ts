@@ -17,15 +17,15 @@ export async function expectNoA11yViolations(page: Page, selector?: string) {
 }
 
 /** The home page, hydrated: shortcuts such as ⌘K are listened for only after hydration, and a key pressed
- *  before it does nothing (the cause of a flaky Ask test under load, V7). The dot field sets `data-ready` in an
- *  effect, after hydration. */
+ *  before it does nothing (the cause of a flaky Ask test under load, V7). The v5 thread sets `data-ready`
+ *  in an effect, after hydration, once it has measured the page. */
 export async function openHome(page: Page) {
   await page.goto("/");
-  await expect(page.locator("canvas[data-dot-field][data-ready]")).toHaveCount(1);
+  await expect(page.locator("svg[data-thread][data-ready]")).toHaveCount(1);
   await page.evaluate(() => document.fonts.ready);
 }
 
-/** The home page's "Ask about my work" (v4 W2.4): it opens the Ask panel; the question goes in its input. */
+/** The home page's "Ask about my work" (v5: in Let's talk): it opens the Ask panel; the question goes in its input. */
 export async function askFromHome(page: Page, question: string) {
   await page.getByRole("button", { name: "Ask about my work" }).click();
   const input = page.getByRole("dialog", { name: "Ask about my work" }).locator("#ask-input");

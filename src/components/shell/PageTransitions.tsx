@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { lenisStore } from "./lenis-store";
 import { internalTarget, isPendingArrival } from "./route-paths";
 
 // Route changes (runbook v4 W1.6, motion-system): the old page fades out over 260 ms and the
@@ -32,9 +31,6 @@ function focusTarget(): HTMLElement | null {
 }
 
 function resetScroll() {
-  const lenis = lenisStore.get();
-  lenis?.resize();
-  lenis?.scrollTo(0, { immediate: true, force: true });
   window.scrollTo(0, 0);
 }
 
@@ -68,11 +64,7 @@ export function PageTransitions() {
     }
     const raf = requestAnimationFrame(() => {
       const el = focusTarget();
-      if (ours && el && location.hash) {
-        const lenis = lenisStore.get();
-        if (lenis) lenis.scrollTo(el, { immediate: true, force: true });
-        else el.scrollIntoView();
-      }
+      if (ours && el && location.hash) el.scrollIntoView();
       if (el) {
         if (!el.hasAttribute("tabindex")) el.tabIndex = -1;
         el.focus({ preventScroll: true });

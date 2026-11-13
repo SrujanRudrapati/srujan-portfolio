@@ -19,7 +19,7 @@ test.describe("v4 work catalogue", () => {
     await openWork(page);
     await expect(page.locator("[data-stage] a")).toHaveCount(4);
     await expect(count(page)).toHaveText("1 of 4");
-    await expect(front(page)).toHaveAttribute("href", /\/work\/surplus-ai\/?$/);
+    await expect(front(page)).toHaveAttribute("href", /\/work\/surplus-station\/?$/);
     const next = page.getByRole("button", { name: "Next project" });
     for (let i = 1; i < FEATURED_ORDER.length; i++) {
       await next.click();
@@ -92,7 +92,7 @@ test.describe("v4 work catalogue", () => {
   test("clicking the front card opens its project", async ({ page }) => {
     await openWork(page);
     await front(page).click();
-    await expect(page).toHaveURL(/\/work\/surplus-ai\/?$/);
+    await expect(page).toHaveURL(/\/work\/surplus-station\/?$/);
   });
 
   test("no accessibility violations", async ({ page }) => {

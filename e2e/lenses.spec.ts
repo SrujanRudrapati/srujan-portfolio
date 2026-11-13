@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { projects } from "../src/data/projects";
 import { expectNoA11yViolations, openExplore } from "./helpers";
 
 test.beforeEach(async ({ page, javaScriptEnabled }) => openExplore(page, undefined, javaScriptEnabled));
@@ -11,7 +12,7 @@ test.describe("Lenses", () => {
     const buttons = switcher(page).getByRole("button");
     await expect(buttons).toHaveText(["Highlights", "Timeline", "Skill map", "By problem", "By industry", "Recruiter"]);
     await expect(switcher(page).getByRole("button", { name: "Highlights" })).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("#project-surplus-ai")).toBeVisible();
+    await expect(page.locator("#project-surplus-station")).toBeVisible();
   });
 
   test("a lens click updates the hash, arrow keys move between lenses", async ({ page }) => {
@@ -19,7 +20,7 @@ test.describe("Lenses", () => {
     await timeline.click();
     await expect(page).toHaveURL(/#lens=timeline$/);
     await expect(timeline).toHaveAttribute("aria-pressed", "true");
-    await expect(page.locator("#project-surplus-ai")).toBeHidden();
+    await expect(page.locator("#project-surplus-station")).toBeHidden();
 
     // Keyboard users arrive by Tab, so focus is on the button. (Safari on macOS does not focus a button on
     // mouse click, by platform design, so the click above alone would leave focus elsewhere there.)
@@ -45,7 +46,7 @@ test.describe("Lenses", () => {
     await expect(celebal).toContainText("Cut downtime about 30%");
     await expect(celebal).toContainText("on call for it");
     await expect(celebal).toContainText("mentored two interns");
-    await expect(work.getByRole("list", { name: "Projects during Graduate Teaching Assistant" })).toContainText("WLAN Traffic Forensics Toolkit");
+    await expect(work.getByRole("list", { name: "Projects during Graduate Teaching Assistant" })).toContainText("Network Anomaly Toolkit");
     await expect(work.locator("time").first()).toHaveAttribute("datetime", /^\d{4}/);
   });
 
@@ -57,9 +58,11 @@ test.describe("Lenses", () => {
     await python.click();
     await expect(python).toHaveAttribute("aria-pressed", "true");
     await expect(work.getByRole("heading", { name: "Where Python is used" })).toBeVisible();
-    await expect(work.getByRole("list", { name: "Projects and roles using Python" }).getByRole("listitem")).toHaveCount(4);
+    // Every project with Python in its stack (v5 added InvoiceGuard, RecordSync and Margin Radar).
+    const pythonUsers = projects.filter((p) => p.stack.includes("Python")).length;
+    await expect(work.getByRole("list", { name: "Projects and roles using Python" }).getByRole("listitem")).toHaveCount(pythonUsers);
     await work.getByRole("button", { name: "Show all projects" }).click();
-    await expect(work.getByRole("list", { name: "All projects" }).getByRole("listitem")).toHaveCount(11);
+    await expect(work.getByRole("list", { name: "All projects" }).getByRole("listitem")).toHaveCount(projects.length);
   });
 
   test("By problem and By industry key cards on graph nodes", async ({ page }) => {
@@ -144,8 +147,8 @@ test.describe("Lenses", () => {
     test.use({ javaScriptEnabled: false });
 
     test("the default lens is complete static HTML", async ({ page }) => {
-      await expect(page.locator('#work [id^="project-"]')).toHaveCount(11); // 4 featured + 7 rows (V6)
-      await expect(page.locator("#project-surplus-ai")).toBeVisible();
+      await expect(page.locator('#work [id^="project-"]')).toHaveCount(projects.length); // featured cards + rows (V6)
+      await expect(page.locator("#project-surplus-station")).toBeVisible();
     });
   });
 });

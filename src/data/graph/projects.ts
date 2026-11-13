@@ -11,15 +11,15 @@ const site = (slug: string, label: string) => ({ label: `${label} page`, url: an
 
 export const projectNodes: ProjectNode[] = [
   {
-    id: "project-surplus-ai",
+    id: "project-surplus-station",
     type: "project",
-    label: "Surplus AI",
+    label: "Surplus Station",
     summary: "Private, offline AI system for ASU Surplus, in production. Built on the job from June 2026; processing per item dropped from about 15 min to about 3 min.",
     dates: { start: "2026-06" },
-    evidence: [site("surplus-ai", "Surplus AI")],
+    evidence: [site("surplus-station", "Surplus Station")],
     tags: ["project", "featured", "production", "ai", "data", "llm", "offline"],
     content: {
-      title: "Surplus AI",
+      title: "Surplus Station",
       oneLiner: "Private, offline AI system for ASU Surplus",
       status: "production",
       featured: true,
@@ -42,7 +42,7 @@ export const projectNodes: ProjectNode[] = [
           { name: "USB spec collector", text: "A Bash script on a USB stick runs system_profiler on each Mac, reads model, chip, RAM, storage, battery health, and macOS version, looks up year and screen size from a reference table, and de-duplicates by serial number." },
           { name: "Camera inventory scanner", text: "For Macs that won’t boot, a webcam photographs the bottom label and Apple’s Vision OCR reads the model number, EMC, and serial. These are matched against the lookup table to get product, year, screen size, and resale lane (Retail, Auction, or Parts)." },
           { name: "Merge logic", text: "Both sources land in one master inventory keyed on serial number, so a camera scan never overwrites real data from a working machine." },
-          { name: "Surplus AI app", text: "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds." },
+          { name: "Surplus Station app", text: "A Flask server runs two model engines: Qwen 14B across four nodes, and Llama 3B on one node for quick responses. Replies stream word by word. A Listings tab builds a strict prompt from each row’s real specs, and a Cluster tab polls each node over SSH every 5 seconds." },
           { name: "Launchers", text: "One double-click starts everything, waits for the engines to respond, and opens the app. Closing it shuts down every node." },
         ],
       },
@@ -105,12 +105,12 @@ export const projectNodes: ProjectNode[] = [
     summary: "Multi-agent LLM system: three agents in sequence on the Anthropic Claude API through CrewAI turn sales history into a logistics plan. The Risk Analyst is grounded in real shipping-disruption data over ChromaDB.",
     dates: { start: "2025-11", end: "2025-11" },
     evidence: [site("supply-chain-watchtower", "Watchtower")],
-    tags: ["project", "featured", "personal", "ai", "llm", "agents", "rag"],
+    tags: ["project", "personal", "ai", "llm", "agents", "rag"],
     content: {
       title: "Autonomous Supply Chain Watchtower",
       oneLiner: "Multi-agent LLM system",
       status: "personal",
-      featured: true,
+      featured: false,
       date: "November 2025",
       context: "Personal project, built solo",
       tags: ["ai"],
@@ -161,13 +161,13 @@ export const projectNodes: ProjectNode[] = [
   {
     id: "project-wlan-forensics-toolkit",
     type: "project",
-    label: "WLAN Traffic Forensics Toolkit",
+    label: "Network Anomaly Toolkit",
     summary: "Parses 100,000+ WPA2-encrypted packets, rebuilds the network topology as a directed graph, and classifies device types with K-Means. A Z-score detector caught a live deauthentication attack.",
     dates: { start: "2026-01", end: "2026-05" },
-    evidence: [site("wlan-forensics-toolkit", "WLAN toolkit")],
+    evidence: [site("wlan-forensics-toolkit", "Network Anomaly Toolkit")],
     tags: ["project", "academic", "ai", "data", "networking", "security"],
     content: {
-      title: "WLAN Traffic Forensics Toolkit",
+      title: "Network Anomaly Toolkit",
       oneLiner: "Rebuilds the network topology as a directed graph and classifies device types with K-Means clustering.",
       status: "academic",
       featured: false,
@@ -251,14 +251,14 @@ export const projectNodes: ProjectNode[] = [
 ];
 
 
-const surplus = site("surplus-ai", "Surplus AI");
+const surplus = site("surplus-station", "Surplus Station");
 const devhacks = site("devhacks-cubbie", "DevHacks × Cubbie");
 const labelLens = site("label-lens", "Label Lens");
 
 export const projectMetricNodes: MetricNode[] = [
-  metric("surplus-processing-time", "~80%", "less processing time per item, about 15 min down to about 3 min", "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus AI.", [surplus], ["surplus-ai", "headline"]),
-  metric("surplus-pallet-time", "~10 min", "to list a 100+ unit pallet, instead of 1 to 2 hours", "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.", [surplus], ["surplus-ai"]),
-  metric("surplus-model-size", "14B", "Qwen model across four Mac minis, offline, via MLX", "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.", [surplus], ["surplus-ai", "llm"]),
+  metric("surplus-processing-time", "~80%", "less processing time per item, about 15 min down to about 3 min", "Per-item processing at ASU Surplus went from about 15 min to about 3 min with Surplus Station.", [surplus], ["surplus-station", "headline"]),
+  metric("surplus-pallet-time", "~10 min", "to list a 100+ unit pallet, instead of 1 to 2 hours", "Bulk auction listings automated: a 100+ unit pallet now takes about 10 min instead of 1 to 2 hours.", [surplus], ["surplus-station"]),
+  metric("surplus-model-size", "14B", "Qwen model across four Mac minis, offline, via MLX", "Qwen 14B runs across four Mac minis plus Llama 3B on one, all offline through MLX.", [surplus], ["surplus-station", "llm"]),
   metric("devhacks-place", "1st", "place, Track 1, DevHacks × Cubbie", "Cooked won 1st place, Track 1, at the DevHacks × Cubbie hackathon in October 2026.", [devhacks, { label: "Cooked repository", url: "https://github.com/SrujanRudrapati/cooked" }], ["hackathon", "headline"]),
   metric("devhacks-submissions", "82", "submissions from 350+ students", "Submissions to the DevHacks × Cubbie hackathon in October 2026, from 350+ students.", [devhacks], ["hackathon"]),
   metric("receipts-tests", "493", "automated tests in CI for Receipts", "Receipts, the Discord bot that catches promises in chat, runs 493 automated tests in CI.", [devhacks, { label: "Receipts repository", url: "https://github.com/SrujanRudrapati/receipts" }], ["hackathon", "testing"]),
@@ -268,7 +268,7 @@ export const projectMetricNodes: MetricNode[] = [
   metric("watchtower-agents", "3", "agents in sequence on the Claude API", "Inventory Forecaster, Risk Analyst and Logistics Coordinator run in sequence, each consuming the previous agent’s output.", [site("supply-chain-watchtower", "Watchtower")], ["watchtower", "agents"]),
   metric("capstone-wape", "27.7%", "WAPE vs. 38.5% naive baseline", "Forecast error across 250 SKU and warehouse series with a strict time-based test window.", [site("demand-forecasting", "Demand Forecasting")], ["capstone", "forecasting"]),
   metric("capstone-holding-cost", "about 28%", "lower simulated holding cost", "A reorder-point policy on the forecast, at comparable service levels.", [site("demand-forecasting", "Demand Forecasting")], ["capstone"]),
-  metric("wlan-packets", "100,000+", "WPA2-encrypted packets parsed", "The toolkit rebuilds the network topology from the parsed packets as a directed graph.", [site("wlan-forensics-toolkit", "WLAN toolkit")], ["wlan", "networking"]),
+  metric("wlan-packets", "100,000+", "WPA2-encrypted packets parsed", "The toolkit rebuilds the network topology from the parsed packets as a directed graph.", [site("wlan-forensics-toolkit", "Network Anomaly Toolkit")], ["wlan", "networking"]),
   metric("f1-top3", "80%", "top-3 accuracy vs. 73% baseline", "Backtested on 44 held-out races; 52% top-1 against a 43% baseline.", [site("f1-race-predictor", "F1 predictor")], ["f1", "ml"]),
 ];
 
@@ -285,9 +285,9 @@ const artifact = (id: string, kind: ArtifactNode["kind"], label: string, url: st
 });
 
 export const artifactNodes: ArtifactNode[] = [
-  artifact("surplus-pipeline-diagram", "diagram", "Surplus AI pipeline diagram", "surplus-pipeline", "From spec collection to AI-written listings.", anchor("surplus-ai")),
-  artifact("surplus-network-diagram", "diagram", "Surplus AI cluster network diagram", "surplus-network", "Five Mac minis on a switch with no internet uplink.", anchor("surplus-ai")),
-  artifact("surplus-privacy-diagram", "diagram", "Surplus AI privacy layers diagram", "surplus-privacy", "Four layers between the model and the internet.", anchor("surplus-ai")),
+  artifact("surplus-pipeline-diagram", "diagram", "Surplus Station pipeline diagram", "surplus-pipeline", "From spec collection to AI-written listings.", anchor("surplus-station")),
+  artifact("surplus-network-diagram", "diagram", "Surplus Station cluster network diagram", "surplus-network", "Five Mac minis on a switch with no internet uplink.", anchor("surplus-station")),
+  artifact("surplus-privacy-diagram", "diagram", "Surplus Station privacy layers diagram", "surplus-privacy", "Four layers between the model and the internet.", anchor("surplus-station")),
   artifact("cooked-repo", "repo", "Cooked repository", "https://github.com/SrujanRudrapati/cooked", "Source for Cooked, the DevHacks × Cubbie winner.", "https://github.com/SrujanRudrapati/cooked", "Cooked repository"),
   artifact("receipts-repo", "repo", "Receipts repository", "https://github.com/SrujanRudrapati/receipts", "Source for Receipts, the Discord bot with 493 automated tests.", "https://github.com/SrujanRudrapati/receipts", "Receipts repository"),
   artifact("label-lens-live", "live", "Label Lens live app", "https://label-lens-iota.vercel.app", "Label Lens, live app.", "https://label-lens-iota.vercel.app"),
@@ -304,20 +304,20 @@ const uses = (project: string, ...skills: (string | [string, string])[]): Edge[]
 const alsoUses = (project: string, ...skills: string[]): Edge[] => skills.map((s) => ({ from: project, to: `skill-${s}`, type: "uses", chip: false }));
 
 export const projectEdges: Edge[] = [
-  // Surplus AI
-  e("project-surplus-ai", "achieved", "metric-surplus-processing-time"),
-  e("project-surplus-ai", "achieved", "metric-surplus-pallet-time"),
-  e("project-surplus-ai", "achieved", "metric-surplus-model-size"),
-  ...uses("project-surplus-ai", "mlx", "flask", "bash", "apple-vision-ocr", "qwen-14b", "llama-3b"),
-  ...alsoUses("project-surplus-ai", "local-llm-serving"),
-  { from: "project-surplus-ai", to: "problem-manual-processing-bottleneck", type: "solved", metric: "metric-surplus-processing-time" },
-  e("project-surplus-ai", "solved", "problem-ungrounded-ai-output"),
-  e("project-surplus-ai", "in", "industry-higher-ed-surplus"),
-  e("project-surplus-ai", "at", "role-tech-assistant-asu"),
-  e("project-surplus-ai", "during", "role-tech-assistant-asu"),
-  e("project-surplus-ai", "produced", "artifact-surplus-pipeline-diagram"),
-  e("project-surplus-ai", "produced", "artifact-surplus-network-diagram"),
-  e("project-surplus-ai", "produced", "artifact-surplus-privacy-diagram"),
+  // Surplus Station
+  e("project-surplus-station", "achieved", "metric-surplus-processing-time"),
+  e("project-surplus-station", "achieved", "metric-surplus-pallet-time"),
+  e("project-surplus-station", "achieved", "metric-surplus-model-size"),
+  ...uses("project-surplus-station", "mlx", "flask", "bash", "apple-vision-ocr", "qwen-14b", "llama-3b"),
+  ...alsoUses("project-surplus-station", "local-llm-serving"),
+  { from: "project-surplus-station", to: "problem-manual-processing-bottleneck", type: "solved", metric: "metric-surplus-processing-time" },
+  e("project-surplus-station", "solved", "problem-ungrounded-ai-output"),
+  e("project-surplus-station", "in", "industry-higher-ed-surplus"),
+  e("project-surplus-station", "at", "role-tech-assistant-asu"),
+  e("project-surplus-station", "during", "role-tech-assistant-asu"),
+  e("project-surplus-station", "produced", "artifact-surplus-pipeline-diagram"),
+  e("project-surplus-station", "produced", "artifact-surplus-network-diagram"),
+  e("project-surplus-station", "produced", "artifact-surplus-privacy-diagram"),
   // DevHacks × Cubbie
   e("project-devhacks-cubbie", "achieved", "metric-devhacks-place"),
   e("project-devhacks-cubbie", "achieved", "metric-devhacks-submissions"),
