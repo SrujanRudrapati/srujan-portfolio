@@ -11,7 +11,7 @@ import { FlowDiagram, type FlowLayout } from "./FlowDiagram";
 
 const flowEdges = (pairs: [string, string][]): FlowLayout["edges"] => pairs.map(([from, to]) => ({ from, to }));
 
-/* Surplus AI: how a Mac goes from the shelf to a listing. */
+/* Surplus Station: how a Mac goes from the shelf to a listing. */
 
 const pipelineEdges = flowEdges([
   ["usb", "lookup"],
@@ -58,7 +58,7 @@ const surplusPipelineNarrow: FlowLayout = {
 export function SurplusPipelineDiagram() {
   return (
     <FlowDiagram
-      title="Surplus AI pipeline: from spec collection to AI-written listings"
+      title="Surplus Station pipeline: from spec collection to AI-written listings"
       desc="Two spec sources, a USB collector for working Macs and a camera scanner for Macs that will not boot, feed a lookup table, then one master inventory keyed on serial number, then an LLM with a strict prompt that never invents specs, which writes the listings."
       caption="How a Mac goes from the shelf to a listing. Working Macs report their own specs; Macs that won’t boot get their label scanned. Both land in one inventory keyed on serial number."
       wide={surplusPipelineWide}
@@ -67,7 +67,7 @@ export function SurplusPipelineDiagram() {
   );
 }
 
-/* Surplus AI: the five-node cluster. Head node reaches every node over SSH; nothing reaches the internet. */
+/* Surplus Station: the five-node cluster. Head node reaches every node over SSH; nothing reaches the internet. */
 
 const nodeIps = ["10.0.0.1", "10.0.0.2", "10.0.0.3", "10.0.0.4", "10.0.0.5"];
 // Qwen 14B runs across four nodes and Llama 3B on one (facts 2.1); node 1 is the head node.
@@ -116,7 +116,7 @@ export function SurplusNetworkDiagram() {
   );
 }
 
-/* Surplus AI: four layers between the model and the internet. The dot leaves the app and never gets past the switch. */
+/* Surplus Station: four layers between the model and the internet. The dot leaves the app and never gets past the switch. */
 
 const privacyLayers = [
   "No uplink on the switch",
@@ -141,7 +141,7 @@ function privacyLayout(width: number, sideInset: number, bands: number[], labels
     fill: i % 2 === 0 ? ("bg" as const) : ("surface" as const),
   }));
   const last = layers[layers.length - 1];
-  const app = { id: "app", x: last.x + 14, y: last.y + last.h - 14 - 44, w: last.w - 28, h: 44, label: "Surplus AI", variant: "accent" as const };
+  const app = { id: "app", x: last.x + 14, y: last.y + last.h - 14 - 44, w: last.w - 28, h: 44, label: "Surplus Station", variant: "accent" as const };
   return {
     width,
     height,
@@ -162,8 +162,8 @@ const surplusPrivacyNarrow = privacyLayout(300, 10, [40, 40, 74, 56], [
 export function SurplusPrivacyDiagram() {
   return (
     <FlowDiagram
-      title="Privacy layers between Surplus AI and the internet"
-      desc={`Surplus AI sits inside four layers, innermost first: ${[...privacyLayers].reverse().join("; ")}. The internet is outside all of them and is never reached.`}
+      title="Privacy layers between Surplus Station and the internet"
+      desc={`Surplus Station sits inside four layers, innermost first: ${[...privacyLayers].reverse().join("; ")}. The internet is outside all of them and is never reached.`}
       caption="Four layers sit between the model and the internet. The app checks Wi-Fi and internet status live."
       wide={surplusPrivacyWide}
       narrow={surplusPrivacyNarrow}

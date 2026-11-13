@@ -9,7 +9,7 @@ export const statement = "I like systems that hold up on a bad day: pipelines th
 
 export const paragraphs = [
   // 2.4: Celebal, Azure Databricks, healthcare, energy, manufacturing, e-commerce. 2.7: education. 2.1: production, offline.
-  "I started in data engineering at Celebal Technologies, building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing and e-commerce. Today I’m finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University, and running Surplus AI in production at ASU Surplus, on a small cluster of Mac minis, fully offline.",
+  "I started in data engineering at Celebal Technologies, building data platforms on Azure Databricks for clients in healthcare, energy, manufacturing and e-commerce. Today I’m finishing an M.S. in Data Science, Analytics, and Engineering at Arizona State University, and running Surplus Station in production at ASU Surplus, on a small cluster of Mac minis, fully offline.",
   `I’m looking for a data or AI engineering role. ${profile.status}.`,
 ];
 

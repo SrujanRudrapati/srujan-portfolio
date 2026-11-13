@@ -1,6 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import { projectPage } from "../src/data/project-page";
 import { projects } from "../src/data/projects";
+import { FEATURED_ORDER } from "../src/data/work";
 import { expectNoA11yViolations } from "./helpers";
 
 // Runbook v4 W4: project pages on /work/[slug], filled from the graph.
@@ -20,8 +21,9 @@ test.describe("v4 project pages: every page", () => {
       await expect(main(page).getByRole("link", { name: "All work" })).toHaveAttribute("href", /\/work\/?$/);
       await expect(main(page).getByText(p.oneLiner, { exact: true })).toBeVisible();
       await expect(main(page).locator("[data-result]")).toHaveCount(Math.min(3, data.figures.length));
-      // The band (art plate) is for the four featured projects only.
-      await expect(main(page).locator("header [data-art]")).toHaveCount(p.featured ? 1 : 0);
+      // The band (art plate) is for the v4 catalogue's four only, until the v5 project pages replace this template.
+      const plated = (FEATURED_ORDER as readonly string[]).includes(p.slug);
+      await expect(main(page).locator("header [data-art]")).toHaveCount(plated ? 1 : 0);
       // A section appears only when the graph has data for it.
       const hasDiagram = Boolean(p.diagram);
       await expect(page.getByRole("heading", { level: 2, name: "How it’s built" })).toHaveCount(hasDiagram ? 1 : 0);
@@ -34,11 +36,11 @@ test.describe("v4 project pages: every page", () => {
 });
 
 test.describe("v4 project pages: template parts", () => {
-  test("the featured four loop: Watchtower leads back to Surplus AI", async ({ page }) => {
+  test("the featured four loop: Watchtower leads back to Surplus Station", async ({ page }) => {
     await page.goto("/work/supply-chain-watchtower");
     await page.getByRole("navigation", { name: "Next project" }).getByRole("link").click();
-    await expect(page).toHaveURL(/\/work\/surplus-ai\/?$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Surplus AI");
+    await expect(page).toHaveURL(/\/work\/surplus-station\/?$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Surplus Station");
   });
 
   test("DevHacks × Cubbie keeps one sub-section per entry, each with its own repository", async ({ page }) => {
@@ -56,8 +58,8 @@ test.describe("v4 project pages: template parts", () => {
     await expect(main(page).getByRole("link", { name: /Live app/ })).toHaveAttribute("href", "https://label-lens-iota.vercel.app");
   });
 
-  test("Surplus AI shows all three architecture diagrams, static under reduced motion", async ({ page }) => {
-    await page.goto("/work/surplus-ai");
+  test("Surplus Station shows all three architecture diagrams, static under reduced motion", async ({ page }) => {
+    await page.goto("/work/surplus-station");
     const figures = main(page).locator("figure.flow");
     await expect(figures).toHaveCount(3);
     await expect(figures.first()).not.toHaveAttribute("data-draw", /.*/);
@@ -66,7 +68,7 @@ test.describe("v4 project pages: template parts", () => {
     expect(new Set(lit)).toEqual(new Set(["1"]));
   });
 
-  for (const slug of ["surplus-ai", "devhacks-cubbie", "label-lens", "f1-race-predictor"]) {
+  for (const slug of ["surplus-station", "devhacks-cubbie", "label-lens", "f1-race-predictor"]) {
     test(`${slug}: no accessibility violations`, async ({ page }) => {
       await page.goto(`/work/${slug}`);
       await expectNoA11yViolations(page);

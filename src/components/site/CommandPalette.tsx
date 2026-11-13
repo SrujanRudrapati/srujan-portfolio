@@ -201,7 +201,7 @@ export function CommandPalette({ projects }: { projects: PaletteProject[] }) {
         />
         <kbd className="rounded-full border border-line px-2 py-0.5 text-[13px] text-muted">esc</kbd>
       </div>
-      <ul id={listId} role="listbox" aria-label="Results" className="max-h-[50vh] overflow-y-auto py-2" data-lenis-prevent>
+      <ul id={listId} role="listbox" aria-label="Results" className="max-h-[50vh] overflow-y-auto overscroll-contain py-2">
         {visible.map((item, i) => {
           const header = item.group !== lastGroup ? item.group : null;
           lastGroup = item.group;

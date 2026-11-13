@@ -149,12 +149,7 @@ mkdirSync(publicDir, { recursive: true });
 writeFileSync(join(publicDir, "graph.json"), JSON.stringify(graph, null, 2) + "\n");
 writeFileSync(join(publicDir, "search-index.json"), JSON.stringify(searchIndex(), null, 2) + "\n");
 
-// The sitemap (v4 W8): every route, from the same list the site uses plus one page per project.
-const SITE = "https://srujanrudrapati.github.io/srujan-portfolio";
-const ROUTES = ["/", "/work", "/experience", "/about", "/contact", "/explore", "/cv"];
-const projectSlugs = graph.nodes.filter((x) => x.type === "project").map((x) => x.id.replace(/^project-/, ""));
-const urls = [...ROUTES, ...projectSlugs.map((slug) => `/work/${slug}`)].map((r) => `  <url>\n    <loc>${SITE}${r === "/" ? "/" : r}</loc>\n  </url>`);
-writeFileSync(join(publicDir, "sitemap.xml"), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>\n`);
+// The sitemap is src/app/sitemap.ts (v5): generated from the same routes the app builds.
 
 const counts = graph.nodes.reduce<Record<string, number>>((acc, n) => ({ ...acc, [n.type]: (acc[n.type] ?? 0) + 1 }), {});
-console.log(`✓ graph ok: ${graph.nodes.length} nodes (${Object.entries(counts).map(([t, c]) => `${t} ${c}`).join(", ")}), ${graph.edges.length} edges → public/graph.json, public/search-index.json, public/sitemap.xml`);
+console.log(`✓ graph ok: ${graph.nodes.length} nodes (${Object.entries(counts).map(([t, c]) => `${t} ${c}`).join(", ")}), ${graph.edges.length} edges → public/graph.json, public/search-index.json`);

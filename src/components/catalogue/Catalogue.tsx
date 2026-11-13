@@ -85,7 +85,6 @@ export function Catalogue({ items, index, onIndex }: { items: WorkItem[]; index:
         aria-label="Featured projects, use the arrow keys to move"
         data-cursor="Drag"
         data-stage
-        data-lenis-prevent-horizontal
         onPointerEnter={(e) => e.pointerType === "mouse" && auto.setHover(true)}
         onPointerLeave={(e) => e.pointerType === "mouse" && auto.setHover(false)}
         onKeyDown={(e) => {

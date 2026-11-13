@@ -13,7 +13,7 @@ const industry = (id: string, label: string, summary: string, tags: string[] = [
 });
 
 export const industryNodes: IndustryNode[] = [
-  industry("higher-ed-surplus", "Higher-ed surplus", "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus AI runs here."),
+  industry("higher-ed-surplus", "Higher-ed surplus", "University surplus operations: identifying, grading, pricing and listing hardware for resale. Surplus Station runs here."),
   industry("higher-education", "Higher education", "Students and teaching: a Canvas-reading study planner and two 400-level networking courses."),
   industry("e-commerce", "E-commerce", "A major fashion e-commerce client at Celebal: impressions, clicks, conversions, spend and attribution pipelines."),
   industry("healthcare", "Healthcare", "A telehealth client in New Zealand and a US medical device manufacturer, both at Celebal."),
@@ -37,8 +37,8 @@ const problem = (id: string, label: string, summary: string, tags: string[] = []
 });
 
 export const problemNodes: ProblemNode[] = [
-  problem("manual-processing-bottleneck", "Manual processing bottleneck", "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus AI cut processing per item from about 15 min to about 3 min."),
-  problem("ungrounded-ai-output", "Ungrounded AI output", "Surplus AI uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB."),
+  problem("manual-processing-bottleneck", "Manual processing bottleneck", "Staff typed hardware specs into a spreadsheet by hand and wrote listings manually. Surplus Station cut processing per item from about 15 min to about 3 min."),
+  problem("ungrounded-ai-output", "Ungrounded AI output", "Surplus Station uses a strict never-invent prompt, Label Lens quotes the label word for word, and Watchtower grounds its risk analyst in ChromaDB."),
   problem("slow-reporting", "Slow reporting", "Clinical and operations teams were waiting days for reports. A Lakehouse on Microsoft Fabric dropped time-to-insight about 50%."),
   problem("pipeline-downtime", "Pipeline downtime", "An AWS pipeline handling about 10 million records a day kept failing in the same ways. Tracing recurring failures to root causes cut downtime about 30%."),
   problem("pipeline-cost", "Pipeline cost", "Spark jobs and SQL on Databricks tuned for performance and cost."),
@@ -48,6 +48,7 @@ export const problemNodes: ProblemNode[] = [
   problem("deadline-overload", "Deadline overload", "Students juggling Canvas deadlines and grade weights. Cooked scores the week 0 to 100 and books study blocks after the student says yes."),
   problem("network-attack-detection", "Network attack detection", "Finding a live attack inside 100,000+ WPA2-encrypted packets. A Z-score detector caught a denial-of-service deauthentication attack."),
   problem("backtest-leakage", "Backtest leakage", "Rolling features shifted forward so predictions never see the future. 80% top-3 accuracy on 44 held-out races against a 73% baseline."),
+  problem("heat-safety", "Heat safety", "Planning work around dangerous heat. HeatShift, a heat-safety planner, was built in about 75 minutes at IBM’s Bobathon."),
   problem("manual-deployment", "Manual deployment", "One Terraform codebase deploys dev or prod; GitHub Actions tests, builds and deploys on every push to main."),
 ];
 
@@ -63,6 +64,6 @@ const event = (id: string, label: string, summary: string, dates: EventNode["dat
 
 export const eventNodes: EventNode[] = [
   event("devhacks-win", "1st place, DevHacks × Cubbie hackathon", "1st place, Track 1, among 82 submissions from 350+ students.", { start: "2026-10", end: "2026-10" }, [{ label: "DevHacks × Cubbie page", url: "/work/devhacks-cubbie" }], ["hackathon"]),
-  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus AI, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "/experience" }, { label: "Surplus AI page", url: "/work/surplus-ai" }], ["role", "production"]),
-  event("graduation", "M.S. graduation (expected)", "Expected December 2026 from Arizona State University. Available early 2027.", { start: "2026-12", end: "2026-12" }, [{ label: "Education", url: "/about#credentials" }], ["education"]),
+  event("asu-surplus-start", "Started at ASU Surplus", "Started as Tech Assistant, Surplus Operations at Arizona State University in June 2026. Surplus Station, built on the job, is in production there.", { start: "2026-06" }, [{ label: "Experience", url: "/experience" }, { label: "Surplus Station page", url: "/work/surplus-station" }], ["role", "production"]),
+  event("graduation", "M.S. graduation (expected)", "Expected December 2026 from Arizona State University. Available January 2027.", { start: "2026-12", end: "2026-12" }, [{ label: "Education", url: "/about#credentials" }], ["education"]),
 ];

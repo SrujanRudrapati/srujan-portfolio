@@ -17,7 +17,7 @@ describe("injection guard", () => {
     "What runs in production?",
     "What did you do at Celebal?",
     "How do you keep AI output grounded?",
-    "Which prompt does Surplus AI use for listings?",
+    "Which prompt does Surplus Station use for listings?",
     "Show me the system design of Watchtower",
     "Did you act as tech lead at Celebal?",
     "Did any project override the legacy system?",

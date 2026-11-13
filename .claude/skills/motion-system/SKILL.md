@@ -1,9 +1,15 @@
 ---
 name: motion-system
-description: The motion rules for the v4 portfolio (Midnight & Bronze): one easing, durations, page transitions via the View Transitions API, the home dot field (2D canvas spring physics and its performance contract), custom cursor, magnetic buttons, Lenis smooth scroll, the catalogue and list morph, and reduced motion. Load whenever adding or changing any animation, transition, hover, scroll effect, canvas, or interaction.
+description: The motion rules for the portfolio. v5 "Thread" (DESIGN.md section 6) wins: no animation libraries, no Lenis, native scroll, CSS animations plus one rAF loop for the scroll-drawn thread, the View cursor, reduced motion as the finished page. Below, history of v4 (Midnight & Bronze): one easing, durations, page transitions via the View Transitions API, the home dot field (2D canvas spring physics and its performance contract), custom cursor, magnetic buttons, Lenis smooth scroll, the catalogue and list morph, and reduced motion. Load whenever adding or changing any animation, transition, hover, scroll effect, canvas, or interaction.
 ---
 
-# Motion system (v4)
+# Motion system: v5 first (DESIGN.md section 6)
+
+v5 rules (DECISIONS 26): no animation runtimes (no GSAP) and no smooth scroll (Lenis removed); CSS keyframes and transitions, the `@property` colour fade, and one `requestAnimationFrame` loop in `src/components/v5/thread/Thread.tsx`. Animate only transform, opacity, stroke-dashoffset and the registered colours. Reduced motion shows every drawing finished; the global rule uses `transition-duration: 0s` (0.01ms transitions every property, since `transition-property` defaults to `all`). The dot field, magnetic buttons, progress line and ring cursor below are removed.
+
+---
+
+# History: motion system (v4)
 
 Rewritten at Phase W0 from runbook v4 §10 and the reference (`docs/v4/reference/srujan-premium-concept.html`). v3's GSAP scroll primitives, WebGL stage, posters and physics scenes were removed in W7 (with `three`, `@react-three/*`, `cannon-es` and `gsap`); nothing new may bring them back. Colours and layout: `design-direction`.
 

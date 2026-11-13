@@ -24,7 +24,7 @@ test.describe("v4 experience timeline", () => {
     await expect(page.locator('[data-item="role-tech-assistant-asu"]')).toHaveAttribute("aria-pressed", "true");
     await expect(detail(page).getByRole("heading", { level: 2 })).toHaveText("Tech Assistant, Surplus Operations");
     await expect(detail(page).getByText("June 2026 to present")).toBeVisible();
-    await expect(detail(page).getByRole("link", { name: "Surplus AI" })).toHaveAttribute("href", /\/work\/surplus-ai\/?$/);
+    await expect(detail(page).getByRole("link", { name: "Surplus Station" })).toHaveAttribute("href", /\/work\/surplus-station\/?$/);
   });
 
   test("selecting a bar shows that role’s dates, organisation, figures and every outcome", async ({ page }) => {

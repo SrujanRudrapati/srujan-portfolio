@@ -1,0 +1,345 @@
+/* v5 demo and animated cards (design/redesign.html). Card animations run only while the card is
+   on screen ([data-live], set by LiveCard) and never under reduced motion. */
+
+.card {
+  position: relative;
+  z-index: 3;
+  background: var(--panel);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius-tile);
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  width: 100%;
+  max-width: 460px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 7px 7px 0 var(--ink);
+}
+.bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+}
+.small {
+  color: var(--mute);
+  font-size: 12px;
+}
+.btn {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--ink);
+  background: var(--ink);
+  color: var(--ground);
+  cursor: pointer;
+}
+/* Ink stays behind the label (ground text on raw thread is under 4.5:1); the thread rings it instead. */
+.btn:hover {
+  border-color: var(--thread);
+  box-shadow: inset 0 0 0 2px var(--thread);
+}
+.card * {
+  animation-play-state: paused;
+}
+.card[data-live] * {
+  animation-play-state: running;
+}
+
+/* InvoiceGuard */
+.inv {
+  border: 1px solid var(--ink);
+}
+.inv > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 2.2em 4.2em 4.6em;
+  gap: 8px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--edge);
+}
+.inv > div:first-child {
+  border-top: 0;
+  color: var(--mute);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.inv span:nth-child(n + 2) {
+  text-align: right;
+}
+.inv .tot {
+  grid-template-columns: minmax(0, 1fr) auto;
+  font-weight: 500;
+  border-top-color: var(--ink);
+}
+.tot b {
+  font-weight: 500;
+}
+.verdict {
+  margin: 0;
+  padding: 11px 12px;
+  border: 1px solid var(--ink);
+  line-height: 1.4;
+  min-height: 64px;
+  transition: background-color 0.3s, color 0.3s;
+}
+.bad .verdict {
+  background: var(--ink);
+  border-color: var(--thread);
+  border-left: 6px solid var(--thread);
+  color: var(--ground);
+}
+.bad .tot b {
+  text-decoration: underline wavy var(--thread);
+  text-underline-offset: 4px;
+}
+
+/* Label Lens */
+.label {
+  margin: 0;
+  border: 1px solid var(--ink);
+  padding: 12px;
+  line-height: 1.7;
+}
+.label mark {
+  background: transparent;
+  color: inherit;
+  padding: 1px 2px;
+  transition: background-color 0.25s, color 0.25s;
+}
+.label mark[data-hit] {
+  background: var(--ink);
+  color: var(--ground);
+  box-shadow: inset 0 -3px 0 var(--thread);
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chips .btn {
+  background: transparent;
+  color: var(--ink);
+}
+.chips .btn[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--ground);
+}
+.chips .btn:hover {
+  border-color: var(--thread);
+}
+.warn {
+  margin: 0;
+  border-left: 3px solid var(--thread);
+  padding: 4px 0 4px 12px;
+  min-height: 44px;
+  line-height: 1.45;
+}
+
+/* RecordSync */
+.recs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.rec {
+  border: 1px solid var(--ink);
+  padding: 10px;
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.rec h4 {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mute);
+}
+.miss {
+  color: var(--mute);
+  font-style: italic;
+}
+.gold {
+  border: 2px solid var(--thread);
+  opacity: 0.3;
+  transform: translateY(8px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.gold p {
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.gold i {
+  font-style: normal;
+  font-size: 12px;
+  border: 1px solid var(--ink);
+  padding: 0 5px;
+  height: fit-content;
+  visibility: hidden;
+  white-space: nowrap;
+}
+.gold p span {
+  visibility: hidden;
+  min-width: 0;
+}
+.merged .gold {
+  opacity: 1;
+  transform: none;
+}
+.merged .gold i,
+.merged .gold p span {
+  visibility: visible;
+}
+
+/* Receipts chat (illustration) */
+.chat {
+  display: grid;
+  gap: 10px;
+  min-height: 150px;
+  min-width: 0;
+  align-content: start;
+}
+.msg {
+  justify-self: start;
+  max-width: 85%;
+  margin: 0;
+  border: 1px solid var(--ink);
+  border-radius: 14px 14px 14px 3px;
+  padding: 10px 12px;
+  line-height: 1.4;
+}
+.msg b {
+  display: block;
+  font-weight: 500;
+  color: var(--mute);
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+.track {
+  justify-self: end;
+  max-width: 90%;
+  margin: 0;
+  background: var(--ink);
+  color: var(--ground);
+  border-left: 4px solid var(--thread);
+  border-radius: 14px 14px 3px 14px;
+  padding: 10px 12px;
+  line-height: 1.4;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .msg {
+    opacity: 0;
+    animation: pop 7s infinite;
+  }
+  .track {
+    opacity: 0;
+    animation: pop2 7s infinite;
+  }
+}
+@keyframes pop {
+  0%,
+  6% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  12%,
+  92% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes pop2 {
+  0%,
+  30% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  38%,
+  92% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Pallet bars (drawn to scale: 90 min before, 10 min now) */
+.swap {
+  display: grid;
+  gap: 10px;
+}
+.swap > div {
+  display: grid;
+  grid-template-columns: 5.2em minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+}
+.swap i {
+  display: block;
+  height: 14px;
+  background: var(--ink);
+  transform-origin: left;
+}
+.swap .now i {
+  background: var(--thread);
+  width: calc(100% * 10 / 90);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .swap i {
+    animation: grow 6s infinite;
+  }
+  .swap .now i {
+    animation-name: grow2;
+  }
+}
+@keyframes grow {
+  0% {
+    transform: scaleX(0);
+  }
+  30%,
+  92% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+@keyframes grow2 {
+  0%,
+  34% {
+    transform: scaleX(0);
+  }
+  46%,
+  92% {
+    transform: scaleX(1);
+  }
+  100% {
+    transform: scaleX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verdict,
+  .label mark,
+  .gold {
+    transition: none;
+  }
+}

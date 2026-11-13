@@ -20,11 +20,11 @@ export type WorkItem = {
 
 type FeaturedCopy = Omit<WorkItem, "slug" | "featured" | "art">;
 
-/** Catalogue order (runbook W3.2): Surplus AI, Label Lens, Cooked (DevHacks × Cubbie), Watchtower. */
+/** Catalogue order (runbook W3.2): Surplus Station, Label Lens, Cooked (DevHacks × Cubbie), Watchtower. */
 const FEATURED: Record<string, FeaturedCopy> = {
   // Facts 2.1: about 15 min to about 3 min per item; offline; identifies, grades, prices, labels; bulk listings automated.
-  "surplus-ai": {
-    name: "Surplus AI",
+  "surplus-station": {
+    name: "Surplus Station",
     kicker: "In production at ASU Surplus",
     num: "~15 → ~3 min",
     numSub: "processing time per item",
@@ -60,7 +60,7 @@ const FEATURED: Record<string, FeaturedCopy> = {
     tags: ["Multi-agent", "Claude API", "CrewAI", "RAG"],
   },
 };
-export const FEATURED_ORDER = ["surplus-ai", "label-lens", "devhacks-cubbie", "supply-chain-watchtower"] as const;
+export const FEATURED_ORDER = ["surplus-station", "label-lens", "devhacks-cubbie", "supply-chain-watchtower"] as const;
 
 const STATUS_KICKER: Record<Project["status"], string> = {
   production: "In production",
@@ -90,7 +90,9 @@ export function workItems(): WorkItem[] {
   const bySlug = new Map(projects.map((p) => [p.slug, p]));
   const featured = FEATURED_ORDER.map((slug, i) => {
     const p = bySlug.get(slug);
-    if (!p || !p.featured) throw new Error(`work: ${slug} is not a featured project in the graph`);
+    // v5 changed the graph's featured set (DECISIONS 26). This v4 catalogue keeps its own four art
+    // plates until /work is rebuilt in the v5 project-pages stage, so it only checks the project exists.
+    if (!p) throw new Error(`work: ${slug} is not a project in the graph`);
     return { slug, featured: true, art: i, ...FEATURED[slug] };
   });
   const rest = projects.filter((p) => !FEATURED_ORDER.includes(p.slug as (typeof FEATURED_ORDER)[number])).map(smaller);

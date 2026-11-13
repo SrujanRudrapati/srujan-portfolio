@@ -2,31 +2,51 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { profile } from "@/content/profile";
+import { AskButton } from "@/components/v5/AskButton";
 import s from "./shell.module.css";
 
-const SOLID_AFTER_PX = 30;
+const HIDE_AFTER_PX = 140;
+const MOVE_PX = 12;
 
-/** Fixed 60px header: the name (home) and the availability line, nothing else (runbook v4 W1.2).
- *  Transparent at the top, frosted after 30px of scroll. */
+/**
+ * The v5 nav (design/redesign.html ".nav"): initials, Projects, About, Contact, and Ask. It slides
+ * away while scrolling down past 140px and returns on any scroll up. Section links point at the
+ * home page's anchors, so they work from every page.
+ */
 export function Header() {
   const ref = useRef<HTMLElement>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const onScroll = () => el.toggleAttribute("data-solid", scrollY > SOLID_AFTER_PX);
-    onScroll();
+    let last = scrollY;
+    const onScroll = () => {
+      const y = scrollY;
+      if (Math.abs(y - last) <= MOVE_PX) return;
+      // Never hide while something inside the nav has keyboard focus.
+      el.toggleAttribute("data-up", y > last && y > HIDE_AFTER_PX && !el.contains(document.activeElement));
+      last = y;
+    };
+    const onFocus = () => el.removeAttribute("data-up");
     addEventListener("scroll", onScroll, { passive: true });
-    return () => removeEventListener("scroll", onScroll);
+    el.addEventListener("focusin", onFocus);
+    return () => {
+      removeEventListener("scroll", onScroll);
+      el.removeEventListener("focusin", onFocus);
+    };
   }, []);
   return (
     <header ref={ref} className={s.header}>
-      <div className={`wrap ${s.bar}`}>
-        <Link href="/" className={s.mark}>
-          {profile.name}
+      <Link href="/" className={s.me} aria-label="Srujan Rudrapati, home">
+        SR
+      </Link>
+      <nav aria-label="Primary" className={s.nav}>
+        <Link href="/#work">Projects</Link>
+        <Link href="/#about" className={s.hideSmall}>
+          About
         </Link>
-        <span className={s.avail}>{profile.availability}</span>
-      </div>
+        <Link href="/#contact">Contact</Link>
+        <AskButton className={s.ask} label="Ask" />
+      </nav>
     </header>
   );
 }

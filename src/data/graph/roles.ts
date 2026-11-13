@@ -13,17 +13,17 @@ export const roleNodes: RoleNode[] = [
     id: "role-tech-assistant-asu",
     type: "role",
     label: "Tech Assistant, Surplus Operations, Arizona State University",
-    summary: "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production. Also a Power BI dashboard on asset sorting data, and advice to departments and buyers on equipment.",
+    summary: "Built Surplus Station, a private, offline AI system for ASU Surplus, now in production. Also a Power BI dashboard on asset sorting data, and advice to departments and buyers on equipment.",
     dates: { start: "2026-06" },
     evidence: [{ label: "Experience", url: EXPERIENCE }],
     tags: ["role", "asu", "current"],
     content: {
       title: "Tech Assistant, Surplus Operations",
       org: "Arizona State University",
-      place: "Tempe, AZ",
+      place: "Phoenix, AZ",
       dates: "June 2026 to present",
       outcomes: [
-        { text: "Built Surplus AI, a private, offline AI system for ASU Surplus, now in production." },
+        { text: "Built Surplus Station, a private, offline AI system for ASU Surplus, now in production." },
         { text: "Built a Power BI dashboard on asset sorting data showing where items stall." },
         { text: "Advise university departments and outside buyers on what equipment fits their needs." },
       ],
@@ -128,6 +128,8 @@ export const certificationNodes: CertificationNode[] = [
   cert("aws-ai-practitioner", "AWS Certified AI Practitioner", "AWS’s AI Practitioner certification.", ["aws", "ai"]),
   cert("azure-data-engineer", "Microsoft Certified: Azure Data Engineer Associate", "Microsoft’s associate-level Azure data engineering certification.", ["azure"]),
   cert("azure-administrator", "Microsoft Certified: Azure Administrator Associate", "Microsoft’s associate-level Azure administration certification.", ["azure"]),
+  // DECISIONS 26 F (facts 3.6).
+  cert("fabric-analytics-engineer", "Microsoft Certified: Fabric Analytics Engineer Associate", "Microsoft’s associate-level Fabric analytics engineering certification.", ["azure", "fabric"]),
 ];
 
 

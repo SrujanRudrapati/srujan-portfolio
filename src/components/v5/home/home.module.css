@@ -1,0 +1,4 @@
+/* The thread's SVG is absolutely positioned in <main>; main is its containing block. */
+.main {
+  position: relative;
+}

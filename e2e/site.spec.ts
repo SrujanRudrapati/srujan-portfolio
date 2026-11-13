@@ -1,8 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { projects } from "../src/data/projects";
 import { expectNoA11yViolations } from "./helpers";
 
 // Routes, the shell on every page, the command palette, and that older anchors still land
-// (docs/v4/IA.md). Updated for v4 in W7: the header is the name, the footer the Arizona clock.
+// (docs/v4/IA.md). Updated for v5: the nav and the footer's Back to top.
 
 const PAGES = [
   { path: "/work", h1: "Work" },
@@ -21,20 +22,20 @@ test.describe("Routes", () => {
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(p.h1);
       await expect(page.getByRole("banner").getByRole("link", { name: "Srujan Rudrapati" })).toBeVisible();
       await expect(page.locator("main a.back")).toHaveCount(1);
-      await expect(page.getByRole("contentinfo")).toContainText("Arizona");
+      await expect(page.getByRole("contentinfo").getByRole("link", { name: "Back to top" })).toBeVisible();
       await expectNoA11yViolations(page, "main");
     });
   }
 
   test("every project has its own page, all listed on /work", async ({ page }) => {
     await page.goto("/work");
-    // v4: the List layout shows all eleven.
+    // The List layout shows every project in the graph (fifteen since v5).
     await expect(async () => {
       await page.getByRole("button", { name: "List" }).click();
-      await expect(page.locator("[data-work-list] a")).toHaveCount(11, { timeout: 1000 });
+      await expect(page.locator("[data-work-list] a")).toHaveCount(projects.length, { timeout: 1000 });
     }).toPass({ timeout: 10000 });
     const hrefs = await page.locator("[data-work-list] a").evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href")))]);
-    expect(hrefs).toHaveLength(11);
+    expect(hrefs).toHaveLength(projects.length);
     for (const href of hrefs) {
       const res = await page.request.get(href!);
       expect(res.status(), href!).toBe(200);

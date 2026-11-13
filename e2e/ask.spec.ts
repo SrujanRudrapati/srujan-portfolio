@@ -14,8 +14,8 @@ test.describe("Ask", () => {
     });
     await askFromHome(page, "What runs in production?");
     const evidence = dialog(page).getByRole("list", { name: "Evidence" });
-    await expect(evidence.getByRole("heading", { level: 3 }).first()).toHaveText("Surplus AI");
-    await expect(dialog(page)).toContainText(/match(es)?; strongest evidence: Surplus AI/);
+    await expect(evidence.getByRole("heading", { level: 3 }).first()).toHaveText("Surplus Station");
+    await expect(dialog(page)).toContainText(/match(es)?; strongest evidence: Surplus Station/);
     await expect(dialog(page).getByRole("group", { name: "Answer" })).toHaveCount(0);
     expect(offsite).toEqual([]);
   });
@@ -62,7 +62,7 @@ test.describe("Ask", () => {
     await palette.getByRole("combobox").fill("what runs in production");
     await expect(palette.getByRole("option").last()).toHaveText("Ask about my work: “what runs in production”");
     await palette.getByRole("option").last().click();
-    await expect(dialog(page).getByRole("list", { name: "Evidence" }).getByRole("heading", { level: 3 }).first()).toHaveText("Surplus AI");
+    await expect(dialog(page).getByRole("list", { name: "Evidence" }).getByRole("heading", { level: 3 }).first()).toHaveText("Surplus Station");
   });
 
   test("off-topic and prompt-injection questions get the grounded refusal", async ({ page }) => {

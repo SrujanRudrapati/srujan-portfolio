@@ -1,7 +1,18 @@
-import { Home } from "@/components/home/Home";
-import { homeContent } from "@/data/home";
+import type { Metadata } from "next";
+import { HomePage } from "@/components/v5/home/HomePage";
+import { hero } from "@/data/home";
+import { jsonLdScript, personJsonLd } from "@/data/person";
+import { pageMeta } from "@/lib/meta";
 
-// v4: the home is a hub (runbook W2). Everything the v3 story held lives on its own route.
+export const metadata: Metadata = pageMeta("/", "Srujan Rudrapati | Data and AI Engineer", hero.headline);
+
+// v5: the home is the prototype's single scroll page (design/redesign.html).
 export default function Page() {
-  return <Home content={homeContent()} />;
+  return (
+    <>
+      {/* Structured data for search engines; a constant built from résumé facts, escaped by jsonLdScript. */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(personJsonLd()) }} />
+      <HomePage />
+    </>
+  );
 }
